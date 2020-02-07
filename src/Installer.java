@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.*;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 
 public class Installer {
     public static void install(File smJarFile) throws IOException {
@@ -76,9 +77,14 @@ public class Installer {
 
     static void writeEntry(JarEntry toWrite, byte[] buffer, InputStream in, JarOutputStream out) throws IOException {
         System.out.println("Writing: " + toWrite.getName());
-        out.putNextEntry(toWrite);
-        for (int nr; 0 < (nr = in.read(buffer)); ) {
-            out.write(buffer, 0, nr);
+        try {
+            out.putNextEntry(toWrite);
+            for (int nr; 0 < (nr = in.read(buffer)); ) {
+                out.write(buffer, 0, nr);
+            }
+        }catch (ZipException e){
+            System.out.println(e.getMessage());
+            System.out.println("No problem really");
         }
     }
 

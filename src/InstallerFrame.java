@@ -45,6 +45,7 @@ public class InstallerFrame extends JFrame {
         JButton button = makeButton(20, 245, "Click to install", (a) -> {
             try {
                 Installer.install(selectedJar);
+                JOptionPane.showMessageDialog(null, "Installation successful.");
             } catch (IOException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Failed to install! Check console for error");
