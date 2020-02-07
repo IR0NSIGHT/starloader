@@ -1,0 +1,75 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
+import org.schema.game.common.Starter;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
+import java.util.jar.JarFile;
+import java.util.jar.Attributes.Name;
+
+import javax.swing.*;
+
+public class SMModLoader {
+    public static final File modFolder = new File("SMMods");
+
+    static {
+        if (!modFolder.exists()) {
+            modFolder.mkdir();
+        }
+
+    }
+
+    public SMModLoader() {
+    }
+
+    public static void main(String[] args) {
+        JOptionPane.showMessageDialog(null, "Congrats bro you just started starmade");
+        if (Arrays.asList(args).contains("-nomods")) {
+            try {
+                Starter.main(args);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            File[] files = modFolder.listFiles();
+            URL[] urls = new URL[files.length];
+
+            for (int i = 0; i < urls.length; ++i) {
+                try {
+                    urls[i] = files[i].toURI().toURL();
+                } catch (MalformedURLException var11) {
+                    var11.printStackTrace();
+                }
+            }
+
+            URLClassLoader cl = new URLClassLoader(urls);
+            File[] var7 = files;
+            int var6 = files.length;
+
+            for (int var5 = 0; var5 < var6; ++var5) {
+                File f = var7[var5];
+
+                try {
+                    JarFile jf = new JarFile(f);
+                    Class<?> c = cl.loadClass(jf.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS));
+                    jf.close();
+                    c.getMethod("main", String[].class).invoke(null, (Object) new String[]{});
+                } catch (NoClassDefFoundError | ReflectiveOperationException | IOException var10) {
+                    var10.printStackTrace();
+                }
+            }
+            try {
+                Starter.main(args);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
