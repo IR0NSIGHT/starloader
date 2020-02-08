@@ -41,34 +41,43 @@ public class InstallerFrame extends JFrame {
         title.setSize(400, 26);
         title.setFont(title.getFont().deriveFont(18.0f));
         makeText(new Color(147, 147, 147), 40, "1) Select StarMade.jar:");
-        JTextArea filePath = makeText(new Color(255, 0, 28), 110, "no jar selected............................. select one");
-        JButton button = makeButton(20, 245, "Click to install", (a) -> {
-            try {
-                Installer.install(selectedJar);
-                JOptionPane.showMessageDialog(null, "Installation successful");
-            } catch (IOException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Failed to install! Check console for error");
+        final JTextArea filePath = makeText(new Color(255, 0, 28), 110, "no jar selected............................. select one");
+        final JButton button = makeButton(20, 245, "Click to install", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Installer.install(selectedJar);
+                    JOptionPane.showMessageDialog(null, "Installation successful");
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                    JOptionPane.showMessageDialog(null, exc.getMessage());
+                }
             }
         });
-        makeButton(20, 70, "Select JAR", (a) -> {
-            JFileChooser chooser = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                    "StarMade.jar file", "jar");
-            chooser.setFileFilter(filter);
-            int returnVal = chooser.showOpenDialog(this);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = chooser.getSelectedFile();
-                filePath.setText(selectedFile.getAbsolutePath());
-                filePath.setBackground(new Color(12, 255, 0));
-                button.setEnabled(true);
-                selectedJar = selectedFile;
+        makeButton(20, 70, "Select JAR", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "StarMade.jar file", "jar");
+                chooser.setFileFilter(filter);
+                int returnVal = chooser.showOpenDialog(InstallerFrame.this);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = chooser.getSelectedFile();
+                    filePath.setText(selectedFile.getAbsolutePath());
+                    filePath.setBackground(new Color(12, 255, 0));
+                    button.setEnabled(true);
+                    selectedJar = selectedFile;
+                }
             }
         });
         makeText(new Color(147, 147, 147), 220, "2) Install Modloader: ");
 
-        makeButton(20, 290, "Report a bug", (a) -> {
-            JOptionPane.showMessageDialog(this, "    there are no bugs");
+        makeButton(20, 290, "Report a bug", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Message Jake#5670 on discord");
+            }
         });
 
         button.setEnabled(false);

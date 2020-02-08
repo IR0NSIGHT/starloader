@@ -1,13 +1,6 @@
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FileAdder {
     static ArrayList<String> filesToAdd = new ArrayList<>();
@@ -30,6 +23,27 @@ public class FileAdder {
         }
     }
 
+    public static void main(String[] args) {
+        getAPIClasses();
+    }
+    public static List<String> getAPIClasses(){
+        for(File f : getFiles(new File("classes"))){
+            System.out.println(f.getPath());
+        }
+        return null;
+    }
+    public static List<File> getFiles(File folder){
+        ArrayList<File> ret = new ArrayList<>();
+        for (File f : folder.listFiles()){
+            if(f.isDirectory()){
+                ret.addAll(getFiles(f));
+            }else{
+                ret.add(f);
+            }
+        }
+        return ret;
+    }
+    /*
     public static List<String> getAPIClasses() {
         try (Stream<Path> walk = Files.walk(Paths.get("classes"))) {
 
@@ -42,7 +56,7 @@ public class FileAdder {
             e.printStackTrace();
         }
         throw new RuntimeException("something broke");
-    }
+    }*/
     public static String filePath(String s) {
 
         return s.replace(".", File.separator);

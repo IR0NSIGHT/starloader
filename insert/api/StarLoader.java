@@ -18,7 +18,7 @@ public class StarLoader {
     public static void registerListener(Listener listener){
         Class<? extends Listener> listenerClass = listener.getClass();
         if(!listeners.containsKey(listener.getClass())){
-            listeners.put(listener.getClass(), new ArrayList<>());
+            listeners.put(listener.getClass(), new ArrayList<Listener>());
         }
         ArrayList<Listener> specificListeners = listeners.get(listenerClass);
         specificListeners.add(listener);
@@ -33,13 +33,13 @@ public class StarLoader {
 
     //fire x event methods:
     public static void fireChatReceiveEvent(PlayerState player, ChatMessage message){
-        getListeners(ChatReceiveListener.class).forEach(listener -> {
-            ((ChatReceiveListener) listener).onChatReceive(player, message);
-        });
+        for (Listener l : getListeners(ChatReceiveListener.class)){
+            ((ChatReceiveListener) l).onChatReceive(player, message);
+        }
     }
     public static void firePlayerChatEvent(PlayerState player, ChatMessage message){
-        getListeners(PlayerChatListener.class).forEach(listener -> {
-            ((PlayerChatListener) listener).onPlayerChat(player, message);
-        });
+        for (Listener l : getListeners(PlayerChatListener.class)){
+            ((PlayerChatListener) l).onPlayerChat(player, message);
+        }
     }
 }
