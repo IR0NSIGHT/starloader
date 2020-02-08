@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.io.*;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -14,8 +15,10 @@ public class Installer {
 
         String classFileFolder = filePath("classes");
         File newJarF = File.createTempFile("ModloaderTmp", ".jar");
-        JarOutputStream newJar = new JarOutputStream(new FileOutputStream(newJarF));
-        JarInputStream inputS = new JarInputStream(new FileInputStream(smJarFile));
+        FileOutputStream newJarOutputStream = new FileOutputStream(newJarF);
+        JarOutputStream newJar = new JarOutputStream(newJarOutputStream);
+        FileInputStream oldJarInputStream = new FileInputStream(smJarFile);
+        JarInputStream inputS = new JarInputStream(oldJarInputStream);
 
 
         ArrayList<File> resources = new ArrayList<>();
@@ -28,9 +31,20 @@ public class Installer {
 
 
         newJar.close();
-        Files.move(newJarF.toPath(), new File("StarMade.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+        inputS.close();
+        oldJarInputStream.close();
+        newJarOutputStream.close();
+
+        try {
+            //Files.move(newJarF.toPath(), new File("StarMade.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            //FIXME: throws an error... somehow the jar is being used
+            Files.move(newJarF.toPath(), smJarFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }catch (FileSystemException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Filesystem error, make sure starmade is NOT open");
+        }
         System.out.println("Done");
-        JOptionPane.showMessageDialog(null, "StarLoader installed!");
+
     }
 
     static void writeJar(JarInputStream in, JarOutputStream out, List<File> insert) throws IOException {
@@ -50,7 +64,7 @@ public class Installer {
         for (JarEntry je; (je = in.getNextJarEntry()) != null; ) {
             writeEntry(je, buffer, in, out);
         }
-
+        out.close();
         in.close();
     }
 
