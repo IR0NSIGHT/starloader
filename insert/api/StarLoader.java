@@ -3,6 +3,8 @@ package api;
 import api.listener.events.ChatReceiveListener;
 import api.listener.events.Listener;
 import api.listener.events.PlayerChatListener;
+import org.schema.game.common.data.player.PlayerState;
+import org.schema.game.network.objects.ChatMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;

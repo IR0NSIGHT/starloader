@@ -12,7 +12,7 @@ public class Installer {
     public static void install(File smJarFile) throws IOException {
         FileAdder.mkDefaults();
 
-        String classFileFolder = filePath("out/production/StarLoader");
+        String classFileFolder = filePath("classes");
         File newJarF = File.createTempFile("ModloaderTmp", ".jar");
         JarOutputStream newJar = new JarOutputStream(new FileOutputStream(newJarF));
         JarInputStream inputS = new JarInputStream(new FileInputStream(smJarFile));
@@ -61,7 +61,7 @@ public class Installer {
             System.out.println(path);
 
             //Delete the out/production/StarLoader/ part so.
-            out.putNextEntry(new JarEntry(path.replace("out" + File.separator + "production" + File.separator + "StarLoader" + File.separator, "")));
+            out.putNextEntry(new JarEntry(path.replace("classes" + File.separator, "")));
 
             //Write file
             int bytesRead = 0;
