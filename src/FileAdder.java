@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +28,13 @@ public class FileAdder {
     public static void main(String[] args) {
         getAPIClasses();
     }
+
     public static List<String> getAPIClasses(){
+        ArrayList<String> strValues = new ArrayList<>();
         for(File f : getFiles(new File("classes"))){
-            System.out.println(f.getPath());
+            strValues.add(f.getPath());
         }
-        return null;
+        return strValues;
     }
     public static List<File> getFiles(File folder){
         ArrayList<File> ret = new ArrayList<>();
