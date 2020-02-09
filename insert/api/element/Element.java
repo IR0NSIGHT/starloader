@@ -12,7 +12,7 @@ public class Element {
     private Category category;
     private String name;
     private int id;
-    public Element() {
+    public Element(int elementId, String elementName) {
     }
 
     public Category getCategory() {
