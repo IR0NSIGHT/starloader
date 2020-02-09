@@ -11,10 +11,18 @@ public class Element {
     private boolean deprecated = false;
     private int buildIcon;
     private Recipe recipe = null;
-
+    private Category category;
     public Element(int elementID, String elementName) {
         this.blockID = elementID;
         this.blockName = elementName;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public Recipe getRecipe() {
