@@ -18,6 +18,7 @@ public class FileAdder {
         //Classes that are not in /api .... for some reason ...
         registerFile("SMModLoader");
         registerFile("org.schema.game.network.commands.CreateNewShip");
+        registerFile("org.schema.game.client.view.gui.shiphud.newhud.TargetPowerBar");
         //Register all classes in 'api'
         for (String cl : getAPIClasses()){
             //classes\api\listener\events\ChatReceiveListener.class turns into:
