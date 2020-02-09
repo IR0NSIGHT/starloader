@@ -1,5 +1,6 @@
 package api.mod;
 
+import api.DebugFile;
 import api.listener.events.ChatReceiveListener;
 import api.listener.events.Listener;
 import api.listener.events.PlayerChatListener;
@@ -27,9 +28,13 @@ public class StarLoader {
     }
     //Get listeners of a specific type
     private static ArrayList<Listener> getListeners(Class<? extends Listener> type){
+        DebugFile.log("Getting listener: " + type.toString());
         ArrayList<Listener> specificListeners = listeners.get(type);
-        if (specificListeners == null)
+        if (specificListeners == null) {
+            DebugFile.log("No listeners found");
             return new ArrayList<>();
+        }
+        DebugFile.log(specificListeners.size() + " listeners found");
         return specificListeners;
     }
 
@@ -40,7 +45,9 @@ public class StarLoader {
         }
     }
     public static void fireTargetPanelDraw(TargetPanel panel){
+        DebugFile.log("Firing targetdraw");
         for (Listener l : getListeners(TargetPanelDrawListener.class)){
+            DebugFile.log("Passing to mod...");
             ((TargetPanelDrawListener) l).onDraw(panel);
         }
     }
