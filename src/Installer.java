@@ -74,8 +74,9 @@ public class Installer {
             String path = toWrite.getPath();
             System.out.println(path);
 
-            //Delete the out/production/StarLoader/ part so.
-            out.putNextEntry(new JarEntry(path.replace("classes" + File.separator, "")));
+            //both intellij and eclipse throw errors if I dont replace all \'s with /'s in the jar archive....
+            String replace = path.replace("classes" + File.separator, "").replace(File.separator, "/");
+            out.putNextEntry(new JarEntry(replace));
 
             //Write file
             int bytesRead = 0;

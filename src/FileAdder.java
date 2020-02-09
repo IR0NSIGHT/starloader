@@ -7,14 +7,17 @@ import java.util.List;
 public class FileAdder {
     static ArrayList<String> filesToAdd = new ArrayList<>();
     public static void registerFile(String file){
+        System.out.println("Reg: " + filePath(file) + ".class");
         filesToAdd.add(filePath(file) + ".class");
     }
     public static void registerFileRaw(String file){
+        System.out.println("Regx: " + file);
         filesToAdd.add(file);
     }
     public static void mkDefaults(){
         //Classes that are not in /api .... for some reason ...
         registerFile("SMModLoader");
+        registerFile("org.schema.game.client.view.gui.PowerHealthBars");
         //Register all classes in 'api'
         for (String cl : getAPIClasses()){
             //classes\api\listener\events\ChatReceiveListener.class turns into:
@@ -31,8 +34,9 @@ public class FileAdder {
 
     public static List<String> getAPIClasses(){
         ArrayList<String> strValues = new ArrayList<>();
-        for(File f : getFiles(new File("classes"))){
+        for(File f : getFiles(new File("classes" + File.separator + "api"))){
             strValues.add(f.getPath());
+            System.out.println(f.getPath());
         }
         return strValues;
     }

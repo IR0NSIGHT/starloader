@@ -1,4 +1,4 @@
-package api;
+package api.mod;
 
 import api.listener.events.ChatReceiveListener;
 import api.listener.events.Listener;
