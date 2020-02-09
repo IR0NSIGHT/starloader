@@ -8,11 +8,9 @@ public class Recipe {
 
     private double bakeTime = 0;
     private int numberProduced = 0;
-    private Map<Block, Integer> ingredients = null;
+    private Map<Element, Integer> ingredients = null;
 
-    public Recipe(double recipeBakeTime, int recipeNumberProduced) {
-        this.bakeTime = recipeBakeTime;
-        this.numberProduced = recipeNumberProduced;
+    public Recipe() {
     }
 
     public double getBakeTime() {
@@ -31,11 +29,11 @@ public class Recipe {
         this.numberProduced = numberProduced;
     }
 
-    public Map<Block, Integer> getIngredients() {
+    public Map<Element, Integer> getIngredients() {
         return this.ingredients;
     }
 
-    public void setIngredients(Map<Block, Integer> ingredients) {
+    public void setIngredients(Map<Element, Integer> ingredients) {
         this.ingredients = ingredients;
     }
 }

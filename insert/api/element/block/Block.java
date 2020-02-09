@@ -2,6 +2,7 @@ package api.element.block;
 
 import api.element.Element;
 import api.element.InventoryGroup;
+import api.element.Recipe;
 
 import java.util.List;
 

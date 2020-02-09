@@ -2,8 +2,6 @@ package api.element;
 
 public class Element {
 
-    private int blockID;
-    private String blockName;
     private String fullName;
     private String description;
     private boolean inShop = false;
@@ -12,9 +10,9 @@ public class Element {
     private int buildIcon;
     private Recipe recipe = null;
     private Category category;
-    public Element(int elementID, String elementName) {
-        this.blockID = elementID;
-        this.blockName = elementName;
+    private String name;
+    private int id;
+    public Element() {
     }
 
     public Category getCategory() {
@@ -33,12 +31,20 @@ public class Element {
         this.recipe = blockRecipe;
     }
 
+    public void setID(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getID() {
-        return this.blockID;
+        return this.id;
     }
 
     public String getName() {
-        return this.blockName;
+        return this.name;
     }
 
     public String getFullName() {
