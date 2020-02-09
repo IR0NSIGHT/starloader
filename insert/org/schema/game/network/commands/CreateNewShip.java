@@ -27,7 +27,7 @@ public class CreateNewShip extends Command {
     public void serverProcess(ServerProcessor var1, Object[] var2, ServerStateInterface var3, short var4) throws NetworkObjectNotFoundException, IOException, Exception {
         JOptionPane.showMessageDialog(null, "someone spawned ship");
         EntityRequest var6 = null;
-        if (var2[var2.length - 1].equals("Ship")) {
+        if (var2[var2.length - 1].equals("ship")) {
             var6 = new EntityRequest(var1.getClient().getId(), var2, Ship.class);
         }
 
