@@ -3,6 +3,8 @@ package api.mod;
 import api.listener.events.ChatReceiveListener;
 import api.listener.events.Listener;
 import api.listener.events.PlayerChatListener;
+import api.listener.events.TargetPanelDrawListener;
+import org.schema.game.client.view.gui.shiphud.newhud.TargetPanel;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.network.objects.ChatMessage;
 
@@ -31,12 +33,19 @@ public class StarLoader {
         return specificListeners;
     }
 
-    //fire x event methods:
+    //fire client event methods:
     public static void fireChatReceiveEvent(PlayerState player, ChatMessage message){
         for (Listener l : getListeners(ChatReceiveListener.class)){
             ((ChatReceiveListener) l).onChatReceive(player, message);
         }
     }
+    public static void fireTargetPanelDraw(TargetPanel panel){
+        for (Listener l : getListeners(TargetPanelDrawListener.class)){
+            ((TargetPanelDrawListener) l).onDraw(panel);
+        }
+    }
+
+    //Fire server events
     public static void firePlayerChatEvent(PlayerState player, ChatMessage message){
         for (Listener l : getListeners(PlayerChatListener.class)){
             ((PlayerChatListener) l).onPlayerChat(player, message);
