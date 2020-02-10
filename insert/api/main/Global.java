@@ -1,11 +1,12 @@
 package api.main;
 
+import api.element.Element;
 import api.element.InventoryGroup;
-import api.element.block.Block;
 import java.util.List;
+import java.util.Map;
 
 public class Global {
 
-    public static List<Block> blockList;
+    public static Map<Integer, Element> elementList;
     public static List<InventoryGroup> inventoryGroups;
 }

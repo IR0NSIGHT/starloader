@@ -8,7 +8,6 @@ import java.util.Scanner;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import api.element.InventoryGroup;
 import api.element.Recipe;
 import api.main.Global;
@@ -29,6 +28,7 @@ public class BlockConfigReader {
         //Todo:Handle any errors
     }
 
+    /*
     public void registerConfigBlocks() {
         document.getDocumentElement().normalize();
 
@@ -61,6 +61,7 @@ public class BlockConfigReader {
                 Node recipeNode = blockItems.item(0);
                 NodeList recipeNodes = recipeNode.getChildNodes();
                 Map<api.element.Element, Integer> ingredients = null;
+
                 for(int r = 0; r < recipeNodes.getLength(); r ++) {
                     Node component = recipeNodes.item(r);
                     int count = Integer.parseInt(component.getAttributes().getNamedItem("count").getNodeValue());
@@ -120,4 +121,5 @@ public class BlockConfigReader {
             }
         }
     }
+    */
 }

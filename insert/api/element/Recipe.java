@@ -1,7 +1,5 @@
 package api.element;
 
-import api.element.block.Block;
-
 import java.util.Map;
 
 public class Recipe {

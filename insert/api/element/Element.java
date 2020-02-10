@@ -1,5 +1,7 @@
 package api.element;
 
+import api.main.Global;
+
 public class Element {
 
     private String fullName;
@@ -93,5 +95,9 @@ public class Element {
 
     public void setBuildIcon(int value) {
         this.buildIcon = value;
+    }
+
+    public static Element getElementFromID(int id) {
+        return Global.elementList.get(id);
     }
 }
