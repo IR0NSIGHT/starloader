@@ -1,0 +1,26 @@
+package api.element;
+
+public enum ElementList {
+    SHIP_CORE(1),
+    SHIELD_CAPACITOR(3),
+    THRUSTER_MODULE(8),
+    CAMERA(47),
+    GRAVITY_UNIT(56),
+    REACTOR_STABILIZER_STREAM_NODE(66),
+    STORAGE(120),
+    BOBBY_AI_MODULE(121),
+    BUILD_BLOCK(123),
+    SHIELD_RECHARGER(478),
+    TRANSPORTER_CONTROLLER(687),
+    TRANSPORTER_MODULE(688),
+    CARGO_SPACE(689),
+    REACTOR_POWER(1008),
+    REACTOR_STABILIZER(1009),
+    REACTOR_CONDUIT(1010),
+    REPULSE_MODULE(1126);
+
+    private int id;
+    ElementList(int value) {
+        this.id = id;
+    }
+}

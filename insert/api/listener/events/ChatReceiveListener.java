@@ -8,5 +8,5 @@ import org.schema.game.network.objects.ChatMessage;
 @ClientListener
 public interface ChatReceiveListener extends Listener {
     void onChatReceive(PlayerState player, ChatMessage message);
-    //Todo:Make this use Player.class instead of PlayerState
+    Integer id = 0;
 }

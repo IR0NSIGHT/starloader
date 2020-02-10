@@ -1,7 +1,6 @@
 package api.mod;
 
 import api.listener.events.Listener;
-import org.schema.game.common.controller.elements.VoidElementManager;
 
 public class StarMod {
     public String modName;
@@ -14,10 +13,6 @@ public class StarMod {
     }
     public void register(){
         StarLoader.starMods.add(this);
-    }
-    public void registerListener(Listener listener){
-        StarLoader.registerListener(listener);
-
     }
 
 }
