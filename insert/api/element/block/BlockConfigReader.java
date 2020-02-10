@@ -66,7 +66,7 @@ public class BlockConfigReader {
                     Node component = recipeNodes.item(r);
                     int count = Integer.parseInt(component.getAttributes().getNamedItem("count").getNodeValue());
                     String itemString = component.getNodeValue();
-                    api.element.Element item = new api.element.Element();
+                    api.element.Element item = new api.element.Element(1, null);
                     item.setName(itemString);
                     ingredients.put(item, count);
                 }
