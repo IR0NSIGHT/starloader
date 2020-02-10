@@ -3,6 +3,9 @@
 // (powered by Fernflower decompiler)
 //
 
+import api.DebugFile;
+import api.mod.StarLoader;
+import api.mod.StarMod;
 import org.schema.game.common.Starter;
 
 import java.io.File;
@@ -59,6 +62,14 @@ public class SMModLoader {
                 try {
                     JarFile jf = new JarFile(f);
                     Class<?> c = cl.loadClass(jf.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS));
+                    Object o = c.getConstructors()[0].newInstance();
+                    if(!(o instanceof StarMod)){
+                        DebugFile.log("Failed to load plugin! not instanceof StarMod! We'll invoke main anyway...");
+                    }else {
+                        StarMod sMod = ((StarMod) o);
+                        sMod.onEnable();
+                        StarLoader.starMods.add(sMod);
+                    }
                     jf.close();
                     c.getMethod("main", String[].class).invoke(null, (Object) new String[]{});
                 } catch (NoClassDefFoundError | ReflectiveOperationException | IOException var10) {

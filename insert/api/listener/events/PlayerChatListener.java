@@ -7,5 +7,6 @@ import org.schema.game.network.objects.ChatMessage;
 
 @ServerListener
 public interface PlayerChatListener extends Listener{
-    void onPlayerChat(PlayerState whoChatted, ChatMessage message);
+    public abstract void onPlayerChat(PlayerState whoChatted, ChatMessage message);
+    Integer id = 1;
 }
