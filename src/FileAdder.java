@@ -23,7 +23,14 @@ public class FileAdder {
         //maybe make it so anything in org.schema is imported
 
         //Register all classes in 'api'
-        for (String cl : getAPIClasses()){
+        for (String cl : getAPIClasses("api")){
+            //classes\api\listener\events\ChatReceiveListener.class turns into:
+            // api.listener.events.ChatReceiveListener
+            String replace = cl.replace("classes" + File.separator, "");
+
+            registerFileRaw(replace);
+        }
+        for (String cl : getAPIClasses("org")){
             //classes\api\listener\events\ChatReceiveListener.class turns into:
             // api.listener.events.ChatReceiveListener
             String replace = cl.replace("classes" + File.separator, "");
@@ -33,12 +40,12 @@ public class FileAdder {
     }
 
     public static void main(String[] args) {
-        getAPIClasses();
+        getAPIClasses("api");
     }
 
-    public static List<String> getAPIClasses(){
+    public static List<String> getAPIClasses(String subclass){
         ArrayList<String> strValues = new ArrayList<>();
-        for(File f : getFiles(new File("classes" + File.separator + "api"))){
+        for(File f : getFiles(new File("classes" + File.separator + subclass))){
             strValues.add(f.getPath());
             System.out.println(f.getPath());
         }
