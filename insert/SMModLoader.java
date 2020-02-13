@@ -77,13 +77,14 @@ public class SMModLoader {
                 } catch (Exception e) {
                     e.printStackTrace();
                     DebugFile.log("MOD LOAD FAILED::::");
-                    DebugFile.log(e.getMessage());
+                    DebugFile.logError(e, null);
                 }
             }
             try {
                 Starter.main(args);
             } catch (IOException e) {
                 e.printStackTrace();
+                DebugFile.logError(e, null);
             }
         }
     }
