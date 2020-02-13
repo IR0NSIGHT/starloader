@@ -17,8 +17,8 @@ public class FileAdder {
     public static void mkDefaults(){
         //Classes that are not in /api .... for some reason ...
         registerFile("SMModLoader");
-        registerFile("org.schema.game.client.view.gui.shiphud.newhud.TargetPowerBar");
-        registerFile("org.schema.game.client.view.gui.shiphud.newhud.TargetPanel");
+        //registerFile("org.schema.game.client.view.gui.shiphud.newhud.TargetPowerBar");
+        //registerFile("org.schema.game.client.view.gui.shiphud.newhud.TargetPanel");
 
         //maybe make it so anything in org.schema is imported
 
@@ -31,8 +31,6 @@ public class FileAdder {
             registerFileRaw(replace);
         }
         for (String cl : getAPIClasses("org")){
-            //classes\api\listener\events\ChatReceiveListener.class turns into:
-            // api.listener.events.ChatReceiveListener
             String replace = cl.replace("classes" + File.separator, "");
 
             registerFileRaw(replace);

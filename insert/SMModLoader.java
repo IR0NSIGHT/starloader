@@ -33,7 +33,8 @@ public class SMModLoader {
     }
 
     public static void main(String[] args) {
-        JOptionPane.showMessageDialog(null, "Congrats bro you just started starmade");
+        JOptionPane.showMessageDialog(null, "StarLoader temporary message");
+        DebugFile.clear();
         if (Arrays.asList(args).contains("-nomods")) {
             try {
                 Starter.main(args);
@@ -67,13 +68,16 @@ public class SMModLoader {
                         DebugFile.log("Failed to load plugin! not instanceof StarMod! We'll invoke main anyway...");
                     }else {
                         StarMod sMod = ((StarMod) o);
+                        DebugFile.log("Enabling mod...");
                         sMod.onEnable();
                         StarLoader.starMods.add(sMod);
                     }
                     jf.close();
-                    c.getMethod("main", String[].class).invoke(null, (Object) new String[]{});
-                } catch (NoClassDefFoundError | ReflectiveOperationException | IOException var10) {
-                    var10.printStackTrace();
+                    //c.getMethod("main", String[].class).invoke(null, (Object) new String[]{});
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    DebugFile.log("MOD LOAD FAILED::::");
+                    DebugFile.log(e.getMessage());
                 }
             }
             try {

@@ -8,6 +8,7 @@ import java.io.IOException;
 public class DebugFile {
     private static FileWriter writer = null;
     public static void log(String s, StarMod mod){
+        //FIXME save file without closing it every time.
         try {
             writer = new FileWriter("starloader.log", true);
             if(mod == null){
@@ -16,6 +17,14 @@ public class DebugFile {
                 writer.append("[" + mod.modName + "] ");
             }
             writer.append(s + "\n");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void clear(){
+        try {
+            writer = new FileWriter("starloader.log", false);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
