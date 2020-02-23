@@ -17,12 +17,7 @@ public class FileAdder {
     public static void mkDefaults(){
         //Classes that are not in /api .... for some reason ...
         registerFile("SMModLoader");
-        //registerFile("org.schema.game.client.view.gui.shiphud.newhud.TargetPowerBar");
-        //registerFile("org.schema.game.client.view.gui.shiphud.newhud.TargetPanel");
 
-        //maybe make it so anything in org.schema is imported
-
-        //Register all classes in 'api'
         for (String cl : getAPIClasses("api")){
             //classes\api\listener\events\ChatReceiveListener.class turns into:
             // api.listener.events.ChatReceiveListener
@@ -60,20 +55,7 @@ public class FileAdder {
         }
         return ret;
     }
-    /*
-    public static List<String> getAPIClasses() {
-        try (Stream<Path> walk = Files.walk(Paths.get("classes"))) {
 
-            List<String> result = walk.filter(Files::isRegularFile)
-                    .map(x -> x.toString()).collect(Collectors.toList());
-
-            return result;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        throw new RuntimeException("something broke");
-    }*/
     public static String filePath(String s) {
 
         return s.replace(".", File.separator);

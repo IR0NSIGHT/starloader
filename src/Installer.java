@@ -41,7 +41,7 @@ public class Installer {
             Files.move(newJarF.toPath(), smJarFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }catch (FileSystemException e){
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Filesystem error, make sure starmade is NOT open");
+            JOptionPane.showMessageDialog(null, "Filesystem error, make sure starmade and/or the launcher are not open");
         }
         System.out.println("Done");
 
