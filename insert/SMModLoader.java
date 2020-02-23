@@ -35,6 +35,7 @@ public class SMModLoader {
     public static void main(String[] args) {
         JOptionPane.showMessageDialog(null, "StarLoader temporary message");
         DebugFile.clear();
+        DebugFile.log("Starting starloader...");
         if (Arrays.asList(args).contains("-nomods")) {
             try {
                 Starter.main(args);
@@ -42,6 +43,7 @@ public class SMModLoader {
                 e.printStackTrace();
             }
         } else {
+            DebugFile.log("Listing mods...");
             File[] files = modFolder.listFiles();
             URL[] urls = new URL[files.length];
 
@@ -62,6 +64,7 @@ public class SMModLoader {
 
                 try {
                     JarFile jf = new JarFile(f);
+                    DebugFile.log("Loading Mod: " + jf.getName());
                     Class<?> c = cl.loadClass(jf.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS));
                     Object o = c.getConstructors()[0].newInstance();
                     if(!(o instanceof StarMod)){
@@ -81,6 +84,7 @@ public class SMModLoader {
                 }
             }
             try {
+                DebugFile.log("Starting StarMade...");
                 Starter.main(args);
             } catch (IOException e) {
                 e.printStackTrace();

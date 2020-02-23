@@ -15,6 +15,7 @@ public class DebugFile {
             }else{
                 writer.append("[" + mod.modName + "] ");
             }
+            writer.append(e.getMessage() + "\n");
             for ( StackTraceElement ste : e.getStackTrace()){
                 writer.append(ste.toString() + "\n");
             }
@@ -22,6 +23,7 @@ public class DebugFile {
         } catch (IOException e2) {
             e2.printStackTrace();
         }
+
     }
     public static void log(String s, StarMod mod){
         //FIXME save file without closing it every time.
