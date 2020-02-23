@@ -13,7 +13,7 @@ public class Installer {
     public static void install(File smJarFile) throws IOException {
         FileAdder.mkDefaults();
 
-        String classFileFolder = filePath("classes");
+        //String classFileFolder = filePath("classes");
         File newJarF = File.createTempFile("ModloaderTmp", ".jar");
         FileOutputStream newJarOutputStream = new FileOutputStream(newJarF);
         JarOutputStream newJar = new JarOutputStream(newJarOutputStream);
@@ -21,10 +21,10 @@ public class Installer {
         JarInputStream inputS = new JarInputStream(oldJarInputStream);
 
 
-        ArrayList<File> resources = new ArrayList<>();
-        for (String s : FileAdder.filesToAdd){
-            resources.add(new File(classFileFolder + File.separator + s));
-            System.out.println("Added " + s);
+        ArrayList<NamedInputStream> resources = new ArrayList<>();
+        for (NamedInputStream s : FileAdder.filesToAdd){
+            resources.add(s);
+            System.out.println("Added " + s.getName());
         }
         //resources.add(new File(classFileFolder + "/SMModLoader.class"));
         writeJar(inputS, newJar, resources);
@@ -47,7 +47,7 @@ public class Installer {
 
     }
 
-    static void writeJar(JarInputStream in, JarOutputStream out, List<File> insert) throws IOException {
+    static void writeJar(JarInputStream in, JarOutputStream out, List<NamedInputStream> insert) throws IOException {
         if (in.getManifest() != null) {
             in.getManifest().getMainAttributes().putValue(Attributes.Name.MAIN_CLASS.toString(), "SMModLoader");
             ZipEntry me = new ZipEntry(JarFile.MANIFEST_NAME);
@@ -57,7 +57,7 @@ public class Installer {
         }
         //big buffer for big writes
         byte[] buffer = new byte[1 << 14];
-        for (File extraFile : insert) {
+        for (NamedInputStream extraFile : insert) {
             writeSpecialEntry(extraFile, out);
         }
 
@@ -68,30 +68,31 @@ public class Installer {
         in.close();
     }
 
-    static void writeSpecialEntry(File toWrite, JarOutputStream out) {
-        System.out.println("Writing: " + toWrite.getName());
+    static void writeSpecialEntry(NamedInputStream toWrite, JarOutputStream out) {
+        System.out.println("Writing special entry: " + toWrite.getName());
         try {
-            String path = toWrite.getPath();
-            System.out.println(path);
+            //String path = toWrite.getPath();
+            //System.out.println(path);
 
             //both intellij and eclipse throw errors if I dont replace all \'s with /'s in the jar archive....
-            String replace = path.replace("classes" + File.separator, "").replace(File.separator, "/");
-            out.putNextEntry(new JarEntry(replace));
+            //String replace = path.replace("classes" + File.separator, "").replace(File.separator, "/");
+            out.putNextEntry(new JarEntry(toWrite.getName()));
 
             //Write file
             int bytesRead = 0;
             byte[] buffer = new byte[1024];
-            FileInputStream input = new FileInputStream(toWrite);
+            InputStream input = toWrite.getStream();
             while ((bytesRead = input.read(buffer)) != -1) {
                 out.write(buffer, 0, bytesRead);
             }
+            input.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     static void writeEntry(JarEntry toWrite, byte[] buffer, InputStream in, JarOutputStream out) throws IOException {
-        System.out.println("Writing: " + toWrite.getName());
+        //System.out.println("Writing: " + toWrite.getName());
         try {
             out.putNextEntry(toWrite);
             for (int nr; 0 < (nr = in.read(buffer)); ) {
@@ -103,7 +104,4 @@ public class Installer {
         }
     }
 
-    static String filePath(String s) {
-        return s.replace(".", File.separator);
-    }
 }

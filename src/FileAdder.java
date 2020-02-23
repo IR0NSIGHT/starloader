@@ -1,11 +1,54 @@
-import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.security.CodeSource;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class FileAdder {
-    static ArrayList<String> filesToAdd = new ArrayList<>();
+    static ArrayList<NamedInputStream> filesToAdd = new ArrayList<>();
+    public static void mkDefaults(){
+        //Just need a class to get dir
+        FileAdder base = new FileAdder();
+
+        InputStream in = base.getClass().getResourceAsStream("/SMModLoader.class");
+        filesToAdd.add(new NamedInputStream(in, "SMModLoader.class"));
+        try {
+            listPath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void listPath() throws IOException {
+        CodeSource src = FileAdder.class.getProtectionDomain().getCodeSource();
+        if (src != null) {
+            URL jar = src.getLocation();
+            ZipInputStream zip = new ZipInputStream(jar.openStream());
+            while(true) {
+                ZipEntry e = zip.getNextEntry();
+                if (e == null) {
+                    System.out.println("broke");
+                    break;
+                }
+                String name = e.getName();
+                if (name.startsWith("org") || name.startsWith("api")) {
+                    System.out.println("Found class: " + name);
+                    filesToAdd.add(new NamedInputStream(FileAdder.class.getResourceAsStream(name), name));
+                }
+            }
+        } else {
+            System.out.println("stuffs broke yo");
+        }
+    }
+    public static void main(String[] args) {
+        try {
+            listPath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /*
     public static void registerFile(String file){
         System.out.println("Reg: " + filePath(file) + ".class");
         filesToAdd.add(filePath(file) + ".class");
@@ -59,5 +102,5 @@ public class FileAdder {
     public static String filePath(String s) {
 
         return s.replace(".", File.separator);
-    }
+    }*/
 }
