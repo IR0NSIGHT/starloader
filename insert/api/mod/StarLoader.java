@@ -1,17 +1,13 @@
 package api.mod;
 
-import api.DebugFile;
-import api.listener.events.ChatReceiveListener;
-import api.listener.events.Listener;
-import api.listener.events.PlayerChatListener;
-import api.listener.events.TargetPanelDrawListener;
+import api.listener.events.ServerPingEvent;
+import api.listener.listeners.*;
 import org.schema.game.client.view.gui.shiphud.newhud.TargetPanel;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.network.objects.ChatMessage;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class StarLoader {
@@ -55,6 +51,11 @@ public class StarLoader {
     public static void firePlayerChatEvent(PlayerState player, ChatMessage message){
         for (Listener l : getListeners(PlayerChatListener.id)){
             ((PlayerChatListener) l).onPlayerChat(player, message);
+        }
+    }
+    public static void fireServerPingEvent(ServerPingEvent event){
+        for (Listener l : getListeners(ServerPingListener.id)){
+            ((ServerPingListener) l).onChatEvent(event);
         }
     }
 }
