@@ -1,15 +1,15 @@
 package api.inventory;
 
 import api.element.Element;
-import api.element.block.Block;
 import org.schema.game.common.data.player.PlayerState;
-import org.schema.game.common.data.player.inventory.InventorySlot;
-
 import java.util.ArrayList;
 
 public class Inventory {
 
     private ArrayList<Element> contents;
+    private boolean locked = false;
+    private double storageCapacity;
+    private int cargoBlocks;
 
     public Inventory() {
 
@@ -21,12 +21,6 @@ public class Inventory {
 
     public ArrayList<Element> getContents() {
         return contents;
-    }
-
-    public Element getElementFromSlot(InventorySlot slot) {
-        Element element = Element.getElementFromID(slot.metaId);
-        addElement(element);
-        return element;
     }
 
     public static org.schema.game.common.data.player.inventory.Inventory getPlayerStateInventory(PlayerState playerState) {

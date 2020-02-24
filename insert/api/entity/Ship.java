@@ -1,13 +1,11 @@
 package api.entity;
 
-import api.universe.Universe;
-
 public class Ship extends Entity {
 
-    private Universe universe;
     private EntityAI entityAI;
     private float maxTurn;
     private float baseTurn;
+    private boolean turret;
 
     public Ship() {
 
@@ -22,8 +20,31 @@ public class Ship extends Entity {
         return entityAI;
     }
 
-    public Universe getUniverse() {
-        return universe;
+    public void setAI(EntityAI entityAI) {
+        this.entityAI = entityAI;
     }
 
+    public float getMaxTurn() {
+        return maxTurn;
+    }
+
+    public void setMaxTurn(float maxTurn) {
+        this.maxTurn = maxTurn;
+    }
+
+    public float getBaseTurn() {
+        return baseTurn;
+    }
+
+    public void setBaseTurn(float baseTurn) {
+        this.baseTurn = baseTurn;
+    }
+
+    public boolean isTurret() {
+        return turret;
+    }
+
+    public void setTurret(boolean turret) {
+        this.turret = turret;
+    }
 }

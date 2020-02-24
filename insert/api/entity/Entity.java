@@ -3,6 +3,7 @@ package api.entity;
 import api.faction.Faction;
 import api.systems.Reactor;
 import api.systems.Shield;
+import api.universe.Universe;
 import java.util.List;
 
 public class Entity {
@@ -17,9 +18,14 @@ public class Entity {
     private List<Shield> shields;
     private String name;
     private Faction faction;
+    private Universe universe;
 
     public Entity() {
 
+    }
+
+    public Universe getUniverse() {
+        return universe;
     }
 
     public String getName() {

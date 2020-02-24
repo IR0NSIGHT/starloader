@@ -6,7 +6,7 @@ public class Recipe {
 
     private double bakeTime = 0;
     private int numberProduced = 0;
-    private Map<ElementList, Integer> ingredients = null;
+    private Map<Element, Integer> ingredients = null;
 
     public Recipe() {
     }
@@ -27,11 +27,11 @@ public class Recipe {
         this.numberProduced = numberProduced;
     }
 
-    public Map<ElementList, Integer> getIngredients() {
+    public Map<Element, Integer> getIngredients() {
         return this.ingredients;
     }
 
-    public void setIngredients(Map<ElementList, Integer> ingredients) {
+    public void setIngredients(Map<Element, Integer> ingredients) {
         this.ingredients = ingredients;
     }
 }
