@@ -14,6 +14,7 @@ public class Element {
     private Category category;
     private String name;
     private int id;
+
     public Element(int elementId, String elementName) {
     }
 
@@ -97,7 +98,14 @@ public class Element {
         this.buildIcon = value;
     }
 
-    public static Element getElementFromID(int id) {
-        return Global.elementList.get(id);
+    public static Element getElementFromName(String name) {
+        for(Element element: Global.elementList) {
+            if(element.getName() == name) {
+                return element;
+            } else {
+                System.err.println("Tried to fetch Element " + name + " but failed!");
+            }
+        }
+        return null;
     }
 }
