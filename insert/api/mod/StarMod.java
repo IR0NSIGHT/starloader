@@ -1,7 +1,5 @@
 package api.mod;
 
-import api.listener.events.Listener;
-
 public class StarMod {
     public String modName;
     public String modAuthor;

@@ -1,4 +1,4 @@
-package api.listener.events;
+package api.listener.listeners;
 
 import api.listener.type.ServerListener;
 import org.schema.game.common.data.player.PlayerState;

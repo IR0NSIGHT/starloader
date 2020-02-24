@@ -33,7 +33,7 @@ public class SMModLoader {
     }
 
     public static void main(String[] args) {
-        JOptionPane.showMessageDialog(null, "StarLoader temporary message");
+        JOptionPane.showMessageDialog(null, "you have started starmade, press OK to claim your reward");
         DebugFile.clear();
         DebugFile.log("Starting starloader...");
         if (Arrays.asList(args).contains("-nomods")) {
