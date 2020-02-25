@@ -46,4 +46,5 @@ public class Player extends Entity {
     private PlayerState getPlayerState() {
         return this.playerState;
     }
+
 }

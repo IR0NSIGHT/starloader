@@ -1,13 +1,17 @@
 package api.mod;
 
+import api.entity.player.Player;
 import api.listener.events.ServerPingEvent;
 import api.listener.listeners.*;
+import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.view.gui.shiphud.newhud.TargetPanel;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.network.objects.ChatMessage;
+import org.schema.game.server.data.GameServerState;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class StarLoader {
@@ -19,6 +23,12 @@ public class StarLoader {
         for (int i = 0; i < 30; i++) {
             listeners.add(new ArrayList<Listener>());
         }
+    }
+    public static List<Player> getOnlinePlayers(){
+        return null;
+    }
+    public static Collection<PlayerState> getOnlinePlayerStates(){
+        return GameClientState.instance.getOnlinePlayersLowerCaseMap().values();
     }
 
     public static List<Listener> getListeners(int id){

@@ -92,7 +92,7 @@ public class TargetPowerBar extends FillableHorizontalBar {
     }
 
     public void draw() {
-        if (this.currentUsage > 0.0F) {
+        if (this.currentUsage > 0.9F) {
             Color c = new Color(224, 0, 255);
             this.getColor().set((float)c.getRed() / 255.0F, (float)c.getGreen() / 255.0F, (float)c.getBlue() / 255.0F, (float)COLOR_WARN.w / 255.0F);
         } else {
@@ -111,8 +111,8 @@ public class TargetPowerBar extends FillableHorizontalBar {
                 return StringTools.format(Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_SHIPHUD_NEWHUD_TARGETPOWERBAR_3, new Object[]{StringTools.formatPointZero(var4.getPowerConsumptionAsPercent() * 100.0D)});
             } else {
                 PowerManagerInterface var3 = (PowerManagerInterface)((ManagedSegmentController)var1).getManagerContainer();
-                return "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-                //return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_SHIPHUD_NEWHUD_TARGETPOWERBAR_0 + StringTools.massFormat(var3.getPowerAddOn().getPower()) + " / " + StringTools.massFormat(var3.getPowerAddOn().getMaxPower());
+                //return "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+                return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_SHIPHUD_NEWHUD_TARGETPOWERBAR_0 + StringTools.massFormat(var3.getPowerAddOn().getPower()) + " / " + StringTools.massFormat(var3.getPowerAddOn().getMaxPower());
             }
         } else {
             return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_SHIPHUD_NEWHUD_TARGETPOWERBAR_1;
