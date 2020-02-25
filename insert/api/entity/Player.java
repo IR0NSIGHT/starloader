@@ -1,18 +1,24 @@
 package api.entity;
 
-import api.element.Element;
-import api.entity.Entity;
-import api.inventory.Inventory;
 import api.main.GameClient;
 import org.schema.game.common.data.player.PlayerState;
-import org.schema.game.common.data.player.inventory.InventorySlot;
+import org.schema.game.server.data.GameServerState;
+
+import java.util.Map;
 
 public class Player extends Entity {
 
     private PlayerState playerState = new PlayerState(GameClient.getClientState());
 
+    private Entity currentEntity;
+
     public Player() {
 
+    }
+
+    public Entity getCurrentEntity() {
+        //ToDo:set the currentEntity as the players current entered entity
+        return currentEntity;
     }
 
     public int getCredits() {
@@ -44,6 +50,21 @@ public class Player extends Entity {
     }
 */
     private PlayerState getPlayerState() {
+        this.playerState = getPlayerStateFromName(this.getName());
         return this.playerState;
+    }
+
+    private PlayerState getPlayerStateFromName(String playerName) {
+        GameServerState gameServerState = GameServerState.instance;
+        Map<String, PlayerState> playerStates = gameServerState.getPlayerStatesByName();
+        PlayerState pState = null;
+        try {
+            pState = playerStates.get(playerName);
+        } catch(Exception e) {
+            System.err.println("[StarLoader API]: Tried to get a PlayerState from name, but specified player was not found on server!");
+            e.printStackTrace();
+        }
+        this.playerState = pState;
+        return playerState;
     }
 }
