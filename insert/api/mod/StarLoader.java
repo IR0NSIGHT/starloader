@@ -55,7 +55,7 @@ public class StarLoader {
         for (Listener l : getListeners(TargetPanelDrawListener.id)){
             ((TargetPanelDrawListener) l).onDraw(panel);
         }
-    }
+    }//
 
     //Fire server events
     public static void firePlayerChatEvent(PlayerState player, ChatMessage message){
