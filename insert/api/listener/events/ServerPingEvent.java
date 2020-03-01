@@ -1,9 +1,9 @@
 package api.listener.events;
 
-import api.listener.type.ClientListener;
+import api.listener.type.ServerListener;
 
-@ClientListener
-public class ServerPingEvent {
+@ServerListener
+public class ServerPingEvent extends Event{
     private  String version;
     private  String name;
     private  String description;
@@ -11,7 +11,7 @@ public class ServerPingEvent {
     private  int maxPlayers;
 
     public ServerPingEvent(String version, String name, String description, int players, int maxPlayers){
-
+        //Id is used for where it is in the list.
         this.version = version;
         this.name = name;
         this.description = description;
@@ -57,5 +57,18 @@ public class ServerPingEvent {
 
     public int getMaxPlayers() {
         return maxPlayers;
+    }
+
+    public static int id = 1;
+
+    @Override
+    public String toString() {
+        return "ServerPingEvent{" +
+                "version='" + version + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", players=" + players +
+                ", maxPlayers=" + maxPlayers +
+                '}';
     }
 }
