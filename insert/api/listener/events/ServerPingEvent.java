@@ -3,7 +3,7 @@ package api.listener.events;
 import api.listener.type.ClientListener;
 
 @ClientListener
-public class ServerPingEvent {
+public class ServerPingEvent extends Event{
     private  String version;
     private  String name;
     private  String description;
