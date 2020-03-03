@@ -8,7 +8,7 @@ public enum StructureTab {
     DOCKS,
     FACTION,
     GENERAL,
-    GUISGROUP, //wtf is this
+    GUISGROUP, //Some sort of base for all the other tabs?
     HELP_TOP,
     POWER,
     SHIELD,
