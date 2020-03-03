@@ -9,7 +9,6 @@ import java.util.Iterator;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector4f;
 
-import api.listener.events.TargetPanelDrawEvent;
 import api.mod.StarLoader;
 import org.newdawn.slick.Color;
 import org.schema.common.config.ConfigurationElement;
@@ -141,7 +140,7 @@ public class TargetPanel extends HudConfig {
             GlUtil.glPopMatrix();
         }
         // Inserted Code >>>>>>>>>>>>>>>>>>
-        StarLoader.fireEvent(TargetPanelDrawEvent.class, new TargetPanelDrawEvent(this));
+        StarLoader.fireTargetPanelDraw(this);
         // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     }
 
