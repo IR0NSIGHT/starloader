@@ -1,9 +1,9 @@
 package api.listener.events;
 
-import api.listener.type.ClientListener;
+import api.listener.type.ClientEvent;
 import org.schema.game.client.view.gui.shiphud.newhud.TargetPanel;
 
-@ClientListener
+@ClientEvent
 public class TargetPanelDrawEvent extends Event {
     public static int id = 2;
     private TargetPanel panel;
