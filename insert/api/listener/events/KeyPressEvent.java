@@ -11,7 +11,7 @@ public class KeyPressEvent extends Event{
     public KeyPressEvent(KeyboardEvent event) {
         this.event = event;
     }
-//
+
     public char getChar(){
         return event.getCharacter();
     }
