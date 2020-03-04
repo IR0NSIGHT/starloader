@@ -1,4 +1,5 @@
 package api.listener.events;
 
-public class Event {
+public abstract class Event {
+    public static int id = 0;
 }
