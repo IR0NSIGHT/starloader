@@ -1,20 +1,20 @@
 # StarLoader
 
-StarMade basic modloader
+StarMade Modloader
 
-Fork of Mega's SMModLoader that aims to add a small mod API.
+### Notes
+Make a copy of your starmade.jar and add that to IntelliJ dependencies, otherwise the modloader sometimes cant overwrite it.
 
-###IMPORTANT (Devs only)
-Make  a copy of your starmade.jar and add that to IntelliJ dependencies, otherwise the modloader cant overwrite it.
+### How to download for developers:
+Clone and compile, the libraries needed are:
+ - StarMade.jar
+ - Everything inside of the lib/ folder
 
-###Updating Modloader files:
-* Build (green hammer icon in intellij)
-* Put your classes into the "classes" folder
-* Re-build jar file
-
-###Installation for users:
-* Download the modloader.zip
-* Extract all contents into a folder
+### Installation for users:
+* Download (todo: add link)
 * Run the jar
 * Select your starmade.jar
 * Install
+
+### Thanks
+Mega's SMModLoader for some code that I copied over
