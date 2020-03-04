@@ -1,12 +1,15 @@
 package api.mod;
 
+import api.DebugFile;
 import api.entity.Player;
+import api.listener.Listener;
+import api.listener.events.Event;
 import api.listener.events.ServerPingEvent;
-import api.listener.listeners.*;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.view.gui.shiphud.newhud.TargetPanel;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.network.objects.ChatMessage;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,38 +35,28 @@ public class StarLoader {
     public static List<Listener> getListeners(int id){
         return listeners.get(id);
     }
-    public static void registerListener(Listener l){
+    private static int getIdFromEvent(Class<? extends Event> clazz){
         try {
-            //Listeners have a static variable called id
-            Integer id = (Integer) l.getClass().getField("id").get(null);
-            getListeners(id).add(l);
+            //Events have a static variable called id
+            return (Integer) clazz.getField("id").get(null);
+            //I could also make it a hashmap<string, listener> and no id's would be needed... but whatever
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            DebugFile.logError(e, null);
         }
+        return 0;
+    }
+    public static void registerListener(Class<? extends Event> clazz, Listener l) {
+        DebugFile.log("Registering listener " + clazz.getName());
+        int id = getIdFromEvent(clazz);
+        getListeners(id).add(l);
     }
 
     //fire client event methods:
-    public static void fireChatReceiveEvent(PlayerState player, ChatMessage message){
-        for (Listener l : getListeners(ChatReceiveListener.id)){
-            ((ChatReceiveListener) l).onChatReceive(player, message);
-        }
-    }
-    public static void fireTargetPanelDraw(TargetPanel panel){
-        for (Listener l : getListeners(TargetPanelDrawListener.id)){
-            ((TargetPanelDrawListener) l).onDraw(panel);
-        }
-    }
-
-    //Fire server events
-    public static void firePlayerChatEvent(PlayerState player, ChatMessage message){
-        for (Listener l : getListeners(PlayerChatListener.id)){
-            ((PlayerChatListener) l).onPlayerChat(player, message);
-        }
-    }
-    public static void fireServerPingEvent(ServerPingEvent event){
-        for (Listener l : getListeners(ServerPingListener.id)){
-            ((ServerPingListener) l).onChatEvent(event);
+    public static void fireEvent(Class<? extends Event> clazz, Event event){
+        int id = getIdFromEvent(clazz);
+        for (Listener listener : getListeners(id)) {
+            listener.onEvent(event);
         }
     }
 }
