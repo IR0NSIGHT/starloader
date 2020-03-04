@@ -19,10 +19,20 @@ public class Entity {
     private String name;
     private Faction faction;
     private Universe universe;
+    private Fleet fleet;
 
     public Entity() {
 
     }
+
+    public Fleet getFleet() {
+        return fleet;
+    }
+
+    public void setFleet(Fleet fleet) {
+        this.fleet = fleet;
+    }
+
 
     public Universe getUniverse() {
         return universe;
