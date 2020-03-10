@@ -16,9 +16,6 @@ public class ModPlayground extends StarMod {
 
     @Override
     public void onEnable() {
-        //The super call registers the mod
-        super.onEnable();
-
 
         //This is to register a new listener to listen for StructureStatsCreateEvent
         StarLoader.registerListener(StructureStatsCreateEvent.class, new Listener() {
@@ -39,8 +36,8 @@ public class ModPlayground extends StarMod {
 
                     @Override
                     public int getStatDistance() {
-                        //Absolutely no clue what this does
-                        return 0;
+                        //Controls how far to the right it is.
+                        return 30;
                     }
 
                     @Override

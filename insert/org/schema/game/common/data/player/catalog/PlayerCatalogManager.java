@@ -78,7 +78,6 @@ public class PlayerCatalogManager extends Observable implements Observer {
                     var6 = true;
                 }
             }
-            //Just disabling this one statement reveals the entire catalog
             //if (var6) {
                 this.availableCatalog.add(var5);
             //}

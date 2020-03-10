@@ -7,7 +7,7 @@ public class StarMod {
     public String modVersion;
     public String modSMVersion;
     public void onEnable(){
-        register();
+        //register();
     }
     public void register(){
         StarLoader.starMods.add(this);
