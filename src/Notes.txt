@@ -1,0 +1,26 @@
+VoxelEntity Events (segmentcontroller events):
+    BlockBreakEvent
+    OverheatEvent
+    ShipWarpEvent
+    EntityCollisionEvent
+
+Player Events:
+    PlayerBreakBlockEvent
+    PlayerPlaceBlockEvent
+    InventoryClickEvent
+    InventoryDragDropEvent
+    InventoryOpenEvent
+    FactoryCraftEvent
+    PlayerChatEvent
+    PlayerInteractEvent
+
+Logic Events: tba
+
+Entity Events:
+    EntitySpawnEvent
+
+
+
+UI Events:
+    UICreateEvent(for each type)
+    ShipTargetEvent

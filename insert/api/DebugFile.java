@@ -1,6 +1,8 @@
 package api;
 
 import api.mod.StarMod;
+import org.schema.game.common.Starter;
+import org.schema.game.common.data.player.PlayerState;
 
 import java.io.FileWriter;
 import java.io.IOException;
