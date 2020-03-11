@@ -4,6 +4,7 @@
 //
 
 import api.DebugFile;
+import api.ModPlayground;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import org.schema.game.common.Starter;
@@ -43,7 +44,12 @@ public class SMModLoader {
                 e.printStackTrace();
             }
         } else {
-            DebugFile.log("Listing mods...");
+            DebugFile.log("Loading default mod...");
+            ModPlayground defaultMod = new ModPlayground();
+            defaultMod.register();
+            defaultMod.onEnable();
+
+            DebugFile.log("Enabling Mods...");
             File[] files = modFolder.listFiles();
             URL[] urls = new URL[files.length];
 

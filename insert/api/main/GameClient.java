@@ -1,11 +1,17 @@
 package api.main;
 
+import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.controller.GameClientController;
 import org.schema.game.client.data.GameClientState;
+import org.schema.game.client.data.PlayerControllable;
+import org.schema.game.common.controller.Ship;
+import org.schema.game.common.data.player.ControllerStateUnit;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
+import org.schema.schine.network.server.ServerMessage;
 
 import java.util.Collection;
+import java.util.Set;
 
 public class GameClient {
     public static GameClientState getClientState(){
@@ -17,6 +23,8 @@ public class GameClient {
     public static PlayerState getClientPlayerState(){
         return getClientState().getPlayer();
     }
+
+    //Lots of internal stuff to be cleaned up later
     public static void makeChatMessage(String msg){
         GameClientState inst = getClientState();
         inst.chat(inst.getChat(), "[ALL]", msg, true);
@@ -33,5 +41,19 @@ public class GameClient {
     }
     public static Collection<PlayerState> getConnectedPlayers(){
         return GameClientState.instance.getOnlinePlayersLowerCaseMap().values();
+    }
+    public static PlayerControllable getCurrentControl(){
+        Set<ControllerStateUnit> units = getClientPlayerState().getControllerState().getUnits();
+        if(units.isEmpty()) return null;
+        ControllerStateUnit unit = units.iterator().next();
+        return unit.playerControllable;
+    }
+    public static Ship getCurrentShip(){
+        PlayerControllable con = getCurrentControl();
+        if(con instanceof Ship){
+            return (Ship) con;
+        }else{
+            return null;
+        }
     }
 }

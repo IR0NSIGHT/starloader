@@ -47,4 +47,5 @@ public class Ship extends Entity {
     public void setTurret(boolean turret) {
         this.turret = turret;
     }
+
 }
