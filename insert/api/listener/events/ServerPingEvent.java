@@ -1,8 +1,8 @@
 package api.listener.events;
 
-import api.listener.type.ServerListener;
+import api.listener.type.ServerEvent;
 
-@ServerListener
+@ServerEvent
 public class ServerPingEvent extends Event{
     private  String version;
     private  String name;
