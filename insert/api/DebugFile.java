@@ -9,19 +9,26 @@ import java.io.IOException;
 
 public class DebugFile {
     private static FileWriter writer = null;
+    private static FileWriter getWriter() throws IOException {
+        if(writer == null){
+            writer = new FileWriter("starloader.log", true);
+        }
+        return writer;
+    }
     public static void logError(Exception e, StarMod mod){
         try {
-            writer = new FileWriter("starloader.log", true);
+
+            FileWriter writer = getWriter();
             if(mod == null){
-                writer.append("[StarLoader] ");
+                writer.append("[StarLoader] [Stacktrace]");
             }else{
-                writer.append("[" + mod.modName + "] ");
+                writer.append("[" + mod.modName + "] [Stacktrace]");
             }
-            writer.append(e.getMessage() + "\n");
+            writer.append(e.getLocalizedMessage()).append("\n");
             for ( StackTraceElement ste : e.getStackTrace()){
-                writer.append(ste.toString() + "\n");
+                writer.append(ste.toString()).append("\n");
             }
-            writer.close();
+            writer.flush();
         } catch (IOException e2) {
             e2.printStackTrace();
         }
@@ -30,13 +37,13 @@ public class DebugFile {
     public static void log(String s, StarMod mod){
         //FIXME save file without closing it every time.
         try {
-            writer = new FileWriter("starloader.log", true);
+            FileWriter writer = getWriter();
             if(mod == null){
                 writer.append("[StarLoader] ");
             }else{
-                writer.append("[" + mod.modName + "] ");
+                writer.append("[").append(mod.modName).append("] ");
             }
-            writer.append(s + "\n");
+            writer.append(s).append("\n");
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,6 +56,9 @@ public class DebugFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public static void err(String s){
+        log("[ERROR] " + s, null);
     }
     public static void log(String s){
         log(s, null);

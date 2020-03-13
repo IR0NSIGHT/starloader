@@ -1,3 +1,8 @@
+Network Objects (send stuff to player):
+    NetworkSegmentProvider
+
+
+
 VoxelEntity Events (segmentcontroller events):
     BlockBreakEvent
     OverheatEvent
