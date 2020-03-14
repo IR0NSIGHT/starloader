@@ -23,6 +23,9 @@ public class Fleet {
     public ArrayList<Ship> getFleetMembers() {
         return fleetMembers;
     }
+    public void addMember(org.schema.game.common.controller.Ship ship){
+        internalFleet.addMemberFromEntity(ship);
+    }
 
     public void setFleetMembers(ArrayList<Ship> fleetMembers) {
         this.fleetMembers = fleetMembers;

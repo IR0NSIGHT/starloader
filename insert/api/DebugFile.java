@@ -35,7 +35,6 @@ public class DebugFile {
 
     }
     public static void log(String s, StarMod mod){
-        //FIXME save file without closing it every time.
         try {
             FileWriter writer = getWriter();
             if(mod == null){
@@ -44,7 +43,7 @@ public class DebugFile {
                 writer.append("[").append(mod.modName).append("] ");
             }
             writer.append(s).append("\n");
-            writer.close();
+            writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,13 +51,19 @@ public class DebugFile {
     public static void clear(){
         try {
             writer = new FileWriter("starloader.log", false);
-            writer.close();
+            writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     public static void err(String s){
         log("[ERROR] " + s, null);
+    }
+    public static void info(String s){
+        log("[INFO] " + s, null);
+    }
+    public static void warn(String s){
+        log("[WARNING] " + s, null);
     }
     public static void log(String s){
         log(s, null);

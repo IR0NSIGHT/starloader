@@ -6,6 +6,7 @@
 package org.schema.game.common.data.player.playermessage;
 
 import api.listener.events.MailReceiveEvent;
+import api.mod.StarLoader;
 import it.unimi.dsi.fastutil.objects.ObjectArrayFIFOQueue;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.sql.SQLException;
@@ -103,8 +104,9 @@ public class PlayerMessageController extends DrawerObservable {
             var5.printStackTrace();
         }
     }
-
+    long lastTimeMS = 0;
     public void update() {
+
         if (!this.received.isEmpty()) {
             while(true) {
                 if (this.received.isEmpty()) {
@@ -118,6 +120,7 @@ public class PlayerMessageController extends DrawerObservable {
                 }
                 System.err.println("[PLAYERMESSAGE] " + this.channel.getState() + " Handle Received PlayerMessage: " + var1);
                 MailReceiveEvent event = new MailReceiveEvent(var1, this.channel, this.channel.isOnServer());
+                StarLoader.fireEvent(MailReceiveEvent.class, event);
                 if(!event.isCanceled()) {
                     if (this.channel.isOnServer()) {
                         this.handleReceivedOnServer(var1, false);
