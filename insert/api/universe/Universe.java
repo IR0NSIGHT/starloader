@@ -10,6 +10,7 @@ import com.bulletphysics.linearmath.Transform;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.view.gui.catalog.newcatalog.CatalogScrollableListNew;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.SegmentControllerHpController;
 import org.schema.game.common.controller.Ship;
 import org.schema.game.common.data.player.catalog.CatalogManager;
 import org.schema.game.common.data.world.Sector;
@@ -67,7 +68,7 @@ public class Universe {
         //True makes it spawn with AI active.
         //Server spawn:
         String command = "spawn_entity_pos "
-                + catalogName + " " + spawnName + " " + sector.x + " " + sector.y + " " + sector.z + " " +
+                + catalogName + " \"" + spawnName + "\" " + sector.x + " " + sector.y + " " + sector.z + " " +
                 localX + " " + localY + " " + localZ + " " + factionId + " true";
         DebugFile.info("[SERVER] Executing command: " + command);
         Server.executeAdminCommand(command);

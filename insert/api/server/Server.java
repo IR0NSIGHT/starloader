@@ -74,7 +74,13 @@ public class Server {
     public static GameServerState getServerState(){
         return GameServerState.instance;
     }
-
+    public static void sendMessage(PlayerState player, String message){
+        try {
+            getClientFromState(player).serverMessage(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static PlayerState getPlayer(String name){
         try {
             return getServerState().getPlayerFromName(name);

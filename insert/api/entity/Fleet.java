@@ -2,11 +2,13 @@ package api.entity;
 
 import api.main.GameClient;
 import api.main.GameServer;
+import api.server.Server;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.data.fleet.FleetCommandTypes;
 import org.schema.game.common.data.fleet.FleetManager;
+import org.schema.game.network.objects.remote.FleetCommand;
 import org.schema.game.server.data.simulation.npc.NPCFleetManager;
 
 import java.util.ArrayList;
@@ -24,7 +26,9 @@ public class Fleet {
         return fleetMembers;
     }
     public void addMember(org.schema.game.common.controller.Ship ship){
-        internalFleet.addMemberFromEntity(ship);
+        getServerFleetManager().requestShipAdd(internalFleet, ship);
+        //also:
+        //internalFleet.addMemberFromEntity(ship);
     }
 
     public void setFleetMembers(ArrayList<Ship> fleetMembers) {
@@ -42,15 +46,22 @@ public class Fleet {
         internalFleet = createNewFleet(name, owner);
     }
 
-    //Commands:
+    //Server Commands:
     public void moveTo(int x, int y, int z){
-        internalFleet.setCurrentMoveTarget(new Vector3i(x, y, z));
+        getServerFleetManager().executeCommand(new FleetCommand(FleetCommandTypes.MOVE_FLEET, internalFleet, new Vector3i(x,y,z)));
     }
     public void idle(){
-        internalFleet.sendFleetCommand(FleetCommandTypes.IDLE);
+        getServerFleetManager().executeCommand(new FleetCommand(FleetCommandTypes.MOVE_FLEET, internalFleet));
+    }
+    public void attack(int x, int y, int z){
+        getServerFleetManager().executeCommand(new FleetCommand(FleetCommandTypes.MOVE_FLEET, internalFleet, new Vector3i(x,y,z)));
+    }
+    public void mine(int x, int y, int z){
+        getServerFleetManager().executeCommand(new FleetCommand(FleetCommandTypes.MOVE_FLEET, internalFleet, new Vector3i(x,y,z)));
     }
 
     //Trying to avoid these kind of Object arrays as parameters that schema has all over the place
+    //Client commands:
     private void sendCommand(FleetCommandTypes types, Object... data){
         internalFleet.sendFleetCommand(types, data);
     }
@@ -58,13 +69,13 @@ public class Fleet {
     //garbage:
     public static org.schema.game.common.data.fleet.Fleet createNewFleet(String fleetName, String playerName){
         getServerFleetManager().requestCreateFleet(fleetName, playerName);
-        ObjectArrayList<org.schema.game.common.data.fleet.Fleet> availableFleets = getServerFleetManager().getAvailableFleets(fleetName);
+        ObjectArrayList<org.schema.game.common.data.fleet.Fleet> availableFleets = getServerFleetManager().getAvailableFleets(playerName);
         for (org.schema.game.common.data.fleet.Fleet fleet : availableFleets){
-            if(fleet.getOwner().equals(fleetName)){
+            if(fleet.getOwner().equals(playerName)){
                 return fleet;
             }
         }
-        assert false : "Unable to find fleet that was just created... bruh";
+        System.err.println("!!! COULD NOT FIND FLEET THAT WAS JUST CREATED !!!");
         return null;
     }
     //Kindof a problem here that nothing is really defined as 'from client' or 'from server'

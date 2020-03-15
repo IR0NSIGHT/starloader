@@ -41,9 +41,10 @@ public abstract class StarRunnable {
         }
     }
     private void register(){
-        runnables.add(this);
+        registerQueue.add(this);
     }
     private static ArrayList<StarRunnable> runnables = new ArrayList<>();
+    private static ArrayList<StarRunnable> registerQueue = new ArrayList<>();
     public static void tickAll(){
         ArrayList<StarRunnable> list = new ArrayList<>();
         for(StarRunnable runnable : runnables){
@@ -55,6 +56,8 @@ public abstract class StarRunnable {
         for(StarRunnable runnable : list){
             runnables.remove(runnable);
         }
+        runnables.addAll(registerQueue);
+        registerQueue.clear();
     }
 }
 
