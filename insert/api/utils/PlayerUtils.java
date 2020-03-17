@@ -1,4 +1,4 @@
-package api;
+package api.utils;
 
 import org.schema.game.common.data.player.PlayerState;
 

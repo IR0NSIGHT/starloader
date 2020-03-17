@@ -8,7 +8,24 @@ import java.io.IOException;
 
 public class InstallerFrame extends JFrame {
     public static void main(String[] args) {
-        new InstallerFrame();
+        if(args.length == 0) {
+            new InstallerFrame();
+        }else{
+            if(args[0].equals("-jar")){
+                File jar = new File(args[1]);
+                if(jar.exists()){
+                    try {
+                        Installer.install(jar);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    System.out.println("Jar " + jar.getAbsolutePath() + " does not exist");
+                }
+            }else{
+                System.out.println("starloader -jar <jarfile> | no arguments for GUI");
+            }
+        }
     }
 
     public JTextArea makeText(Color c, int y, String text) {

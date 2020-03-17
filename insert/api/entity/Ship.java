@@ -1,11 +1,14 @@
 package api.entity;
 
+import org.schema.game.common.controller.SegmentController;
+
 public class Ship extends Entity {
 
     private EntityAI entityAI;
     private float maxTurn;
     private float baseTurn;
     private boolean turret;
+    private org.schema.game.common.controller.Ship internalShip;
 
     public Ship() {
 
@@ -46,6 +49,16 @@ public class Ship extends Entity {
 
     public void setTurret(boolean turret) {
         this.turret = turret;
+    }
+
+    public Fleet getFleet(){
+        return Fleet.fromShip(this);
+    }
+    //temporary
+    public static Ship fromSMShip(org.schema.game.common.controller.Ship controller){
+        Ship ship = new Ship();
+        ship.internalShip = controller;
+        return ship;
     }
 
 }

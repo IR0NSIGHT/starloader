@@ -1,14 +1,12 @@
 package api.main;
 
-import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.controller.GameClientController;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.controller.Ship;
+import org.schema.game.common.data.fleet.Fleet;
 import org.schema.game.common.data.player.ControllerStateUnit;
 import org.schema.game.common.data.player.PlayerState;
-import org.schema.game.server.data.GameServerState;
-import org.schema.schine.network.server.ServerMessage;
 
 import java.util.Collection;
 import java.util.Set;
@@ -55,5 +53,8 @@ public class GameClient {
         }else{
             return null;
         }
+    }
+    public static Collection<Fleet> getAvailableFleets(){
+        return getClientState().getFleetManager().getAvailableFleetsClient();
     }
 }
