@@ -59,6 +59,9 @@ public class Fleet {
     public void mine(int x, int y, int z){
         getServerFleetManager().executeCommand(new FleetCommand(FleetCommandTypes.MOVE_FLEET, internalFleet, new Vector3i(x,y,z)));
     }
+    public void delete(){
+        internalFleet.removeFleet(true);
+    }
 
     //Trying to avoid these kind of Object arrays as parameters that schema has all over the place
     //Client commands:

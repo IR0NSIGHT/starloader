@@ -5,9 +5,10 @@ import org.schema.game.common.controller.Ship;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
 
+import javax.vecmath.Vector3f;
 import java.util.Map;
 
-public class Player extends Entity {
+public class Player {
 
     private PlayerState playerState = new PlayerState(GameClient.getClientState());
 
@@ -39,6 +40,8 @@ public class Player extends Entity {
     public void setName(String name) {
         getPlayerState().setName(name);
     }
+
+
 /*
     public Inventory getInventory() {
         org.schema.game.common.data.player.inventory.Inventory inventoryState = Inventory.getPlayerStateInventory(getPlayerState());

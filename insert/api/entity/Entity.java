@@ -4,10 +4,15 @@ import api.faction.Faction;
 import api.systems.Reactor;
 import api.systems.Shield;
 import api.universe.Universe;
+import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.elements.effectblock.EffectAddOn;
+import org.schema.schine.graphicsengine.core.GlUtil;
+
+import javax.vecmath.Vector3f;
 import java.util.List;
 
 public class Entity {
-
+    public SegmentController internalShip;
     private List<Ship> dockedEntities;
     private double speed;
     private double maxSpeed;
@@ -21,8 +26,8 @@ public class Entity {
     private Universe universe;
     private Fleet fleet;
 
-    public Entity() {
-
+    public Entity(SegmentController controller) {
+        internalShip = controller;
     }
 
     public Fleet getFleet() {
@@ -112,5 +117,19 @@ public class Entity {
 
     public void setShields(List<Shield> shields) {
         this.shields = shields;
+    }
+
+    public Vector3f getDirection(){
+        return GlUtil.getForwardVector(new Vector3f(), internalShip.getWorldTransform());
+    }
+    public Vector3f getVelocity(){
+        return internalShip.getPhysicsObject().getLinearVelocity(new Vector3f());
+    }
+
+    public void setVelocity(Vector3f direction) {
+        internalShip.getPhysicsObject().setLinearVelocity(direction);
+    }
+    public void playEffect(byte value){
+        internalShip.executeGraphicalEffectServer(value);
     }
 }

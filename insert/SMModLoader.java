@@ -7,7 +7,9 @@ import api.DebugFile;
 import api.ModPlayground;
 import api.mod.StarLoader;
 import api.mod.StarMod;
+import org.schema.game.client.view.gui.inventory.InventorySlotOverlayElement;
 import org.schema.game.common.Starter;
+import org.schema.game.common.data.player.PlayerState;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +36,7 @@ public class SMModLoader {
     }
 
     public static void main(String[] args) {
-        JOptionPane.showMessageDialog(null, "you have started starmade, press OK to claim your reward");
+        //JOptionPane.showMessageDialog(null, "you have started starmade, press OK to claim your reward");
         DebugFile.clear();
         DebugFile.log("Starting starloader...");
         if (Arrays.asList(args).contains("-nomods")) {
