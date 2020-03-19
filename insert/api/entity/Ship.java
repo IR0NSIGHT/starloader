@@ -14,9 +14,8 @@ public class Ship extends Entity {
     }
 
 
-    private org.schema.game.common.controller.Ship getSMShip(Ship ship) {
-        //ToDo:Figure out how to get a list of all entities on server and have this convert api ship entity to game ship entity
-        return null;
+    private org.schema.game.common.controller.Ship getSMShip() {
+        return internalShip;
     }
 
     public EntityAI getAI() {
