@@ -11,6 +11,7 @@ import org.schema.game.common.controller.SendableSegmentController;
 import org.schema.game.common.controller.elements.ManagerContainer;
 import org.schema.game.common.controller.elements.RecharchableActivatableDurationSingleModule;
 import org.schema.game.common.controller.elements.ShipManagerContainer;
+import org.schema.game.common.controller.elements.jumpprohibiter.InterdictionAddOn;
 import org.schema.game.common.controller.elements.power.reactor.PowerConsumer.PowerConsumerCategory;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.BlockEffect;
@@ -137,6 +138,7 @@ public class EffectAddOn extends RecharchableActivatableDurationSingleModule {
     }
 
     public void startEffect() {
+        //InterdictionAddOn
         SendableSegmentController var1;
         if (!(var1 = (SendableSegmentController)this.segmentController).getBlockEffectManager().hasEffect(this.type)) {
             BlockEffect var2 = this.type.effectFactory.getInstance().getInstanceFromNT(var1);

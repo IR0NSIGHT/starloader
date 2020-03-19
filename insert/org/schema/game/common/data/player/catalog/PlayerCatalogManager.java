@@ -78,9 +78,9 @@ public class PlayerCatalogManager extends Observable implements Observer {
                     var6 = true;
                 }
             }
-            if (var6) {
+            //if (var6) {
                 this.availableCatalog.add(var5);
-            }
+            //}
 
             if (var7) {
                 this.getPersonalCatalog().add(var5);

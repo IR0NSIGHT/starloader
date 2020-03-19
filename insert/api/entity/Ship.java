@@ -59,4 +59,7 @@ public class Ship extends Entity {
         return Fleet.fromShip(this);
     }
 
+    public Player getPlayerControl(){
+        return new Player(internalShip.getAttachedPlayers().get(0));
+    }
 }

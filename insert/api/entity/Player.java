@@ -1,6 +1,8 @@
 package api.entity;
 
 import api.main.GameClient;
+import api.server.Server;
+import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.Ship;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
@@ -10,12 +12,12 @@ import java.util.Map;
 
 public class Player {
 
-    private PlayerState playerState = new PlayerState(GameClient.getClientState());
+    private PlayerState playerState;
 
     private Entity currentEntity;
 
-    public Player() {
-
+    public Player(PlayerState state) {
+        playerState = state;
     }
 
     public Entity getCurrentEntity() {
@@ -41,6 +43,12 @@ public class Player {
         getPlayerState().setName(name);
     }
 
+    public Vector3i getSector(){
+        return getPlayerState().getCurrentSector();
+    }
+    public void sendServerMessage(String message){
+        Server.sendMessage(this.getPlayerState(), message);
+    }
 
 /*
     public Inventory getInventory() {
@@ -55,8 +63,7 @@ public class Player {
         return inventory;
     }
 */
-    private PlayerState getPlayerState() {
-        this.playerState = getPlayerStateFromName(this.getName());
+    public PlayerState getPlayerState() {
         return this.playerState;
     }
 
