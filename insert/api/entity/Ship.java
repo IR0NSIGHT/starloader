@@ -1,6 +1,9 @@
 package api.entity;
 
 import org.schema.game.common.controller.SegmentController;
+import org.schema.schine.graphicsengine.core.GlUtil;
+
+import javax.vecmath.Vector3f;
 
 public class Ship extends Entity {
 
@@ -10,9 +13,10 @@ public class Ship extends Entity {
     private boolean turret;
     private org.schema.game.common.controller.Ship internalShip;
 
-    public Ship() {
-
+    public Ship(org.schema.game.common.controller.Ship controller) {
+        super(controller);
     }
+
 
     private org.schema.game.common.controller.Ship getSMShip(Ship ship) {
         //ToDo:Figure out how to get a list of all entities on server and have this convert api ship entity to game ship entity
@@ -53,12 +57,6 @@ public class Ship extends Entity {
 
     public Fleet getFleet(){
         return Fleet.fromShip(this);
-    }
-    //temporary
-    public static Ship fromSMShip(org.schema.game.common.controller.Ship controller){
-        Ship ship = new Ship();
-        ship.internalShip = controller;
-        return ship;
     }
 
 }
