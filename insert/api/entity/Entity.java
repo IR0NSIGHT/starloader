@@ -5,7 +5,6 @@ import api.systems.Reactor;
 import api.systems.Shield;
 import api.universe.Universe;
 import org.schema.game.common.controller.SegmentController;
-import org.schema.game.common.controller.elements.effectblock.EffectAddOn;
 import org.schema.schine.graphicsengine.core.GlUtil;
 
 import javax.vecmath.Vector3f;
@@ -24,20 +23,10 @@ public class Entity {
     private String name;
     private Faction faction;
     private Universe universe;
-    private Fleet fleet;
 
     public Entity(SegmentController controller) {
         internalShip = controller;
     }
-
-    public Fleet getFleet() {
-        return fleet;
-    }
-
-    public void setFleet(Fleet fleet) {
-        this.fleet = fleet;
-    }
-
 
     public Universe getUniverse() {
         return universe;
