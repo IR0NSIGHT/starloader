@@ -1,16 +1,12 @@
 package api.entity;
 
-import org.schema.game.common.controller.SegmentController;
-import org.schema.schine.graphicsengine.core.GlUtil;
-
-import javax.vecmath.Vector3f;
-
 public class Ship extends Entity {
 
     private EntityAI entityAI;
     private float maxTurn;
     private float baseTurn;
     private boolean turret;
+    private Fleet fleet;
     private org.schema.game.common.controller.Ship internalShip;
 
     public Ship(org.schema.game.common.controller.Ship controller) {
@@ -55,8 +51,12 @@ public class Ship extends Entity {
         this.turret = turret;
     }
 
-    public Fleet getFleet(){
-        return Fleet.fromShip(this);
+    public Fleet getFleet() {
+        return fleet;
+    }
+
+    public void setFleet(Fleet fleet) {
+        this.fleet = fleet;
     }
 
     public Player getPlayerControl(){

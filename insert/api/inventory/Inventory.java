@@ -1,29 +1,33 @@
 package api.inventory;
 
 import api.element.Element;
-import org.schema.game.common.data.player.PlayerState;
-import java.util.ArrayList;
+import java.util.Map;
 
 public class Inventory {
 
-    private ArrayList<Element> contents;
+    private Map<Element, Integer> contents;
     private boolean locked = false;
     private double storageCapacity;
     private int cargoBlocks;
+    private InventoryType inventoryType;
 
-    public Inventory() {
-
+    public Inventory(InventoryType inventoryType) {
+        this.inventoryType = inventoryType;
     }
 
-    public void addElement(Element element) {
-        this.contents.add(element);
+    public void addElement(Element element, int count) {
+        this.contents.put(element, count);
     }
 
-    public ArrayList<Element> getContents() {
+    public Map<Element, Integer> getContents() {
         return contents;
     }
 
-    public static org.schema.game.common.data.player.inventory.Inventory getPlayerStateInventory(PlayerState playerState) {
-        return playerState.getInventory();
+    public void setContents(Map<Element, Integer> contents) {
+        this.contents = contents;
+    }
+
+    public InventoryType getInventoryType() {
+        return inventoryType;
     }
 }
