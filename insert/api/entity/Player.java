@@ -1,7 +1,6 @@
 package api.entity;
 
 import api.main.GameClient;
-import org.schema.game.common.controller.Ship;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
 
