@@ -6,12 +6,11 @@ import api.systems.Shield;
 import api.universe.Universe;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.schine.graphicsengine.core.GlUtil;
-
 import javax.vecmath.Vector3f;
 import java.util.List;
 
 public class Entity {
-    public SegmentController internalShip;
+    public SegmentController internalEntity;
     private List<Ship> dockedEntities;
     private double speed;
     private double maxSpeed;
@@ -23,9 +22,10 @@ public class Entity {
     private String name;
     private Faction faction;
     private Universe universe;
+    private EntityType entityType;
 
     public Entity(SegmentController controller) {
-        internalShip = controller;
+        internalEntity = controller;
     }
 
     public Universe getUniverse() {
@@ -109,16 +109,29 @@ public class Entity {
     }
 
     public Vector3f getDirection(){
-        return GlUtil.getForwardVector(new Vector3f(), internalShip.getWorldTransform());
+        return GlUtil.getForwardVector(new Vector3f(), internalEntity.getWorldTransform());
     }
+
     public Vector3f getVelocity(){
-        return internalShip.getPhysicsObject().getLinearVelocity(new Vector3f());
+        return internalEntity.getPhysicsObject().getLinearVelocity(new Vector3f());
     }
 
     public void setVelocity(Vector3f direction) {
-        internalShip.getPhysicsObject().setLinearVelocity(direction);
+        if(getEntityType() != EntityType.STATION && getEntityType() != EntityType.SHOP && getEntityType() != EntityType.PLANETCORE) {
+            //Stations, Shops, and Planet Cores shouldn't have velocity
+            internalEntity.getPhysicsObject().setLinearVelocity(direction);
+        }
     }
+
     public void playEffect(byte value){
-        internalShip.executeGraphicalEffectServer(value);
+        internalEntity.executeGraphicalEffectServer(value);
+    }
+
+    public EntityType getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
     }
 }

@@ -1,16 +1,12 @@
 package api.entity;
 
-import api.main.GameClient;
 import api.server.Server;
 import org.schema.common.util.linAlg.Vector3i;
-import org.schema.game.common.controller.Ship;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
-
-import javax.vecmath.Vector3f;
 import java.util.Map;
 
-public class Player {
+public class Player{
 
     private PlayerState playerState;
 
