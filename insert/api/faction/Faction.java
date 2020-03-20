@@ -21,6 +21,11 @@ public class Faction {
     private Station homebase;
     private List<Station> claimStations;
     private System ownedSystems;
+    private org.schema.game.common.data.player.faction.Faction internalFaction;
+
+    public Faction(org.schema.game.common.data.player.faction.Faction internalFaction){
+        this.internalFaction = internalFaction;
+    }
 
     public String getName() {
         return name;

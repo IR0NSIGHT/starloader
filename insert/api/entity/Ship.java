@@ -1,5 +1,7 @@
 package api.entity;
 
+import api.faction.Faction;
+
 public class Ship extends Entity {
 
     private EntityAI entityAI;
@@ -61,4 +63,5 @@ public class Ship extends Entity {
     public Player getPlayerControl(){
         return new Player(internalShip.getAttachedPlayers().get(0));
     }
+
 }

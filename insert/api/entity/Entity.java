@@ -41,7 +41,10 @@ public class Entity {
     }
 
     public Faction getFaction() {
-        return faction;
+        return new Faction(internalShip.getFaction());
+    }
+    public void setFactionId(int id){
+        internalShip.setFactionId(id);
     }
 
     public void setFaction(Faction faction) {
