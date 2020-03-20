@@ -2,33 +2,15 @@ package api.universe;
 
 import api.DebugFile;
 import api.main.GameServer;
-import api.mod.StarLoader;
 import api.server.Server;
 import api.utils.StarRunnable;
 import api.utils.callbacks.ShipSpawnCallback;
-import com.bulletphysics.linearmath.Transform;
 import org.schema.common.util.linAlg.Vector3i;
-import org.schema.game.client.view.gui.catalog.newcatalog.CatalogScrollableListNew;
-import org.schema.game.common.controller.SegmentController;
-import org.schema.game.common.controller.SegmentControllerHpController;
 import org.schema.game.common.controller.Ship;
-import org.schema.game.common.data.player.catalog.CatalogManager;
 import org.schema.game.common.data.world.Sector;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
-import org.schema.game.server.controller.BluePrintController;
-import org.schema.game.server.controller.EntityAlreadyExistsException;
-import org.schema.game.server.controller.EntityNotFountException;
-import org.schema.game.server.controller.GameServerController;
-import org.schema.game.server.data.GameServerState;
-import org.schema.game.server.data.ServerConfig;
-import org.schema.game.server.data.admin.AdminCommands;
-import org.schema.game.server.data.blueprint.ChildStats;
-import org.schema.game.server.data.blueprint.SegmentControllerOutline;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
 
 public class Universe {
 
@@ -110,7 +92,9 @@ public class Universe {
         }
         return r;
     }
-    public ArrayList<Ship> getShips(Vector3i sector){
+
+    public ArrayList<Ship> getShips(Vector3i sector) {
+        //Todo: Replace this with a getShips method inside the api Sector class itself
         ArrayList<Ship> r = new ArrayList<>();
         for(SimpleTransformableSendableObject<?> entity : getSector(sector).getEntities()){
             if(entity instanceof Ship){

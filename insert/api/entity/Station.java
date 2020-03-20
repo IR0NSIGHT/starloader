@@ -6,5 +6,7 @@ public class Station extends Entity {
 
     public Station(SegmentController controller) {
         super(controller);
+        this.setEntityType(EntityType.STATION);
     }
+
 }

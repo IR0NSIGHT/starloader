@@ -13,8 +13,8 @@ public class Ship extends Entity {
 
     public Ship(org.schema.game.common.controller.Ship controller) {
         super(controller);
+        this.setEntityType(EntityType.SHIP);
     }
-
 
     private org.schema.game.common.controller.Ship getSMShip() {
         return internalShip;
