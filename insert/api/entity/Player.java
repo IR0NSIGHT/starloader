@@ -1,5 +1,7 @@
 package api.entity;
 
+import api.inventory.Inventory;
+import api.inventory.InventoryType;
 import api.main.GameClient;
 import api.server.Server;
 import org.schema.common.util.linAlg.Vector3i;
@@ -48,6 +50,9 @@ public class Player {
     }
     public void sendServerMessage(String message){
         Server.sendMessage(this.getPlayerState(), message);
+    }
+    public Inventory getInventory(){
+        return new Inventory(playerState.getInventory(), InventoryType.PLAYER_INVENTORY, this);
     }
 
 /*
