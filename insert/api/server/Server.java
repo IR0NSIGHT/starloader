@@ -1,6 +1,7 @@
 package api.server;
 
 import api.DebugFile;
+import api.entity.Player;
 import api.main.GameServer;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import org.schema.common.util.StringTools;
@@ -21,6 +22,7 @@ import org.schema.schine.network.server.ServerMessage;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -65,14 +67,21 @@ public class Server {
         }
         return null;
     }
-    public static Collection<PlayerState> getOnlinePlayers(){
-        return getServerState().getPlayerStatesByName().values();
+    public static ArrayList<Player> getOnlinePlayers(){
+        ArrayList<Player> ret = new ArrayList<>();
+        for (PlayerState pState : getServerState().getPlayerStatesByName().values()) {
+            ret.add(new Player(pState));
+        }
+        return ret;
     }
     public static ObjectCollection<RegisteredClientOnServer> getClients(){
         return getServerState().getClients().values();
     }
     public static GameServerState getServerState(){
         return GameServerState.instance;
+    }
+    public static boolean isInitialized(){
+        return GameServer.getServerState() != null;
     }
     public static void sendMessage(PlayerState player, String message){
         try {

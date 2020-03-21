@@ -1,5 +1,7 @@
 package api.utils;
 
+import api.DebugFile;
+
 import java.util.ArrayList;
 
 public abstract class StarRunnable {
@@ -48,7 +50,12 @@ public abstract class StarRunnable {
     public static void tickAll(){
         ArrayList<StarRunnable> list = new ArrayList<>();
         for(StarRunnable runnable : runnables){
-            runnable.tick();
+            try {
+                runnable.tick();
+            }catch (Exception e){
+                DebugFile.log("A StarRunnable threw an error: ");
+                DebugFile.logError(e, null);
+            }
             if(runnable.queuedForDelete){
                 list.add(runnable);
             }

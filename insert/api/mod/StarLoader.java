@@ -56,7 +56,12 @@ public class StarLoader {
     public static void fireEvent(Class<? extends Event> clazz, Event event){
         int id = getIdFromEvent(clazz);
         for (Listener listener : getListeners(id)) {
-            listener.onEvent(event);
+            try {
+                listener.onEvent(event);
+            }catch (Exception e){
+                DebugFile.log("Exception during event: " + clazz.getName());
+
+            }
         }
     }
 }

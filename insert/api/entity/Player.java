@@ -46,7 +46,8 @@ public class Player {
     }
 
     public Vector3i getSector(){
-        return getPlayerState().getCurrentSector();
+        //Duplicate vector so nothing weird happens
+        return new Vector3i(getPlayerState().getCurrentSector());
     }
     public void sendServerMessage(String message){
         Server.sendMessage(this.getPlayerState(), message);
@@ -54,7 +55,10 @@ public class Player {
     public Inventory getInventory(){
         return new Inventory(playerState.getInventory(), InventoryType.PLAYER_INVENTORY, this);
     }
-
+    public void sendMail(String from, String to, String title, String contents){
+        playerState.getClientChannel().getPlayerMessageController().serverSend(from, to, title,
+                contents);
+    }
 /*
     public Inventory getInventory() {
         org.schema.game.common.data.player.inventory.Inventory inventoryState = Inventory.getPlayerStateInventory(getPlayerState());
