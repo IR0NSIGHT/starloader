@@ -1,20 +1,35 @@
 # StarLoader
+## What is StarLoader?
+StarLoader is a mod API, as well as a program to replace starmades .java files with your own.
 
-StarMade Modloader
+## I want to make a mod
+See [Api Documentation]
 
-### Notes
-Make a copy of your starmade.jar and add that to IntelliJ dependencies, otherwise the modloader sometimes cant overwrite it.
+## Installation (IntelliJ)
+ - Clone into a new project
+ - Add StarMade.jar & everything in the StarMade/libs/ folder into your dependencies
+ - Mark insert/ and src/ as source directories
+ - Set java compiler to target java 7, as that is what is bundled with the starmade starter
+ - Usual procedure to build a jar file, set InstallerFrame as the main class.
+ - Build artifacts and run the jar file, do not try to run it from intellij.
+ - Done!
+ 
+## Installation (Eclipse)
+[WIP]
 
-### How to download for developers:
-Clone and compile, the libraries needed are:
- - StarMade.jar
- - Everything inside of the lib/ folder
+## ModPlayground.java
+This file allows you to play around with the event system and modding in general. Take a look around
 
-### Installation for users:
-* Download (todo: add link)
-* Run the jar
-* Select your starmade.jar
-* Install
+It is located in insert/api
 
-### Thanks
-Mega's SMModLoader for some code that I copied over
+## Replacing classes
+ - Everything in insert/api and insert/org replace the existing starmade classes.
+ - If you want to make your own, decompile the file you want to add stuff to, then copy its contents to the correct folder.
+ - You can tell if you got the right folder because the 'package org.schema.whatever' will NOT have an error
+ - Once enough functionality is in place, mod makers shouldn't have to use this.
+
+## I have a bug / cant get it to install!
+Ask in the starmade discords modding channel, or me directly: JakeV#5670.
+
+## Thanks
+Mega's SMModLoader for some code for the installer,
