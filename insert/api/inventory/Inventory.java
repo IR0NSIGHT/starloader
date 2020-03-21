@@ -1,19 +1,11 @@
 package api.inventory;
 
-import api.DebugFile;
-import api.element.Element;
 import api.entity.Player;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.player.PlayerState;
 
-import java.util.Map;
-
 public class Inventory {
 
-    //private Map<Element, Integer> contents;
-    //private boolean locked = false;
-    //private double storageCapacity;
-    //private int cargoBlocks;
     private org.schema.game.common.data.player.inventory.Inventory internalInventory;
     private InventoryType inventoryType;
     private Player inventoryHolder;
@@ -29,6 +21,7 @@ public class Inventory {
         this.internalInventory = internalInventory;
         this.inventoryType = inventoryType;
     }
+
     public void addItem(ItemStack stack){
         PlayerState state = inventoryHolder.getPlayerState();
         //what actualy adds the item to the inventory
