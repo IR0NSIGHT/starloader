@@ -6,11 +6,63 @@ public class StarMod {
     public String modDescription;
     public String modVersion;
     public String modSMVersion;
+
+    /**
+     * Where mods are enabled before/during world load
+     */
     public void onEnable(){
         //register();
     }
-    public void register(){
-        StarLoader.starMods.add(this);
+
+    /**
+     * Mods that do stuff directly when the game starts
+     * Currently it does it even if the mod is not enabled
+     */
+    public void onGameStart(){
+
     }
 
+    //Builder style setters
+    public StarMod setModName(String modName) {
+        this.modName = modName;
+        return this;
+    }
+
+    public StarMod setModAuthor(String modAuthor) {
+        this.modAuthor = modAuthor;
+        return this;
+    }
+
+    public StarMod setModDescription(String modDescription) {
+        this.modDescription = modDescription;
+        return this;
+    }
+
+    public StarMod setModVersion(String modVersion) {
+        this.modVersion = modVersion;
+        return this;
+    }
+
+    public StarMod setModSMVersion(String modSMVersion) {
+        this.modSMVersion = modSMVersion;
+        return this;
+    }
+    public boolean isValid(){
+        return modName != null && modVersion != null;
+    }
+
+    @Override
+    public String toString() {
+        return "StarMod{" +
+                "modName='" + modName + '\'' +
+                ", modAuthor='" + modAuthor + '\'' +
+                ", modDescription='" + modDescription + '\'' +
+                ", modVersion='" + modVersion + '\'' +
+                ", modSMVersion='" + modSMVersion + '\'' +
+                '}';
+    }
+    //Gets the info that will be sent to the client
+    public ModInfo getInfo(){
+        return new ModInfo(modName, modVersion);
+    }
 }
