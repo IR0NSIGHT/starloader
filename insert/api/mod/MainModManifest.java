@@ -18,13 +18,16 @@ public class MainModManifest {
     }
 
     public static void main(String[] args) {
-        getManifest();
+        MainModManifest manifest = getManifest();
+        for (ModInfo modInfo : manifest.allModInfo) {
+            System.out.println(modInfo.toString());
+        }
     }
     private ArrayList<ModInfo> allModInfo = new ArrayList<>();
     private MainModManifest(){
         URL url = null;
         try {
-            url = new URL("https://pastebin.com/raw/7rjKV1ZG");
+            url = new URL("https://pastebin.com/raw/f1X7ZK4V");
             Scanner s = new Scanner(url.openStream());
             while (s.hasNext()){
                 String modLine = s.next();
@@ -39,8 +42,12 @@ public class MainModManifest {
         }
     }
     public String getURL(ModInfo info){
+        DebugFile.info("Getting URL for: " + info.serialize());
         for (ModInfo mod : allModInfo) {
-            if(mod.toString().equals(info.toString())){
+            DebugFile.info("Trying against: " + mod.serialize());
+            //.serialize() is toString but only with name and version
+            //So we compare a mods name and version to the manifest to get its download url
+            if(mod.serialize().equals(info.serialize())){
                 return mod.downloadURL;
             }
         }

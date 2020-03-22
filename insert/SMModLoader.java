@@ -62,6 +62,7 @@ public class SMModLoader {
         DebugFile.log("Loading default mod...");
         ModPlayground defaultMod = new ModPlayground();
         StarLoader.starMods.add(defaultMod);
+        defaultMod.onGameStart();
         defaultMod.onEnable();
 
         DebugFile.log("Enabling Mods...");

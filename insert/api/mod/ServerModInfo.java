@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class ServerModInfo {
     private static HashMap<String, ArrayList<ModInfo>> serverModInfo = new HashMap<>();
     public static void registerModInfo(String server, ModInfo info){
-        DebugFile.log("[Client] Registering info: " + info.toString());
+        DebugFile.log("[Client] Registering server mod info: " + info.toString() + ", for: " + server);
         ArrayList<ModInfo> infos = serverModInfo.get(server);
         if(infos == null){
             ArrayList<ModInfo> emptyModList = new ArrayList<>();
