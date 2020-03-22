@@ -28,6 +28,12 @@ public class BlockConfigReader {
         //Todo:Handle any errors
     }
 
+    public Block getBlockFromID(int ID) {
+        //Todo:Create a block objuct from data in config
+        Block block = new Block(ID, );
+        return block;
+    }
+
     /*
     public void registerConfigBlocks() {
         document.getDocumentElement().normalize();
