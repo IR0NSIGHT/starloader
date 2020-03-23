@@ -2,21 +2,18 @@ package api.entity;
 
 import api.inventory.Inventory;
 import api.inventory.InventoryType;
-import api.main.GameClient;
 import api.server.Server;
 import org.schema.common.util.linAlg.Vector3i;
-import org.schema.game.common.controller.Ship;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
-
-import javax.vecmath.Vector3f;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Player {
 
     private PlayerState playerState;
-
     private Entity currentEntity;
+    private ArrayList<Fleet> fleets;
 
     public Player(PlayerState state) {
         playerState = state;
@@ -27,7 +24,17 @@ public class Player {
         return currentEntity;
     }
 
+    public ArrayList<Fleet> getFleets() {
+        return fleets;
+    }
 
+    public void addFleet(Fleet fleet) {
+        fleets.add(fleet);
+    }
+
+    public void removeFleet(Fleet fleet) {
+        fleets.add(fleet);
+    }
 
     public int getCredits() {
         return getPlayerState().getCredits();

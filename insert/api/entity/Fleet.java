@@ -42,8 +42,8 @@ public class Fleet {
     public void setFleetLeader(Ship fleetLeader) {
         this.fleetLeader = fleetLeader;
     }
-    public Fleet(String name, String owner){
-        internalFleet = createNewFleet(name, owner);
+    public Fleet(String name, Player owner){
+        internalFleet = createNewFleet(name, owner.getName());
     }
 
     //Server Commands:
