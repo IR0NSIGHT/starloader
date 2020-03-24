@@ -12,8 +12,8 @@ public class FileAdder {
         //Just need a class to get dir
         FileAdder base = new FileAdder();
 
-        InputStream in = base.getClass().getResourceAsStream("/SMModLoader.class");
-        filesToAdd.add(new NamedInputStream(in, "SMModLoader.class"));
+        InputStream in = base.getClass().getResourceAsStream("/api/SMModLoader.class");
+        filesToAdd.add(new NamedInputStream(in, "api/SMModLoader.class"));
         try {
             listPath();
         } catch (IOException e) {

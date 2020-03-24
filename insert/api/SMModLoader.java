@@ -6,6 +6,7 @@ import api.mod.StarLoader;
 import api.mod.StarMod;
 import org.schema.game.client.view.gui.inventory.InventorySlotOverlayElement;
 import org.schema.game.common.Starter;
+import org.schema.game.common.controller.elements.scanner.ScanAddOn;
 import org.schema.game.common.data.player.PlayerState;
 
 import java.io.File;
