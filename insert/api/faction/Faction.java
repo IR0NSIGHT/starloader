@@ -20,7 +20,7 @@ public class Faction {
     private List<NewsPost> newsPosts;
     private Station homebase;
     private List<Station> claimStations;
-    private System ownedSystems;
+    private List<System> ownedSystems;
     private org.schema.game.common.data.player.faction.Faction internalFaction;
 
     public Faction(org.schema.game.common.data.player.faction.Faction internalFaction){
@@ -131,11 +131,11 @@ public class Faction {
         this.claimStations = claimStations;
     }
 
-    public System getOwnedSystems() {
+    public List<System> getOwnedSystems() {
         return ownedSystems;
     }
 
-    public void setOwnedSystems(System ownedSystems) {
+    public void setOwnedSystems(List<System> ownedSystems) {
         this.ownedSystems = ownedSystems;
     }
 }
