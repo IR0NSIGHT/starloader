@@ -137,4 +137,8 @@ public class Entity {
     public void setEntityType(EntityType entityType) {
         this.entityType = entityType;
     }
+
+    public boolean isOnServer(){
+        return internalEntity.isOnServer();
+    }
 }

@@ -158,9 +158,9 @@ public class ScanAddOn extends RecharchableActivatableDurationSingleModule {
             AbstractOwnerState ownerState = this.getSegmentController().getOwnerState();
             EntityScanEvent event = new EntityScanEvent(this, success, ownerState, this.getSegmentController());
             StarLoader.fireEvent(EntityScanEvent.class, event);
-            if(ownerState instanceof PlayerState) {
-                GameServer.getServerState().scanOnServer(null, (PlayerState) ownerState);
-            }
+            //if(ownerState instanceof PlayerState) {
+                //GameServer.getServerState().scanOnServer(null, (PlayerState) ownerState);
+            //}
         }
         return success;
     }
