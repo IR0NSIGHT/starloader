@@ -26,7 +26,7 @@ public class Installer {
             resources.add(s);
             System.out.println("Added " + s.getName());
         }
-        //resources.add(new File(classFileFolder + "/SMModLoader.class"));
+        //resources.add(new File(classFileFolder + "/api.SMModLoader.class"));
         writeJar(inputS, newJar, resources);
 
 
@@ -49,7 +49,7 @@ public class Installer {
 
     static void writeJar(JarInputStream in, JarOutputStream out, List<NamedInputStream> insert) throws IOException {
         if (in.getManifest() != null) {
-            in.getManifest().getMainAttributes().putValue(Attributes.Name.MAIN_CLASS.toString(), "SMModLoader");
+            in.getManifest().getMainAttributes().putValue(Attributes.Name.MAIN_CLASS.toString(), "api.SMModLoader");
             ZipEntry me = new ZipEntry(JarFile.MANIFEST_NAME);
             out.putNextEntry(me);
             in.getManifest().write(out);

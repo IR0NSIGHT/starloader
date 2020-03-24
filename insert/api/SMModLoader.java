@@ -1,7 +1,4 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+package api;
 
 import api.DebugFile;
 import api.ModPlayground;
@@ -30,7 +27,6 @@ public class SMModLoader {
         if (!modFolder.exists()) {
             modFolder.mkdir();
         }
-
     }
 
     public SMModLoader() {
@@ -41,7 +37,7 @@ public class SMModLoader {
         Class<?> c = loader.loadClass(jf.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS));
         Object o = c.getConstructors()[0].newInstance();
         if (!(o instanceof StarMod)) {
-            DebugFile.log("Failed to load plugin! not instanceof StarMod! We'll invoke main anyway...");
+            DebugFile.err("Failed to load plugin! not instanceof StarMod.");
         } else {
             StarMod sMod = ((StarMod) o);
             DebugFile.log("Registering mod...");

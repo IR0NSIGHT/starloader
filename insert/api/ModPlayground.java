@@ -17,6 +17,7 @@ public class ModPlayground extends StarMod {
     @Override
     public void onGameStart() {
         setModName("DefaultMod").setModAuthor("Jake").setModDescription("test").setModVersion("1.0").setModSMVersion("0.202");
+        setModDescription("Default mod that is always loaded");
     }
 
     @Override

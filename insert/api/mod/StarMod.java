@@ -15,6 +15,13 @@ public class StarMod {
     }
 
     /**
+     * When a player leaves a server, mods are disabled
+     */
+    public void onDisable(){
+
+    }
+
+    /**
      * Mods that do stuff directly when the game starts
      * Currently it does it even if the mod is not enabled
      */

@@ -59,7 +59,7 @@ public class FileAdder {
     }
     public static void mkDefaults(){
         //Classes that are not in /api .... for some reason ...
-        registerFile("SMModLoader");
+        registerFile("api.SMModLoader");
 
         for (String cl : getAPIClasses("api")){
             //classes\api\listener\events\ChatReceiveListener.class turns into:

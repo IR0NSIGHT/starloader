@@ -1273,7 +1273,7 @@ public class Starter implements Observer {
         //INSERTED CODE
         String loginName = var0.host;
         DebugFile.log("Connecting to server: " + loginName);
-        boolean allUptoDate = ModStarter.preClientConnect(loginName);
+        boolean allUptoDate = ModStarter.preClientConnect(loginName, var3);
         ///
         if(allUptoDate) {
             System.err.println("Dispatch client thread");

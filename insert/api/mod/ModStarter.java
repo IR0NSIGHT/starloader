@@ -1,6 +1,7 @@
 package api.mod;
 
 import api.DebugFile;
+import api.SMModLoader;
 import org.apache.commons.io.FileUtils;
 import org.schema.schine.graphicsengine.core.GlUtil;
 
@@ -9,11 +10,13 @@ import javax.swing.*;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.jar.JarFile;
 
 public class ModStarter {
     public static void preServerStart(){
@@ -51,14 +54,15 @@ public class ModStarter {
         System.setProperty("https.protocols", "TLSv1.2");
         FileUtils.copyInputStreamToFile(openConnection.getInputStream(), new File(fileName));
     }
-    public static boolean preClientConnect(String serverHost){
+    public static boolean preClientConnect(String serverHost, Thread clientThread){
         //TODO only enable the ones that are enabled on the server, and the ones that are set to force enable
         DebugFile.log("Enabling mods...");
         ArrayList<ModInfo> serverMods = ServerModInfo.getServerInfo(serverHost);
         for (StarMod mod : StarLoader.starMods){
             System.err.println("[Client] >>> Found mod: " + mod.modName);
-            if(serverMods == null){
+            if(serverMods == null) {
                 DebugFile.log("Mod info not found for: " + serverHost + " This is likely because they direct connected");
+                mod.onEnable();
             }else {
                 DebugFile.log("Mod info WAS found");
                 for (ModInfo serverMod : serverMods) {
@@ -83,17 +87,22 @@ public class ModStarter {
                 sMod.fetchDownloadURL();
                 DebugFile.log("WE NEED TO DOWNLOAD: " + sMod.toString());
                 try {
-                    downloadFile(new URL(sMod.downloadURL), "mods/" + sMod.name + ".jar");
+                    String fileName = "mods/" + sMod.name + ".jar";
+                    downloadFile(new URL(sMod.downloadURL), fileName);
                     DebugFile.log("Successfully downloaded mod: " + sMod.name + ", version: " + sMod.version + ", from: " + sMod.downloadURL + ", into: " + sMod.name + ".jar");
+                    URL[] url = new URL[]{new URL(fileName)};
+                    SMModLoader.loadModFromJar(new URLClassLoader(url), new JarFile(fileName));
+
                 } catch (Exception e) {
-                    DebugFile.log("Failed to download: ");
+                    DebugFile.log("Failed to download, reason: ");
                     DebugFile.logError(e, null);
                     e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Failed to download mods... please send in starloader.log and log/starmade0.log");
                 }
             }
-            JOptionPane.showMessageDialog(null, "We are going to need to download some mods... fancy gui coming later");
-            DebugFile.log("We are going to download some mods, so dont start the client yet");
-            return false;
+            //JOptionPane.showMessageDialog(null, "We are going to need to download some mods... fancy gui coming later");
+            //DebugFile.log("We are going to download some mods, so dont start the client yet");
+            return true;
         }else{
             DebugFile.log("all good");
             return true;
