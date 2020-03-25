@@ -2,6 +2,7 @@ package api.mod;
 
 import api.DebugFile;
 import api.SMModLoader;
+import api.main.GameClient;
 import org.apache.commons.io.FileUtils;
 import org.schema.schine.graphicsengine.core.GlUtil;
 
@@ -25,6 +26,7 @@ public class ModStarter {
         for (StarMod mod : StarLoader.starMods){
             DebugFile.log("[Server] >>> Enabling: " + mod.modName);
             mod.onEnable();
+            mod.flagEnabled(true);
             DebugFile.log("[Server] <<< Enabled: " + mod.modName);
         }
     }
@@ -49,12 +51,21 @@ public class ModStarter {
         final URLConnection openConnection = url.openConnection();
         openConnection.setConnectTimeout(100000000);
         openConnection.setRequestProperty("User-Agent", "StarMade-Client");
+        //Fixes some errors with java 7 not downloading properly
         SSLContext ssl = SSLContext.getInstance("TLSv1.2");
         ssl.init(null, null, new SecureRandom());
         System.setProperty("https.protocols", "TLSv1.2");
+        //
         FileUtils.copyInputStreamToFile(openConnection.getInputStream(), new File(fileName));
     }
-    public static boolean preClientConnect(String serverHost, Thread clientThread){
+    public static boolean preClientConnect(String serverHost){
+        DebugFile.log("Disabling existing mods:");
+        for (StarMod mod : StarLoader.starMods){
+            if(mod.isEnabled()) {
+                mod.onDisable();
+                mod.flagEnabled(false);
+            }
+        }
         //TODO only enable the ones that are enabled on the server, and the ones that are set to force enable
         DebugFile.log("Enabling mods...");
         ArrayList<ModInfo> serverMods = ServerModInfo.getServerInfo(serverHost);
@@ -63,6 +74,7 @@ public class ModStarter {
             if(serverMods == null) {
                 DebugFile.log("Mod info not found for: " + serverHost + " This is likely because they direct connected");
                 mod.onEnable();
+                mod.flagEnabled(true);
             }else {
                 DebugFile.log("Mod info WAS found");
                 for (ModInfo serverMod : serverMods) {
@@ -72,6 +84,7 @@ public class ModStarter {
                         if (serverMod.version.equals(mod.modVersion)) {
                             serverMods.remove(serverMod);
                             mod.onEnable();
+                            mod.flagEnabled(true);
                             DebugFile.log("[Client] <<< Enabled: " + mod.modName);
                             break;
                         }
@@ -88,10 +101,16 @@ public class ModStarter {
                 DebugFile.log("WE NEED TO DOWNLOAD: " + sMod.toString());
                 try {
                     String fileName = "mods/" + sMod.name + ".jar";
+                    GameClient.setLoadString("Downloading mod: " + sMod.name);
                     downloadFile(new URL(sMod.downloadURL), fileName);
                     DebugFile.log("Successfully downloaded mod: " + sMod.name + ", version: " + sMod.version + ", from: " + sMod.downloadURL + ", into: " + sMod.name + ".jar");
-                    URL[] url = new URL[]{new URL(fileName)};
-                    SMModLoader.loadModFromJar(new URLClassLoader(url), new JarFile(fileName));
+                    //Get file, convert to URL
+                    URL[] url = new URL[]{new File(fileName).toURI().toURL()};
+                    GameClient.setLoadString("Done downloading, Loading mod: " + sMod.name);
+                    StarMod starMod = SMModLoader.loadModFromJar(new URLClassLoader(url), new JarFile(fileName));
+                    GameClient.setLoadString("Mod loaded, enabling mod...");
+                    starMod.onEnable();
+                    starMod.flagEnabled(true);
 
                 } catch (Exception e) {
                     DebugFile.log("Failed to download, reason: ");
@@ -110,6 +129,11 @@ public class ModStarter {
     }
     public static void postClientConnect(){
 
+    }
+    public static void onClientLeave(){
+        for (StarMod mod : StarLoader.starMods){
+            mod.onDisable();
+        }
     }
 
     public static void main(String[] args) {

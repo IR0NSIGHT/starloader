@@ -7,9 +7,13 @@ package org.schema.game.client.view.mainmenu;
 
 import javax.swing.*;
 
+import api.main.GameClient;
+import api.mod.EnabledModFile;
+import api.mod.ModInfo;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import org.schema.game.client.controller.GameMainMenuController;
+import org.schema.game.client.controller.MainMenu;
 import org.schema.game.client.controller.PlayerButtonTilesInput;
 import org.schema.game.client.view.mainmenu.gui.effectconfig.EffectConfigDialog;
 import org.schema.game.client.view.mainmenu.gui.effectconfig.GUIEffectStat;
@@ -22,6 +26,7 @@ import org.schema.game.common.starcalc.StarCalc;
 import org.schema.game.common.staremote.Staremote;
 import org.schema.schine.common.language.Lng;
 import org.schema.schine.common.language.editor.LanguageEditor;
+import org.schema.schine.graphicsengine.core.GLFrame;
 import org.schema.schine.graphicsengine.core.MouseEvent;
 import org.schema.schine.graphicsengine.forms.font.FontLibrary;
 import org.schema.schine.graphicsengine.forms.gui.GUIActivationCallback;
@@ -30,6 +35,10 @@ import org.schema.schine.graphicsengine.forms.gui.GUIElement;
 import org.schema.schine.graphicsengine.forms.gui.newgui.GUIHorizontalArea.HButtonColor;
 import org.schema.schine.graphicsengine.forms.gui.newgui.GUITilePane;
 import org.schema.schine.input.InputState;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class ToolsAndModsDialog extends PlayerButtonTilesInput implements MainMenuInputDialogInterface {
     private GUITilePane tiles;
@@ -227,15 +236,38 @@ public class ToolsAndModsDialog extends PlayerButtonTilesInput implements MainMe
                 return ToolsAndModsDialog.this.isActive();
             }
         });
+        final EnabledModFile modFile = EnabledModFile.getInstance();
         for (StarMod mod : StarLoader.starMods){
-            this.addTile("Mod: " + mod.modName, "Version: " + mod.modVersion + "\n" + mod.modDescription, HButtonColor.GREEN, new GUICallback() {
+            final ModInfo modInfo = mod.getInfo();
+            HButtonColor color = modFile.isClientEnabled(modInfo) ? HButtonColor.GREEN : HButtonColor.RED;
+            this.addTile("Mod: " + mod.modName, "Version: " + mod.modVersion + "\n" + mod.modDescription, color, new GUICallback() {
                 public boolean isOccluded() {
                     return !ToolsAndModsDialog.this.isActive();
                 }
 
                 public void callback(GUIElement var1, MouseEvent var2) {
                     if (var2.pressedLeftMouse()) {
-                        //ToolsAndModsDialog.this.deactivate();
+                        modFile.setClientEnabled(modInfo, !modFile.isClientEnabled(modInfo));
+                        ToolsAndModsDialog.this.deactivate();
+                        ToolsAndModsDialog.this.addToolsAndModsButtons();
+                        try {
+                            Field frame = GameMainMenuController.class.getDeclaredField("frame");
+                            frame.setAccessible(true);
+                            MainMenuFrame o = (MainMenuFrame) frame.get(GameMainMenuController.currentMainMenu);
+                            Field gui = MainMenuFrame.class.getDeclaredField("gui");
+                            gui.setAccessible(true);
+                            MainMenuGUI g = (MainMenuGUI) gui.get(o);
+                            Method m = MainMenuGUI.class.getDeclaredMethod("popupToolsAndModsDialog");
+                            m.setAccessible(true);
+                            m.invoke(g);
+
+                        } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
+
+                        //tiles.addButtonTile("", "", HButtonColor.BLUE, null, null);
+
+
                         //GUIEffectStat var3 = new GUIEffectStat(ToolsAndModsDialog.this.getState(), (String)null);
                         //(new EffectConfigDialog(ToolsAndModsDialog.this.getState(), var3)).activate();
                     }

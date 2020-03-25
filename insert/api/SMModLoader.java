@@ -33,12 +33,13 @@ public class SMModLoader {
     public SMModLoader() {
     }
 
-    public static void loadModFromJar(ClassLoader loader, JarFile jf) throws IOException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
+    public static StarMod loadModFromJar(ClassLoader loader, JarFile jf) throws IOException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
         DebugFile.log("Loading Mod: " + jf.getName());
         Class<?> c = loader.loadClass(jf.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS));
         Object o = c.getConstructors()[0].newInstance();
         if (!(o instanceof StarMod)) {
             DebugFile.err("Failed to load plugin! not instanceof StarMod.");
+            throw new IllegalArgumentException("Main class must be an instance of StarMod");
         } else {
             StarMod sMod = ((StarMod) o);
             DebugFile.log("Registering mod...");
@@ -49,6 +50,7 @@ public class SMModLoader {
             } else {
                 StarLoader.starMods.add(sMod);
             }
+            return sMod;
         }
     }
 
@@ -61,6 +63,7 @@ public class SMModLoader {
         StarLoader.starMods.add(defaultMod);
         defaultMod.onGameStart();
         defaultMod.onEnable();
+        defaultMod.flagEnabled(true);
 
         DebugFile.log("Enabling Mods...");
         File[] files = modFolder.listFiles();

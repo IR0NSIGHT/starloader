@@ -7,6 +7,7 @@ import org.schema.game.common.controller.Ship;
 import org.schema.game.common.data.fleet.Fleet;
 import org.schema.game.common.data.player.ControllerStateUnit;
 import org.schema.game.common.data.player.PlayerState;
+import org.schema.schine.graphicsengine.core.Controller;
 
 import java.util.Collection;
 import java.util.Set;
@@ -56,5 +57,8 @@ public class GameClient {
     }
     public static Collection<Fleet> getAvailableFleets(){
         return getClientState().getFleetManager().getAvailableFleetsClient();
+    }
+    public static void setLoadString(String s){
+        Controller.getResLoader().setLoadString(s);
     }
 }

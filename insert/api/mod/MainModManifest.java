@@ -27,7 +27,7 @@ public class MainModManifest {
     private MainModManifest(){
         URL url = null;
         try {
-            url = new URL("https://pastebin.com/raw/f1X7ZK4V");
+            url = new URL("https://pastebin.com/raw/0K56txqy");
             Scanner s = new Scanner(url.openStream());
             while (s.hasNext()){
                 String modLine = s.next();
