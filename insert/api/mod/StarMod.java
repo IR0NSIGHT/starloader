@@ -6,7 +6,13 @@ public class StarMod {
     public String modDescription;
     public String modVersion;
     public String modSMVersion;
-
+    private boolean isEnabled = false;
+    public boolean isEnabled(){
+        return isEnabled;
+    }
+    public void flagEnabled(boolean flag){
+        isEnabled = flag;
+    }
     /**
      * Where mods are enabled before/during world load
      */
