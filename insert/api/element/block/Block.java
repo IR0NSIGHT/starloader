@@ -2,15 +2,13 @@ package api.element.block;
 
 import api.element.Element;
 import api.element.InventoryGroup;
-import api.element.Recipe;
-import api.main.Global;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class Block extends Element {
 
     private int HP = 0;
-    private double armor = 0;
+    private float armor = 0;
     private int price = 0;
     private double heatValue = 0;
     private double kineticValue = 0;
@@ -18,14 +16,13 @@ public class Block extends Element {
     private boolean animated = false;
     private boolean transparent = false;
     private boolean placeable = true;
-    private Block controller = null;
-    private List<Integer> textureIDs = null;
+    private ArrayList<Integer> textureIDs = null;
     private List<Block> controlling = null;
     private List<Block> controllers = null;
     private boolean orientable = false;
     private boolean enterable = false;
-    private double mass = 0;
-    private double volume = 0;
+    private float mass = 0;
+    private float volume = 0;
     private boolean hasAcivationTexture = false;
     private boolean activatable = false;
     private boolean physical = true;
@@ -143,11 +140,11 @@ public class Block extends Element {
         this.HP = value;
     }
 
-    public double getArmor() {
+    public float getArmor() {
         return this.armor;
     }
 
-    public void setArmor(double value) {
+    public void setArmor(float value) {
         this.armor = value;
     }
 
@@ -207,19 +204,11 @@ public class Block extends Element {
         this.placeable = bool;
     }
 
-    public Block getController() {
-        return this.controller;
-    }
-
-    public void setController(Block controllerBlock) {
-        this.controller = controllerBlock;
-    }
-
-    public List<Integer> getTextureIDs() {
+    public ArrayList<Integer> getTextureIDs() {
         return this.textureIDs;
     }
 
-    public void setTextureIDs(List<Integer> blockTextureIDs) {
+    public void setTextureIDs(ArrayList<Integer> blockTextureIDs) {
         this.textureIDs = blockTextureIDs;
         this.individualSides = blockTextureIDs.size();
     }
@@ -256,19 +245,19 @@ public class Block extends Element {
         this.enterable = bool;
     }
 
-    public double getMass() {
+    public float getMass() {
         return this.mass;
     }
 
-    public void setMass(double value) {
+    public void setMass(float value) {
         this.mass = value;
     }
 
-    public double getVolume() {
+    public float getVolume() {
         return this.volume;
     }
 
-    public void setVolume(double value) {
+    public void setVolume(float value) {
         this.volume = value;
     }
 

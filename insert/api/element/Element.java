@@ -1,7 +1,5 @@
 package api.element;
 
-import api.main.Global;
-
 public class Element {
 
     private String fullName;
@@ -96,16 +94,5 @@ public class Element {
 
     public void setBuildIcon(int value) {
         this.buildIcon = value;
-    }
-
-    public static Element getElementFromName(String name) {
-        for(Element element: Global.elementList) {
-            if(element.getName() == name) {
-                return element;
-            } else {
-                System.err.println("Tried to fetch Element " + name + " but failed!");
-            }
-        }
-        return null;
     }
 }
