@@ -1,5 +1,7 @@
 package api.mod;
 
+import api.config.BlockConfig;
+
 public class StarMod {
     public String modName;
     public String modAuthor;
@@ -77,5 +79,9 @@ public class StarMod {
     //Gets the info that will be sent to the client
     public ModInfo getInfo(){
         return new ModInfo(modName, modVersion);
+    }
+
+    public void onBlockConfigLoad(BlockConfig config){
+
     }
 }
