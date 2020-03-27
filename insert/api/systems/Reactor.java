@@ -4,8 +4,8 @@ import api.element.Element;
 
 public class Reactor {
 
-    private final Element reactorBlock = Element.getElementFromName("REACTOR_POWER");
-    private final Element stabilizerBlock = Element.getElementFromName("REACTOR_STABILIZER");
+    //private final Element reactorBlock = Element.getElementFromName("REACTOR_POWER");
+    //private final Element stabilizerBlock = Element.getElementFromName("REACTOR_STABILIZER");
 
     private int size;
     private double stabilization;

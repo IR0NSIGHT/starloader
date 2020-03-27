@@ -7,7 +7,7 @@ import org.schema.game.common.controller.elements.scanner.ScanAddOn;
 import org.schema.game.common.data.player.AbstractOwnerState;
 
 public class EntityScanEvent extends Event {
-    public static int id = 11+idLog++;
+    public static int id = idLog++;
     private Entity entity;
     private AbstractOwnerState owner;
     private boolean success;

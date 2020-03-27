@@ -8,8 +8,10 @@ package org.schema.game.common.controller.elements.scanner;
 import java.util.Iterator;
 
 import api.listener.events.EntityScanEvent;
+import api.listener.events.RegisterAddonsEvent;
 import api.main.GameServer;
 import api.mod.StarLoader;
+import api.systems.addons.custom.CustomAddOn;
 import org.schema.common.util.StringTools;
 import org.schema.game.client.data.GameStateInterface;
 import org.schema.game.common.controller.ElementCountMap;
@@ -41,6 +43,9 @@ public class ScanAddOn extends RecharchableActivatableDurationSingleModule {
 
     public ScanAddOn(ManagerContainer<?> var1) {
         super(var1);
+        //INSERTED CODE to do with custom add ons, in scanner so I dont have to mess with ManagerContainer
+        RegisterAddonsEvent event = new RegisterAddonsEvent(var1);
+        StarLoader.fireEvent(RegisterAddonsEvent.class, event);
     }
 
     public int getDistance() {
@@ -154,14 +159,12 @@ public class ScanAddOn extends RecharchableActivatableDurationSingleModule {
     @Override
     public boolean executeModule() {
         boolean success = super.executeModule();
-        if(this.getActiveStrength() > 3) {
-            AbstractOwnerState ownerState = this.getSegmentController().getOwnerState();
-            EntityScanEvent event = new EntityScanEvent(this, success, ownerState, this.getSegmentController());
-            StarLoader.fireEvent(EntityScanEvent.class, event);
-            //if(ownerState instanceof PlayerState) {
-                //GameServer.getServerState().scanOnServer(null, (PlayerState) ownerState);
-            //}
-        }
+        AbstractOwnerState ownerState = this.getSegmentController().getOwnerState();
+        EntityScanEvent event = new EntityScanEvent(this, success, ownerState, this.getSegmentController());
+        StarLoader.fireEvent(EntityScanEvent.class, event);
+        //if(ownerState instanceof PlayerState) {
+        //GameServer.getServerState().scanOnServer(null, (PlayerState) ownerState);
+        //}
         return success;
     }
 

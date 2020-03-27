@@ -147,27 +147,7 @@ public class EffectAddOn extends RecharchableActivatableDurationSingleModule {
         }
         /*
         tac drive code:
-        SendableSegmentController var1;
-        if (!(var1 = (SendableSegmentController)this.segmentController).getBlockEffectManager().hasEffect(this.type)) {
-            BlockEffect var2 = this.type.effectFactory.getInstance().getInstanceFromNT(var1);
-            this.configureEffect(var2);
-            TakeOffEffect effect = (TakeOffEffect) var2;
-            final Entity entity = new Entity(this.segmentController);
-            final Vector3f v = entity.getVelocity();
-            Vector3f direction = entity.getDirection();
-            direction.scale(10000);
-            entity.setVelocity(direction);
-            entity.playEffect((byte) 3);
-            for (int i = 0; i < 3; i++) {
-                new StarRunnable(){
-                    @Override
-                    public void run() {
-                        entity.playEffect((byte) 2);
-                        entity.setVelocity(new Vector3f(2,2,2));
-                    }
-                }.runLater(10+i);
-            }
-        }
+
          */
     }
 

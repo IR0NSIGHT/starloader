@@ -3,19 +3,23 @@ package api;
 import api.config.BlockConfig;
 import api.inventory.ItemStack;
 import api.listener.Listener;
-import api.listener.events.EntityScanEvent;
-import api.listener.events.Event;
-import api.listener.events.KeyPressEvent;
-import api.listener.events.StructureStatsCreateEvent;
+import api.listener.events.*;
 import api.main.GameClient;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.server.Server;
+import api.systems.addons.custom.CustomAddOn;
+import api.systems.addons.custom.TacticalJumpAddOn;
 import api.utils.StarRunnable;
 import org.schema.game.client.view.GameResourceLoader;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
 import org.schema.game.common.controller.ElementCountMap;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.elements.ManagerContainer;
+import org.schema.game.common.controller.elements.dockingBeam.ActivationBeamElementManager;
+import org.schema.game.common.controller.elements.effectblock.EffectAddOn;
+import org.schema.game.common.data.ManagedSegmentController;
+import org.schema.game.common.data.blockeffects.BlockEffectTypes;
 import org.schema.game.common.data.element.ElementCategory;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
@@ -36,11 +40,29 @@ public class ModPlayground extends StarMod {
 
     @Override
     public void onBlockConfigLoad(BlockConfig config) {
-        ElementInformation dabxd = BlockConfig.newElement("Impervium Armor", new short[]{5,2,3,4,5,6});
-        dabxd.setBuildIconNum(234);
-        dabxd.setMaxHitPointsE(100000);
-        dabxd.setArmorValue(1000);
-        config.add(dabxd);
+        ElementInformation imp = BlockConfig.newElement("Impervium Armor", new short[]{66,66,66,66,66,66});
+        imp.setBuildIconNum(234);
+        imp.setMaxHitPointsE(100000);
+        imp.setArmorValue(1000);
+        config.add(imp);
+
+
+        ElementInformation creative = BlockConfig.newElement("Tactical Drive", new short[]{86,23,45,33,99});
+        creative.blockResourceType = 2;
+        creative.sourceReference = 1085;
+        creative.chamberRoot = 1011;
+        creative.chamberParent = 1085;
+        creative.chamberPermission = 1;
+        creative.chamberPrerequisites.add((short) 1085);
+        creative.placable = true;
+        creative.canActivate = true;
+        creative.systemBlock = true;
+        creative.chamberConfigGroupsLowerCase.add("mobility - top speed 1");
+        ElementKeyMap.chamberAnyTypes.add(creative.getId());
+        config.add(creative);
+
+        ElementInformation info = ElementKeyMap.getInfo(ElementKeyMap.REACTOR_CHAMBER_MOBILITY);
+        info.chamberChildren.add(creative.getId());
     }
     public static void initBlockData(){
         final BlockConfig config = new BlockConfig();
@@ -73,8 +95,29 @@ public class ModPlayground extends StarMod {
                 //config.loadXML();
               //  ElementKeyMap.getInfo(ElementKeyMap.ACTIVAION_BLOCK_ID)
 
+        StarLoader.registerListener(RegisterAddonsEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                RegisterAddonsEvent ev = (RegisterAddonsEvent) event;
+                ev.addAddOn(new TacticalJumpAddOn(ev.getContainer()));
+            }
+        });
 
-
+        /*StarLoader.registerListener(EntityScanEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                EntityScanEvent e = ((EntityScanEvent) event);
+                SegmentController internalEntity = e.getEntity().internalEntity;
+                Server.broadcastMessage("1");
+                if(internalEntity instanceof ManagedSegmentController){
+                    Server.broadcastMessage("2");
+                    ManagerContainer manager = ((ManagedSegmentController) internalEntity).getManagerContainer();
+                    ActivationBeamElementManager activationBeamElementManager = new ActivationBeamElementManager(internalEntity);
+                    manager.addUpdatable(activationBeamElementManager);
+                    Server.broadcastMessage("3");
+                }
+            }
+        });*/
         //This is to register a new listener to listen for StructureStatsCreateEvent
         StarLoader.registerListener(StructureStatsCreateEvent.class, new Listener() {
             @Override

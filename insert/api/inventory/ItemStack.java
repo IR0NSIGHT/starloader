@@ -1,5 +1,9 @@
 package api.inventory;
 
+import javafx.scene.effect.Effect;
+import org.schema.game.common.controller.damage.effects.InterEffectHandler;
+import org.schema.game.common.controller.elements.effectblock.EffectAddOn;
+import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 
