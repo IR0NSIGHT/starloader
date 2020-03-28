@@ -1,10 +1,13 @@
 package api.systems.addons.custom;
 
+import api.DebugFile;
 import api.entity.Entity;
 import api.inventory.ItemStack;
+import api.server.Server;
 import api.utils.StarRunnable;
 import org.schema.game.common.controller.PlayerUsableInterface;
 import org.schema.game.common.controller.elements.ManagerContainer;
+import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementKeyMap;
 
 import javax.vecmath.Vector3f;
@@ -13,11 +16,6 @@ import javax.vecmath.Vector3f;
 public class TacticalJumpAddOn extends CustomAddOn{
     public TacticalJumpAddOn(ManagerContainer<?> var1) {
         super(var1);
-    }
-
-    @Override
-    public boolean executeModule() {
-        return super.executeModule();
     }
 
     @Override
@@ -32,12 +30,18 @@ public class TacticalJumpAddOn extends CustomAddOn{
 
     @Override
     public long getUsableId() {
-        return PlayerUsableInterface.USABLE_ID_EVADE;
+        return PlayerUsableInterface.USABLE_ID_REPULSOR;
     }
 
     @Override
     public String getWeaponRowName() {
         return "Tactical Drive";
+    }
+
+    @Override
+    public boolean isPlayerUsable() {
+        float apply = this.getConfigManager().apply(StatusEffectType.CUSTOM_EFFECT_01, 1F);
+        return apply == 100;
     }
 
     @Override

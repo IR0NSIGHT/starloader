@@ -1,31 +1,22 @@
 package api;
 
 import api.config.BlockConfig;
-import api.inventory.ItemStack;
 import api.listener.Listener;
 import api.listener.events.*;
-import api.main.GameClient;
+import api.listener.events.register.RegisterAddonsEvent;
+import api.listener.events.register.RegisterEffectsEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
-import api.server.Server;
-import api.systems.addons.custom.CustomAddOn;
 import api.systems.addons.custom.TacticalJumpAddOn;
-import api.utils.StarRunnable;
-import org.schema.game.client.view.GameResourceLoader;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
-import org.schema.game.common.controller.ElementCountMap;
 import org.schema.game.common.controller.SegmentController;
-import org.schema.game.common.controller.elements.ManagerContainer;
-import org.schema.game.common.controller.elements.dockingBeam.ActivationBeamElementManager;
-import org.schema.game.common.controller.elements.effectblock.EffectAddOn;
-import org.schema.game.common.data.ManagedSegmentController;
-import org.schema.game.common.data.blockeffects.BlockEffectTypes;
-import org.schema.game.common.data.element.ElementCategory;
+import org.schema.game.common.controller.elements.power.reactor.tree.ReactorElement;
+import org.schema.game.common.data.blockeffects.config.ConfigPool;
+import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 
 public class ModPlayground extends StarMod {
     public static void main(String[] args) {
@@ -57,7 +48,8 @@ public class ModPlayground extends StarMod {
         creative.placable = true;
         creative.canActivate = true;
         creative.systemBlock = true;
-        creative.chamberConfigGroupsLowerCase.add("mobility - top speed 1");
+        //creative.chamberConfigGroupsLowerCase.add("mobility - top speed 1");
+        creative.chamberConfigGroupsLowerCase.add(StatusEffectType.CUSTOM_EFFECT_01.name().toLowerCase());
         ElementKeyMap.chamberAnyTypes.add(creative.getId());
         config.add(creative);
 
@@ -94,11 +86,18 @@ public class ModPlayground extends StarMod {
         //ElementKeyMap.initializeData(file);
                 //config.loadXML();
               //  ElementKeyMap.getInfo(ElementKeyMap.ACTIVAION_BLOCK_ID)
-
+        StarLoader.registerListener(RegisterEffectsEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                RegisterEffectsEvent ev = (RegisterEffectsEvent) event;
+                ev.addEffectModifier(StatusEffectType.CUSTOM_EFFECT_01, 100);
+            }
+        });
         StarLoader.registerListener(RegisterAddonsEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
                 RegisterAddonsEvent ev = (RegisterAddonsEvent) event;
+                //ev.getContainer().getSegmentController().getConfigManager().apply()
                 ev.addAddOn(new TacticalJumpAddOn(ev.getContainer()));
             }
         });

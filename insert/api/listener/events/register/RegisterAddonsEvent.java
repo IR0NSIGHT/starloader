@@ -1,5 +1,6 @@
-package api.listener.events;
+package api.listener.events.register;
 
+import api.listener.events.Event;
 import api.systems.addons.custom.CustomAddOn;
 import org.schema.game.common.controller.elements.ManagerContainer;
 

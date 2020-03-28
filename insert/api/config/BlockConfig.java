@@ -3,6 +3,8 @@ package api.config;
 import api.DebugFile;
 import api.mod.StarLoader;
 import api.mod.StarMod;
+import api.systems.ChamberType;
+import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementCategory;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
@@ -26,6 +28,23 @@ public class BlockConfig {
     public static ElementInformation newElement(String name, short... ids){
         short id = (short) ElementKeyMap.insertIntoProperties(name);
         return new ElementInformation(id, name, ElementKeyMap.getCategoryHirarchy(), ids);
+    }
+    public static ElementInformation newChamber(String name, ChamberType type, short[] ids, int prerequisite, StatusEffectType appliedEffect){
+        ElementInformation info = newElement(name, ids);
+        info.blockResourceType = 2;
+        //info.sourceReference = 1085;
+        info.chamberRoot = type.getId();
+        //info.chamberParent = 1085;
+        info.chamberPermission = 1;
+        info.chamberPrerequisites.add((short) prerequisite);
+        info.placable = true;
+        info.canActivate = true;
+        info.systemBlock = true;
+        //info.chamberConfigGroupsLowerCase.add("mobility - top speed 1");
+        info.chamberConfigGroupsLowerCase.add(appliedEffect.name().toLowerCase());
+        ElementKeyMap.chamberAnyTypes.add(info.getId());
+
+        return info;
     }
 
     private ArrayList<ElementInformation> elements = new ArrayList<>();
@@ -76,70 +95,6 @@ public class BlockConfig {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
-    }
-
-    public static void main(String[] args) {
-        try {
-            DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-
-            DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
-
-            Document document = documentBuilder.newDocument();
-            // root element
-            Element root = document.createElement("company");
-            document.appendChild(root);
-
-            // employee element
-            Element employee = document.createElement("employee");
-
-            root.appendChild(employee);
-
-            // set an attribute to staff element
-            Attr attr = document.createAttribute("id");
-            attr.setValue("10");
-            employee.setAttributeNode(attr);
-
-            //you can also use staff.setAttribute("id", "1") for this
-
-            // firstname element
-            Element firstName = document.createElement("firstname");
-            firstName.appendChild(document.createTextNode("James"));
-            employee.appendChild(firstName);
-
-            // lastname element
-            Element lastname = document.createElement("lastname");
-            lastname.appendChild(document.createTextNode("Harley"));
-            employee.appendChild(lastname);
-
-            // email element
-            Element email = document.createElement("email");
-            email.appendChild(document.createTextNode("james@example.org"));
-            employee.appendChild(email);
-
-            // department elements
-            Element department = document.createElement("department");
-            department.appendChild(document.createTextNode("Human Resources"));
-            employee.appendChild(department);
-
-            // create the xml file
-            //transform the DOM Object to an XML File
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource domSource = new DOMSource(document);
-            StreamResult streamResult = new StreamResult(new File("bruh.xml"));
-
-            // If you use
-            // StreamResult result = new StreamResult(System.out);
-            // the output will be pushed to the standard output ...
-            // You can use that for debugging
-
-            transformer.transform(domSource, streamResult);
-
-            System.out.println("Done creating XML File");
-
-        } catch (ParserConfigurationException | TransformerException pce) {
-            pce.printStackTrace();
         }
     }
 }

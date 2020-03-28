@@ -8,17 +8,14 @@ package org.schema.game.common.controller.elements.scanner;
 import java.util.Iterator;
 
 import api.listener.events.EntityScanEvent;
-import api.listener.events.RegisterAddonsEvent;
-import api.main.GameServer;
+import api.listener.events.register.RegisterAddonsEvent;
 import api.mod.StarLoader;
-import api.systems.addons.custom.CustomAddOn;
 import org.schema.common.util.StringTools;
 import org.schema.game.client.data.GameStateInterface;
 import org.schema.game.common.controller.ElementCountMap;
 import org.schema.game.common.controller.elements.ManagerContainer;
 import org.schema.game.common.controller.elements.RecharchableActivatableDurationSingleModule;
 import org.schema.game.common.controller.elements.VoidElementManager;
-import org.schema.game.common.controller.elements.power.reactor.PowerConsumer.PowerConsumerCategory;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementKeyMap;
@@ -133,7 +130,7 @@ public class ScanAddOn extends RecharchableActivatableDurationSingleModule {
     }
 
     public boolean isPlayerUsable() {
-        return !((GameStateInterface)this.getSegmentController().getState()).getGameState().isModuleEnabledByDefault(this.getUsableId()) && !this.getConfigManager().apply(StatusEffectType.SCAN_SHORT_RANGE_SCANNER_ENABLE, false) ? false : super.isPlayerUsable();
+        return (((GameStateInterface) this.getSegmentController().getState()).getGameState().isModuleEnabledByDefault(this.getUsableId()) || this.getConfigManager().apply(StatusEffectType.SCAN_SHORT_RANGE_SCANNER_ENABLE, false)) && super.isPlayerUsable();
     }
 
     public String getWeaponRowName() {
