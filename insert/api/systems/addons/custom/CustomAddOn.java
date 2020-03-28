@@ -44,9 +44,12 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
         this.getSegmentController().popupOwnClientMessage("Addon not fully charged", 1);
     }
 
+    public abstract float getChargeRate();
+
     public float getChargeRateFull() {
-        float var1 = VoidElementManager.SCAN_CHARGE_NEEDED;
-        return this.getConfigManager().apply(StatusEffectType.SCAN_CHARGE_TIME, var1);
+        return getChargeRate();
+       // float var1 = VoidElementManager.SCAN_CHARGE_NEEDED;
+       // return this.getConfigManager().apply(StatusEffectType.SCAN_CHARGE_TIME, var1);
     }
 
     public boolean canExecute() {

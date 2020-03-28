@@ -773,7 +773,7 @@ public enum StatusEffectType {
     }, false, StatusEffectFloatValue.class),
     CUSTOM_EFFECT_02(StatusEffectCategory.POWER, new Object(){
         public String toString() {
-            return "Custom Effect";
+            return "Custom Effect 2";
         }
     }, false, StatusEffectFloatValue.class),
     CUSTOM_EFFECT_03(StatusEffectCategory.POWER, new Object(){

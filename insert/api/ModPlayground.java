@@ -41,30 +41,26 @@ public class ModPlayground extends StarMod {
 
         ElementInformation creative =
                 BlockConfig.newChamber("Tactical Drive", ChamberType.MOBILITY.getId(),
-                        new short[]{1,1,1,1,1,1}, StatusEffectType.CUSTOM_EFFECT_01);
+                        new short[]{86,23,45,33,99}, StatusEffectType.CUSTOM_EFFECT_01);
         config.add(creative);
 
+        ElementInformation c2 =
+                BlockConfig.newChamber("Upward Jump", creative.getId(),
+                        new short[]{1,1,1,1,1,1}, StatusEffectType.CUSTOM_EFFECT_02);
+        config.add(c2);
     }
     public static void initBlockData(){
         final BlockConfig config = new BlockConfig();
         for(StarMod mod : StarLoader.starMods){
             mod.onBlockConfigLoad(config);
         }
-        for (ElementInformation element : config.getElements()) {
+        /*for (ElementInformation element : config.getElements()) {
             try {
-                //ElementKeyMap.addInformationToExisting(new ElementInformation(element.getId(), element.getName(), ElementKeyMap.getCategoryHirarchy(), element.getTextureIds()));
                 ElementKeyMap.addInformationToExisting(element);
             } catch (ParserConfigurationException e) {
                 DebugFile.logError(e, null);
                 e.printStackTrace();
             }
-        }
-        /*try {
-            int aaaaa = ElementKeyMap.insertIntoProperties("aaaaa");
-            ElementKeyMap.addInformationToExisting(new ElementInformation((short) aaaaa, "aaaaa", ElementKeyMap.getCategoryHirarchy(), new short[]{1,2,3,4,5,6}));
-            Server.broadcastMessage("Key: " + aaaaa);
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
         }*/
     }
     @Override
@@ -80,6 +76,7 @@ public class ModPlayground extends StarMod {
             public void onEvent(Event event) {
                 RegisterEffectsEvent ev = (RegisterEffectsEvent) event;
                 ev.addEffectModifier(StatusEffectType.CUSTOM_EFFECT_01, 100);
+                ev.addEffectModifier(StatusEffectType.CUSTOM_EFFECT_02, 4);
             }
         });
         StarLoader.registerListener(RegisterAddonsEvent.class, new Listener() {
