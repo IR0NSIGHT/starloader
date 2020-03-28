@@ -29,20 +29,23 @@ public class BlockConfig {
         short id = (short) ElementKeyMap.insertIntoProperties(name);
         return new ElementInformation(id, name, ElementKeyMap.getCategoryHirarchy(), ids);
     }
-    public static ElementInformation newChamber(String name, ChamberType type, short[] ids, int prerequisite, StatusEffectType appliedEffect){
+    public static ElementInformation newChamber(String name, short rootChamber, short[] ids, StatusEffectType appliedEffect){
         ElementInformation info = newElement(name, ids);
         info.blockResourceType = 2;
         //info.sourceReference = 1085;
-        info.chamberRoot = type.getId();
+        info.chamberRoot = rootChamber;
         //info.chamberParent = 1085;
         info.chamberPermission = 1;
-        info.chamberPrerequisites.add((short) prerequisite);
+        info.chamberPrerequisites.add(rootChamber);
         info.placable = true;
         info.canActivate = true;
         info.systemBlock = true;
         //info.chamberConfigGroupsLowerCase.add("mobility - top speed 1");
         info.chamberConfigGroupsLowerCase.add(appliedEffect.name().toLowerCase());
         ElementKeyMap.chamberAnyTypes.add(info.getId());
+
+        ElementInformation parentInfo = ElementKeyMap.getInfo(rootChamber);
+        info.chamberChildren.add(parentInfo.getId());
 
         return info;
     }

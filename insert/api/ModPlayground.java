@@ -7,6 +7,7 @@ import api.listener.events.register.RegisterAddonsEvent;
 import api.listener.events.register.RegisterEffectsEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
+import api.systems.ChamberType;
 import api.systems.addons.custom.TacticalJumpAddOn;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
 import org.schema.game.common.controller.SegmentController;
@@ -38,23 +39,11 @@ public class ModPlayground extends StarMod {
         config.add(imp);
 
 
-        ElementInformation creative = BlockConfig.newElement("Tactical Drive", new short[]{86,23,45,33,99});
-        creative.blockResourceType = 2;
-        creative.sourceReference = 1085;
-        creative.chamberRoot = 1011;
-        creative.chamberParent = 1085;
-        creative.chamberPermission = 1;
-        creative.chamberPrerequisites.add((short) 1085);
-        creative.placable = true;
-        creative.canActivate = true;
-        creative.systemBlock = true;
-        //creative.chamberConfigGroupsLowerCase.add("mobility - top speed 1");
-        creative.chamberConfigGroupsLowerCase.add(StatusEffectType.CUSTOM_EFFECT_01.name().toLowerCase());
-        ElementKeyMap.chamberAnyTypes.add(creative.getId());
+        ElementInformation creative =
+                BlockConfig.newChamber("Tactical Drive", ChamberType.MOBILITY.getId(),
+                        new short[]{1,1,1,1,1,1}, StatusEffectType.CUSTOM_EFFECT_01);
         config.add(creative);
 
-        ElementInformation info = ElementKeyMap.getInfo(ElementKeyMap.REACTOR_CHAMBER_MOBILITY);
-        info.chamberChildren.add(creative.getId());
     }
     public static void initBlockData(){
         final BlockConfig config = new BlockConfig();
