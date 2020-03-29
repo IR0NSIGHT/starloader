@@ -45,6 +45,7 @@ public class ModPlayground extends StarMod {
         config.add(creative);
 
     }
+
     public static void initBlockData(){
         final BlockConfig config = new BlockConfig();
         for(StarMod mod : StarLoader.starMods){
