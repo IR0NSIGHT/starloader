@@ -32,20 +32,19 @@ public class BlockConfig {
     public static ElementInformation newChamber(String name, short rootChamber, short[] ids, StatusEffectType appliedEffect){
         ElementInformation info = newElement(name, ids);
         info.blockResourceType = 2;
-        //info.sourceReference = 1085;
-        info.chamberRoot = rootChamber;
-        //info.chamberParent = 1085;
+        info.sourceReference = 1085;
+        info.chamberRoot = 1011;
+        info.chamberParent = 1085;
         info.chamberPermission = 1;
-        info.chamberPrerequisites.add(rootChamber);
+        info.chamberPrerequisites.add((short) 1085);
         info.placable = true;
         info.canActivate = true;
         info.systemBlock = true;
-        //info.chamberConfigGroupsLowerCase.add("mobility - top speed 1");
         info.chamberConfigGroupsLowerCase.add(appliedEffect.name().toLowerCase());
         ElementKeyMap.chamberAnyTypes.add(info.getId());
 
         ElementInformation parentInfo = ElementKeyMap.getInfo(rootChamber);
-        info.chamberChildren.add(parentInfo.getId());
+        parentInfo.chamberChildren.add(info.getId());
 
         return info;
     }
@@ -57,6 +56,11 @@ public class BlockConfig {
     public void add(ElementInformation entry) {
         // ElementKeyMap.getCategoryHirarchy();
         elements.add(entry);
+        try {
+            ElementKeyMap.addInformationToExisting(entry);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
     }
     public void loadXML(){
         //ElementKeyMap.reinitializeData(new FileExt("loader"+File.separator+"CustomBlockConfig.xml"), false, null, null);

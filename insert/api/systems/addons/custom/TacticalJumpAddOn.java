@@ -19,6 +19,11 @@ public class TacticalJumpAddOn extends CustomAddOn{
     }
 
     @Override
+    public float getChargeRate() {
+        return this.getConfigManager().apply(StatusEffectType.CUSTOM_EFFECT_02, 10F);
+    }
+
+    @Override
     public double getPowerConsumedPerSecondResting() {
         return 2;
     }

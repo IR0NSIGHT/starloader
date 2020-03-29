@@ -123,6 +123,7 @@ public class ConfigPool {
 
             for (Pair<StatusEffectType, Float> effect : event.registeredEffects) {
                 ConfigGroup group = new ConfigGroup(effect.getLeft().name());
+
                 EffectConfigElement element = new EffectConfigElement();
                 StatusEffectType type = effect.getLeft();
                 element.init(type);
@@ -131,6 +132,7 @@ public class ConfigPool {
                 value.value.set(effect.getRight());
                 element.priority = 1;
                 group.elements.add(element);
+
                 this.add(group);
             }
 
