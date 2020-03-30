@@ -95,12 +95,23 @@ public class Faction {
 
     public List<Player> getPersonalEnemies() {
         List<Player> personalEnemies = null;
-        for(String name : internalFaction.getPersonalEnemies()) {
-            //Todo: Figure out if these strings are names or UIDs
-            personalEnemies.add(new Player(getPlayerStateFromName(name)));
+        for(String uid : internalFaction.getPersonalEnemies()) {
+            personalEnemies.add(new Player(getPlayerStateFromUID(uid)));
         }
 
         return personalEnemies;
+    }
+
+    public Station getHomebase() throws IOException {
+        Station homebase = null;
+        Vector3i internalHomeCoords = internalFaction.getHomeSector();
+        Sector internalSector = GameServer.getServerState().getUniverse().getSector(internalHomeCoords, true);
+        for(SimpleTransformableSendableObject internalEntity : internalSector.getEntities()) {
+            if(internalEntity.isSegmentController() && internalEntity.getType() == SimpleTransformableSendableObject.EntityType.SPACE_STATION) {
+                homebase = new Station((SegmentController) internalEntity);
+            }
+        }
+        return homebase;
     }
 
     private PlayerState getPlayerStateFromName(String playerName) {
