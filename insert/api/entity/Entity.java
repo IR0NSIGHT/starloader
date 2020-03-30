@@ -28,104 +28,14 @@ public class Entity {
 
     public Entity(SegmentController controller) {
         internalEntity = controller;
-
-        //Entity Type (For some reason a Switch statement won't work here, I tried)
-        if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.SPACE_STATION) {
-            entityType = EntityType.STATION;
-        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.SHIP) {
-            entityType = EntityType.SHIP;
-        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.ASTEROID) {
-            entityType = EntityType.ASTEROID;
-        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.PLANET_CORE) {
-            entityType = EntityType.PLANETCORE;
-        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.PLANET_SEGMENT) {
-            entityType = EntityType.PLANETSEGMENT;
-        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.SHOP) {
-            entityType = EntityType.SHOP;
-        }
-    }
-
-    public Universe getUniverse() {
-        return universe;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Faction getFaction() throws IOException {
         return new Faction(internalEntity.getFaction());
     }
-    public void setFactionId(int id){
-        internalEntity.setFactionId(id);
-    }
 
     public void setFaction(Faction faction) {
-        this.faction = faction;
-    }
-
-    public double getMaxSpeed() {
-        return maxSpeed;
-    }
-
-    public void setMaxSpeed(double maxSpeed) {
-        this.maxSpeed = maxSpeed;
-    }
-
-    public List<Ship> getDockedEntities() {
-        return dockedEntities;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
-
-    public boolean hasReactor() {
-        return hasReactor;
-    }
-
-    public void setHasReactor(boolean hasReactor) {
-        this.hasReactor = hasReactor;
-    }
-
-    public boolean hasShields() {
-        return hasShields;
-    }
-
-    public void setHasShields(boolean hasShields) {
-        this.hasShields = hasShields;
-    }
-
-    public List<Reactor> getReactors() {
-        return reactors;
-    }
-
-    public void setReactors(List<Reactor> reactors) {
-        this.reactors = reactors;
-    }
-
-    public Reactor getActiveReactor() {
-        return activeReactor;
-    }
-
-    public void setActiveReactor(Reactor activeReactor) {
-        this.activeReactor = activeReactor;
-    }
-
-    public List<Shield> getShields() {
-        return shields;
-    }
-
-    public void setShields(List<Shield> shields) {
-        this.shields = shields;
+        internalEntity.setFactionId(faction.getID());
     }
 
     public Vector3f getDirection(){
@@ -148,11 +58,22 @@ public class Entity {
     }
 
     public EntityType getEntityType() {
+        //(For some reason a Switch statement won't work here, I tried
+        EntityType entityType = null;
+        if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.SPACE_STATION) {
+            entityType = EntityType.STATION;
+        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.SHIP) {
+            entityType = EntityType.SHIP;
+        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.ASTEROID) {
+            entityType = EntityType.ASTEROID;
+        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.PLANET_CORE) {
+            entityType = EntityType.PLANETCORE;
+        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.PLANET_SEGMENT) {
+            entityType = EntityType.PLANETSEGMENT;
+        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.SHOP) {
+            entityType = EntityType.SHOP;
+        }
         return entityType;
-    }
-
-    public void setEntityType(EntityType entityType) {
-        this.entityType = entityType;
     }
 
     public boolean isOnServer(){
