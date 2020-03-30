@@ -2,8 +2,17 @@ package api.faction;
 
 import api.entity.Player;
 import api.entity.Station;
-import java.util.ArrayList;
+import api.main.GameServer;
+import org.schema.common.util.linAlg.Vector3i;
+import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.data.player.PlayerState;
+import org.schema.game.common.data.player.faction.FactionPermission;
+import org.schema.game.common.data.world.Sector;
+import org.schema.game.common.data.world.SimpleTransformableSendableObject;
+import org.schema.game.server.data.GameServerState;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class Faction {
 
@@ -11,9 +20,8 @@ public class Faction {
     private List<Player> members;
     private List<Player> activePlayers;
     private List<Player> inactivePlayers;
-    private ArrayList<FactionRank> ranks;
     private int memberCount;
-    private List<Faction> neutrals;
+    private Map<Player, FactionPermission> ranks;
     private List<Faction> allies;
     private List<Faction> enemies;
     private List<Player> personalEnemies;
@@ -23,119 +31,72 @@ public class Faction {
     private List<System> ownedSystems;
     private org.schema.game.common.data.player.faction.Faction internalFaction;
 
-    public Faction(org.schema.game.common.data.player.faction.Faction internalFaction){
+    public Faction(org.schema.game.common.data.player.faction.Faction internalFaction) throws IOException {
         this.internalFaction = internalFaction;
+
+        //Name
+        name = internalFaction.getName();
+
+        //Member Stuff
+        for(String name : internalFaction.getMembersUID().keySet()) {
+            Player player = new Player(getPlayerStateFromName(name));
+            members.add(player);
+            if (internalFaction.getMembersUID().get(name).isActiveMember()) {
+                activePlayers.add(player);
+            } else {
+                inactivePlayers.add(player);
+            }
+            memberCount = members.size();
+
+            ranks.put(player, internalFaction.getMembersUID().get(name));
+        }
+
+        //Allies
+        for(org.schema.game.common.data.player.faction.Faction internalAlly : internalFaction.getFriends()) {
+            Faction faction = new Faction(internalAlly);
+            allies.add(faction);
+        }
+
+        //Enemies
+        for(org.schema.game.common.data.player.faction.Faction internalEnemy : internalFaction.getEnemies()) {
+            Faction faction = new Faction(internalEnemy);
+            enemies.add(faction);
+        }
+
+        //Personal Enemies
+        for(String pName : internalFaction.getPersonalEnemies()) {
+            personalEnemies.add(new Player(getPlayerStateFromName(pName)));
+        }
+
+        //News Posts
+        //Todo:News Post Stuff
+
+        //Home Base
+        Vector3i internalHomeCoords = internalFaction.getHomeSector();
+        Sector internalSector = GameServer.getServerState().getUniverse().getSector(internalHomeCoords, true);
+        for(SimpleTransformableSendableObject internalEntity : internalSector.getEntities()) {
+            if(internalEntity.isSegmentController() && internalEntity.getType() == SimpleTransformableSendableObject.EntityType.SPACE_STATION) {
+                homebase = new Station((SegmentController) internalEntity);
+            }
+        }
+
+        //Claim Stations
+        //Todo: Claim Stations
+
+        //Owned Systems
+        //Todo: Owned Systems
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Player> getMembers() {
-        return members;
-    }
-
-    public void setMembers(List<Player> members) {
-        this.members = members;
-    }
-
-    public List<Player> getActivePlayers() {
-        return activePlayers;
-    }
-
-    public void setActivePlayers(List<Player> activePlayers) {
-        this.activePlayers = activePlayers;
-    }
-
-    public List<Player> getInactivePlayers() {
-        return inactivePlayers;
-    }
-
-    public void setInactivePlayers(List<Player> inactivePlayers) {
-        this.inactivePlayers = inactivePlayers;
-    }
-
-    public ArrayList<FactionRank> getRanks() {
-        return ranks;
-    }
-
-    public void setRanks(ArrayList<FactionRank> ranks) {
-        this.ranks = ranks;
-    }
-
-    public int getMemberCount() {
-        return memberCount;
-    }
-
-    public void setMemberCount(int memberCount) {
-        this.memberCount = memberCount;
-    }
-
-    public List<Faction> getNeutrals() {
-        return neutrals;
-    }
-
-    public void setNeutrals(List<Faction> neutrals) {
-        this.neutrals = neutrals;
-    }
-
-    public List<Faction> getAllies() {
-        return allies;
-    }
-
-    public void setAllies(List<Faction> allies) {
-        this.allies = allies;
-    }
-
-    public List<Faction> getEnemies() {
-        return enemies;
-    }
-
-    public void setEnemies(List<Faction> enemies) {
-        this.enemies = enemies;
-    }
-
-    public List<Player> getPersonalEnemies() {
-        return personalEnemies;
-    }
-
-    public void setPersonalEnemies(List<Player> personalEnemies) {
-        this.personalEnemies = personalEnemies;
-    }
-
-    public List<NewsPost> getNewsPosts() {
-        return newsPosts;
-    }
-
-    public void setNewsPosts(List<NewsPost> newsPosts) {
-        this.newsPosts = newsPosts;
-    }
-
-    public Station getHomebase() {
-        return homebase;
-    }
-
-    public void setHomebase(Station homebase) {
-        this.homebase = homebase;
-    }
-
-    public List<Station> getClaimStations() {
-        return claimStations;
-    }
-
-    public void setClaimStations(List<Station> claimStations) {
-        this.claimStations = claimStations;
-    }
-
-    public List<System> getOwnedSystems() {
-        return ownedSystems;
-    }
-
-    public void setOwnedSystems(List<System> ownedSystems) {
-        this.ownedSystems = ownedSystems;
+    private PlayerState getPlayerStateFromName(String playerName) {
+        GameServerState gameServerState = GameServerState.instance;
+        Map<String, PlayerState> playerStates = gameServerState.getPlayerStatesByName();
+        PlayerState pState = null;
+        try {
+            pState = playerStates.get(playerName);
+        } catch(Exception e) {
+            System.err.println("[StarLoader API]: Tried to get a PlayerState from name, but specified player was not found on server!");
+            e.printStackTrace();
+        }
+        return pState;
     }
 }

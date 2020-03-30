@@ -1,7 +1,5 @@
 package api.systems;
 
-import api.element.Element;
-
 public class Reactor {
 
     //private final Element reactorBlock = Element.getElementFromName("REACTOR_POWER");
