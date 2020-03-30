@@ -53,11 +53,11 @@ public class StarLoader {
     }
 
     //fire client event methods:
-    public static void fireEvent(Class<? extends Event> clazz, Event event){
+    public static void fireEvent(Class<? extends Event> clazz, Event ev){
         int id = getIdFromEvent(clazz);
         for (Listener listener : getListeners(id)) {
             try {
-                listener.onEvent(event);
+                listener.onEvent(ev);
             }catch (Exception e){
                 DebugFile.log("Exception during event: " + clazz.getName());
 
