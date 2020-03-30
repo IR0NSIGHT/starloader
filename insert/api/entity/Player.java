@@ -7,6 +7,7 @@ import api.server.Server;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
+import java.io.IOException;
 import java.util.Map;
 
 public class Player {
@@ -17,8 +18,10 @@ public class Player {
         playerState = state;
     }
 
-    public Faction getFaction() {
-
+    public Faction getFaction() throws IOException {
+        GameServerState gameServerState = GameServerState.instance;
+        int factionID = playerState.getFactionId();
+        return new Faction(gameServerState.getFactionManager().getFaction(factionID));
     }
 
     public int getCredits() {
