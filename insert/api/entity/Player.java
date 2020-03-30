@@ -1,39 +1,24 @@
 package api.entity;
 
+import api.faction.Faction;
 import api.inventory.Inventory;
 import api.inventory.InventoryType;
 import api.server.Server;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
-import java.util.ArrayList;
 import java.util.Map;
 
 public class Player {
 
     private PlayerState playerState;
-    private Entity currentEntity;
-    private ArrayList<Fleet> fleets;
 
     public Player(PlayerState state) {
         playerState = state;
     }
 
-    public Entity getCurrentEntity() {
-        //ToDo:set the currentEntity as the players current entered entity
-        return currentEntity;
-    }
+    public Faction getFaction() {
 
-    public ArrayList<Fleet> getFleets() {
-        return fleets;
-    }
-
-    public void addFleet(Fleet fleet) {
-        fleets.add(fleet);
-    }
-
-    public void removeFleet(Fleet fleet) {
-        fleets.add(fleet);
     }
 
     public int getCredits() {
