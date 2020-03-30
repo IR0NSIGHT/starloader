@@ -1407,7 +1407,7 @@ public enum Blocks {
 
 
 
-    private ElementInformation blockInfo;
+    private ElementInformation blockInfo = null;
     private short id;
     private Blocks(int id) {
         //Block block = new Block(ElementKeyMap.getInfo(id));
@@ -1415,6 +1415,9 @@ public enum Blocks {
     }
 
     public ElementInformation getInfo() {
+        if(blockInfo == null){
+            blockInfo = ElementKeyMap.getInfoFast(id);
+        }
         return blockInfo;
     }
 

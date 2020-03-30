@@ -47,7 +47,7 @@ public class ModPlayground extends StarMod {
         imp.lightSource = true;
         imp.lightSourceColor.set(new Vector4f(1F,0F,1F, 1F));
         imp.setCanActivate(true);
-        BlockConfig.addRecipe(imp, FactoryType.ADVANCED, 1, new FactoryResource(1, Blocks.RED_PAINT.getId()));
+        BlockConfig.addRecipe(imp, FactoryType.ADVANCED, 5, new FactoryResource(1, Blocks.RED_PAINT.getId()));
         imp.setArmorValue(1000);
         config.add(imp);
 
