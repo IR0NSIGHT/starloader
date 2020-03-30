@@ -62,8 +62,8 @@ public class SMModLoader {
         ModPlayground defaultMod = new ModPlayground();
         StarLoader.starMods.add(defaultMod);
         defaultMod.onGameStart();
-        defaultMod.onEnable();
-        defaultMod.flagEnabled(true);
+        //defaultMod.onEnable();
+        //defaultMod.flagEnabled(true);
 
         DebugFile.log("Enabling Mods...");
         File[] files = modFolder.listFiles();

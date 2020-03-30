@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class BlockConfig {
     public static void addRecipe(ElementInformation info, FactoryType type, int bakeTime, FactoryResource... resources){
         for (FactoryResource resource : resources){
-
             info.consistence.add(resource);
             info.cubatomConsistence.add(resource);
         }

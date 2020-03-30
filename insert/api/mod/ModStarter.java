@@ -72,9 +72,13 @@ public class ModStarter {
         for (StarMod mod : StarLoader.starMods){
             System.err.println("[Client] >>> Found mod: " + mod.modName);
             if(serverMods == null) {
-                DebugFile.log("Mod info not found for: " + serverHost + " This is likely because they direct connected");
-                mod.onEnable();
-                mod.flagEnabled(true);
+                if(serverHost.equals("localhost")){
+                    DebugFile.log("Connecting to own server, mods are already enabled by the server");
+                }else {
+                    DebugFile.log("Mod info not found for: " + serverHost + " This is likely because they direct connected");
+                    mod.onEnable();
+                    mod.flagEnabled(true);
+                }
             }else {
                 DebugFile.log("Mod info WAS found");
                 for (ModInfo serverMod : serverMods) {

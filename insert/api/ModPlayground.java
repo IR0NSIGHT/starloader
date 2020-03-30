@@ -3,6 +3,7 @@ package api;
 import api.config.BlockConfig;
 import api.element.block.Blocks;
 import api.element.block.FactoryType;
+import api.entity.Entity;
 import api.listener.Listener;
 import api.listener.events.Event;
 import api.listener.events.StructureStatsCreateEvent;
@@ -12,12 +13,14 @@ import api.listener.events.register.RegisterAddonsEvent;
 import api.listener.events.register.RegisterEffectsEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
+import api.server.Server;
 import api.systems.ChamberType;
 import api.systems.addons.custom.TacticalJumpAddOn;
 import org.newdawn.slick.Color;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
 import org.schema.game.client.view.gui.shiphud.newhud.TargetShieldBar;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.elements.beam.damageBeam.DamageBeamElementManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.FactoryResource;
@@ -74,6 +77,10 @@ public class ModPlayground extends StarMod {
                 BlockConfig.newChamber("Bruh Jump", creative.getId(),
                         new short[]{1,1,1,1,1,1}, StatusEffectType.CUSTOM_EFFECT_03);
         config.add(bruh);
+
+        ElementInformation info = Blocks.THRUSTER_MODULE.getInfo();
+        info.signal = true;
+        info.hasActivationTexure = true;
     }
 
     public static void initBlockData(){
@@ -123,9 +130,14 @@ public class ModPlayground extends StarMod {
             @Override
             public void onEvent(Event ev) {
                 BlockActivateEvent event = (BlockActivateEvent) ev;
+                Server.broadcastMessage("Activated block: " + event.getBlockType().getName());
+                Server.broadcastMessage("At: " + event.getSegmentPiece().getAbsolutePos(new Vector3f()).toString());
+                Entity entity = event.getEntity();
+                //Vector3f v = entity.getVelocity();
+                //v.add(entity.getDirection());
 
-                //Server.broadcastMessage("Activated block: " + event.getBlockType().getName());
-                //Server.broadcastMessage("At: " + event.getSegmentPiece().getAbsolutePos(new Vector3f()).toString());
+                //entity.setVelocity();
+
             }
         });
 
