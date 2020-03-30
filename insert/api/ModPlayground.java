@@ -75,6 +75,7 @@ public class ModPlayground extends StarMod {
                         new short[]{1,1,1,1,1,1}, StatusEffectType.CUSTOM_EFFECT_03);
         config.add(bruh);
     }
+
     public static void initBlockData(){
         final BlockConfig config = new BlockConfig();
         for(StarMod mod : StarLoader.starMods){
