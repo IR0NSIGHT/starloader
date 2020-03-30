@@ -1,15 +1,12 @@
 package api.config;
 
 import api.DebugFile;
-import api.mod.StarLoader;
-import api.mod.StarMod;
-import api.systems.ChamberType;
+import api.element.block.Blocks;
+import api.element.block.FactoryType;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
-import org.schema.game.common.data.element.ElementCategory;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
-import org.schema.schine.resource.FileExt;
-import org.w3c.dom.Attr;
+import org.schema.game.common.data.element.FactoryResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -17,7 +14,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -25,9 +21,34 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class BlockConfig {
+    public static void addRecipe(ElementInformation info, FactoryType type, int bakeTime, FactoryResource... resources){
+        for (FactoryResource resource : resources){
+
+            info.consistence.add(resource);
+            info.cubatomConsistence.add(resource);
+        }
+        info.factoryBakeTime = bakeTime;
+        info.blockResourceType = 2;
+        info.producedInFactory = type.getId();
+    }
+    public static void clearRecipes(ElementInformation element){
+        element.cubatomConsistence.clear();
+        element.consistence.clear();
+    }
     public static ElementInformation newElement(String name, short... ids){
         short id = (short) ElementKeyMap.insertIntoProperties(name);
-        return new ElementInformation(id, name, ElementKeyMap.getCategoryHirarchy(), ids);
+        ElementInformation elementInformation = new ElementInformation(id, name, ElementKeyMap.getCategoryHirarchy(), ids);
+        int idLength = ids.length;
+        if(idLength == 3 || idLength == 6 || idLength == 1) {
+            elementInformation.individualSides = idLength;
+            elementInformation.normalizeTextureIds();
+        }else{
+            DebugFile.warn("You just passed a " + idLength + " array to newElement... Use sizes of 1, 3, or 6");
+            DebugFile.warn("If its a grey basic armor texture, that is why");
+        }
+        //todo resort at end
+        ElementKeyMap.sortedByName.add(elementInformation);
+        return elementInformation;
     }
     public static ElementInformation newChamber(String name, short rootChamber, short[] ids, StatusEffectType appliedEffect){
         ElementInformation info = newElement(name, ids);
@@ -45,7 +66,6 @@ public class BlockConfig {
 
         ElementInformation parentInfo = ElementKeyMap.getInfo(rootChamber);
         parentInfo.chamberChildren.add(info.getId());
-
         return info;
     }
 

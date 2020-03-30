@@ -1,8 +1,12 @@
 package api;
 
 import api.config.BlockConfig;
+import api.element.block.Blocks;
+import api.element.block.FactoryType;
 import api.listener.Listener;
-import api.listener.events.*;
+import api.listener.events.Event;
+import api.listener.events.StructureStatsCreateEvent;
+import api.listener.events.block.BlockActivateEvent;
 import api.listener.events.gui.HudCreateEvent;
 import api.listener.events.register.RegisterAddonsEvent;
 import api.listener.events.register.RegisterEffectsEvent;
@@ -11,26 +15,18 @@ import api.mod.StarMod;
 import api.systems.ChamberType;
 import api.systems.addons.custom.TacticalJumpAddOn;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.UnicodeFont;
-import org.schema.game.client.view.effects.FlareDrawer;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
-import org.schema.game.client.view.gui.shiphud.newhud.ShieldBarRightLocal;
-import org.schema.game.client.view.gui.shiphud.newhud.TargetPanel;
 import org.schema.game.client.view.gui.shiphud.newhud.TargetShieldBar;
 import org.schema.game.common.controller.SegmentController;
-import org.schema.game.common.controller.elements.power.reactor.tree.ReactorElement;
-import org.schema.game.common.data.blockeffects.config.ConfigPool;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
-import org.schema.game.common.data.element.ElementKeyMap;
+import org.schema.game.common.data.element.FactoryResource;
 import org.schema.schine.graphicsengine.forms.font.FontLibrary;
 import org.schema.schine.graphicsengine.forms.gui.GUITextOverlay;
 
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
-import javax.xml.parsers.ParserConfigurationException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 public class ModPlayground extends StarMod {
     public static void main(String[] args) {
@@ -46,29 +42,38 @@ public class ModPlayground extends StarMod {
     @Override
     public void onBlockConfigLoad(BlockConfig config) {
         ElementInformation imp = BlockConfig.newElement("Impervium Armor", new short[]{124, 753, 427, 345, 231, 427});
-        imp.individualSides = 6;
         imp.setBuildIconNum(234);
         imp.setMaxHitPointsE(100000);
         imp.lightSource = true;
         imp.lightSourceColor.set(new Vector4f(1F,0F,1F, 1F));
         imp.setCanActivate(true);
-        imp.hasActivationTexure = true;
-
-
+        BlockConfig.addRecipe(imp, FactoryType.ADVANCED, 5, new FactoryResource(1, Blocks.RED_PAINT.getId()));
         imp.setArmorValue(1000);
-        imp.normalizeTextureIds();
         config.add(imp);
+
+        ArrayList<FactoryResource> factoryResources = new ArrayList<>();
+        for (Blocks b : Blocks.values()){
+            if(b.name().endsWith("PAINT")){
+                factoryResources.add(new FactoryResource(1, b.getId()));
+            }
+        }
+        BlockConfig.addRecipe(Blocks.FERTIKEEN_CAPSULE.getInfo(), FactoryType.ADVANCED, 5, factoryResources.toArray(new FactoryResource[0]));
 
 
         ElementInformation creative =
                 BlockConfig.newChamber("Tactical Drive", ChamberType.MOBILITY.getId(),
-                        new short[]{86,23,45,33,99}, StatusEffectType.CUSTOM_EFFECT_01);
+                        new short[]{86,23,45,33,99,99}, StatusEffectType.CUSTOM_EFFECT_01);
         config.add(creative);
 
         ElementInformation c2 =
                 BlockConfig.newChamber("Upward Jump", creative.getId(),
                         new short[]{1,1,1,1,1,1}, StatusEffectType.CUSTOM_EFFECT_02);
         config.add(c2);
+
+        ElementInformation bruh =
+                BlockConfig.newChamber("Bruh Jump", creative.getId(),
+                        new short[]{1,1,1,1,1,1}, StatusEffectType.CUSTOM_EFFECT_03);
+        config.add(bruh);
     }
 
     public static void initBlockData(){
@@ -114,6 +119,15 @@ public class ModPlayground extends StarMod {
 
             }
         });
+        StarLoader.registerListener(BlockActivateEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event ev) {
+                BlockActivateEvent event = (BlockActivateEvent) ev;
+
+                //Server.broadcastMessage("Activated block: " + event.getBlockType().getName());
+                //Server.broadcastMessage("At: " + event.getSegmentPiece().getAbsolutePos(new Vector3f()).toString());
+            }
+        });
 
         StarLoader.registerListener(RegisterEffectsEvent.class, new Listener() {
             @Override
@@ -121,6 +135,7 @@ public class ModPlayground extends StarMod {
                 RegisterEffectsEvent ev = (RegisterEffectsEvent) event;
                 ev.addEffectModifier(StatusEffectType.CUSTOM_EFFECT_01, 100);
                 ev.addEffectModifier(StatusEffectType.CUSTOM_EFFECT_02, 4);
+                ev.addEffectModifier(StatusEffectType.CUSTOM_EFFECT_03, 4);
             }
         });
         StarLoader.registerListener(RegisterAddonsEvent.class, new Listener() {
