@@ -44,8 +44,6 @@ public class Sector {
 
         for(SegmentController segmentController : internalEntities) {
             entities.add(new Entity(segmentController));
-            //Construct an API Entity out of SegmentController
-            //I don't know if this will actually work correctly
         }
         return entities;
     }
