@@ -1,55 +1,47 @@
 package api.systems;
 
+import api.entity.Entity;
+import org.schema.game.common.controller.elements.power.reactor.tree.ReactorElement;
+import org.schema.game.common.controller.elements.power.reactor.tree.ReactorTree;
+import java.util.List;
+
 public class Reactor {
 
-    //private final Element reactorBlock = Element.getElementFromName("REACTOR_POWER");
-    //private final Element stabilizerBlock = Element.getElementFromName("REACTOR_STABILIZER");
+    private ReactorTree internalReactor;
 
-    private int size;
-    private double stabilization;
-    //private ChamberTree chambers;
-    //ToDo: Implement chamber stuff
-    private double regen;
-    private double currentUsage;
-    private int level;
+    public Reactor(ReactorTree internalReactor) {
+        this.internalReactor = internalReactor;
+    }
+
+    public float getHp() {
+        return internalReactor.getHp();
+    }
+
+    public float getMaxHp() {
+        return internalReactor.getMaxHp();
+    }
+
+    public List<Chamber> getChildren() {
+        List<Chamber> children = null;
+        for(ReactorElement internalChildChamber : internalReactor.children) {
+            children.add(new Chamber(internalChildChamber));
+        }
+        return children;
+    }
 
     public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public double getStabilization() {
-        return stabilization;
-    }
-
-    public void setStabilization(double stabilization) {
-        this.stabilization = stabilization;
-    }
-
-    public double getRegen() {
-        return regen;
-    }
-
-    public void setRegen(double regen) {
-        this.regen = regen;
-    }
-
-    public double getCurrentUsage() {
-        return currentUsage;
-    }
-
-    public void setCurrentUsage(double currentUsage) {
-        this.currentUsage = currentUsage;
+        return internalReactor.getSize();
     }
 
     public int getLevel() {
-        return level;
+        return internalReactor.getLevel();
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public double getRegen() {
+        return internalReactor.pw.getCurrentPowerGain();
+    }
+
+    public Entity getEntity() {
+        return new Entity(internalReactor.pw.getSegmentController());
     }
 }

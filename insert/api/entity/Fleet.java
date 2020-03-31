@@ -2,63 +2,63 @@ package api.entity;
 
 import api.main.GameClient;
 import api.main.GameServer;
-import api.server.Server;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.data.fleet.FleetCommandTypes;
 import org.schema.game.common.data.fleet.FleetManager;
+import org.schema.game.common.data.fleet.FleetMember;
 import org.schema.game.network.objects.remote.FleetCommand;
-import org.schema.game.server.data.simulation.npc.NPCFleetManager;
+import org.schema.game.server.data.GameServerState;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Fleet {
 
-    private ArrayList<Ship> fleetMembers;
-    private Ship fleetLeader = null;//fleetMembers.get(0);
     private org.schema.game.common.data.fleet.Fleet internalFleet;
 
-
-
-
-    public ArrayList<Ship> getFleetMembers() {
-        return fleetMembers;
-    }
-    public void addMember(org.schema.game.common.controller.Ship ship){
-        getServerFleetManager().requestShipAdd(internalFleet, ship);
-        //also:
-        //internalFleet.addMemberFromEntity(ship);
+    public Fleet(org.schema.game.common.data.fleet.Fleet internalFleet) {
+        this.internalFleet = internalFleet;
     }
 
-    public void setFleetMembers(ArrayList<Ship> fleetMembers) {
-        this.fleetMembers = fleetMembers;
+    public void addMember(Ship ship) {
+        getServerFleetManager().requestShipAdd(internalFleet, ship.getInternalShip());
     }
 
-    public Ship getFleetLeader() {
-        return fleetLeader;
+    public void removeMember(Ship ship) {
+        getServerFleetManager().requestFleetMemberRemove(internalFleet, new FleetMember(ship.getInternalShip());
     }
 
-    public void setFleetLeader(Ship fleetLeader) {
-        this.fleetLeader = fleetLeader;
-    }
-    public Fleet(String name, Player owner){
-        internalFleet = createNewFleet(name, owner.getName());
+    public List<Ship> getMembers() {
+        GameServerState gameServerState = GameServerState.instance;
+
+        List<Ship> members = null;
+        for(FleetMember fleetMember : internalFleet.getMembers()) {
+            SegmentController internalShip = gameServerState.getSegmentControllersByName().get(fleetMember.name);
+            members.add(new Ship(internalShip));
+        }
+        return members;
     }
 
     //Server Commands:
     public void moveTo(int x, int y, int z){
         getServerFleetManager().executeCommand(new FleetCommand(FleetCommandTypes.MOVE_FLEET, internalFleet, new Vector3i(x,y,z)));
     }
+
     public void idle(){
-        getServerFleetManager().executeCommand(new FleetCommand(FleetCommandTypes.MOVE_FLEET, internalFleet));
+        getServerFleetManager().executeCommand(new FleetCommand(FleetCommandTypes.IDLE, internalFleet));
     }
+
     public void attack(int x, int y, int z){
-        getServerFleetManager().executeCommand(new FleetCommand(FleetCommandTypes.MOVE_FLEET, internalFleet, new Vector3i(x,y,z)));
+        getServerFleetManager().executeCommand(new FleetCommand(FleetCommandTypes.FLEET_ATTACK, internalFleet, new Vector3i(x,y,z)));
     }
+
     public void mine(int x, int y, int z){
-        getServerFleetManager().executeCommand(new FleetCommand(FleetCommandTypes.MOVE_FLEET, internalFleet, new Vector3i(x,y,z)));
+        getServerFleetManager().executeCommand(new FleetCommand(FleetCommandTypes.MINE_IN_SECTOR, internalFleet, new Vector3i(x,y,z)));
     }
+
+    //Todo:Add more fleet commands
+
     public void delete(){
         internalFleet.removeFleet(true);
     }
@@ -81,18 +81,12 @@ public class Fleet {
         System.err.println("!!! COULD NOT FIND FLEET THAT WAS JUST CREATED !!!");
         return null;
     }
-    //Kindof a problem here that nothing is really defined as 'from client' or 'from server'
-    public static Fleet fromShip(Ship ship) {
-        //getServerFleetManager().getByEntity(ship.getSegmentController())
-        return null;
-    }
-    public static org.schema.game.common.data.fleet.Fleet fromController(SegmentController controller){
-        return controller.getFleet();
-    }
+
     //internal stuff -  public for now
     public static FleetManager getServerFleetManager(){
         return GameServer.getServerState().getFleetManager();
     }
+
     public static FleetManager getClientFleetManager(){
         return GameClient.getClientState().getFleetManager();
     }
