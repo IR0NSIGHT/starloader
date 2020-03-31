@@ -1,6 +1,7 @@
 package api.utils;
 
 import api.DebugFile;
+import api.server.Server;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,8 @@ public abstract class StarRunnable {
         this.frequency = frequency;
         this.timer = true;
     }
-    long time = 0;
+    public long ticksRan = 0;
+    private long time = 0;
     private boolean delay = false;
     private boolean timer = false;
     public StarRunnable(){
@@ -29,6 +31,7 @@ public abstract class StarRunnable {
     }
     private void tick(){
         time++;
+        ticksRan++;
         if(this.delay) {
             if (time > ticks){
                 run();
@@ -53,6 +56,7 @@ public abstract class StarRunnable {
             try {
                 runnable.tick();
             }catch (Exception e){
+                Server.broadcastMessage("A StarRunnable threw an error");
                 DebugFile.log("A StarRunnable threw an error: ");
                 DebugFile.logError(e, null);
             }

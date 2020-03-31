@@ -42,4 +42,8 @@ public class BlockActivateEvent extends Event {
     public ItemStack getBlockType() {
         return blockType;
     }
+
+    public short getBlockId() {
+        return blockType.getId();
+    }
 }

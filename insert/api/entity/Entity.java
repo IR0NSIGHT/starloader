@@ -1,10 +1,12 @@
 package api.entity;
 
 import api.faction.Faction;
+import api.server.Server;
 import api.systems.Reactor;
 import api.systems.Shield;
 import api.universe.Universe;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.schine.graphicsengine.core.GlUtil;
 import javax.vecmath.Vector3f;
@@ -28,20 +30,14 @@ public class Entity {
 
     public Entity(SegmentController controller) {
         internalEntity = controller;
-
         //Entity Type (For some reason a Switch statement won't work here, I tried)
-        if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.SPACE_STATION) {
-            entityType = EntityType.STATION;
-        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.SHIP) {
-            entityType = EntityType.SHIP;
-        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.ASTEROID) {
-            entityType = EntityType.ASTEROID;
-        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.PLANET_CORE) {
-            entityType = EntityType.PLANETCORE;
-        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.PLANET_SEGMENT) {
-            entityType = EntityType.PLANETSEGMENT;
-        } else if(internalEntity.getType() == SimpleTransformableSendableObject.EntityType.SHOP) {
-            entityType = EntityType.SHOP;
+        switch(internalEntity.getType()){
+            case SPACE_STATION: entityType = EntityType.STATION; break;
+            case SHIP: entityType = EntityType.SHIP; break;
+            case ASTEROID: entityType = EntityType.ASTEROID; break;
+            case PLANET_CORE: entityType = EntityType.PLANETCORE; break;
+            case PLANET_SEGMENT: entityType = EntityType.PLANETSEGMENT; break;
+            case SHOP: entityType = EntityType.SHOP; break;
         }
     }
 
