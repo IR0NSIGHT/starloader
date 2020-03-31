@@ -2,8 +2,6 @@ package api.entity;
 
 import api.faction.Faction;
 import api.systems.Reactor;
-import api.systems.Shield;
-import api.universe.Universe;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.schine.graphicsengine.core.GlUtil;
@@ -12,19 +10,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class Entity {
-    public SegmentController internalEntity;
-    private List<Ship> dockedEntities;
-    private double speed;
-    private double maxSpeed;
-    private boolean hasReactor;
-    private List<Reactor> reactors;
-    private Reactor activeReactor;
-    private boolean hasShields;
-    private List<Shield> shields;
-    private String name;
-    private Faction faction;
-    private Universe universe;
-    private EntityType entityType;
+
+    private SegmentController internalEntity;
 
     public Entity(SegmentController controller) {
         internalEntity = controller;
@@ -36,6 +23,73 @@ public class Entity {
 
     public void setFaction(Faction faction) {
         internalEntity.setFactionId(faction.getID());
+    }
+
+    public String getName() {
+        return internalEntity.getRealName();
+    }
+
+    public void setName(String name) {
+        internalEntity.setRealName(name);
+    }
+
+    public float getMass() {
+        return internalEntity.getMassWithDocks();
+    }
+
+    public void setMass(Float mass) {
+        internalEntity.setMass(mass);
+    }
+
+    public float getMassWithoutDocks() {
+        return internalEntity.getMass();
+    }
+
+    public float getSpeed() {
+        if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.PLANETSEGMENT) || getEntityType().equals(EntityType.ASTEROID)) {
+            return internalEntity.getSpeedCurrent();
+        } else {
+            return 0;
+        }
+    }
+
+    public float getMaxSpeed() {
+        if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.PLANETSEGMENT) || getEntityType().equals(EntityType.ASTEROID)) {
+            return internalEntity.getMaxServerSpeed();
+        } else {
+            return 0;
+        }
+    }
+
+    public float getHP() {
+        return getReactor().getHp();
+    }
+
+    public float getMaxHP() {
+        return getReactor().getMaxHp();
+    }
+
+    public float getMissileCapacity() {
+        return internalEntity.getMissileCapacity();
+    }
+
+    public float getMissileCapacityMax() {
+        return internalEntity.getMissileCapacityMax();
+    }
+
+    public Fleet getFleet() {
+        Fleet fleet = new Fleet(internalEntity.getFleet());
+        return fleet;
+    }
+
+    public Reactor getReactor() {
+        //Todo:Construct a Reactor object from the internal ship's current active reactor
+        return null;
+    }
+
+    public List<Reactor> getAllReactors() {
+        //Todo:Construct a list of all Reactors from the internal ship
+        return null;
     }
 
     public Vector3f getDirection(){
