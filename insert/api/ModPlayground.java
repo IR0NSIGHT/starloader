@@ -4,6 +4,7 @@ import api.config.BlockConfig;
 import api.element.block.Blocks;
 import api.element.block.FactoryType;
 import api.entity.Entity;
+import api.faction.Faction;
 import api.listener.Listener;
 import api.listener.events.Event;
 import api.listener.events.StructureStatsCreateEvent;
@@ -16,14 +17,18 @@ import api.mod.StarMod;
 import api.server.Server;
 import api.systems.ChamberType;
 import api.systems.addons.custom.TacticalJumpAddOn;
+import api.utils.StarRunnable;
+import api.utils.VecUtil;
 import org.newdawn.slick.Color;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
 import org.schema.game.client.view.gui.shiphud.newhud.TargetShieldBar;
 import org.schema.game.common.controller.SegmentController;
-import org.schema.game.common.controller.elements.beam.damageBeam.DamageBeamElementManager;
+import org.schema.game.common.controller.elements.ManagerContainer;
+import org.schema.game.common.controller.elements.thrust.ThrusterCollectionManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.FactoryResource;
+import org.schema.game.common.data.player.faction.FactionPermission;
 import org.schema.schine.graphicsengine.forms.font.FontLibrary;
 import org.schema.schine.graphicsengine.forms.gui.GUITextOverlay;
 
@@ -62,7 +67,6 @@ public class ModPlayground extends StarMod {
         }
         BlockConfig.addRecipe(Blocks.FERTIKEEN_CAPSULE.getInfo(), FactoryType.ADVANCED, 5, factoryResources.toArray(new FactoryResource[0]));
 
-
         ElementInformation creative =
                 BlockConfig.newChamber("Tactical Drive", ChamberType.MOBILITY.getId(),
                         new short[]{86,23,45,33,99,99}, StatusEffectType.CUSTOM_EFFECT_01);
@@ -79,8 +83,7 @@ public class ModPlayground extends StarMod {
         config.add(bruh);
 
         ElementInformation info = Blocks.THRUSTER_MODULE.getInfo();
-        info.signal = true;
-        info.hasActivationTexure = true;
+        //info.signal = true;
     }
 
     public static void initBlockData(){
@@ -129,14 +132,24 @@ public class ModPlayground extends StarMod {
         StarLoader.registerListener(BlockActivateEvent.class, new Listener() {
             @Override
             public void onEvent(Event ev) {
-                BlockActivateEvent event = (BlockActivateEvent) ev;
+                final BlockActivateEvent event = (BlockActivateEvent) ev;
                 Server.broadcastMessage("Activated block: " + event.getBlockType().getName());
                 Server.broadcastMessage("At: " + event.getSegmentPiece().getAbsolutePos(new Vector3f()).toString());
-                Entity entity = event.getEntity();
-                //Vector3f v = entity.getVelocity();
-                //v.add(entity.getDirection());
+                if(event.getBlockId() == Blocks.THRUSTER_MODULE.getId()) {
+                    final Entity entity = event.getEntity();
+                    //entity.internalEntity.getPhysicsObject().applyCentralForce(new Vector3f(10,10,10));
+                    final Vector3f v = entity.getVelocity();
+                    v.add(VecUtil.scale(entity.getDirection(), 15F));
+                    entity.setVelocity(v);
 
-                //entity.setVelocity();
+                    new StarRunnable(){
+                        @Override
+                        public void run() {
+                            entity.setVelocity(v);
+                        }
+                    }.runLater(1);
+
+                }
 
             }
         });
