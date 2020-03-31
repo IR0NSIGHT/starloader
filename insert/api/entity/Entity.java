@@ -26,6 +26,8 @@ public class Entity {
     private Universe universe;
     private EntityType entityType;
 
+
+
     public Entity(SegmentController controller) {
         internalEntity = controller;
     }
@@ -44,6 +46,73 @@ public class Entity {
 
     public Vector3f getVelocity(){
         return internalEntity.getPhysicsObject().getLinearVelocity(new Vector3f());
+    }
+
+    public String getName() {
+        return internalEntity.getRealName();
+    }
+
+    public void setName(String name) {
+        internalEntity.setRealName(name);
+    }
+
+    public float getMass() {
+        return internalEntity.getMassWithDocks();
+    }
+
+    public void setMass(Float mass) {
+        internalEntity.setMass(mass);
+    }
+
+    public float getMassWithoutDocks() {
+        return internalEntity.getMass();
+    }
+
+    public float getSpeed() {
+        if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.PLANETSEGMENT) || getEntityType().equals(EntityType.ASTEROID)) {
+            return internalEntity.getSpeedCurrent();
+        } else {
+            return 0;
+        }
+    }
+
+    public float getMaxSpeed() {
+        if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.PLANETSEGMENT) || getEntityType().equals(EntityType.ASTEROID)) {
+            return internalEntity.getMaxServerSpeed();
+        } else {
+            return 0;
+        }
+    }
+
+    public float getHP() {
+        return getReactor().getHp();
+    }
+
+    public float getMaxHP() {
+        return getReactor().getMaxHp();
+    }
+
+    public float getMissileCapacity() {
+        return internalEntity.getMissileCapacity();
+    }
+
+    public float getMissileCapacityMax() {
+        return internalEntity.getMissileCapacityMax();
+    }
+
+    public Fleet getFleet() {
+        Fleet fleet = new Fleet(internalEntity.getFleet());
+        return fleet;
+    }
+
+    public Reactor getReactor() {
+        //Todo:Construct a Reactor object from the internal ship's current active reactor
+        return null;
+    }
+
+    public List<Reactor> getAllReactors() {
+        //Todo:Construct a list of all Reactors from the internal ship
+        return null;
     }
 
     public void setVelocity(Vector3f direction) {
