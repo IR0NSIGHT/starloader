@@ -4,7 +4,8 @@ import org.schema.game.common.controller.elements.ShieldLocal;
 
 public class Shield {
 
-    ShieldLocal internalShield;
+    private ShieldLocal internalShield;
+
     public Shield(ShieldLocal local){
         internalShield = local;
     }

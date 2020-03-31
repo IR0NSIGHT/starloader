@@ -3,14 +3,10 @@ package api.entity;
 import api.faction.Faction;
 import api.systems.Reactor;
 import api.systems.Shield;
-import api.universe.Universe;
 import org.schema.game.common.controller.SegmentController;
-import org.schema.game.common.controller.elements.ManagerContainer;
-import org.schema.game.common.controller.elements.ShieldLocal;
-import org.schema.game.common.controller.elements.ShipManagerContainer;
-import org.schema.game.common.controller.elements.SpaceStationManagerContainer;
+import org.schema.game.common.controller.elements.*;
+import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
 import org.schema.game.common.data.ManagedSegmentController;
-import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.schine.graphicsengine.core.GlUtil;
 import javax.vecmath.Vector3f;
 import java.io.IOException;
@@ -78,11 +74,11 @@ public class Entity {
     }
 
     public float getHP() {
-        return getReactor().getHp();
+        return getCurrentReactor().getHp();
     }
 
     public float getMaxHP() {
-        return getReactor().getMaxHp();
+        return getCurrentReactor().getMaxHp();
     }
 
     public float getMissileCapacity() {
@@ -98,14 +94,40 @@ public class Entity {
         return fleet;
     }
 
-    public Reactor getReactor() {
-        //Todo:Construct a Reactor object from the internal ship's current active reactor
-        return null;
+    public Reactor getCurrentReactor() {
+        ManagerContainer<?> manager = getManagerContainer();
+        Reactor activeReactor = null;
+        if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.STATION)) {
+            if(manager instanceof ShipManagerContainer) {
+                activeReactor = new Reactor(((ShipManagerContainer) manager).getPowerInterface().getActiveReactor());
+            } else if(manager instanceof SpaceStationManagerContainer) {
+                activeReactor = new Reactor(((SpaceStationManagerContainer) manager).getPowerInterface().getActiveReactor());
+            }
+        }
+        return activeReactor;
     }
 
-    public List<Reactor> getAllReactors() {
-        //Todo:Construct a list of all Reactors from the internal ship
-        return null;
+    public Reactor getReactor(int i) {
+        return getReactors().get(i);
+    }
+
+    public ArrayList<Reactor> getReactors() {
+        ManagerContainer<?> manager = getManagerContainer();
+        ArrayList<Reactor> reactors = new ArrayList<>();
+        if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.STATION)) {
+            if(manager instanceof ShipManagerContainer) {
+                List<MainReactorUnit> allReactors = ((ShipManagerContainer) manager).getPowerInterface().getMainReactors();
+                for (MainReactorUnit reactorUnit : allReactors) {
+                    reactors.add(new Reactor(reactorUnit.getPowerInterface().getActiveReactor()));
+                }
+            } else if(manager instanceof SpaceStationManagerContainer) {
+                List<MainReactorUnit> allReactors = ((SpaceStationManagerContainer) manager).getPowerInterface().getMainReactors();
+                for(MainReactorUnit reactorUnit : allReactors) {
+                    reactors.add(new Reactor(reactorUnit.getPowerInterface().getActiveReactor()));
+                }
+            }
+        }
+        return reactors;
     }
 
     public void setVelocity(Vector3f direction) {
@@ -115,32 +137,38 @@ public class Entity {
         }
     }
 
-    public void playEffect(byte value){
+    public void playEffect(byte value) {
         internalEntity.executeGraphicalEffectServer(value);
     }
-    public ArrayList<Ship> getDockedEntities(){
+
+    public ArrayList<Ship> getDockedEntities() {
         ArrayList<SegmentController> collection = new ArrayList<>();
         internalEntity.railController.getDockedRecusive(collection);
         ArrayList<Ship> ships = new ArrayList<>();
-        for (SegmentController controller : collection){
+        for (SegmentController controller : collection) {
             if(controller instanceof org.schema.game.common.controller.Ship){
                 ships.add(new Ship((org.schema.game.common.controller.Ship) controller));
             }
         }
         return ships;
     }
-    public ArrayList<Shield> getShields(){
+
+    public Shield getShield(int i) {
+        return getShields().get(i);
+    }
+
+    public ArrayList<Shield> getShields() {
         ManagerContainer<?> manager = getManagerContainer();
         ArrayList<Shield> shields = new ArrayList<>();
-        if(manager instanceof ShipManagerContainer){
+        if(manager instanceof ShipManagerContainer) {
             Collection<ShieldLocal> allShields = ((ShipManagerContainer) manager).getShieldAddOn().getShieldLocalAddOn().getAllShields();
             for (ShieldLocal sh : allShields){
                 shields.add(new Shield(sh));
             }
             return shields;
-        }else if(manager instanceof SpaceStationManagerContainer){
+        } else if(manager instanceof SpaceStationManagerContainer) {
             //TODO implement other types of shields
-        }else{
+        } else {
             //no shields
         }
         return shields;

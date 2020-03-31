@@ -40,8 +40,4 @@ public class Reactor {
     public double getRegen() {
         return internalReactor.pw.getCurrentPowerGain();
     }
-
-    public Entity getEntity() {
-        return new Entity(internalReactor.pw.getSegmentController());
-    }
 }
