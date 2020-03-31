@@ -13,6 +13,18 @@ import java.util.List;
 
 public class Entity {
     public SegmentController internalEntity;
+    private List<Ship> dockedEntities;
+    private double speed;
+    private double maxSpeed;
+    private boolean hasReactor;
+    private List<Reactor> reactors;
+    private Reactor activeReactor;
+    private boolean hasShields;
+    private List<Shield> shields;
+    private String name;
+    private Faction faction;
+    private Universe universe;
+    private EntityType entityType;
 
     public Entity(SegmentController controller) {
         internalEntity = controller;
