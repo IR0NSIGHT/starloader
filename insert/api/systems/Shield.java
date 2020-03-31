@@ -1,77 +1,34 @@
 package api.systems;
 
+import org.schema.game.common.controller.elements.ShieldLocal;
+
 public class Shield {
-
-    private int size;
-    private double capacity;
-    private double maxCapacity;
-    private double regen;
-    private double upkeep;
-    private double radius;
-    private boolean underFire;
-    private boolean depleted;
-
-    public int getSize() {
-        return size;
+    ShieldLocal internalShield;
+    public Shield(ShieldLocal local){
+        internalShield = local;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public float getRadius() {
+        return internalShield.radius;
     }
 
-    public double getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(double capacity) {
-        this.capacity = capacity;
+    public double getCurrentShields() {
+        return internalShield.getShields();
     }
 
     public double getMaxCapacity() {
-        return maxCapacity;
-    }
-
-    public void setMaxCapacity(double maxCapacity) {
-        this.maxCapacity = maxCapacity;
+        return internalShield.getShieldCapacity();
     }
 
     public double getRegen() {
-        return regen;
-    }
-
-    public void setRegen(double regen) {
-        this.regen = regen;
+        return internalShield.rechargePerSecond;
     }
 
     public double getUpkeep() {
-        return upkeep;
-    }
-
-    public void setUpkeep(double upkeep) {
-        this.upkeep = upkeep;
-    }
-
-    public double getRadius() {
-        return radius;
-    }
-
-    public void setRadius(double radius) {
-        this.radius = radius;
-    }
-
-    public boolean isUnderFire() {
-        return underFire;
-    }
-
-    public void setUnderFire(boolean underFire) {
-        this.underFire = underFire;
+        return internalShield.getShieldUpkeep();
     }
 
     public boolean isDepleted() {
-        return depleted;
-    }
-
-    public void setDepleted(boolean depleted) {
-        this.depleted = depleted;
+        return getCurrentShields() <= 0;
     }
 }
