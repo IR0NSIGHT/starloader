@@ -40,4 +40,8 @@ public class Reactor {
     public double getRegen() {
         return internalReactor.pw.getCurrentPowerGain();
     }
+
+    public double getCurrentUsage() {
+        return internalReactor.pw.getCurrentConsumptionPerSec();
+    }
 }

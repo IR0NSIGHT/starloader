@@ -10,6 +10,8 @@ import org.schema.game.common.data.fleet.FleetManager;
 import org.schema.game.common.data.fleet.FleetMember;
 import org.schema.game.network.objects.remote.FleetCommand;
 import org.schema.game.server.data.GameServerState;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Fleet {
@@ -25,13 +27,13 @@ public class Fleet {
     }
 
     public void removeMember(Ship ship) {
-        getServerFleetManager().requestFleetMemberRemove(internalFleet, new FleetMember(ship.getInternalShip());
+        getServerFleetManager().requestFleetMemberRemove(internalFleet, new FleetMember(ship.getInternalShip()));
     }
 
-    public List<Ship> getMembers() {
+    public ArrayList<Ship> getMembers() {
         GameServerState gameServerState = GameServerState.instance;
 
-        List<Ship> members = null;
+        ArrayList<Ship> members = null;
         for(FleetMember fleetMember : internalFleet.getMembers()) {
             SegmentController internalShip = gameServerState.getSegmentControllersByName().get(fleetMember.name);
             members.add(new Ship(internalShip));

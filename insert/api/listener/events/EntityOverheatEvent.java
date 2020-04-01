@@ -2,7 +2,7 @@ package api.listener.events;
 
 import org.schema.game.common.controller.SegmentController;
 
-public class EntityOverheatEvent extends Event{
+public class EntityOverheatEvent extends Event {
     public static int id = 8;
     SegmentController entity;
     int lastDamager;
