@@ -5,6 +5,7 @@ import api.main.GameServer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.damage.projectile.ProjectileHandlerSegmentController;
 import org.schema.game.common.data.fleet.FleetCommandTypes;
 import org.schema.game.common.data.fleet.FleetManager;
 import org.schema.game.common.data.fleet.FleetMember;
@@ -25,12 +26,11 @@ public class Fleet {
     }
 
     public void removeMember(Ship ship) {
-        getServerFleetManager().requestFleetMemberRemove(internalFleet, new FleetMember(ship.getInternalShip());
+        getServerFleetManager().requestFleetMemberRemove(internalFleet, new FleetMember(ship.getInternalShip()));
     }
 
     public List<Ship> getMembers() {
         GameServerState gameServerState = GameServerState.instance;
-
         List<Ship> members = null;
         for(FleetMember fleetMember : internalFleet.getMembers()) {
             SegmentController internalShip = gameServerState.getSegmentControllersByName().get(fleetMember.name);
