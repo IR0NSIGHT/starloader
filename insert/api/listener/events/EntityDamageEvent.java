@@ -10,7 +10,7 @@ import org.schema.game.common.controller.damage.projectile.ProjectileHandlerSegm
 import org.schema.game.common.data.player.PlayerCharacter;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 
-public class EntityDamageEvent extends Event{
+public class EntityDamageEvent extends Event {
     public static int id = idLog++;
     Entity entity;
     private final ProjectileHandlerSegmentController.ShotHandler shotHandler;

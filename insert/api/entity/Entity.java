@@ -7,6 +7,7 @@ import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.*;
 import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
 import org.schema.game.common.data.ManagedSegmentController;
+import org.schema.game.common.data.player.PlayerState;
 import org.schema.schine.graphicsengine.core.GlUtil;
 import javax.vecmath.Vector3f;
 import java.io.IOException;
@@ -192,5 +193,13 @@ public class Entity {
 
     public boolean isOnServer(){
         return internalEntity.isOnServer();
+    }
+
+    public Player getPilot() {
+        if(internalEntity.isConrolledByActivePlayer()) {
+            Player player = new Player((PlayerState) internalEntity.getOwnerState());
+            return player;
+        }
+        return null;
     }
 }
