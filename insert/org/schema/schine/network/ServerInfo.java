@@ -7,7 +7,9 @@ package org.schema.schine.network;
 
 import api.DebugFile;
 import api.mod.ModInfo;
+import api.mod.ModStarter;
 import api.mod.ServerModInfo;
+import api.server.Server;
 
 public class ServerInfo extends AbstractServerInfo {
     public static long curtime;
@@ -31,7 +33,7 @@ public class ServerInfo extends AbstractServerInfo {
         System.err.println("[Starloader][ServerInfo] Registering info for: " + host);
         for (int i = 7; i < arr.length; i++) {
             String serializedInfo = (String) arr[i];
-            ServerModInfo.registerModInfo(host, ModInfo.fromString(serializedInfo));
+            ServerModInfo.registerModInfo(ServerModInfo.getServerUID(host, port), ModInfo.fromString(serializedInfo));
         }
         //ServerModInfo.dumpModInfos();
         //

@@ -53,7 +53,7 @@ public class StarLoader {
         getListeners(id).add(l);
     }
 
-    //fire client event methods:
+    //fire event methods:
     public static void fireEvent(Class<? extends Event> clazz, Event ev){
         int id = getIdFromEvent(clazz);
         if(clazz == BlockActivateEvent.class){

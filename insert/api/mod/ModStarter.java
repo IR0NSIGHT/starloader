@@ -3,8 +3,11 @@ package api.mod;
 import api.DebugFile;
 import api.SMModLoader;
 import api.main.GameClient;
+import api.main.GameServer;
 import org.apache.commons.io.FileUtils;
 import org.schema.schine.graphicsengine.core.GlUtil;
+import org.schema.schine.network.ServerListRetriever;
+import org.schema.schine.network.StarMadeNetUtil;
 
 import javax.net.ssl.SSLContext;
 import javax.swing.*;
@@ -33,23 +36,10 @@ public class ModStarter {
     public static void postServerStart(){
         //whatever lol
     }
-    //doesnt work cause of user agent stuff
-    /*public static void downloadFile(URL url, String fileName) throws IOException {
-        FileUtils.copyURLToFile(url, new File(fileName));
-    }*/
-    /*public static void downloadFile(URL url, String fileName) throws IOException {
-        System.setProperty("http.agent", "StarMade-Client");
-        System.setProperty("https.protocols", "TLSv1.2");
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        FileUtils.copyURLToFile(url, new File(fileName));
-    }*/
+
     public static void downloadFile(URL url, String fileName) throws IOException, NoSuchAlgorithmException, KeyManagementException {
         final URLConnection openConnection = url.openConnection();
-        openConnection.setConnectTimeout(100000000);
+        openConnection.setConnectTimeout(10000000);
         openConnection.setRequestProperty("User-Agent", "StarMade-Client");
         //Fixes some errors with java 7 not downloading properly
         SSLContext ssl = SSLContext.getInstance("TLSv1.2");
@@ -58,7 +48,7 @@ public class ModStarter {
         //
         FileUtils.copyInputStreamToFile(openConnection.getInputStream(), new File(fileName));
     }
-    public static boolean preClientConnect(String serverHost){
+    public static boolean preClientConnect(String serverHost, int serverPort){
         DebugFile.log("Disabling existing mods:");
         for (StarMod mod : StarLoader.starMods){
             if(mod.isEnabled()) {
@@ -68,14 +58,23 @@ public class ModStarter {
         }
         //TODO only enable the ones that are enabled on the server, and the ones that are set to force enable
         DebugFile.log("Enabling mods...");
-        ArrayList<ModInfo> serverMods = ServerModInfo.getServerInfo(serverHost);
+        ArrayList<ModInfo> serverMods = ServerModInfo.getServerInfo(ServerModInfo.getServerUID(serverHost, serverPort));
         for (StarMod mod : StarLoader.starMods){
             System.err.println("[Client] >>> Found mod: " + mod.modName);
             if(serverMods == null) {
-                if(serverHost.equals("localhost")){
+                if(serverHost.equals("localhost:4242")){
                     DebugFile.log("Connecting to own server, mods are already enabled by the server");
                 }else {
-                    DebugFile.log("Mod info not found for: " + serverHost + " This is likely because they direct connected");
+                    DebugFile.log("Mod info not found for: " + serverHost + ":" + serverPort + " This is likely because they direct connected");
+                    GameClient.setLoadString("Getting server mod info...");
+                    StarMadeNetUtil starMadeNetUtil = new StarMadeNetUtil();
+                    try {
+                        System.err.println(starMadeNetUtil.getServerInfo(serverHost, serverPort, 5000).toString());
+                        //should register the mods.
+                    } catch (IOException e) {
+                        //???
+                        e.printStackTrace();
+                    }
                     mod.onEnable();
                     mod.flagEnabled(true);
                 }
