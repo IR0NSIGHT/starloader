@@ -1268,7 +1268,7 @@ public class Starter implements Observer {
         //INSERTED CODE
         String loginName = var0.host;
         DebugFile.log("Connecting to server: " + loginName);
-        boolean allUptoDate = ModStarter.preClientConnect(loginName);
+        boolean allUptoDate = ModStarter.preClientConnect(loginName, var0.port);
         ///
         if(allUptoDate) {
             stopClient(var2);

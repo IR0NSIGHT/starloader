@@ -6,13 +6,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ServerModInfo {
+    public static String getServerUID(String name, int port){
+        return name + ":" + port;
+    }
     private static HashMap<String, ArrayList<ModInfo>> serverModInfo = new HashMap<>();
-    public static void registerModInfo(String server, ModInfo info){
-        DebugFile.log("[Client] Registering server mod info: " + info.toString() + ", for: " + server);
-        ArrayList<ModInfo> infos = serverModInfo.get(server);
+    public static void registerModInfo(String serverUid, ModInfo info){
+        DebugFile.log("[Client] Registering server mod info: " + info.toString() + ", for: " + serverUid);
+        ArrayList<ModInfo> infos = serverModInfo.get(serverUid);
         if(infos == null){
             ArrayList<ModInfo> emptyModList = new ArrayList<>();
-            serverModInfo.put(server, emptyModList);
+            serverModInfo.put(serverUid, emptyModList);
             infos = emptyModList;
         }
         for (ModInfo allInfo : infos){
@@ -34,7 +37,7 @@ public class ServerModInfo {
         DebugFile.log("====== End ======");
     }
 
-    public static ArrayList<ModInfo> getServerInfo(String serverName) {
-        return serverModInfo.get(serverName);
+    public static ArrayList<ModInfo> getServerInfo(String serverUid) {
+        return serverModInfo.get(serverUid);
     }
 }
