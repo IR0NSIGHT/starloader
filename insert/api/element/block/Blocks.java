@@ -1402,7 +1402,8 @@ public enum Blocks {
     CUSTOM_ID_252(2044),
     CUSTOM_ID_253(2045),
     CUSTOM_ID_254(2046),
-    CUSTOM_ID_255(2047)
+    CUSTOM_ID_255(2047),
+    EMPTY_SPACE(0)
     ;
 
 
@@ -1423,6 +1424,22 @@ public enum Blocks {
 
     public short getId() {
         return id;
+    }
+
+    private static Blocks[] lookup;
+
+    //Fast block lookup:
+    public static Blocks fromId(short id){
+        Blocks blocks = lookup[id];
+        if(blocks == null) return EMPTY_SPACE;
+        return blocks;
+    }
+    static{
+        //Generate fast lookup
+        lookup = new Blocks[3000];
+        for (Blocks b : values()){
+            lookup[b.getId()] = b;
+        }
     }
 
 }

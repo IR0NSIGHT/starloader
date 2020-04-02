@@ -31,7 +31,7 @@ public class StarMod {
 
     /**
      * Mods that do stuff directly when the game starts
-     * Currently it does it even if the mod is not enabled
+     * Happends for EVERY mod, not just the ones enabled
      */
     public void onGameStart(){
 

@@ -13,7 +13,6 @@ public class BlockActivateEvent extends Event {
     private final ActivationElementManager manager;
     private final SegmentPiece segmentPiece;
     private final ItemStack blockType;
-    private boolean canceled = false;
 
     public BlockActivateEvent(ActivationElementManager manager, SegmentPiece segmentPiece, ItemStack blockType){
         this.manager = manager;
@@ -22,14 +21,6 @@ public class BlockActivateEvent extends Event {
     }
     public Entity getEntity(){
         return new Entity(this.getSegmentPiece().getSegmentController());
-    }
-
-    public void setCanceled(boolean canceled) {
-        this.canceled = canceled;
-    }
-
-    public boolean isCanceled() {
-        return canceled;
     }
 
     public ActivationElementManager getManager() {

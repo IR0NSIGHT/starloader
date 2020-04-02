@@ -30,9 +30,6 @@ public class SMModLoader {
         }
     }
 
-    public SMModLoader() {
-    }
-
     public static StarMod loadModFromJar(ClassLoader loader, JarFile jf) throws IOException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
         DebugFile.log("Loading Mod: " + jf.getName());
         Class<?> c = loader.loadClass(jf.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS));
