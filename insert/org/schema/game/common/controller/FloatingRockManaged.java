@@ -5,7 +5,9 @@
 
 package org.schema.game.common.controller;
 
+import api.DebugFile;
 import api.listener.events.block.BlockSalvageEvent;
+import api.listener.events.client.BlockSalvageOnClientEvent;
 import api.mod.StarLoader;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.longs.LongIterator;
@@ -176,7 +178,7 @@ public class FloatingRockManaged extends FloatingRock implements PlayerControlla
 
             //INSERTED CODE
             //Note that this currently only calls for the server.
-            BlockSalvageEvent event = new BlockSalvageEvent(var1, var2, var4, var5, var7, var17);
+            BlockSalvageEvent event = new BlockSalvageEvent(var1, var2, var4, var5, var7);
             StarLoader.fireEvent(BlockSalvageEvent.class, event);
             if(event.isCanceled()){
                 return var2;

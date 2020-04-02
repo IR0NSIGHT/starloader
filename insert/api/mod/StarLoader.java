@@ -22,7 +22,7 @@ public class StarLoader {
     //Allocate size for 20 listeners
     public static ArrayList<ArrayList<Listener>> listeners = new ArrayList<>();
     static{
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 40; i++) {
             listeners.add(new ArrayList<Listener>());
         }
     }
@@ -56,9 +56,7 @@ public class StarLoader {
     //fire event methods:
     public static void fireEvent(Class<? extends Event> clazz, Event ev){
         int id = getIdFromEvent(clazz);
-        if(clazz == BlockActivateEvent.class){
-            DebugFile.log("========: ");
-        }
+        DebugFile.log("Firing Event: " +clazz.getName());
         for (Listener listener : getListeners(id)) {
             if(clazz == BlockActivateEvent.class){
                 DebugFile.log("Block activate for: ");

@@ -7,11 +7,15 @@ import api.entity.Entity;
 import api.faction.Faction;
 import api.listener.Listener;
 import api.listener.events.Event;
+import api.listener.events.KeyPressEvent;
 import api.listener.events.StructureStatsCreateEvent;
 import api.listener.events.block.BlockActivateEvent;
+import api.listener.events.block.BlockSalvageEvent;
+import api.listener.events.client.BlockSalvageOnClientEvent;
 import api.listener.events.gui.HudCreateEvent;
 import api.listener.events.register.RegisterAddonsEvent;
 import api.listener.events.register.RegisterEffectsEvent;
+import api.main.GameClient;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.server.Server;
@@ -19,19 +23,28 @@ import api.systems.ChamberType;
 import api.systems.addons.custom.TacticalJumpAddOn;
 import api.utils.StarRunnable;
 import api.utils.VecUtil;
+import com.bulletphysics.linearmath.Transform;
 import org.newdawn.slick.Color;
+import org.schema.common.util.linAlg.Vector3b;
+import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
 import org.schema.game.client.view.gui.shiphud.newhud.TargetShieldBar;
+import org.schema.game.client.view.shards.Shard;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.ManagerContainer;
 import org.schema.game.common.controller.elements.thrust.ThrusterCollectionManager;
+import org.schema.game.common.data.SegmentPiece;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.FactoryResource;
+import org.schema.game.common.data.physics.PhysicsExt;
+import org.schema.game.common.data.physics.Vector3fb;
 import org.schema.game.common.data.player.faction.FactionPermission;
+import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.schine.graphicsengine.forms.font.FontLibrary;
 import org.schema.schine.graphicsengine.forms.gui.GUITextOverlay;
 
+import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 import java.util.ArrayList;
@@ -53,15 +66,15 @@ public class ModPlayground extends StarMod {
         imp.setBuildIconNum(234);
         imp.setMaxHitPointsE(100000);
         imp.lightSource = true;
-        imp.lightSourceColor.set(new Vector4f(1F,0F,1F, 1F));
+        imp.lightSourceColor.set(new Vector4f(1F, 0F, 1F, 1F));
         imp.setCanActivate(true);
         BlockConfig.addRecipe(imp, FactoryType.ADVANCED, 5, new FactoryResource(1, Blocks.RED_PAINT.getId()));
         imp.setArmorValue(1000);
         config.add(imp);
 
         ArrayList<FactoryResource> factoryResources = new ArrayList<>();
-        for (Blocks b : Blocks.values()){
-            if(b.name().endsWith("PAINT")){
+        for (Blocks b : Blocks.values()) {
+            if (b.name().endsWith("PAINT")) {
                 factoryResources.add(new FactoryResource(1, b.getId()));
             }
         }
@@ -69,26 +82,26 @@ public class ModPlayground extends StarMod {
 
         ElementInformation creative =
                 BlockConfig.newChamber("Tactical Drive", ChamberType.MOBILITY.getId(),
-                        new short[]{86,23,45,33,99,99}, StatusEffectType.CUSTOM_EFFECT_01);
+                        new short[]{86, 23, 45, 33, 99, 99}, StatusEffectType.CUSTOM_EFFECT_01);
         config.add(creative);
 
         ElementInformation c2 =
                 BlockConfig.newChamber("Upward Jump", creative.getId(),
-                        new short[]{1,1,1,1,1,1}, StatusEffectType.CUSTOM_EFFECT_02);
+                        new short[]{231}, StatusEffectType.CUSTOM_EFFECT_02);
         config.add(c2);
 
         ElementInformation bruh =
                 BlockConfig.newChamber("Bruh Jump", creative.getId(),
-                        new short[]{1,1,1,1,1,1}, StatusEffectType.CUSTOM_EFFECT_03);
+                        new short[]{Blocks.CHABAZ_CAPSULE.getId()}, StatusEffectType.CUSTOM_EFFECT_03);
         config.add(bruh);
 
         ElementInformation info = Blocks.THRUSTER_MODULE.getInfo();
         //info.signal = true;
     }
 
-    public static void initBlockData(){
+    public static void initBlockData() {
         final BlockConfig config = new BlockConfig();
-        for(StarMod mod : StarLoader.starMods){
+        for (StarMod mod : StarLoader.starMods) {
             mod.onBlockConfigLoad(config);
         }
         /*for (ElementInformation element : config.getElements()) {
@@ -100,31 +113,71 @@ public class ModPlayground extends StarMod {
             }
         }*/
     }
+    public static void spawnBlockParticle(short id, Vector3f pos){
+        GameClientState state = GameClient.getClientState();
+        if(state == null){
+            return;
+        }
+        final Vector3fb vector3fb = new Vector3fb(pos);
+        final Transform transform = new Transform();
+        transform.setIdentity();
+        transform.origin.set(vector3fb);
+        state.getWorldDrawer().getShards().voronoiBBShatter((PhysicsExt)state.getPhysics(), transform, id, state.getCurrentSectorId(), transform.origin, null);
+    }
     @Override
     public void onEnable() {
         DebugFile.log("Loading default mod...");
-        //File file = config.writeXML();
-       // config.loadXML();
-        //ElementKeyMap.initializeData(file);
-                //config.loadXML();
-              //  ElementKeyMap.getInfo(ElementKeyMap.ACTIVAION_BLOCK_ID)
+
+        StarLoader.registerListener(KeyPressEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                /*
+                SegmentPiece sp = event.getBlock().getInternalSegmentPiece();
+                sp.getPos(new Vector3b());
+                final Vector3fb vector3fb = new Vector3fb(state.getCurrentPlayerObject().getWorldTransform().origin);
+                final Vector3f forward;
+                (forward = state.getPlayer().getForward(new Vector3f())).scale(3.0f);
+                vector3fb.add((Tuple3f)forward);
+                final Transform transform;
+                (transform = new Transform()).setIdentity();
+                transform.origin.set((Tuple3f)vector3fb);
+                state.getWorldDrawer().getShards().voronoiBBShatter((PhysicsExt)state.getPhysics(), transform, (short)1, state.getCurrentSectorId(), transform.origin, null);
+                 */
+
+            }
+        });
+        StarLoader.registerListener(BlockSalvageEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event e) {
+                BlockSalvageEvent event = (BlockSalvageEvent) e;
+                //spawnBlockParticle(event.getBlock().getType().getId(), event.getBeam().getInternalBeam().lastHitTrans.origin);
+                //spawnBlockParticle(event.getBlock().getType().getId(), event.getBlock().getInternalSegmentPiece().getWorldPos(new Vector3f(), event.getBlock().getInternalSegmentPiece().getSegmentController().getSectorId()));
+                spawnBlockParticle(event.getBlock().getType().getId(), event.getBeam().getInternalBeam().hitPoint);
+            }
+        });
 
         StarLoader.registerListener(HudCreateEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
                 HudCreateEvent ev = (HudCreateEvent) event;
-                GUITextOverlay text = new GUITextOverlay(100, 100, FontLibrary.getBlenderProHeavy30(), Color.red, ev.getInputState());
-                text.setTextSimple(new Object(){
+                GUITextOverlay text = new GUITextOverlay(150, 10, FontLibrary.getBlenderProHeavy30(), Color.red, ev.getInputState());
+
+                text.setTextSimple(new Object() {
                     @Override
                     public String toString() {
-                        return "GUITextOverlay is here";
+                        SimpleTransformableSendableObject<?> selectedEntity = GameClient.getClientState().getSelectedEntity();
+                        if (selectedEntity != null) {
+                            return "Selected: " + selectedEntity.toNiceString();
+                        } else {
+                            return "No entity selected";
+                        }
                     }
                 });
-                text.setPos(new Vector3f(100,100,0));
+                text.setPos(new Vector3f(100, 100, 0));
                 ev.addElement(text);
 
                 TargetShieldBar panel = new TargetShieldBar(ev.getInputState());
-                panel.getPos().set(200,200,0);
+                panel.getPos().set(200, 200, 0);
                 ev.addElement(panel);
 
             }
@@ -135,14 +188,14 @@ public class ModPlayground extends StarMod {
                 final BlockActivateEvent event = (BlockActivateEvent) ev;
                 Server.broadcastMessage("Activated block: " + event.getBlockType().getName());
                 Server.broadcastMessage("At: " + event.getSegmentPiece().getAbsolutePos(new Vector3f()).toString());
-                if(event.getBlockId() == Blocks.THRUSTER_MODULE.getId()) {
+                if (event.getBlockId() == Blocks.THRUSTER_MODULE.getId()) {
                     final Entity entity = event.getEntity();
                     //entity.internalEntity.getPhysicsObject().applyCentralForce(new Vector3f(10,10,10));
                     final Vector3f v = entity.getVelocity();
                     v.add(VecUtil.scale(entity.getDirection(), 15F));
                     entity.setVelocity(v);
 
-                    new StarRunnable(){
+                    new StarRunnable() {
                         @Override
                         public void run() {
                             entity.setVelocity(v);
@@ -198,7 +251,7 @@ public class ModPlayground extends StarMod {
                         //SegmentControllers are ships or stations.
                         //It's going to take a while to get used to naming, dont worry about it.
                         SegmentController ship = e.getCurrentShip();
-                        if(ship != null){
+                        if (ship != null) {
                             return String.valueOf(ship.railController.getDockedCount());
                         }
                         return "No ship";

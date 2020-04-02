@@ -35,4 +35,8 @@ public class Block {
     public int getMaxHp(){
         return getType().getInfo().maxHitPointsFull;
     }
+
+    public SegmentPiece getInternalSegmentPiece() {
+        return internalBlock;
+    }
 }

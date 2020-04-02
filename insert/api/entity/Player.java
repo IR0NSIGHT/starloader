@@ -3,10 +3,13 @@ package api.entity;
 import api.faction.Faction;
 import api.inventory.Inventory;
 import api.inventory.InventoryType;
+import api.main.GameServer;
 import api.server.Server;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
+import org.schema.schine.network.RegisteredClientOnServer;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -83,5 +86,8 @@ public class Player {
         }
         this.playerState = pState;
         return playerState;
+    }
+    public RegisteredClientOnServer getClientOnServer(){
+        return GameServer.getServerState().getClients().get(playerState.getClientId());
     }
 }
