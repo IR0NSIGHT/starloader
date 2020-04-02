@@ -1,6 +1,6 @@
 package api.listener.events;
 
-import api.systems.weapons.DamageBeamShot;
+import api.systems.weapons.Beam;
 import org.schema.game.common.controller.BeamHandlerContainer;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.damage.HitReceiverType;
@@ -16,7 +16,7 @@ public class DamageBeamHitEvent extends Event{
     public static int id = 10;
     private final DamageBeamHitHandlerSegmentController inst;
     private final SegmentController hitSegment;
-    DamageBeamShot beam;
+    Beam beam;
     private final int damage;
     private final BeamHandlerContainer<?> unknownVar1;
     private final SegmentPiece unknownVar2;
@@ -28,7 +28,7 @@ public class DamageBeamHitEvent extends Event{
 
         this.inst = inst;
         this.hitSegment = hitSegment;
-        this.beam = new DamageBeamShot(beam);
+        this.beam = new Beam(beam);
         this.damage = damage;
         this.unknownVar1 = unknownVar1;
         this.unknownVar2 = unknownVar2;

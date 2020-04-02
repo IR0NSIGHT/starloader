@@ -40,6 +40,11 @@ public class BlockConfig {
         int idLength = ids.length;
         if(idLength == 3 || idLength == 6 || idLength == 1) {
             elementInformation.individualSides = idLength;
+            if(idLength == 1){
+                short t = ids[0];
+                ids = new short[]{t,t,t,t,t,t};
+                elementInformation.setTextureId(ids);
+            }
             elementInformation.normalizeTextureIds();
         }else{
             DebugFile.warn("You just passed a " + idLength + " array to newElement... Use sizes of 1, 3, or 6");

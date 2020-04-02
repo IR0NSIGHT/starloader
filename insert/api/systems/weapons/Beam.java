@@ -2,10 +2,10 @@ package api.systems.weapons;
 
 import org.schema.game.common.controller.elements.BeamState;
 
-public class DamageBeamShot extends Weapon {
+public class Beam extends Weapon {
     private BeamState internalBeam;
 
-    public DamageBeamShot(BeamState internalBeam) {
+    public Beam(BeamState internalBeam) {
         this.internalBeam = internalBeam;
        // hitController.getEffectContainer().get(HitReceiverType.SHIELD).getStrength(InterEffectHandler.InterEffectType.EM);
     }
