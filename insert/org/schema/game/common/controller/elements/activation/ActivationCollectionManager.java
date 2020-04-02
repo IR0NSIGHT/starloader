@@ -5,7 +5,7 @@
 
 package org.schema.game.common.controller.elements.activation;
 
-import api.inventory.ItemStack;
+import api.inventory.Block;
 import api.listener.events.block.BlockActivateEvent;
 import api.mod.StarLoader;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -24,7 +24,6 @@ import org.schema.game.common.controller.elements.BlockMetaDataDummy;
 import org.schema.game.common.controller.elements.ControlBlockElementCollectionManager;
 import org.schema.game.common.data.SegmentPiece;
 import org.schema.game.common.data.element.ElementCollection;
-import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.element.meta.weapon.MarkerBeam;
 import org.schema.game.common.data.player.ControllerStateInterface;
@@ -111,7 +110,7 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
 
                 if (ElementKeyMap.isValidType(var2.getType())) {
                     //INSERTED CODE
-                    BlockActivateEvent ev = new BlockActivateEvent(var1, var2, new ItemStack(var2.getType()));
+                    BlockActivateEvent ev = new BlockActivateEvent(var1, var2, new Block(var2.getType()));
                     StarLoader.fireEvent(BlockActivateEvent.class, ev);
                     if(ev.isCanceled()){
                         return 0;

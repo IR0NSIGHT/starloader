@@ -33,4 +33,8 @@ public class Shield {
     public boolean isDepleted() {
         return getCurrentShields() <= 0;
     }
+
+    public boolean isActive() {
+        return internalShield.active;
+    }
 }

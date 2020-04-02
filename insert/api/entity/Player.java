@@ -40,33 +40,23 @@ public class Player {
         getPlayerState().setName(name);
     }
 
-    public Vector3i getSector(){
+    public Vector3i getSector() {
         //Duplicate vector so nothing weird happens
         return new Vector3i(getPlayerState().getCurrentSector());
     }
     public void sendServerMessage(String message){
         Server.sendMessage(this.getPlayerState(), message);
     }
-    public Inventory getInventory(){
-        return new Inventory(playerState.getInventory(), InventoryType.PLAYER_INVENTORY, this);
-    }
-    public void sendMail(String from, String to, String title, String contents){
+
+    public void sendMail(String from, String to, String title, String contents) {
         playerState.getClientChannel().getPlayerMessageController().serverSend(from, to, title,
                 contents);
     }
-/*
+
     public Inventory getInventory() {
-        org.schema.game.common.data.player.inventory.Inventory inventoryState = Inventory.getPlayerStateInventory(getPlayerState());
-        Inventory inventory = new Inventory();
-        //Todo: How to get a list of all slots?
-        for(int slot = 0; slot < inventoryState.getSlots(); slot ++) {
-            InventorySlot invSlot = inventoryState.getSlot(slot);
-            Element element = Inventory.getElementFromSlot(invSlot);
-            inventory.addElement(element);
-        }
-        return inventory;
+        return new Inventory(getPlayerState().getInventory(), this, InventoryType.PLAYER_INVENTORY);
     }
-*/
+
     public PlayerState getPlayerState() {
         return this.playerState;
     }
@@ -83,5 +73,9 @@ public class Player {
         }
         this.playerState = pState;
         return playerState;
+    }
+
+    public void openInventory(Inventory inventory) {
+
     }
 }

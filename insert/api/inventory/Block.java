@@ -1,27 +1,23 @@
 package api.inventory;
 
-import javafx.scene.effect.Effect;
-import org.schema.game.common.controller.damage.effects.InterEffectHandler;
-import org.schema.game.common.controller.elements.effectblock.EffectAddOn;
-import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
-
 import java.util.ArrayList;
 
-public class ItemStack {
+public class Block {
 
     private short id;
     private String name;
     private ElementInformation info;
     private int amount;
 
-    public ItemStack(short id){
+    public Block(short id) {
         this.id = id;
         this.info = ElementKeyMap.getInfo(id);
         this.name = info.getName();
     }
-    public ItemStack(String name){
+
+    public Block(String name){
         for (short type : ElementKeyMap.typeList()) {
             ElementInformation info = ElementKeyMap.getInfo(type);
             if(info.getName().toLowerCase().contains(name.toLowerCase())){
@@ -33,7 +29,7 @@ public class ItemStack {
         this.name = name;
     }
 
-    public ItemStack setAmount(int amount) {
+    public Block setAmount(int amount) {
         this.amount = amount;
         return this;
 
@@ -55,13 +51,13 @@ public class ItemStack {
         return amount;
     }
 
-    public static ArrayList<ItemStack> getAllRawResources(){
-        ArrayList<ItemStack> ret = new ArrayList<>();
+    public static ArrayList<Block> getAllRawResources(){
+        ArrayList<Block> ret = new ArrayList<>();
         for (short type : ElementKeyMap.typeList()) {
             ElementInformation info = ElementKeyMap.getInfo(type);
             String name = info.getName().toLowerCase();
             if(name.contains("ore raw") || name.contains("shard raw")){
-                ret.add(new ItemStack(type));
+                ret.add(new Block(type));
             }
         }
         return ret;

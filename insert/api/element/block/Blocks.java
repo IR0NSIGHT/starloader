@@ -1410,12 +1410,11 @@ public enum Blocks {
     private ElementInformation blockInfo = null;
     private short id;
     private Blocks(int id) {
-        //Block block = new Block(ElementKeyMap.getInfo(id));
         this.id = (short) id;
     }
 
     public ElementInformation getInfo() {
-        if(blockInfo == null){
+        if(blockInfo == null) {
             blockInfo = ElementKeyMap.getInfoFast(id);
         }
         return blockInfo;
@@ -1424,5 +1423,4 @@ public enum Blocks {
     public short getId() {
         return id;
     }
-
 }

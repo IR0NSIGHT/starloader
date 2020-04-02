@@ -2,7 +2,7 @@ package api.listener.events.block;
 
 import api.entity.Entity;
 import api.entity.Player;
-import api.inventory.ItemStack;
+import api.inventory.Block;
 import api.listener.events.Event;
 import org.schema.game.common.controller.elements.activation.ActivationElementManager;
 import org.schema.game.common.data.SegmentPiece;
@@ -12,10 +12,10 @@ public class BlockActivateEvent extends Event {
     public static int id = idLog++;
     private final ActivationElementManager manager;
     private final SegmentPiece segmentPiece;
-    private final ItemStack blockType;
+    private final Block blockType;
     private boolean canceled = false;
 
-    public BlockActivateEvent(ActivationElementManager manager, SegmentPiece segmentPiece, ItemStack blockType){
+    public BlockActivateEvent(ActivationElementManager manager, SegmentPiece segmentPiece, Block blockType) {
         this.manager = manager;
         this.segmentPiece = segmentPiece;
         this.blockType = blockType;
@@ -40,26 +40,11 @@ public class BlockActivateEvent extends Event {
         return segmentPiece;
     }
 
-    public ItemStack getBlockType() {
+    public Block getBlockType() {
         return blockType;
     }
 
     public short getBlockId() {
         return blockType.getId();
-    }
-
-    private boolean isActivatedByPlayer() {
-        if(getManager().getState() instanceof PlayerState) { //Does getState() refer to the player who activated it?
-            return true;
-        }
-        return false;
-    }
-
-    public Player getPlayer() {
-        if(isActivatedByPlayer()) {
-            Player player = new Player((PlayerState) getManager().getState()); //Does getState() refer to the player who activated it?
-            return player;
-        }
-        return null;
     }
 }
