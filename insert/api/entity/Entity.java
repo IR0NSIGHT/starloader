@@ -1,21 +1,14 @@
 package api.entity;
 
-import api.config.BlockConfig;
 import api.element.block.Blocks;
 import api.faction.Faction;
-import api.inventory.Block;
-import api.mod.StarLoader;
+import api.inventory.ItemStack;
 import api.systems.Reactor;
 import api.systems.Shield;
-import org.schema.game.common.controller.ElementCountMap;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.*;
 import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
 import org.schema.game.common.data.ManagedSegmentController;
-import org.schema.game.common.data.element.ElementInformation;
-import org.schema.game.common.data.element.ElementKeyMap;
-import org.schema.game.common.data.player.PlayerState;
-import org.schema.game.server.data.GameServerState;
 import org.schema.schine.graphicsengine.core.GlUtil;
 import javax.vecmath.Vector3f;
 import java.io.IOException;
@@ -291,22 +284,22 @@ public class Entity {
         return internalEntity.isOnServer();
     }
 
-    public int getBlockAmount(Block block) {
+    public int getBlockAmount(ItemStack itemStack) {
         /**
          * Gets how many of the specified block the entity has. Does not include docked or root entities.
          */
-        return internalEntity.getElementClassCountMap().get(block.getId());
+        return internalEntity.getElementClassCountMap().get(itemStack.getId());
     }
 
-    public Map<Block, Integer> getBlocks() {
+    public Map<ItemStack, Integer> getBlocks() {
         /**
          * Gets a Map of every block the entity has and how many of each are present. Does not include docked or root entities.
          */
-        Map<Block, Integer> blocks = null;
+        Map<ItemStack, Integer> blocks = null;
 
         for(Blocks value : Blocks.values()) {
-            Block block = new Block(value.getId());
-            blocks.put(block, getBlockAmount(block));
+            ItemStack itemStack = new ItemStack(value.getId());
+            blocks.put(itemStack, getBlockAmount(itemStack));
         }
         return blocks;
     }

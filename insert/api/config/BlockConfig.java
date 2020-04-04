@@ -46,7 +46,7 @@ public class BlockConfig {
                 elementInformation.setTextureId(ids);
             }
             elementInformation.normalizeTextureIds();
-        }else{
+        } else {
             DebugFile.warn("You just passed a " + idLength + " array to newElement... Use sizes of 1, 3, or 6");
             DebugFile.warn("If its a grey basic armor texture, that is why");
         }

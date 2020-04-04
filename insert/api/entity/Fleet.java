@@ -10,9 +10,7 @@ import org.schema.game.common.data.fleet.FleetManager;
 import org.schema.game.common.data.fleet.FleetMember;
 import org.schema.game.network.objects.remote.FleetCommand;
 import org.schema.game.server.data.GameServerState;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class Fleet {
 

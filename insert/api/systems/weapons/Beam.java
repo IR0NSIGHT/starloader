@@ -1,5 +1,6 @@
 package api.systems.weapons;
 
+import api.systems.WeaponSystem;
 import org.schema.game.common.controller.elements.BeamState;
 
 public class Beam extends Weapon {
@@ -14,12 +15,12 @@ public class Beam extends Weapon {
         return internalBeam;
     }
 
-    private Weapon secondary;
+    private WeaponSystem secondary;
     private TertiaryEffectType tertiaryEffectType;
 
     private float effectPercent = 0F;
 
-    public Weapon getSecondary() {
+    public WeaponSystem getSecondary() {
         return secondary;
     }
 
