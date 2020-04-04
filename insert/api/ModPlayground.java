@@ -1,50 +1,44 @@
 package api;
 
 import api.config.BlockConfig;
+import api.element.block.Block;
 import api.element.block.Blocks;
 import api.element.block.FactoryType;
 import api.entity.Entity;
-import api.faction.Faction;
+import api.gui.custom.CustomShieldTargetBar;
+import api.gui.custom.CustomShipHPBar;
 import api.listener.Listener;
 import api.listener.events.Event;
-import api.listener.events.KeyPressEvent;
 import api.listener.events.StructureStatsCreateEvent;
 import api.listener.events.block.BlockActivateEvent;
 import api.listener.events.block.BlockSalvageEvent;
-import api.listener.events.client.BlockSalvageOnClientEvent;
 import api.listener.events.gui.HudCreateEvent;
 import api.listener.events.register.RegisterAddonsEvent;
 import api.listener.events.register.RegisterEffectsEvent;
 import api.main.GameClient;
 import api.mod.StarLoader;
 import api.mod.StarMod;
-import api.server.Server;
 import api.systems.ChamberType;
 import api.systems.addons.custom.TacticalJumpAddOn;
 import api.utils.StarRunnable;
 import api.utils.VecUtil;
 import com.bulletphysics.linearmath.Transform;
 import org.newdawn.slick.Color;
-import org.schema.common.util.linAlg.Vector3b;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
-import org.schema.game.client.view.gui.shiphud.newhud.TargetShieldBar;
-import org.schema.game.client.view.shards.Shard;
 import org.schema.game.common.controller.SegmentController;
-import org.schema.game.common.controller.elements.ManagerContainer;
-import org.schema.game.common.controller.elements.thrust.ThrusterCollectionManager;
-import org.schema.game.common.data.SegmentPiece;
+import org.schema.game.common.controller.elements.activation.AbstractUnit;
+import org.schema.game.common.controller.elements.activation.ActivationCollectionManager;
+import org.schema.game.common.controller.elements.activation.ActivationElementManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.FactoryResource;
 import org.schema.game.common.data.physics.PhysicsExt;
 import org.schema.game.common.data.physics.Vector3fb;
-import org.schema.game.common.data.player.faction.FactionPermission;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.schine.graphicsengine.forms.font.FontLibrary;
 import org.schema.schine.graphicsengine.forms.gui.GUITextOverlay;
 
-import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 import java.util.ArrayList;
@@ -59,6 +53,7 @@ public class ModPlayground extends StarMod {
         setModName("DefaultMod").setModAuthor("Jake").setModDescription("test").setModVersion("1.0").setModSMVersion("0.202");
         setModDescription("Default mod that is always loaded");
     }
+    public static short xorId = 0;
 
     @Override
     public void onBlockConfigLoad(BlockConfig config) {
@@ -97,6 +92,18 @@ public class ModPlayground extends StarMod {
 
         ElementInformation info = Blocks.THRUSTER_MODULE.getInfo();
         //info.signal = true;
+
+
+
+        //Doesnt work (not sure why
+        ElementInformation xor = BlockConfig.newElement("XOR gate", new short[]{745});
+        xor.signal = true;
+        xor.setBuildIconNum(745);
+        xor.setHasActivationTexure(true);
+        config.add(xor);
+
+        xorId = xor.getId();
+
     }
 
     public static void initBlockData() {
@@ -128,24 +135,6 @@ public class ModPlayground extends StarMod {
     public void onEnable() {
         DebugFile.log("Loading default mod...");
 
-        StarLoader.registerListener(KeyPressEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                /*
-                SegmentPiece sp = event.getBlock().getInternalSegmentPiece();
-                sp.getPos(new Vector3b());
-                final Vector3fb vector3fb = new Vector3fb(state.getCurrentPlayerObject().getWorldTransform().origin);
-                final Vector3f forward;
-                (forward = state.getPlayer().getForward(new Vector3f())).scale(3.0f);
-                vector3fb.add((Tuple3f)forward);
-                final Transform transform;
-                (transform = new Transform()).setIdentity();
-                transform.origin.set((Tuple3f)vector3fb);
-                state.getWorldDrawer().getShards().voronoiBBShatter((PhysicsExt)state.getPhysics(), transform, (short)1, state.getCurrentSectorId(), transform.origin, null);
-                 */
-
-            }
-        });
         StarLoader.registerListener(BlockSalvageEvent.class, new Listener() {
             @Override
             public void onEvent(Event e) {
@@ -176,9 +165,23 @@ public class ModPlayground extends StarMod {
                 text.setPos(new Vector3f(100, 100, 0));
                 ev.addElement(text);
 
-                TargetShieldBar panel = new TargetShieldBar(ev.getInputState());
-                panel.getPos().set(200, 200, 0);
-                ev.addElement(panel);
+                CustomShieldTargetBar bar = new CustomShieldTargetBar() {
+                    @Override
+                    public void onUpdate() {
+                        Entity currentEntity = GameClient.getCurrentEntity();
+                        this.setEntity(currentEntity);
+                    }
+                };
+                ev.addElement(bar);
+
+                CustomShipHPBar customShipHPBar = new CustomShipHPBar(ev.getInputState()) {
+                    @Override
+                    public void onUpdate() {
+                        Entity currentEntity = GameClient.getCurrentEntity();
+                        this.setEntity(currentEntity);
+                    }
+                };
+                ev.addElement(customShipHPBar);
 
             }
         });
@@ -186,8 +189,30 @@ public class ModPlayground extends StarMod {
             @Override
             public void onEvent(Event ev) {
                 final BlockActivateEvent event = (BlockActivateEvent) ev;
-                Server.broadcastMessage("Activated block: " + event.getBlockType().getName());
-                Server.broadcastMessage("At: " + event.getSegmentPiece().getAbsolutePos(new Vector3f()).toString());
+                //Server.broadcastMessage("Activated block: " + event.getBlockType().getName());
+                //Server.broadcastMessage("At: " + event.getSegmentPiece().getAbsolutePos(new Vector3f()).toString());
+                if(event.getBlockId() == xorId){
+                    ActivationElementManager var1 = event.getManager();
+                    Block block = event.getBlock();
+                    long var6 = block.getInternalSegmentPiece().getAbsoluteIndex();
+                    int activeSignals = 0;
+                    for(int i = 0; i < var1.getCollectionManagers().size(); ++i) {
+                        ActivationCollectionManager var8 = (ActivationCollectionManager)var1.getCollectionManagers().get(i);
+                        for(int j = 0; j < var8.getElementCollections().size(); ++j) {
+                            if (((AbstractUnit)var8.getElementCollections().get(j)).contains(var6)) {
+                                var8.getControllerElement().refresh();
+                                if(var8.getControllerElement().isActive()){
+                                    activeSignals++;
+                                }
+                            }
+                        }
+                    }
+                    if(activeSignals == 2){
+                        block.getInternalSegmentPiece().setActive(true);
+                    }else{
+                        block.getInternalSegmentPiece().setActive(false);
+                    }
+                }
                 if (event.getBlockId() == Blocks.THRUSTER_MODULE.getId()) {
                     final Entity entity = event.getEntity();
                     //entity.internalEntity.getPhysicsObject().applyCentralForce(new Vector3f(10,10,10));

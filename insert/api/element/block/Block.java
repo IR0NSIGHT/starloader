@@ -39,4 +39,7 @@ public class Block {
     public SegmentPiece getInternalSegmentPiece() {
         return internalBlock;
     }
+    public void setActive(boolean b){
+        internalBlock.setActive(b);
+    }
 }
