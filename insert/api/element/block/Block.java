@@ -88,4 +88,10 @@ public class Block {
          */
         return internalBlock;
     }
+    public void setActive(boolean b){
+        internalBlock.setActive(b);
+    }
+    public short getId(){
+        return internalBlock.getType();
+    }
 }

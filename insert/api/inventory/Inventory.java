@@ -9,6 +9,7 @@ public class Inventory {
     private org.schema.game.common.data.player.inventory.Inventory internalInventory;
     private InventoryType inventoryType;
     private Player inventoryHolder;
+    private ItemStack container;
 
     /**
      * @param internalInventory Internal inventory
@@ -19,12 +20,14 @@ public class Inventory {
         this.inventoryHolder = holder;
         this.internalInventory = internalInventory;
         this.inventoryType = inventoryType;
+        this.container = null;
     }
 
-    public Inventory(org.schema.game.common.data.player.inventory.Inventory internalInventory, InventoryType inventoryType) {
+    public Inventory(org.schema.game.common.data.player.inventory.Inventory internalInventory, ItemStack container, InventoryType inventoryType) {
         this.inventoryHolder = null;
         this.internalInventory = internalInventory;
         this.inventoryType = inventoryType;
+        this.container = container;
     }
 
     public org.schema.game.common.data.player.inventory.Inventory getInternalInventory() {
@@ -33,18 +36,18 @@ public class Inventory {
 
     public void setInventoryFilter(InventoryFilter inventoryFilter) {
         org.schema.game.common.data.player.inventory.InventoryFilter internalFilter = internalInventory.getFilter();
-        for(ItemStack itemStack : inventoryFilter.getBlocks().keySet()) {
-            int amount = inventoryFilter.getBlocks().get(itemStack)[0];
-            int upTo = inventoryFilter.getBlocks().get(itemStack)[1];
+        for(ItemStack block : inventoryFilter.getBlocks().keySet()) {
+            int amount = inventoryFilter.getBlocks().get(block)[0];
+            int upTo = inventoryFilter.getBlocks().get(block)[1];
             //internalFilter.filter.put(?);
-            //Todo:Figure out how to put itemStack, amount, and upTo values in the internalFilter
+            //Todo:Figure out how to put block, amount, and upTo values in the internalFilter
         }
     }
 
-    public void addItem(ItemStack itemStack) {
+    public void addItem(ItemStack block) {
         PlayerState state = inventoryHolder.getPlayerState();
         //what actualy adds the item to the inventory
-        int slot = internalInventory.incExistingOrNextFreeSlot(itemStack.getId(), itemStack.getAmount());
+        int slot = internalInventory.incExistingOrNextFreeSlot(block.getId(), block.getAmount());
         if(inventoryHolder != null) {
             state.sendInventoryModification(slot, Long.MIN_VALUE);
         }

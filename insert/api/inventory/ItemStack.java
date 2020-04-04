@@ -17,8 +17,8 @@ public class ItemStack {
         this.name = info.getName();
     }
 
-    public ItemStack(String name) {
-        for(short type : ElementKeyMap.typeList()) {
+    public ItemStack(String name){
+        for (short type : ElementKeyMap.typeList()) {
             ElementInformation info = ElementKeyMap.getInfo(type);
             if(info.getName().toLowerCase().contains(name.toLowerCase())){
                 this.id = type;

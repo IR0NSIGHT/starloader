@@ -5,7 +5,7 @@
 
 package org.schema.game.common.controller.elements.activation;
 
-import api.inventory.ItemStack;
+import api.element.block.Blocks;
 import api.listener.events.block.BlockActivateEvent;
 import api.mod.StarLoader;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -24,6 +24,7 @@ import org.schema.game.common.controller.elements.BlockMetaDataDummy;
 import org.schema.game.common.controller.elements.ControlBlockElementCollectionManager;
 import org.schema.game.common.data.SegmentPiece;
 import org.schema.game.common.data.element.ElementCollection;
+import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.element.meta.weapon.MarkerBeam;
 import org.schema.game.common.data.player.ControllerStateInterface;
@@ -110,7 +111,7 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
 
                 if (ElementKeyMap.isValidType(var2.getType())) {
                     //INSERTED CODE
-                    BlockActivateEvent ev = new BlockActivateEvent(var1, var2, new ItemStack(var2.getType()));
+                    BlockActivateEvent ev = new BlockActivateEvent(var1, var2, this);
                     StarLoader.fireEvent(BlockActivateEvent.class, ev);
                     if(ev.isCanceled()){
                         return 0;
@@ -120,7 +121,8 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
                     ActivationCollectionManager var8;
                     int var9;
                     int var10;
-                    if (var2.getType() == 408) {
+
+                    if (var2.getType() == Blocks.AND_SIGNAL.getId()) {
                         var6 = var2.getAbsoluteIndex();
 
                         for(var10 = 0; var10 < var1.getCollectionManagers().size(); ++var10) {
@@ -133,10 +135,10 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
                                 }
                             }
                         }
-                    } else if (var2.getType() != 409) {
-                        if (var2.getType() == 410) {
+                    } else if (var2.getType() != Blocks.OR_SIGNAL.getId()) {
+                        if (var2.getType() == Blocks.NOT_SIGNAL.getId()) {
                             var4 = !var4;
-                        } else if (var2.getType() == 979) {
+                        } else if (var2.getType() == Blocks.RANDOMIZER.getId()) {
                             var4 = Math.random() > 0.5D;
                         } else if (!ElementKeyMap.isButton(var2.getType())) {
                             if (var2.getType() == 667) {

@@ -1,8 +1,10 @@
 package api.main;
 
+import api.entity.Entity;
 import org.schema.game.client.controller.GameClientController;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.data.PlayerControllable;
+import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.Ship;
 import org.schema.game.common.data.fleet.Fleet;
 import org.schema.game.common.data.player.ControllerStateUnit;
@@ -51,6 +53,14 @@ public class GameClient {
         PlayerControllable con = getCurrentControl();
         if(con instanceof Ship){
             return (Ship) con;
+        }else{
+            return null;
+        }
+    }
+    public static Entity getCurrentEntity(){
+        PlayerControllable con = getCurrentControl();
+        if(con instanceof SegmentController){
+            return new Entity((SegmentController) con);
         }else{
             return null;
         }

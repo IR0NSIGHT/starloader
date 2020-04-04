@@ -1,5 +1,6 @@
 package api.entity;
 
+import api.element.block.Block;
 import api.element.block.Blocks;
 import api.faction.Faction;
 import api.inventory.ItemStack;
@@ -12,10 +13,7 @@ import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.schine.graphicsengine.core.GlUtil;
 import javax.vecmath.Vector3f;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Entity {
     public SegmentController internalEntity;
@@ -284,22 +282,22 @@ public class Entity {
         return internalEntity.isOnServer();
     }
 
-    public int getBlockAmount(ItemStack itemStack) {
+    public int getBlockAmount(Blocks block) {
         /**
          * Gets how many of the specified block the entity has. Does not include docked or root entities.
          */
-        return internalEntity.getElementClassCountMap().get(itemStack.getId());
+        return internalEntity.getElementClassCountMap().get(block.getId());
     }
 
-    public Map<ItemStack, Integer> getBlocks() {
+
+    public HashMap<Blocks, Integer> getBlocks() {
         /**
          * Gets a Map of every block the entity has and how many of each are present. Does not include docked or root entities.
          */
-        Map<ItemStack, Integer> blocks = null;
+        HashMap<Blocks, Integer> blocks = new HashMap<>();
 
         for(Blocks value : Blocks.values()) {
-            ItemStack itemStack = new ItemStack(value.getId());
-            blocks.put(itemStack, getBlockAmount(itemStack));
+            blocks.put(value, getBlockAmount(value));
         }
         return blocks;
     }

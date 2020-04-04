@@ -12,7 +12,7 @@ public class Ship extends Entity {
         this.internalShip = (org.schema.game.common.controller.Ship) internalEntity;
     }
 
-    private org.schema.game.common.controller.Ship getInternalShip() {
+    public org.schema.game.common.controller.Ship getInternalShip() {
         return internalShip;
     }
 

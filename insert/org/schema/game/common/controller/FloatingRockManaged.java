@@ -177,7 +177,8 @@ public class FloatingRockManaged extends FloatingRock implements PlayerControlla
             byte var18 = var5.getOrientation();
 
             //INSERTED CODE
-            //Note that this currently only calls for the server.
+            //Note: this is when an ASTEROID mines something,
+            //ship mining asteroid is in ManagedUsableSegmentController
             BlockSalvageEvent event = new BlockSalvageEvent(var1, var2, var4, var5, var7);
             StarLoader.fireEvent(BlockSalvageEvent.class, event);
             if(event.isCanceled()){
