@@ -7,6 +7,7 @@ import api.element.block.FactoryType;
 import api.entity.Entity;
 import api.gui.custom.CustomShieldTargetBar;
 import api.gui.custom.CustomShipHPBar;
+import api.gui.custom.EntityShieldBar;
 import api.listener.Listener;
 import api.listener.events.Event;
 import api.listener.events.StructureStatsCreateEvent;
@@ -149,7 +150,9 @@ public class ModPlayground extends StarMod {
             @Override
             public void onEvent(Event event) {
                 HudCreateEvent ev = (HudCreateEvent) event;
-                GUITextOverlay text = new GUITextOverlay(150, 10, FontLibrary.getBlenderProHeavy30(), Color.red, ev.getInputState());
+                EntityShieldBar bar = new EntityShieldBar();
+                ev.addElement(bar);
+                /*GUITextOverlay text = new GUITextOverlay(150, 10, FontLibrary.getBlenderProHeavy30(), Color.red, ev.getInputState());
 
                 text.setTextSimple(new Object() {
                     @Override
@@ -181,7 +184,7 @@ public class ModPlayground extends StarMod {
                         this.setEntity(currentEntity);
                     }
                 };
-                ev.addElement(customShipHPBar);
+                ev.addElement(customShipHPBar);*/
 
             }
         });

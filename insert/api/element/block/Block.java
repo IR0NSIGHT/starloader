@@ -4,6 +4,7 @@ import api.entity.Entity;
 import api.inventory.Inventory;
 import api.inventory.InventoryType;
 import api.systems.WeaponSystem;
+import org.schema.common.util.linAlg.Vector3b;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.elements.cargo.CargoElementManager;
 import org.schema.game.common.controller.elements.weapon.WeaponCollectionManager;
@@ -22,9 +23,6 @@ public class Block {
 
     public Blocks getType(){
         return Blocks.fromId(internalBlock.getType());
-    }
-    public Vector3i getLocation(){
-        return new Vector3i(internalBlock.x, internalBlock.y, internalBlock.z);
     }
     public float distance(Block other){
         return SegmentPiece.getWorldDistance(internalBlock, other.internalBlock);
@@ -90,7 +88,7 @@ public class Block {
         return null;
     }
 
-    private SegmentPiece getInternalSegmentPiece() {
+    public SegmentPiece getInternalSegmentPiece() {
         return internalBlock;
     }
     public void setActive(boolean b){
@@ -99,4 +97,51 @@ public class Block {
     public short getId(){
         return internalBlock.getType();
     }
+
+    public Vector3i getLocation(){
+        return internalBlock.getAbsolutePos(new Vector3i());
+    }
+    public Vector3b getLocationOnChunk(){
+        return internalBlock.getPos(new Vector3b());
+    }
+
+    //TODO Make sure it works
+    public Block[] getAdjacentBlocks(){
+        Block[] adjacent = new Block[6];
+        Vector3i absolutePos = internalBlock.getAbsolutePos(new Vector3i());
+        Vector3i posTmp = new Vector3i();
+        for(int var4 = 0; var4 < 6; ++var4) {
+            posTmp.set(absolutePos);
+            posTmp.add(Element.DIRECTIONSi[var4]);
+            SegmentPiece var5;
+            if ((var5 = internalBlock.getSegmentController().getSegmentBuffer().getPointUnsave(posTmp)) == null) {
+                //something broke
+                return null;
+            }
+            adjacent[var4] = new Block(var5);
+        }
+        return adjacent;
+    }
+    /*
+    public SegmentPiece[] getNeighborElements(Vector3i var1, short var2, SegmentPiece[] var3) throws IOException, InterruptedException {
+        assert var3.length == 6;
+
+        for(int var4 = 0; var4 < 6; ++var4) {
+            this.posTmp.set(var1);
+            this.posTmp.add(Element.DIRECTIONSi[var4]);
+            SegmentPiece var5;
+            if ((var5 = this.getSegmentBuffer().getPointUnsave(this.posTmp)) == null) {
+                return null;
+            }
+
+            if (var2 != 32767 && var2 != var5.getType()) {
+                var3[var4] = null;
+            } else {
+                var3[var4] = var5;
+            }
+        }
+
+        return var3;
+    }
+     */
 }

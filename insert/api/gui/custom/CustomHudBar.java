@@ -31,13 +31,13 @@ import org.schema.schine.input.InputState;
 import java.awt.*;
 
 public abstract class CustomHudBar extends FillableHorizontalBar {
-    public static Vector4i COLOR = new Vector4i(0, 255, 109, 255);
+    public Vector4i COLOR = new Vector4i(0, 255, 109, 255);
     public static Vector2f OFFSET = new Vector2f(100,100);
     public static boolean FLIPX = false;
     public static boolean FLIPY = false;
     public static boolean FILL_ON_TOP = true;
-    public static Vector2f TEXT_POS = new Vector2f(120,120);
-    public static Vector2f TEXT_DESC_POS = new Vector2f(140,140);
+    public Vector2f TEXT_POS = new Vector2f(120,120);
+    public Vector2f TEXT_DESC_POS = new Vector2f(140,140);
 
     public abstract boolean drawBar();
 
@@ -48,6 +48,11 @@ public abstract class CustomHudBar extends FillableHorizontalBar {
         }
     }
 
+    @Override
+    public void onInit() {
+        super.onInit();
+        create();
+    }
 
     public abstract void create();
 

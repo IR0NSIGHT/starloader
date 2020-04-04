@@ -1,7 +1,10 @@
 package api.gui.custom;
 
+import api.element.block.Block;
 import api.entity.Entity;
+import api.main.GameClient;
 import api.systems.Shield;
+import org.schema.game.common.controller.SegmentController;
 
 public class EntityShieldBar extends CustomHudBar {
 
@@ -17,14 +20,15 @@ public class EntityShieldBar extends CustomHudBar {
 
     @Override
     public void create() {
-        setGlowIntensity(100);
-        setWidth(300);
+        setGlowIntensity(100000);
+        setWidth(11111);
         setPos(200,200,1);
     }
 
     @Override
     public void onUpdate() {
-
+        Entity currentEntity = GameClient.getCurrentEntity();
+        this.setEntity(currentEntity);
     }
 
     @Override
