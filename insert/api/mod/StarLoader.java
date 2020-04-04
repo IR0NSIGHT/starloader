@@ -59,7 +59,7 @@ public class StarLoader {
         DebugFile.log("Firing Event: " +clazz.getName());
         for (Listener listener : getListeners(id)) {
             if(clazz == BlockActivateEvent.class){
-                DebugFile.log("ItemStack activate for: ");
+                DebugFile.log("Block activate for: ");
             }
             try {
                 listener.onEvent(ev);

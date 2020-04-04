@@ -417,7 +417,7 @@ public class ElementKeyMap {
 
     public static void add(short var0, ElementInformation var1) throws ParserConfigurationException {
         if (keySet.contains(var0)) {
-            throw new ParserConfigurationException("Duplicate ItemStack ID " + var0 + " (" + var1.getName() + " and " + ((ElementInformation)informationKeyMap.get(var0)).getName() + ")");
+            throw new ParserConfigurationException("Duplicate Block ID " + var0 + " (" + var1.getName() + " and " + ((ElementInformation)informationKeyMap.get(var0)).getName() + ")");
         } else {
             keySet.add(var0);
             informationKeyMap.put(var0, var1);
@@ -924,7 +924,7 @@ public class ElementKeyMap {
         fixedRecipes = var0;
 
         for(int var1 = 0; var1 < var0.recipes.size(); ++var1) {
-            if (((FixedRecipe)var0.recipes.get(var1)).name.equals("Make Macro Factory ItemStack")) {
+            if (((FixedRecipe)var0.recipes.get(var1)).name.equals("Make Macro Factory Block")) {
                 macroBlockRecipe = (FixedRecipe)var0.recipes.get(var1);
             }
 
@@ -1625,7 +1625,7 @@ public class ElementKeyMap {
                 }
             }
 
-            throw new NullPointerException("No ItemStack ID Free");
+            throw new NullPointerException("No Block ID Free");
         }
     }
 
