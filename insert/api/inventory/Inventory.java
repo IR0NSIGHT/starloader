@@ -9,7 +9,6 @@ public class Inventory {
     private org.schema.game.common.data.player.inventory.Inventory internalInventory;
     private InventoryType inventoryType;
     private Player inventoryHolder;
-    private ItemStack container;
 
     /**
      * @param internalInventory Internal inventory
@@ -20,14 +19,12 @@ public class Inventory {
         this.inventoryHolder = holder;
         this.internalInventory = internalInventory;
         this.inventoryType = inventoryType;
-        this.container = null;
     }
 
-    public Inventory(org.schema.game.common.data.player.inventory.Inventory internalInventory, ItemStack container, InventoryType inventoryType) {
+    public Inventory(org.schema.game.common.data.player.inventory.Inventory internalInventory, InventoryType inventoryType) {
         this.inventoryHolder = null;
         this.internalInventory = internalInventory;
         this.inventoryType = inventoryType;
-        this.container = container;
     }
 
     public org.schema.game.common.data.player.inventory.Inventory getInternalInventory() {
