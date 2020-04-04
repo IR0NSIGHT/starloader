@@ -6,9 +6,12 @@ import api.inventory.InventoryType;
 import api.systems.WeaponSystem;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.elements.cargo.CargoElementManager;
+import org.schema.game.common.controller.elements.weapon.WeaponCollectionManager;
 import org.schema.game.common.controller.elements.weapon.WeaponElementManager;
 import org.schema.game.common.data.SegmentPiece;
-import org.schema.game.common.data.element.ElementDocking;
+import org.schema.game.common.data.element.*;
+
+import java.util.List;
 
 public class Block {
     private SegmentPiece internalBlock;
@@ -72,20 +75,22 @@ public class Block {
 
     public WeaponSystem getWeaponSystem() {
         /**
-         * Gets the block's weapon system. Returns null if the block is not a type of weapon computer or weapon module.
+         * Gets the block's weapon system. Returns null if the block is not part of a weapon system.
          */
         if(getType().getInfo().getFullName().contains("COMPUTER") || getType().getInfo().getFullName().contains("MODULE")) {
             //Todo:Implement a better system of detecting if a block is a weapon other than just by it's name.
             WeaponElementManager weaponElementManager = new WeaponElementManager(internalBlock.getSegmentController());
-            return new WeaponSystem(weaponElementManager);
+            List<WeaponCollectionManager> weaponCollections = weaponElementManager.getCollectionManagers();
+            for(WeaponCollectionManager weaponCollection : weaponCollections) {
+                if(weaponCollection.getControllerPos() == getLocation()) {
+                    return new WeaponSystem(weaponCollection);
+                }
+            }
         }
         return null;
     }
 
-    public SegmentPiece getInternalSegmentPiece() {
-        /**
-         * Gets the internal segment piece associated with the block. Don't use this unless you know what you're doing!
-         */
+    private SegmentPiece getInternalSegmentPiece() {
         return internalBlock;
     }
     public void setActive(boolean b){

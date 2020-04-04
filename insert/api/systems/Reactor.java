@@ -1,6 +1,5 @@
 package api.systems;
 
-import api.entity.Entity;
 import org.schema.game.common.controller.elements.power.reactor.tree.ReactorElement;
 import org.schema.game.common.controller.elements.power.reactor.tree.ReactorTree;
 import java.util.List;

@@ -1,26 +1,42 @@
 package api.systems;
 
-import api.systems.modules.EffectModule;
-import api.systems.weapons.Weapon;
-import org.schema.game.common.controller.elements.weapon.WeaponElementManager;
+import api.entity.Entity;
+import org.schema.common.util.linAlg.Vector3i;
+import org.schema.game.common.controller.elements.ControlBlockElementCollectionManager;
 
 public class WeaponSystem {
 
-    private WeaponElementManager internalWeaponSystem;
+    private ControlBlockElementCollectionManager internalWeaponSystem;
 
-    public WeaponSystem(WeaponElementManager internalWeaponSystem) {
+    public WeaponSystem(ControlBlockElementCollectionManager internalWeaponSystem) {
         this.internalWeaponSystem = internalWeaponSystem;
     }
 
-    public Weapon getPrimary() {
-        return null;
+    public WeaponSystem getSecondary() {
+        /**
+         * Returns the secondary computer group for the weapon system. Returns null if the system has no secondary computer group.
+         */
+        return new WeaponSystem(internalWeaponSystem.getSupportCollectionManager());
     }
 
-    public Weapon getSecondary() {
-        return null;
+    public WeaponSystem getEffect() {
+        /**
+         * Returns the effect weapon computer group for the module system. Returns null if the system has no effect.
+         */
+        return new WeaponSystem(internalWeaponSystem.getEffectCollectionManager());
     }
 
-    public EffectModule getEffect() {
-        return null;
+    public Entity getEntity() {
+        /**
+         * Gets the entity the module system is on.
+         */
+        return new Entity(internalWeaponSystem.getSegmentController());
+    }
+
+    public Vector3i getControllerPosition() {
+        /**
+         * Gets the location of the controlling computer.
+         */
+        return internalWeaponSystem.getControllerPos();
     }
 }

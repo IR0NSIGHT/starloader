@@ -252,7 +252,7 @@ public class Entity {
         return null;
     }
 
-    private ManagerContainer<?> getManagerContainer() {
+    public ManagerContainer<?> getManagerContainer() {
         return ((ManagedSegmentController<?>) internalEntity).getManagerContainer();
     }
 
