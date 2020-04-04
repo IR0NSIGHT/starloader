@@ -1,18 +1,15 @@
 package api.inventory;
 
 import api.entity.Player;
-import it.unimi.dsi.fastutil.shorts.Short2IntOpenHashMap;
-import org.schema.game.client.view.gui.inventory.inventorynew.InventoryFilterBar;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.player.PlayerState;
-import org.schema.game.common.data.player.inventory.InventoryHolder;
 
 public class Inventory {
 
     private org.schema.game.common.data.player.inventory.Inventory internalInventory;
     private InventoryType inventoryType;
     private Player inventoryHolder;
-    private Block container;
+    private ItemStack container;
 
     /**
      * @param internalInventory Internal inventory
@@ -26,7 +23,7 @@ public class Inventory {
         this.container = null;
     }
 
-    public Inventory(org.schema.game.common.data.player.inventory.Inventory internalInventory, Block container, InventoryType inventoryType) {
+    public Inventory(org.schema.game.common.data.player.inventory.Inventory internalInventory, ItemStack container, InventoryType inventoryType) {
         this.inventoryHolder = null;
         this.internalInventory = internalInventory;
         this.inventoryType = inventoryType;
@@ -39,7 +36,7 @@ public class Inventory {
 
     public void setInventoryFilter(InventoryFilter inventoryFilter) {
         org.schema.game.common.data.player.inventory.InventoryFilter internalFilter = internalInventory.getFilter();
-        for(Block block : inventoryFilter.getBlocks().keySet()) {
+        for(ItemStack block : inventoryFilter.getBlocks().keySet()) {
             int amount = inventoryFilter.getBlocks().get(block)[0];
             int upTo = inventoryFilter.getBlocks().get(block)[1];
             //internalFilter.filter.put(?);
@@ -47,7 +44,7 @@ public class Inventory {
         }
     }
 
-    public void addItem(Block block) {
+    public void addItem(ItemStack block) {
         PlayerState state = inventoryHolder.getPlayerState();
         //what actualy adds the item to the inventory
         int slot = internalInventory.incExistingOrNextFreeSlot(block.getId(), block.getAmount());

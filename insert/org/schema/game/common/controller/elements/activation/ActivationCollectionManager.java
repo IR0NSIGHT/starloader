@@ -6,7 +6,6 @@
 package org.schema.game.common.controller.elements.activation;
 
 import api.element.block.Blocks;
-import api.inventory.ItemStack;
 import api.listener.events.block.BlockActivateEvent;
 import api.mod.StarLoader;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -112,7 +111,7 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
 
                 if (ElementKeyMap.isValidType(var2.getType())) {
                     //INSERTED CODE
-                    BlockActivateEvent ev = new BlockActivateEvent(var1, var2, new ItemStack(var2.getType()), this);
+                    BlockActivateEvent ev = new BlockActivateEvent(var1, var2, this);
                     StarLoader.fireEvent(BlockActivateEvent.class, ev);
                     if(ev.isCanceled()){
                         return 0;

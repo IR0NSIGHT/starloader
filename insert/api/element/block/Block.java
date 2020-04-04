@@ -42,4 +42,7 @@ public class Block {
     public void setActive(boolean b){
         internalBlock.setActive(b);
     }
+    public short getId(){
+        return internalBlock.getType();
+    }
 }
