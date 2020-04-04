@@ -69,6 +69,7 @@ public abstract class CustomShieldTargetBar extends FillableHorizontalBar {
     public void onInit() {
 
         super.onInit();
+        getPos().set(100,100, 1F);
     }
 
     public Vector2f getTextPos() {

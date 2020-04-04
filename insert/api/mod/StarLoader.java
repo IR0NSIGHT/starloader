@@ -56,7 +56,7 @@ public class StarLoader {
     //fire event methods:
     public static void fireEvent(Class<? extends Event> clazz, Event ev){
         int id = getIdFromEvent(clazz);
-        DebugFile.log("Firing Event: " +clazz.getName());
+        //DebugFile.log("Firing Event: " +clazz.getName());
         for (Listener listener : getListeners(id)) {
             if(clazz == BlockActivateEvent.class){
                 DebugFile.log("Block activate for: ");

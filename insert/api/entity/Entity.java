@@ -242,14 +242,8 @@ public class Entity {
          */
         ManagerContainer<?> manager = getManagerContainer();
         ArrayList<Shield> shields = new ArrayList<>();
-        if(manager instanceof ShipManagerContainer) {
-            Collection<ShieldLocal> allShields = ((ShipManagerContainer) manager).getShieldAddOn().getShieldLocalAddOn().getAllShields();
-            for(ShieldLocal sh : allShields) {
-                shields.add(new Shield(sh));
-            }
-            return shields;
-        } else if(manager instanceof SpaceStationManagerContainer) {
-            Collection<ShieldLocal> allShields = ((SpaceStationManagerContainer) manager).getShieldAddOn().getShieldLocalAddOn().getAllShields();
+        if(manager instanceof ShieldContainerInterface) {
+            Collection<ShieldLocal> allShields = ((ShieldContainerInterface) manager).getShieldAddOn().getShieldLocalAddOn().getAllShields();
             for(ShieldLocal sh : allShields) {
                 shields.add(new Shield(sh));
             }
@@ -300,5 +294,17 @@ public class Entity {
             blocks.put(value, getBlockAmount(value));
         }
         return blocks;
+    }
+
+    public Shield getLastHitShield() {
+        ManagerContainer<?> manager = getManagerContainer();
+        if(manager instanceof ShieldContainerInterface){
+            ShieldLocal lastHitShield = ((ShieldContainerInterface) manager).getShieldAddOn().getShieldLocalAddOn().getLastHitShield();
+            if(lastHitShield == null){
+                return null;
+            }
+            return new Shield(lastHitShield);
+        }
+        return null;
     }
 }

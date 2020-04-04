@@ -3,7 +3,7 @@ package api.systems.weapons;
 import api.systems.WeaponSystem;
 import org.schema.game.common.controller.elements.BeamState;
 
-public class Beam extends Weapon {
+public class Beam {
     private BeamState internalBeam;
 
     public Beam(BeamState internalBeam) {

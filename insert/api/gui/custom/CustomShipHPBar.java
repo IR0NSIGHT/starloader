@@ -61,6 +61,13 @@ public abstract class CustomShipHPBar extends FillableHorizontalBar {
             return 0;
         }
     }
+
+    @Override
+    public void onInit() {
+        super.onInit();
+        getPos().set(200,200, 1F);
+    }
+
     public abstract void onUpdate();
 
     @Override

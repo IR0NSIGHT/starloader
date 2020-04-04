@@ -10,6 +10,10 @@ public class Shield {
         internalShield = local;
     }
 
+    public ShieldLocal getInternalShield() {
+        return internalShield;
+    }
+
     public float getRadius() {
         return internalShield.radius;
     }
@@ -36,5 +40,9 @@ public class Shield {
 
     public boolean isActive() {
         return internalShield.active;
+    }
+
+    public float getPercent(){
+        return internalShield.getPercentOne();
     }
 }
