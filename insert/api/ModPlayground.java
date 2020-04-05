@@ -5,8 +5,9 @@ import api.element.block.Block;
 import api.element.block.Blocks;
 import api.element.block.FactoryType;
 import api.entity.Entity;
-import api.gui.custom.CustomShieldTargetBar;
-import api.gui.custom.CustomShipHPBar;
+import api.entity.Player;
+import api.gui.custom.CustomHudText;
+import api.gui.custom.examples.*;
 import api.listener.Listener;
 import api.listener.events.Event;
 import api.listener.events.StructureStatsCreateEvent;
@@ -22,9 +23,8 @@ import api.systems.ChamberType;
 import api.systems.addons.custom.TacticalJumpAddOn;
 import api.utils.StarRunnable;
 import api.utils.VecUtil;
-import com.bulletphysics.linearmath.Transform;
 import org.newdawn.slick.Color;
-import org.schema.game.client.data.GameClientState;
+import org.newdawn.slick.UnicodeFont;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.activation.AbstractUnit;
@@ -33,11 +33,7 @@ import org.schema.game.common.controller.elements.activation.ActivationElementMa
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.FactoryResource;
-import org.schema.game.common.data.physics.PhysicsExt;
-import org.schema.game.common.data.physics.Vector3fb;
-import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.schine.graphicsengine.forms.font.FontLibrary;
-import org.schema.schine.graphicsengine.forms.gui.GUITextOverlay;
 
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
@@ -120,17 +116,7 @@ public class ModPlayground extends StarMod {
             }
         }*/
     }
-    public static void spawnBlockParticle(short id, Vector3f pos){
-        GameClientState state = GameClient.getClientState();
-        if(state == null){
-            return;
-        }
-        final Vector3fb vector3fb = new Vector3fb(pos);
-        final Transform transform = new Transform();
-        transform.setIdentity();
-        transform.origin.set(vector3fb);
-        state.getWorldDrawer().getShards().voronoiBBShatter((PhysicsExt)state.getPhysics(), transform, id, state.getCurrentSectorId(), transform.origin, null);
-    }
+
     @Override
     public void onEnable() {
         DebugFile.log("Loading default mod...");
@@ -139,9 +125,7 @@ public class ModPlayground extends StarMod {
             @Override
             public void onEvent(Event e) {
                 BlockSalvageEvent event = (BlockSalvageEvent) e;
-                //spawnBlockParticle(event.getBlock().getType().getId(), event.getBeam().getInternalBeam().lastHitTrans.origin);
-                //spawnBlockParticle(event.getBlock().getType().getId(), event.getBlock().getInternalSegmentPiece().getWorldPos(new Vector3f(), event.getBlock().getInternalSegmentPiece().getSegmentController().getSectorId()));
-                spawnBlockParticle(event.getBlock().getType().getId(), event.getBeam().getInternalBeam().hitPoint);
+                GameClient.spawnBlockParticle(event.getBlock().getType().getId(), event.getBeam().getInternalBeam().hitPoint);
             }
         });
 
@@ -149,7 +133,8 @@ public class ModPlayground extends StarMod {
             @Override
             public void onEvent(Event event) {
                 HudCreateEvent ev = (HudCreateEvent) event;
-                GUITextOverlay text = new GUITextOverlay(150, 10, FontLibrary.getBlenderProHeavy30(), Color.red, ev.getInputState());
+                BasicInfoGroup bar = new BasicInfoGroup(ev);
+                /*GUITextOverlay text = new GUITextOverlay(150, 10, FontLibrary.getBlenderProHeavy30(), Color.red, ev.getInputState());
 
                 text.setTextSimple(new Object() {
                     @Override
@@ -164,24 +149,7 @@ public class ModPlayground extends StarMod {
                 });
                 text.setPos(new Vector3f(100, 100, 0));
                 ev.addElement(text);
-
-                CustomShieldTargetBar bar = new CustomShieldTargetBar() {
-                    @Override
-                    public void onUpdate() {
-                        Entity currentEntity = GameClient.getCurrentEntity();
-                        this.setEntity(currentEntity);
-                    }
-                };
-                ev.addElement(bar);
-
-                CustomShipHPBar customShipHPBar = new CustomShipHPBar(ev.getInputState()) {
-                    @Override
-                    public void onUpdate() {
-                        Entity currentEntity = GameClient.getCurrentEntity();
-                        this.setEntity(currentEntity);
-                    }
-                };
-                ev.addElement(customShipHPBar);
+*/
 
             }
         });

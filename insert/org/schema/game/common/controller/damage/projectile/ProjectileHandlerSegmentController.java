@@ -378,9 +378,11 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
                     this.rayCallbackTraverse.setSimpleRayTest(true);
                     ((ModifiedDynamicsWorld)var2.getCurrentPhysics().getDynamicsWorld()).rayTest(var3, var4, this.rayCallbackTraverse);
 
+
+                    //INSERTED CODE
                     EntityDamageEvent event = new EntityDamageEvent(this.shotHandler.hitSegController, this.shotHandler, this, this.shotHandler.hitType, var1);
                     StarLoader.fireEvent(EntityDamageEvent.class, event);
-
+                    ///
 
                     if (this.shotHandler.typesHit.size() > 0) {
                         this.processHitsUnshielded(this.shotHandler);
