@@ -1,8 +1,11 @@
 package api.systems;
 
+import api.element.block.Block;
 import api.entity.Entity;
-import org.schema.common.util.linAlg.Vector3i;
+import api.systems.weapons.Weapon;
 import org.schema.game.common.controller.elements.ControlBlockElementCollectionManager;
+import org.schema.game.common.controller.elements.weapon.WeaponCollectionManager;
+import org.schema.game.common.controller.elements.weapon.WeaponElementManager;
 
 public class WeaponSystem {
 
@@ -33,10 +36,18 @@ public class WeaponSystem {
         return new Entity(internalWeaponSystem.getSegmentController());
     }
 
-    public Vector3i getControllerPosition() {
+    public Block getControllerBlock() {
         /**
-         * Gets the location of the controlling computer.
+         * Gets the controlling computer block.
          */
-        return internalWeaponSystem.getControllerPos();
+        return new Block(internalWeaponSystem.getControllerElement());
+    }
+
+    public Weapon getWeapon() {
+        /**
+         * Gets the system's controlling weapon.
+         */
+        WeaponCollectionManager weaponCollectionManager = new WeaponCollectionManager(internalWeaponSystem.getControllerElement(), internalWeaponSystem.getSegmentController(), (WeaponElementManager) internalWeaponSystem.getElementManager());
+        return new Weapon(weaponCollectionManager.getInstance());
     }
 }

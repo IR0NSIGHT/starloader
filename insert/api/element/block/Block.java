@@ -90,7 +90,7 @@ public class Block {
         return null;
     }
 
-    private SegmentPiece getInternalSegmentPiece() {
+    public SegmentPiece getInternalSegmentPiece() {
         return internalBlock;
     }
     public void setActive(boolean b){
