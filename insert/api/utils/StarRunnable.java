@@ -9,6 +9,8 @@ public abstract class StarRunnable {
     private long ticks;
     private long frequency;
 
+
+
     public abstract void run();
     public void runLater(long ticks){
         this.ticks = ticks;
@@ -69,6 +71,10 @@ public abstract class StarRunnable {
         }
         runnables.addAll(registerQueue);
         registerQueue.clear();
+    }
+    public static void deleteAll() {
+        registerQueue.clear();
+        runnables.clear();
     }
 }
 

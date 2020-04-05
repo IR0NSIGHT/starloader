@@ -1,16 +1,21 @@
 package api.main;
 
 import api.entity.Entity;
+import com.bulletphysics.linearmath.Transform;
 import org.schema.game.client.controller.GameClientController;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.Ship;
 import org.schema.game.common.data.fleet.Fleet;
+import org.schema.game.common.data.physics.PhysicsExt;
+import org.schema.game.common.data.physics.Vector3fb;
 import org.schema.game.common.data.player.ControllerStateUnit;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.schine.graphicsengine.core.Controller;
 
+import javax.vecmath.Vector3f;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -70,5 +75,17 @@ public class GameClient {
     }
     public static void setLoadString(String s){
         Controller.getResLoader().setLoadString(s);
+    }
+
+    public static void spawnBlockParticle(short id, Vector3f pos){
+        GameClientState state = getClientState();
+        if(state == null){
+            return;
+        }
+        final Vector3fb vector3fb = new Vector3fb(pos);
+        final Transform transform = new Transform();
+        transform.setIdentity();
+        transform.origin.set(vector3fb);
+        state.getWorldDrawer().getShards().voronoiBBShatter((PhysicsExt)state.getPhysics(), transform, id, state.getCurrentSectorId(), transform.origin, null);
     }
 }

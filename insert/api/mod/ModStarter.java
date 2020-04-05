@@ -4,6 +4,7 @@ import api.DebugFile;
 import api.SMModLoader;
 import api.main.GameClient;
 import api.main.GameServer;
+import api.utils.StarRunnable;
 import org.apache.commons.io.FileUtils;
 import org.schema.schine.graphicsengine.core.GlUtil;
 import org.schema.schine.network.ServerListRetriever;
@@ -134,6 +135,7 @@ public class ModStarter {
 
     }
     public static void onClientLeave(){
+        StarRunnable.deleteAll();
         for (StarMod mod : StarLoader.starMods){
             mod.onDisable();
         }

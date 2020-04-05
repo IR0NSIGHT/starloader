@@ -6,10 +6,13 @@ import api.faction.Faction;
 import api.inventory.ItemStack;
 import api.systems.Reactor;
 import api.systems.Shield;
+import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.*;
 import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
+import org.schema.game.common.controller.elements.power.reactor.PowerInterface;
 import org.schema.game.common.data.ManagedSegmentController;
+import org.schema.game.common.data.player.PlayerState;
 import org.schema.schine.graphicsengine.core.GlUtil;
 import javax.vecmath.Vector3f;
 import java.io.IOException;
@@ -151,12 +154,8 @@ public class Entity {
          */
         if(hasAnyReactors()) {
             ManagerContainer<?> manager = getManagerContainer();
-            if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.STATION)) {
-                if(manager instanceof ShipManagerContainer) {
-                    return new Reactor(((ShipManagerContainer) manager).getPowerInterface().getActiveReactor());
-                } else if(manager instanceof SpaceStationManagerContainer) {
-                    return new Reactor(((SpaceStationManagerContainer) manager).getPowerInterface().getActiveReactor());
-                }
+            if (getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.STATION)) {
+                return new Reactor(manager.getPowerInterface().getActiveReactor());
             }
         }
         return null;
@@ -181,13 +180,8 @@ public class Entity {
             ArrayList<Reactor> reactors = new ArrayList<>();
             if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.STATION)) {
                 if(manager instanceof ShipManagerContainer) {
-                    List<MainReactorUnit> allReactors = ((ShipManagerContainer) manager).getPowerInterface().getMainReactors();
+                    List<MainReactorUnit> allReactors = manager.getPowerInterface().getMainReactors();
                     for (MainReactorUnit reactorUnit : allReactors) {
-                        reactors.add(new Reactor(reactorUnit.getPowerInterface().getActiveReactor()));
-                    }
-                } else if(manager instanceof SpaceStationManagerContainer) {
-                    List<MainReactorUnit> allReactors = ((SpaceStationManagerContainer) manager).getPowerInterface().getMainReactors();
-                    for(MainReactorUnit reactorUnit : allReactors) {
                         reactors.add(new Reactor(reactorUnit.getPowerInterface().getActiveReactor()));
                     }
                 }
@@ -306,5 +300,16 @@ public class Entity {
             return new Shield(lastHitShield);
         }
         return null;
+    }
+    public ArrayList<Player> getAttachedPlayers(){
+        ArrayList<Player> pl = new ArrayList<>();
+        if(internalEntity instanceof PlayerControllable){
+            for (PlayerState attachedPlayer : ((PlayerControllable) internalEntity).getAttachedPlayers()) {
+                pl.add(new Player(attachedPlayer));
+            }
+        }else{
+            return new ArrayList<>();
+        }
+        return pl;
     }
 }

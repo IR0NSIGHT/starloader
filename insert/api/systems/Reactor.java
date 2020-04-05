@@ -43,4 +43,11 @@ public class Reactor {
     public double getCurrentUsage() {
         return internalReactor.pw.getCurrentConsumptionPerSec();
     }
+
+    public double getHpPercent() {
+        return internalReactor.getHpPercent();
+    }
+    public double getUsagePercent() {
+        return internalReactor.pw.getPowerConsumptionAsPercent();
+    }
 }

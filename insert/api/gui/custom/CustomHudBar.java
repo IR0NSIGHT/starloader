@@ -36,8 +36,8 @@ public abstract class CustomHudBar extends FillableHorizontalBar {
     public static boolean FLIPX = false;
     public static boolean FLIPY = false;
     public static boolean FILL_ON_TOP = true;
-    public Vector2f TEXT_POS = new Vector2f(120,120);
-    public Vector2f TEXT_DESC_POS = new Vector2f(140,140);
+    public Vector2f TEXT_POS = new Vector2f(210,-7);
+    public Vector2f TEXT_DESC_POS = new Vector2f(0,-7);
 
     public abstract boolean drawBar();
 
@@ -50,11 +50,18 @@ public abstract class CustomHudBar extends FillableHorizontalBar {
 
     @Override
     public void onInit() {
-        super.onInit();
         create();
+        super.onInit();
     }
 
     public abstract void create();
+
+    public void setTextPosition(int x, int y){
+        TEXT_DESC_POS = new Vector2f(x, y);
+    }
+    public void setPercentPosition(int x, int y){
+        TEXT_POS = new Vector2f(x, y);
+    }
 
     public Vector2f getTextPos() {
         return TEXT_POS;
@@ -66,6 +73,7 @@ public abstract class CustomHudBar extends FillableHorizontalBar {
 
     public CustomHudBar() {
         super(GameClient.getClientState());
+        setGlowIntensity(500);
     }
     public abstract void onUpdate();
 
@@ -73,6 +81,13 @@ public abstract class CustomHudBar extends FillableHorizontalBar {
     public void update(Timer timer) {
         super.update(timer);
         onUpdate();
+    }
+
+    public void setColor(int r, int g, int b, int a) {
+        this.COLOR.set(r,g,b,a);
+    }
+    public void setColor(java.awt.Color color) {
+        this.COLOR.set(color.getRed(),color.getGreen(),color.getBlue(),255);
     }
 
     public boolean isBarFlippedX() {

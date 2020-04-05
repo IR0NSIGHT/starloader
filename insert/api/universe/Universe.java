@@ -1,6 +1,8 @@
 package api.universe;
 
 import api.DebugFile;
+import api.entity.Entity;
+import api.main.GameClient;
 import api.main.GameServer;
 import api.server.Server;
 import api.utils.StarRunnable;
@@ -75,6 +77,9 @@ public class Universe {
         //Client request spawn:
         //this.getState().getController().sendAdminCommand(AdminCommands.LOAD_AS_FACTION, catalogName, spawnName, factionId);
     }
+
+
+
     public ArrayList<SimpleTransformableSendableObject<?>> getEntities(){
         ArrayList<SimpleTransformableSendableObject<?>> r = new ArrayList<>();
         for (Integer sectorId : GameServer.getServerState().activeSectors) {
