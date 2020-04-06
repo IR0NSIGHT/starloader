@@ -2,6 +2,7 @@ package api.main;
 
 import api.entity.Entity;
 import com.bulletphysics.linearmath.Transform;
+import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import org.schema.game.client.controller.GameClientController;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.data.PlayerControllable;
@@ -12,6 +13,8 @@ import org.schema.game.common.data.physics.PhysicsExt;
 import org.schema.game.common.data.physics.Vector3fb;
 import org.schema.game.common.data.player.ControllerStateUnit;
 import org.schema.game.common.data.player.PlayerState;
+import org.schema.game.common.data.world.RemoteSector;
+import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.schine.graphicsengine.core.Controller;
 
 import javax.vecmath.Vector3f;
@@ -20,6 +23,16 @@ import java.util.Collection;
 import java.util.Set;
 
 public class GameClient {
+    public static ArrayList<Entity> getNearbyEntities(){
+        ArrayList<Entity> entities = new ArrayList<>();
+        for (SimpleTransformableSendableObject<?> value : getClientState().getCurrentSectorEntities().values()) {
+            if(value instanceof SegmentController) {
+                entities.add(new Entity((SegmentController) value));
+            }
+        }
+        return entities;
+    }
+
     public static GameClientState getClientState(){
         return GameClientState.instance;
     }

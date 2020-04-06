@@ -53,14 +53,22 @@ public class ModPlayground extends StarMod {
 
     @Override
     public void onBlockConfigLoad(BlockConfig config) {
-        ElementInformation imp = BlockConfig.newElement("Impervium Armor", new short[]{124, 753, 427, 345, 231, 427});
-        imp.setBuildIconNum(234);
+        //Create a new block called 'Impervium Armor'
+        //The short list is the block texture ids, make sure to give it a list of size 1,3 or 6.
+        ElementInformation imp = BlockConfig.newElement("Impervium Armor", new short[]{124});
+        imp.setBuildIconNum(Blocks.GREY_ADVANCED_ARMOR.getId());
+        //Give it lotss of health
         imp.setMaxHitPointsE(100000);
+        imp.setArmorValue(1000);
+        //Make it emit light
         imp.lightSource = true;
         imp.lightSourceColor.set(new Vector4f(1F, 0F, 1F, 1F));
+        //Make it activatable,
         imp.setCanActivate(true);
+
+        //Give it a recipe that uses red paint
         BlockConfig.addRecipe(imp, FactoryType.ADVANCED, 5, new FactoryResource(1, Blocks.RED_PAINT.getId()));
-        imp.setArmorValue(1000);
+        //Add it to the config.
         config.add(imp);
 
         ArrayList<FactoryResource> factoryResources = new ArrayList<>();
@@ -134,23 +142,8 @@ public class ModPlayground extends StarMod {
             public void onEvent(Event event) {
                 HudCreateEvent ev = (HudCreateEvent) event;
                 BasicInfoGroup bar = new BasicInfoGroup(ev);
-                /*GUITextOverlay text = new GUITextOverlay(150, 10, FontLibrary.getBlenderProHeavy30(), Color.red, ev.getInputState());
-
-                text.setTextSimple(new Object() {
-                    @Override
-                    public String toString() {
-                        SimpleTransformableSendableObject<?> selectedEntity = GameClient.getClientState().getSelectedEntity();
-                        if (selectedEntity != null) {
-                            return "Selected: " + selectedEntity.toNiceString();
-                        } else {
-                            return "No entity selected";
-                        }
-                    }
-                });
-                text.setPos(new Vector3f(100, 100, 0));
-                ev.addElement(text);
-*/
-
+                CurrentEntityReactorBar currentEntityReactorBar = new CurrentEntityReactorBar();
+                ev.addElement(currentEntityReactorBar);
             }
         });
         StarLoader.registerListener(BlockActivateEvent.class, new Listener() {

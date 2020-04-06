@@ -6,6 +6,7 @@ import api.main.GameClient;
 import api.main.GameServer;
 import api.utils.StarRunnable;
 import org.apache.commons.io.FileUtils;
+import org.schema.game.common.data.player.PlayerState;
 import org.schema.schine.graphicsengine.core.GlUtil;
 import org.schema.schine.network.ServerListRetriever;
 import org.schema.schine.network.StarMadeNetUtil;
@@ -60,26 +61,28 @@ public class ModStarter {
         //TODO only enable the ones that are enabled on the server, and the ones that are set to force enable
         DebugFile.log("Enabling mods...");
         ArrayList<ModInfo> serverMods = ServerModInfo.getServerInfo(ServerModInfo.getServerUID(serverHost, serverPort));
-        for (StarMod mod : StarLoader.starMods){
-            System.err.println("[Client] >>> Found mod: " + mod.modName);
-            if(serverMods == null) {
-                if(serverHost.equals("localhost:4242")){
-                    DebugFile.log("Connecting to own server, mods are already enabled by the server");
-                }else {
-                    DebugFile.log("Mod info not found for: " + serverHost + ":" + serverPort + " This is likely because they direct connected");
-                    GameClient.setLoadString("Getting server mod info...");
-                    StarMadeNetUtil starMadeNetUtil = new StarMadeNetUtil();
-                    try {
-                        System.err.println(starMadeNetUtil.getServerInfo(serverHost, serverPort, 5000).toString());
-                        //should register the mods.
-                    } catch (IOException e) {
-                        //???
-                        e.printStackTrace();
-                    }
-                    mod.onEnable();
-                    mod.flagEnabled(true);
-                }
-            }else {
+        if(serverMods == null) {
+            DebugFile.log("Mod info not found for: " + serverHost + ":" + serverPort + " This is likely because they direct connected");
+            GameClient.setLoadString("Getting server mod info...");
+            StarMadeNetUtil starMadeNetUtil = new StarMadeNetUtil();
+            try {
+                System.err.println(starMadeNetUtil.getServerInfo(serverHost, serverPort, 9000).toString());
+                //should register the mods.
+                serverMods = ServerModInfo.getServerInfo(ServerModInfo.getServerUID(serverHost, serverPort));
+            } catch (IOException e) {
+                //???
+                e.printStackTrace();
+            }
+        }
+        if(serverMods == null){
+            DebugFile.log("Mods not found even after refresh... rip");
+            serverMods = new ArrayList<>() ;
+        }
+        if(serverHost.equals("localhost:4242")){
+            DebugFile.log("Connecting to own server, mods are already enabled by the server");
+        }else {
+            for (StarMod mod : StarLoader.starMods) {
+                System.err.println("[Client] >>> Found mod: " + mod.modName);
                 DebugFile.log("Mod info WAS found");
                 for (ModInfo serverMod : serverMods) {
                     DebugFile.log("le test: " + serverMod.name);
@@ -99,7 +102,7 @@ public class ModStarter {
         //DebugFile.log(serverMods.toString());
         if(serverMods != null && !serverMods.isEmpty()){
             //Now we need to download them from the client
-            DebugFile.log("=== DEPENCIES NOT MET, DOWNLOADING MODS ===");
+            DebugFile.log("=== DEPENDENCIES NOT MET, DOWNLOADING MODS ===");
             for(ModInfo sMod : serverMods){
                 sMod.fetchDownloadURL();
                 DebugFile.log("WE NEED TO DOWNLOAD: " + sMod.toString());
