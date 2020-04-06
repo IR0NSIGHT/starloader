@@ -1,16 +1,13 @@
 package api.entity;
 
-import api.element.block.Block;
 import api.element.block.Blocks;
 import api.faction.Faction;
-import api.inventory.ItemStack;
 import api.systems.Reactor;
 import api.systems.Shield;
 import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.*;
 import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
-import org.schema.game.common.controller.elements.power.reactor.PowerInterface;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.schine.graphicsengine.core.GlUtil;
@@ -247,6 +244,9 @@ public class Entity {
     }
 
     public ManagerContainer<?> getManagerContainer() {
+        /**
+         * Used in the API for getting entity systems and modules. Don't use unless you know what you're doing!
+         */
         return ((ManagedSegmentController<?>) internalEntity).getManagerContainer();
     }
 
@@ -291,6 +291,9 @@ public class Entity {
     }
 
     public Shield getLastHitShield() {
+        /**
+         * Gets the shield group last hit by any damage.
+         */
         ManagerContainer<?> manager = getManagerContainer();
         if(manager instanceof ShieldContainerInterface){
             ShieldLocal lastHitShield = ((ShieldContainerInterface) manager).getShieldAddOn().getShieldLocalAddOn().getLastHitShield();
@@ -301,13 +304,17 @@ public class Entity {
         }
         return null;
     }
-    public ArrayList<Player> getAttachedPlayers(){
+
+    public ArrayList<Player> getAttachedPlayers() {
+        /**
+         * Gets an arraylist of players currently attached to the entity.
+         */
         ArrayList<Player> pl = new ArrayList<>();
-        if(internalEntity instanceof PlayerControllable){
-            for (PlayerState attachedPlayer : ((PlayerControllable) internalEntity).getAttachedPlayers()) {
+        if(internalEntity instanceof PlayerControllable) {
+            for(PlayerState attachedPlayer : ((PlayerControllable) internalEntity).getAttachedPlayers()) {
                 pl.add(new Player(attachedPlayer));
             }
-        }else{
+        } else {
             return new ArrayList<>();
         }
         return pl;

@@ -9,10 +9,13 @@ public class Ship extends Entity {
 
     public Ship(SegmentController controller) {
         super(controller);
-        this.internalShip = (org.schema.game.common.controller.Ship) internalEntity;
+        internalShip = (org.schema.game.common.controller.Ship) internalEntity;
     }
 
     public org.schema.game.common.controller.Ship getInternalShip() {
+        /**
+         * Gets the game's internal version of the Ship. Don't use this unless you know what you're doing!
+         */
         return internalShip;
     }
 
@@ -47,9 +50,9 @@ public class Ship extends Entity {
         return new Entity(internalShip.getDockingController().getRoot());
     }
 
-    public Vector3i getDockLocation() {
+    public Vector3i getDockerLocation() {
         /**
-         * Gets the Vector3i location of the currently used docking module. Returns null if the Ship isn't docked to anything.
+         * Gets the Vector3i location of the currently used rail docker. Returns null if the Ship isn't docked to anything.
          */
         if(isDocked()) {
             float x = internalShip.getDockingController().getDockingPos().origin.x;
@@ -93,6 +96,16 @@ public class Ship extends Entity {
          */
         if(isInFleet()) {
             return new Fleet(internalEntity.getFleet());
+        }
+        return null;
+    }
+
+    public AIController getAI() {
+        /**
+         * Gets the ship's AI. Returns null if the entity has no ai module.
+         */
+        if(internalShip.isAIControlled()) {
+            return new AIController(this);
         }
         return null;
     }

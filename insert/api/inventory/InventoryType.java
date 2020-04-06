@@ -7,6 +7,7 @@ public enum InventoryType {
     CREATIVE,
     CREATIVE_SHIPYARD,
     STORAGE_BOX,
+    SHOP_INVENTORY,
     FACTORY,
     SHIPYARD
 }
