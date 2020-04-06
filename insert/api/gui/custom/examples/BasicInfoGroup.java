@@ -2,6 +2,7 @@ package api.gui.custom.examples;
 
 import api.entity.Entity;
 import api.entity.EntityType;
+import api.entity.Ship;
 import api.listener.events.gui.HudCreateEvent;
 import api.main.GameClient;
 import api.server.Server;
@@ -24,13 +25,14 @@ public class BasicInfoGroup {
         new StarRunnable(){
             @Override
             public void run() {
-                ArrayList<Entity> controlledShips = new ArrayList<>();
-                for (Entity en : GameClient.getNearbyEntities()) {
+                ArrayList<Ship> controlledShips = new ArrayList<>();
+                for(Entity en : GameClient.getNearbyEntities()) {
                     if(en.getEntityType() == EntityType.SHIP){
-                        if(!en.isDocked()) {
+                        Ship ship = (Ship) en;
+                        if(!ship.isDocked()) {
                             // if(en.getAttachedPlayers().size() > 0){
                             //if(!en.getAttachedPlayers().get(0).getName().equals(GameClient.getClientPlayerState().getName())){
-                            controlledShips.add(en);
+                            controlledShips.add(ship);
                             //}
                             //}
                         }
