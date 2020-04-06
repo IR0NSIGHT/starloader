@@ -38,7 +38,7 @@ public class PilotElement extends CustomHudText {
                     PilotElement.this.setColor(new Vector4f(relation.defaultColor.x, relation.defaultColor.y, relation.defaultColor.z, 255));
                     return player.getName();
                 }else{
-                    return "No pilot";
+                    return "No Pilot";
                 }
             }
         });

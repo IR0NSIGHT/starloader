@@ -1269,15 +1269,15 @@ public class Starter implements Observer {
         String loginName = var0.host;
         DebugFile.log("Connecting to server: " + loginName);
         boolean allUptoDate = ModStarter.preClientConnect(loginName, var0.port);
-        ///
         if(allUptoDate) {
+            ///
             stopClient(var2);
             clientRunnable = new ClientRunnable(var0, var1, var2);
             Thread var3;
 
             (var3 = new Thread(clientRunnable, "ClientThread")).setPriority(8);
             GameClientController.availableGUI = true;
-            System.err.println("[Starloader] Dispatch client thread");
+            System.err.println("[Starloader] Start client thread");
             var3.start();
         }else{
             System.err.println("[Starloader] Not all mods up to date, not starting");

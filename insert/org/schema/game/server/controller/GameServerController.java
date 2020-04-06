@@ -1577,7 +1577,9 @@ public class GameServerController extends ServerController implements MineInterf
 
 
         }
+        //INSERTED CODE
         StarRunnable.tickAll();
+        ///
     }
     long lastTime = 0;
 

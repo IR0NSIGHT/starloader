@@ -14,6 +14,7 @@ import java.awt.*;
 public class BasicInfoPanel{
     EntityShieldBar bar;
     PilotElement pilot;
+    ShipNameElement shipName;
     EntityReactorBar reactorBar;
     public BasicInfoPanel(HudCreateEvent ev){
         bar = new EntityShieldBar() {
@@ -39,10 +40,12 @@ public class BasicInfoPanel{
             public void onUpdate() {
             }
         };
+        shipName = new ShipNameElement(FontLibrary.getBlenderProMedium13(), ev.getInputState());
 
         ev.addElement(bar);
         ev.addElement(pilot);
         ev.addElement(reactorBar);
+        ev.addElement(shipName);
 //        new StarRunnable(){
 //            @Override
 //            public void run() {
@@ -52,6 +55,7 @@ public class BasicInfoPanel{
     }
     public void setEntity(Entity e){
         pilot.setEntity(e);
+        shipName.setEntity(e);
         bar.setEntity(e);
         reactorBar.setEntity(e);
     }
@@ -59,6 +63,7 @@ public class BasicInfoPanel{
         pilot.getPos().set(new float[]{x-20, y+6,1});
         reactorBar.getPos().set(new float[]{x+40,y,1});
         bar.getPos().set(new float[]{x+300,y,1});
+        shipName.getPos().set(new float[]{x+560,y+5,1});
     }
 
 }

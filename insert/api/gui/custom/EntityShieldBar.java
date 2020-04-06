@@ -1,6 +1,7 @@
 package api.gui.custom;
 
 import api.entity.Entity;
+import api.main.GameClient;
 import api.systems.Shield;
 import org.schema.common.util.StringTools;
 

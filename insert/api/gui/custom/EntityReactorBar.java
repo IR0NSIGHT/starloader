@@ -33,10 +33,13 @@ public abstract class EntityReactorBar extends CustomHudBar {
 
     @Override
     public String getText() {
-        Reactor reactor = entity.getCurrentReactor();
-        if(reactor == null){
-            return "Reactor: N/A";
+        Entity entity = this.entity;
+        if(entity != null){
+            Reactor reactor = entity.getCurrentReactor();
+            if(reactor != null) {
+                return "Reactor: [" + StringTools.massFormat(reactor.getHp()) + " / " + StringTools.massFormat(reactor.getMaxHp()) + "]";
+            }
         }
-        return "Reactor: [" + StringTools.massFormat(reactor.getHp()) + " / " + StringTools.massFormat(reactor.getMaxHp()) + "]";
+        return "Reactor: N/A";
     }
 }
