@@ -83,10 +83,10 @@ public class ModStarter {
         }else {
             for (StarMod mod : StarLoader.starMods) {
                 System.err.println("[Client] >>> Found mod: " + mod.modName);
-                DebugFile.log("Mod info WAS found");
+                //DebugFile.log("Mod info WAS found");
                 for (ModInfo serverMod : serverMods) {
                     DebugFile.log("le test: " + serverMod.name);
-                    if (serverMod.name.equals(mod.modName)) {
+                    if (serverMod.name.equals(mod.modName)){ //|| EnabledModFile.getInstance().isClientEnabled(mod.getInfo())) {
                         DebugFile.log("[Client] >>> Correct mod name: " + serverMod.name);
                         if (serverMod.version.equals(mod.modVersion)) {
                             serverMods.remove(serverMod);

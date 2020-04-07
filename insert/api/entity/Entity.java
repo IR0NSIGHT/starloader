@@ -319,4 +319,8 @@ public class Entity {
         }
         return pl;
     }
+
+    public Ship toShip(){
+        return new Ship(internalEntity);
+    }
 }
