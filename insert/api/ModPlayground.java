@@ -19,24 +19,27 @@ import api.listener.events.register.RegisterEffectsEvent;
 import api.main.GameClient;
 import api.mod.StarLoader;
 import api.mod.StarMod;
+import api.server.Server;
 import api.systems.ChamberType;
 import api.systems.addons.custom.TacticalJumpAddOn;
 import api.utils.StarRunnable;
 import api.utils.VecUtil;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.UnicodeFont;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.activation.AbstractUnit;
 import org.schema.game.common.controller.elements.activation.ActivationCollectionManager;
 import org.schema.game.common.controller.elements.activation.ActivationElementManager;
+import org.schema.game.common.controller.elements.shield.capacity.ShieldCapacityCollectionManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.FactoryResource;
 import org.schema.schine.graphicsengine.forms.font.FontLibrary;
+import sun.plugin2.util.ColorUtil;
 
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class ModPlayground extends StarMod {
@@ -55,7 +58,7 @@ public class ModPlayground extends StarMod {
     public void onBlockConfigLoad(BlockConfig config) {
         //Create a new block called 'Impervium Armor'
         //The short list is the block texture ids, make sure to give it a list of size 1,3 or 6.
-        ElementInformation imp = BlockConfig.newElement("Impervium Armor", new short[]{124});
+        final ElementInformation imp = BlockConfig.newElement("Impervium Armor", new short[]{124});
         imp.setBuildIconNum(Blocks.GREY_ADVANCED_ARMOR.getId());
         //Give it lotss of health
         imp.setMaxHitPointsE(100000);
@@ -63,6 +66,16 @@ public class ModPlayground extends StarMod {
         //Make it emit light
         imp.lightSource = true;
         imp.lightSourceColor.set(new Vector4f(1F, 0F, 1F, 1F));
+        /*imp.blended = true;
+        new StarRunnable(){
+            @Override
+            public void run() {
+                Color hsb = Color.getHSBColor(((float)ticksRan%360)/360F, 1F, 1F);
+                Vector4f tuple4f = new Vector4f(hsb.getRed()/255F, hsb.getGreen()/255F, hsb.getBlue()/255F, 1F);
+                Server.broadcastMessage(tuple4f.toString());
+                imp.lightSourceColor.set(tuple4f);
+            }
+        }.runTimer(1);*/
         //Make it activatable,
         imp.setCanActivate(true);
 

@@ -8,6 +8,7 @@ import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.*;
 import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
+import org.schema.game.common.controller.elements.power.reactor.tree.ReactorTree;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.schine.graphicsengine.core.GlUtil;
@@ -152,7 +153,10 @@ public class Entity {
         if(hasAnyReactors()) {
             ManagerContainer<?> manager = getManagerContainer();
             if (getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.STATION)) {
-                return new Reactor(manager.getPowerInterface().getActiveReactor());
+                ReactorTree activeReactor = manager.getPowerInterface().getActiveReactor();
+                if(activeReactor != null) {
+                    return new Reactor(activeReactor);
+                }
             }
         }
         return null;
