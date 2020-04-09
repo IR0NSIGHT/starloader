@@ -23,6 +23,7 @@ import api.systems.ChamberType;
 import api.systems.addons.custom.TacticalJumpAddOn;
 import api.utils.StarRunnable;
 import api.utils.VecUtil;
+import org.schema.game.client.controller.manager.ingame.PlayerInteractionControlManager;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.activation.AbstractUnit;
@@ -74,6 +75,7 @@ public class ModPlayground extends StarMod {
         }.runTimer(1);*/
         //Make it activatable,
         imp.setCanActivate(true);
+        PlayerInteractionControlManager
 
         //Give it a recipe that uses red paint
         BlockConfig.addRecipe(imp, FactoryType.ADVANCED, 5, new FactoryResource(1, Blocks.RED_PAINT.getId()));
