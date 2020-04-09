@@ -1,24 +1,12 @@
 package api.systems.weapons;
 
-import org.schema.game.common.controller.elements.weapon.WeaponUnit;
+import org.schema.game.common.controller.elements.FireingUnit;
 
 public class Weapon {
 
-    private WeaponUnit internalWeapon;
+    private FireingUnit internalWeapon;
 
-    public Weapon(WeaponUnit internalWeapon) {
+    public Weapon(FireingUnit internalWeapon) {
         this.internalWeapon = internalWeapon;
-    }
-
-    public float getBaseDamage() {
-        return internalWeapon.getBaseDamage();
-    }
-
-    public float getDamageWithoutEffects() {
-        return internalWeapon.getDamageWithoutEffect();
-    }
-
-    public float getDamage() {
-        return internalWeapon.getDamage();
     }
 }

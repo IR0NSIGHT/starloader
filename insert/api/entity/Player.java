@@ -4,6 +4,8 @@ import api.faction.Faction;
 import api.inventory.Inventory;
 import api.inventory.InventoryType;
 import api.server.Server;
+import api.universe.Sector;
+import api.universe.Universe;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
@@ -40,10 +42,6 @@ public class Player {
         getPlayerState().setName(name);
     }
 
-    public Vector3i getSector() {
-        //Duplicate vector so nothing weird happens
-        return new Vector3i(getPlayerState().getCurrentSector());
-    }
     public void sendServerMessage(String message){
         Server.sendMessage(this.getPlayerState(), message);
     }
@@ -77,5 +75,12 @@ public class Player {
 
     public void openInventory(Inventory inventory) {
 
+    }
+
+    public Sector getSector() throws IOException {
+        /**
+         * Gets the player's current sector.
+         */
+        return new Sector(Universe.getUniverse().getSector(playerState.getCurrentSector()));
     }
 }
