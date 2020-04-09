@@ -3,7 +3,7 @@ package api.listener.events.client;
 import api.element.block.Block;
 import api.element.block.Blocks;
 import api.listener.events.Event;
-import api.systems.weapons.Beam;
+import api.systems.weapons.BeamEntity;
 import org.schema.game.common.controller.elements.BeamState;
 import org.schema.game.common.data.SegmentPiece;
 import org.schema.game.common.data.world.Segment;
@@ -13,14 +13,14 @@ import java.util.Collection;
 
 public class BlockSalvageOnClientEvent extends Event {
     public static int id = idLog++;
-    private Beam beam;
+    private BeamEntity beamEntity;
     private final int salvagePower;
     private final Vector3f direction;
     private final Block block;
     private final Collection<Segment> hitSegments;
 
     public BlockSalvageOnClientEvent(BeamState beamState, int salvagePower, Vector3f direction, SegmentPiece blockInternal, Collection<Segment> hitSegments) {
-        this.beam = new Beam(beamState);
+        this.beamEntity = new BeamEntity(beamState);
         this.salvagePower = salvagePower;
         this.direction = direction;
         this.block = new Block(blockInternal);
@@ -28,8 +28,8 @@ public class BlockSalvageOnClientEvent extends Event {
 
     }
 
-    public Beam getBeam() {
-        return beam;
+    public BeamEntity getBeamEntity() {
+        return beamEntity;
     }
 
     public int getSalvagePower() {

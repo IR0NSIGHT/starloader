@@ -1,7 +1,11 @@
 package api.entity;
 
+import api.element.block.Blocks;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.ai.AIConfiguationElements;
+import org.schema.game.common.controller.ai.Types;
+import org.schema.game.common.data.explosion.ExplosionCollisionSegmentCallback;
 
 public class Ship extends Entity {
 
@@ -104,9 +108,13 @@ public class Ship extends Entity {
         /**
          * Gets the ship's AI. Returns null if the entity has no ai module.
          */
-        if(internalShip.isAIControlled()) {
+        if(this.getBlockAmount(Blocks.BOBBY_AI_MODULE) > 0){
             return new AIController(this);
         }
+
         return null;
+    }
+    public boolean isAiControlled(){
+        return internalShip.isAIControlled();
     }
 }

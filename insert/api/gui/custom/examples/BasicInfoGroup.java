@@ -9,6 +9,7 @@ import api.server.Server;
 import api.systems.Reactor;
 import api.utils.StarRunnable;
 import org.schema.game.common.Starter;
+import org.schema.game.common.controller.elements.beam.tractorbeam.TractorBeamCollectionManager;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,7 @@ public class BasicInfoGroup {
                 ArrayList<Ship> controlledShips = new ArrayList<>();
                 for(Entity en : GameClient.getNearbyEntities()) {
                     if(en.getEntityType() == EntityType.SHIP){
-                        Ship ship = (Ship) en;
+                        Ship ship = en.toShip();
                         if(!ship.isDocked()) {
                             // if(en.getAttachedPlayers().size() > 0){
                             //if(!en.getAttachedPlayers().get(0).getName().equals(GameClient.getClientPlayerState().getName())){

@@ -60,11 +60,15 @@ public class JumpAddOn extends RecharchableSingleModule {
         if (this.getSegmentController().isOnServer()) {
             if (this.getCharges() > 0) {
                 if (!this.isInterdicted()) {
+                    //INSERTED CODE
                     Vector3i oldSector = this.getSegmentController().getSector(new Vector3i());
+                    ShipJumpEngageEvent event = new ShipJumpEngageEvent(this.getSegmentController(), this, oldSector);
+                    StarLoader.fireEvent(ShipJumpEngageEvent.class, event);
+                    if(event.isCanceled()){
+                        return false;
+                    }
+                    ///
                     if (this.getSegmentController().engageJump(this.getDistance())) {
-
-                        ShipJumpEngageEvent event = new ShipJumpEngageEvent(this.getSegmentController(), this, oldSector);
-                        StarLoader.fireEvent(ShipJumpEngageEvent.class, event);
 
                         this.removeCharge();
                         this.setCharge(0.0F);
