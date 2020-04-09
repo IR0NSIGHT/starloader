@@ -5,6 +5,9 @@
 
 package org.schema.game.common.controller;
 
+import api.element.block.Block;
+import api.listener.events.block.BlockModifyEvent;
+import api.mod.StarLoader;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.dynamics.RigidBody;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
@@ -388,6 +391,9 @@ public class BlockProcessor {
             return var5;
         }
     }
+    public static void p(String s){
+        System.err.println("[BP] " + s);
+    }
 
     private void handleSegment(BlockProcessor.PieceList var1) {
         String var2 = String.valueOf(var1.absIndex);
@@ -395,18 +401,23 @@ public class BlockProcessor {
             this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "handleSeg");
             int var3 = var1.size();
             SegmentData var4 = var1.segmentData;
-
+            p(var4.toString());
             try {
                 if (var1.blocksModOrAdd > 0) {
                     this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "onBlockAddedHandled");
                     this.con.onBlockAddedHandled();
                     this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "onBlockAddedHandled");
+                    p(var2);
                 }
 
                 int var5;
                 for(var5 = 0; var5 < var3; ++var5) {
                     this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + var5);
                     VoidSegmentPiece var6 = (VoidSegmentPiece)var1.get(var5);
+                    //INSERTED CODE
+                    BlockModifyEvent event = new BlockModifyEvent(var1, var6);
+                    StarLoader.fireEvent(BlockModifyEvent.class, event);
+                            ///
 
                     assert var4 != null : var1.segment + "; " + var1.blocksModOrAdd + "; " + var1.size();
 
@@ -1064,7 +1075,7 @@ public class BlockProcessor {
         }
     }
 
-    static class PieceList extends ObjectArrayList<VoidSegmentPiece> {
+    public static class PieceList extends ObjectArrayList<VoidSegmentPiece> {
         private static final long serialVersionUID = 2296926034557584508L;
         public RemoteSegment segment;
         public long absIndex;

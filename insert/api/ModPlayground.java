@@ -11,6 +11,7 @@ import api.listener.events.CannonShootEvent;
 import api.listener.events.Event;
 import api.listener.events.StructureStatsCreateEvent;
 import api.listener.events.block.BlockActivateEvent;
+import api.listener.events.block.BlockModifyEvent;
 import api.listener.events.block.BlockSalvageEvent;
 import api.listener.events.gui.HudCreateEvent;
 import api.listener.events.register.RegisterAddonsEvent;
@@ -75,7 +76,6 @@ public class ModPlayground extends StarMod {
         }.runTimer(1);*/
         //Make it activatable,
         imp.setCanActivate(true);
-        PlayerInteractionControlManager
 
         //Give it a recipe that uses red paint
         BlockConfig.addRecipe(imp, FactoryType.ADVANCED, 5, new FactoryResource(1, Blocks.RED_PAINT.getId()));
@@ -138,6 +138,13 @@ public class ModPlayground extends StarMod {
     @Override
     public void onEnable() {
         DebugFile.log("Loading default mod...");
+
+        StarLoader.registerListener(BlockModifyEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                BlockModifyEvent e = (BlockModifyEvent) event;
+            }
+        });
 
         StarLoader.registerListener(BlockSalvageEvent.class, new Listener() {
             @Override
