@@ -1,18 +1,12 @@
 package api.universe;
 
 import api.DebugFile;
-import api.entity.Entity;
-import api.main.GameClient;
 import api.main.GameServer;
 import api.server.Server;
-import api.utils.StarRunnable;
-import api.utils.callbacks.ShipSpawnCallback;
 import org.schema.common.util.linAlg.Vector3i;
-import org.schema.game.common.controller.Ship;
 import org.schema.game.common.data.world.Sector;
-import org.schema.game.common.data.world.SimpleTransformableSendableObject;
+
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Universe {
 
