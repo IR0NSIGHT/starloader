@@ -123,6 +123,10 @@ public class Fleet {
         return null;
     }
 
+    public String getName() {
+        return internalFleet.getName();
+    }
+
     //internal stuff -  public for now
     public static FleetManager getServerFleetManager(){
         return GameServer.getServerState().getFleetManager();

@@ -43,7 +43,6 @@ public class Inventory {
 
     public void addItem(ItemStack block) {
         PlayerState state = inventoryHolder.getPlayerState();
-        //what actualy adds the item to the inventory
         int slot = internalInventory.incExistingOrNextFreeSlot(block.getId(), block.getAmount());
         if(inventoryHolder != null) {
             state.sendInventoryModification(slot, Long.MIN_VALUE);

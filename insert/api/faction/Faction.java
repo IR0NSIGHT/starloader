@@ -21,6 +21,10 @@ public class Faction {
         this.internalFaction = internalFaction;
     }
 
+    public org.schema.game.common.data.player.faction.Faction getInternalFaction() {
+        return internalFaction;
+    }
+
     public int getID() {
         return internalFaction.getIdFaction();
     }

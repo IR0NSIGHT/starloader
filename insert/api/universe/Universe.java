@@ -40,83 +40,52 @@ public class Universe {
         GameServerController
     }*/
 
-    public void spawnShip(Vector3i sector, int localX, int localY, int localZ, String catalogName, String spawnName, int factionId){
-        spawnShip(sector,localX,localY,localZ,catalogName, spawnName, factionId, null);
-    }
-    //Cant return ship because it is put into a queue, then spawned
-    //could just force spawn it (code above) but its probably best to not mess with that
-    public void spawnShip(final Vector3i sector, int localX, int localY, int localZ, String catalogName, final String spawnName, int factionId, final ShipSpawnCallback spawnCallback){
-        //TODO: prevent client mods from breaking if they try to spawn ships in:
-        assert true : "Only server mods can spawn ships!";
-        boolean docked = false;
-        //True makes it spawn with AI active.
-        //Server spawn:
-        String command = "spawn_entity_pos "
-                + catalogName + " \"" + spawnName + "\" " + sector.x + " " + sector.y + " " + sector.z + " " +
-                localX + " " + localY + " " + localZ + " " + factionId + " true";
-        DebugFile.info("[SERVER] Executing command: " + command);
-        Server.executeAdminCommand(command);
-        DebugFile.log("Executed");
-        //Ship spawn callback:
-        //Cannot directly return ship because it doesnt instantly spawn
-        if(spawnCallback != null) {
-            new StarRunnable() {
-                @Override
-                public void run() {
-                    for (Ship ship : Universe.getUniverse().getShips(sector)){
-                        if(ship.getRealName().equals(spawnName)){
-                            Server.broadcastMessage(ship.getRealName());
-                            spawnCallback.onShipSpawn(ship);
-                            cancel();
-                        }
-                    }
-                }
-            }.runTimer(1);
-        }
-
-        //Client request spawn:
-        //this.getState().getController().sendAdminCommand(AdminCommands.LOAD_AS_FACTION, catalogName, spawnName, factionId);
-    }
-
-
-
-    public ArrayList<SimpleTransformableSendableObject<?>> getEntities(){
-        ArrayList<SimpleTransformableSendableObject<?>> r = new ArrayList<>();
-        for (Integer sectorId : GameServer.getServerState().activeSectors) {
-            Sector sector = GameServer.getServerState().getUniverse().getSector(sectorId);
-            r.addAll(sector.getEntities());
-        }
-        return r;
-    }
-    public ArrayList<Ship> getShips(){
-        ArrayList<Ship> r = new ArrayList<>();
-        for(SimpleTransformableSendableObject<?> entity : getEntities()){
-            if(entity instanceof Ship){
-                r.add((Ship) entity);
-            }
-        }
-        return r;
-    }
-
-    public ArrayList<Ship> getShips(Vector3i sector) {
-        //Todo: Replace this with a getShips method inside the api Sector class itself
-        ArrayList<Ship> r = new ArrayList<>();
-        for(SimpleTransformableSendableObject<?> entity : getSector(sector).getEntities()){
-            if(entity instanceof Ship){
-                r.add((Ship) entity);
-            }
-        }
-        return r;
-    }
-
     public Sector getSector(int x, int y, int z) {
+        /**
+         * Gets a sector using it's coordinates.
+         */
         return getSector(new Vector3i(x,y,z));
     }
-    public Sector getSector(Vector3i v) {
+
+    public Sector getSector(Vector3i sectorCoords) {
+        /**
+         * Gets a sector using it's vector coordinates.
+         */
         try {
-            return GameServer.getServerState().getUniverse().getSector(v, true);
+            return GameServer.getServerState().getUniverse().getSector(sectorCoords, true);
         } catch (IOException e) {
             DebugFile.log("[ERROR] Getting sector returned error");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public System getSystem(Vector3i systemCoords) {
+        /**
+         * Gets a system using it's vector coordinates.
+         */
+        try {
+            return new System(GameServer.getServerState().getUniverse().getStellarSystemFromStellarPos(systemCoords));
+        } catch (IOException e) {
+            DebugFile.log("[ERROR] Getting system returned error");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public System getSystem(int x, int y, int z) {
+        /**
+         * Gets a system using it's coordinates.
+         */
+        Vector3i systemCoords = new Vector3i();
+        systemCoords.x = x;
+        systemCoords.y = y;
+        systemCoords.z = z;
+
+        try {
+            return new System(GameServer.getServerState().getUniverse().getStellarSystemFromStellarPos(systemCoords));
+        } catch (IOException e) {
+            DebugFile.log("[ERROR] Getting system returned error");
             e.printStackTrace();
         }
         return null;
@@ -126,6 +95,9 @@ public class Universe {
     private static Universe universe;
 
     public static Universe getUniverse() {
+        /**
+         * Gets the server universe.
+         */
         if(universe == null) universe = new Universe();
         return universe;
     }

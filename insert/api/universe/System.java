@@ -1,36 +1,22 @@
 package api.universe;
 
-import api.faction.Faction;
-import java.util.List;
+import org.schema.game.common.data.world.StellarSystem;
+import java.util.ArrayList;
 
 public class System {
 
-    private List<Sector> sectors;
-    private Faction systemOwner = null;
-    private int[] coordinates = new int[3];
+    private StellarSystem internalSystem;
 
-    public System(int[] coordinates) {
-        this.coordinates = coordinates;
-        this.sectors = getSMSectorsFromCoord(coordinates);
+    public System(StellarSystem internalSystem) {
+        this.internalSystem = internalSystem;
     }
 
-    public List<Sector> getSectors() {
+    public ArrayList<Sector> getSectors() {
+        /**
+         * Gets all the sectors inside the system. Currently doesn't work.
+         */
+        ArrayList<Sector> sectors = new ArrayList<>();
+        //Todo:Figure out how to get all sectors in a system.
         return sectors;
-    }
-
-    public Faction getSystemOwner() {
-        return systemOwner;
-    }
-
-    public void setSystemOwner(Faction systemOwner) {
-        this.systemOwner = systemOwner;
-    }
-
-    public int[] getCoordinates() {
-        return coordinates;
-    }
-
-    private List<Sector> getSMSectorsFromCoord(int[] coordinates) {
-        return null; //Todo: Convert to SM system, then get all sectors from it and then convert them back to API sectors.
     }
 }
