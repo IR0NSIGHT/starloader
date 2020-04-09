@@ -2,16 +2,18 @@ package api.entity;
 
 import api.element.block.Block;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.ai.AIGameConfiguration;
 import org.schema.game.common.controller.ai.AIShipConfiguration;
 import org.schema.game.server.ai.AIShipControllerStateUnit;
+import org.schema.game.server.ai.ShipAIEntity;
 
 public class AIController {
 
-    private AIShipConfiguration internalShipAI;
+    private AIGameConfiguration<ShipAIEntity, org.schema.game.common.controller.Ship> internalShipAI;
     private Ship ship;
 
     public AIController(Ship ship) {
-        internalShipAI = new AIShipConfiguration(ship.getInternalShip().getState(), ship.getInternalShip());
+        internalShipAI = ((org.schema.game.common.controller.Ship) ship.internalEntity).getAiConfiguration();
         this.ship = ship;
     }
 
@@ -43,4 +45,5 @@ public class AIController {
         AIShipControllerStateUnit aiShipController = new AIShipControllerStateUnit(internalShipAI.getAiEntityState());
         return new Entity((SegmentController) aiShipController.getAquiredTarget());
     }
+
 }

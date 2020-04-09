@@ -5,10 +5,9 @@ import api.element.block.Block;
 import api.element.block.Blocks;
 import api.element.block.FactoryType;
 import api.entity.Entity;
-import api.entity.Player;
-import api.gui.custom.CustomHudText;
 import api.gui.custom.examples.*;
 import api.listener.Listener;
+import api.listener.events.CannonShootEvent;
 import api.listener.events.Event;
 import api.listener.events.StructureStatsCreateEvent;
 import api.listener.events.block.BlockActivateEvent;
@@ -24,18 +23,14 @@ import api.systems.ChamberType;
 import api.systems.addons.custom.TacticalJumpAddOn;
 import api.utils.StarRunnable;
 import api.utils.VecUtil;
-import org.newdawn.slick.UnicodeFont;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.activation.AbstractUnit;
 import org.schema.game.common.controller.elements.activation.ActivationCollectionManager;
 import org.schema.game.common.controller.elements.activation.ActivationElementManager;
-import org.schema.game.common.controller.elements.shield.capacity.ShieldCapacityCollectionManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.FactoryResource;
-import org.schema.schine.graphicsengine.forms.font.FontLibrary;
-import sun.plugin2.util.ColorUtil;
 
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
@@ -66,6 +61,7 @@ public class ModPlayground extends StarMod {
         //Make it emit light
         imp.lightSource = true;
         imp.lightSourceColor.set(new Vector4f(1F, 0F, 1F, 1F));
+
         /*imp.blended = true;
         new StarRunnable(){
             @Override
@@ -111,7 +107,6 @@ public class ModPlayground extends StarMod {
         //info.signal = true;
 
 
-
         //Doesnt work (not sure why
         ElementInformation xor = BlockConfig.newElement("XOR gate", new short[]{745});
         xor.signal = true;
@@ -146,7 +141,7 @@ public class ModPlayground extends StarMod {
             @Override
             public void onEvent(Event e) {
                 BlockSalvageEvent event = (BlockSalvageEvent) e;
-                GameClient.spawnBlockParticle(event.getBlock().getType().getId(), event.getBeam().getInternalBeam().hitPoint);
+                GameClient.spawnBlockParticle(event.getBlock().getType().getId(), event.getBeamEntity().getInternalBeam().hitPoint);
             }
         });
 
@@ -159,6 +154,23 @@ public class ModPlayground extends StarMod {
                 ev.addElement(currentEntityReactorBar);
             }
         });
+        final int[] t = {0};
+        new StarRunnable(){
+            @Override
+            public void run() {
+                t[0]+=4;
+            }
+        }.runTimer(1);
+        StarLoader.registerListener(CannonShootEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                CannonShootEvent e = (CannonShootEvent) event;
+                Color hsb = Color.getHSBColor(((float) t[0] %360)/360F, 1F, 1F);
+                Vector4f tuple4f = new Vector4f(hsb.getRed()/255F, hsb.getGreen()/255F, hsb.getBlue()/255F, 1F);
+                e.setColor(tuple4f);
+            }
+        });
+
         StarLoader.registerListener(BlockActivateEvent.class, new Listener() {
             @Override
             public void onEvent(Event ev) {

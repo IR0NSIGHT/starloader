@@ -3,10 +3,10 @@ package api.systems.weapons;
 import api.systems.WeaponSystem;
 import org.schema.game.common.controller.elements.BeamState;
 
-public class Beam {
+public class BeamEntity {
     private BeamState internalBeam;
 
-    public Beam(BeamState internalBeam) {
+    public BeamEntity(BeamState internalBeam) {
         this.internalBeam = internalBeam;
        // hitController.getEffectContainer().get(HitReceiverType.SHIELD).getStrength(InterEffectHandler.InterEffectType.EM);
     }

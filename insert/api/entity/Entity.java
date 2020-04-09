@@ -1,5 +1,6 @@
 package api.entity;
 
+import api.element.block.Block;
 import api.element.block.Blocks;
 import api.faction.Faction;
 import api.systems.Reactor;
@@ -274,13 +275,16 @@ public class Entity {
         return internalEntity.isOnServer();
     }
 
+    public Block getBlockAt(int x, int y, int z){
+        return new Block(internalEntity.getSegmentBuffer().getPointUnsave(x,y,z));
+    }
+
     public int getBlockAmount(Blocks block) {
         /**
          * Gets how many of the specified block the entity has. Does not include docked or root entities.
          */
         return internalEntity.getElementClassCountMap().get(block.getId());
     }
-
 
     public HashMap<Blocks, Integer> getBlocks() {
         /**
