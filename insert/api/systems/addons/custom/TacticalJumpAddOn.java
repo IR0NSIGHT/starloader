@@ -1,5 +1,6 @@
 package api.systems.addons.custom;
 
+import api.element.block.Blocks;
 import api.entity.Entity;
 import api.utils.StarRunnable;
 import org.schema.game.common.controller.PlayerUsableInterface;
@@ -17,7 +18,7 @@ public class TacticalJumpAddOn extends CustomAddOn{
 
     @Override
     public float getChargeRate() {
-        return this.getConfigManager().apply(StatusEffectType.CUSTOM_EFFECT_02, 10F);
+        return 10F;
     }
 
     @Override
@@ -32,7 +33,7 @@ public class TacticalJumpAddOn extends CustomAddOn{
 
     @Override
     public long getUsableId() {
-        return PlayerUsableInterface.USABLE_ID_REPULSOR;
+        return Blocks.NOCX_CRYSTAL.getPlayerUsableId();
     }
 
     @Override
@@ -42,13 +43,12 @@ public class TacticalJumpAddOn extends CustomAddOn{
 
     @Override
     public boolean isPlayerUsable() {
-        float apply = this.getConfigManager().apply(StatusEffectType.CUSTOM_EFFECT_01, 1F);
-        return apply == 100;
+        return entityHasEffect(StatusEffectType.CUSTOM_EFFECT_01);
     }
 
     @Override
     public short getWeaponRowIcon() {
-        return ElementKeyMap.CRYS_NOCX;
+        return Blocks.NOCX_CRYSTAL.getId();
     }
 
     @Override

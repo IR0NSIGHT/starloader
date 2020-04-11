@@ -5,6 +5,7 @@
 
 package org.schema.game.common.controller.elements;
 
+import api.server.Server;
 import org.schema.game.client.data.GameClientState;
 import org.schema.schine.graphicsengine.core.Timer;
 
@@ -16,20 +17,22 @@ public abstract class RecharchableActivatableDurationSingleModule extends Rechar
     }
 
     public boolean executeModule() {
-        if (this.getSegmentController().isOnServer()) {
-            if (this.getCharges() > 0) {
+        //MODIFIED METHOD
+        if (this.getCharges() > 0) {
+            if (this.getSegmentController().isOnServer()) {
+
                 this.activation = new SingleModuleActivation();
                 this.activation.startTime = System.currentTimeMillis();
                 this.setCharge(0.0F);
                 this.removeCharge();
                 this.sendChargeUpdate();
                 System.err.println("[SERVER][RECHARGE] ACTIVATE " + this.getWeaponRowName() + "; " + this.getSegmentController());
-                return true;
             }
-
+            return true;
+        }else{
             System.err.println("[SERVER][RECHARGE] NO CHRAGES FOR ACTIVATE " + this.getWeaponRowName() + "; " + this.getSegmentController());
         }
-
+////
         return false;
     }
 

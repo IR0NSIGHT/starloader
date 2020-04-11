@@ -24,6 +24,9 @@ public abstract class EntityReactorBar extends CustomHudBar {
 
     @Override
     public float getFilled() {
+        if(entity == null){
+            return 0;
+        }
         Reactor reactor = entity.getCurrentReactor();
         if(reactor == null){
             return 0;

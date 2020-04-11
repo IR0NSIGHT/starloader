@@ -59,7 +59,7 @@ public class BlockConfig {
         ElementInformation info = newElement(name, ids);
         info.blockResourceType = 2;
         info.sourceReference = 1085;
-        info.chamberRoot = 1011;
+        info.chamberRoot = rootChamber;
         info.chamberParent = 1085;
         info.chamberPermission = 1;
         info.chamberPrerequisites.add((short) 1085);

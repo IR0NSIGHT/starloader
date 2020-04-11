@@ -98,6 +98,11 @@ public class ModPlayground extends StarMod {
         }
         BlockConfig.addRecipe(Blocks.FERTIKEEN_CAPSULE.getInfo(), FactoryType.ADVANCED, 5, factoryResources.toArray(new FactoryResource[0]));
 
+        ElementInformation sh =
+                BlockConfig.newChamber("Shield Hardener", ChamberType.DEFENCE.getId(),
+                        new short[]{12, 42, 111, 86, 222, 333}, StatusEffectType.CUSTOM_EFFECT_05);
+        config.add(sh);
+
         ElementInformation creative =
                 BlockConfig.newChamber("Tactical Drive", ChamberType.MOBILITY.getId(),
                         new short[]{86, 23, 45, 33, 99, 99}, StatusEffectType.CUSTOM_EFFECT_01);
@@ -151,17 +156,20 @@ public class ModPlayground extends StarMod {
             @Override
             public void onEvent(Event event) {
                 ShieldHitEvent e = (ShieldHitEvent) event;
-                Server.broadcastMessage("proc event");
                 CustomAddOn customAddon = e.getEntity().getCustomAddon(ShieldHardenAddOn.class);
-                Server.broadcastMessage("custom addon: " + customAddon);
                 if(customAddon != null && customAddon.isActive()){
-                    Server.broadcastMessage("Canceled");
-                    e.setCanceled(true);
+                    Server.broadcastMessage("damage reduced from " + e.getDamage() + " to " + (e.getDamage()*0.25));
+                    e.setDamage(e.getDamage()*0.25);
+                    //e.setCanceled(true);
+                }else{
+                    if(customAddon == null) {
+                        Server.broadcastMessage("rip");
+                    }
                 }
             }
         });
 
-        /*StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
+        StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
                 ShieldCapacityCalculateEvent e = (ShieldCapacityCalculateEvent) event;
@@ -172,18 +180,26 @@ public class ModPlayground extends StarMod {
                 int deltaX = Math.abs(max.x-min.x);
                 int deltaY = Math.abs(max.y-min.y);
                 int deltaZ = Math.abs(max.z-min.z);
-                int maxDelta = Math.max(Math.max(deltaX, deltaY), deltaZ);
-                Server.broadcastMessage(String.valueOf(maxDelta));
-                e.setShields((long) (e.getCapacity()*1.2));
-                e.addShields(bonusShields);
+                int smallAxes = 0;
+                if(deltaX <= 5)
+                    smallAxes++;
+                if(deltaY <= 5)
+                    smallAxes++;
+                if(deltaZ <= 5)
+                    smallAxes++;
+                if(smallAxes >= 2) {
+                    Server.broadcastMessage("Cap group <=5, granting 20% bonus");
+                    e.setShields((long) (e.getCapacity() * 1.2));
+                }
             }
-        });*/
+        });
 
         StarLoader.registerListener(DamageBeamShootEvent.class, new Listener() {
 
             @Override
             public void onEvent(Event event) {
                 DamageBeamShootEvent e = (DamageBeamShootEvent) event;
+                //e.getBeamWeapon().getUnit().elementCollectionManager.getColor()
             }
         });
 
@@ -270,9 +286,11 @@ public class ModPlayground extends StarMod {
             @Override
             public void onEvent(Event event) {
                 RegisterEffectsEvent ev = (RegisterEffectsEvent) event;
-                ev.addEffectModifier(StatusEffectType.CUSTOM_EFFECT_01, 100);
-                ev.addEffectModifier(StatusEffectType.CUSTOM_EFFECT_02, 4);
-                ev.addEffectModifier(StatusEffectType.CUSTOM_EFFECT_03, 4);
+                for (StatusEffectType types : StatusEffectType.values()){
+                    if(types.name().contains("CUSTOM")){
+                        ev.addEffectModifier(types, 10F);
+                    }
+                }
             }
         });
         StarLoader.registerListener(RegisterAddonsEvent.class, new Listener() {

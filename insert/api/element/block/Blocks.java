@@ -1428,7 +1428,13 @@ public enum Blocks {
     }
 
     private static Blocks[] lookup;
-
+    static {
+        //Generate fast lookup
+        lookup = new Blocks[3000];
+        for (Blocks b : values()) {
+            lookup[b.getId()] = b;
+        }
+    }
     //Fast block lookup:
     public static Blocks fromId(short id){
         Blocks blocks = lookup[id];

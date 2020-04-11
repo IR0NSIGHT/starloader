@@ -349,9 +349,7 @@ public class Entity {
     }
     public CustomAddOn getCustomAddon(Class<? extends CustomAddOn> clazz){
         for (CustomAddOn customAddon : getCustomAddons()) {
-            Server.broadcastMessage("Trying against CA: " + customAddon.getName());
             if(customAddon.getClass().equals(clazz)){
-                Server.broadcastMessage("Found custom addon");
                 return customAddon;
             }
         }

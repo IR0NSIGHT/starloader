@@ -37,6 +37,7 @@ import org.schema.game.client.controller.ClientChannel;
 import org.schema.game.client.data.ClientStatics;
 import org.schema.game.client.view.GameResourceLoader;
 import org.schema.game.common.data.blockeffects.config.elements.ModifierStackType;
+import org.schema.game.common.data.blockeffects.config.parameter.StatusEffectBooleanValue;
 import org.schema.game.common.data.blockeffects.config.parameter.StatusEffectFloatValue;
 import org.schema.game.common.data.blockeffects.config.parameter.StatusEffectParameterNames;
 import org.schema.game.common.data.blockeffects.config.parameter.StatusEffectParameterType;
@@ -124,18 +125,33 @@ public class ConfigPool {
             for (Pair<StatusEffectType, Float> effect : event.registeredEffects) {
                 ConfigGroup group = new ConfigGroup(effect.getLeft().name());
 
+                //BOOLEAN EFFECT - If an effect is registered with a float value it will also have a boolean value
+                /*EffectConfigElement bElement = new EffectConfigElement();
+                StatusEffectType bType = effect.getLeft();
+                bElement.init(bType);
+                bElement.value = new StatusEffectBooleanValue();
+                StatusEffectBooleanValue bValue = (StatusEffectBooleanValue) bElement.value;
+                bValue.value.set(true);
+                bElement.priority = 1;*/
+
+                //FLOAT EFFECT
                 EffectConfigElement element = new EffectConfigElement();
                 StatusEffectType type = effect.getLeft();
                 element.init(type);
                 element.value = new StatusEffectFloatValue();
                 StatusEffectFloatValue value = (StatusEffectFloatValue) element.value;
-                value.value.set(effect.getRight());
+                value.value.set(10F);
                 element.priority = 1;
+                //group.elements.add(element);
+
+
+                //ADD
+
                 group.elements.add(element);
 
                 this.add(group);
             }
-
+////////////////////
             /*ConfigGroup group = new ConfigGroup("bruh");
             EffectConfigElement element = new EffectConfigElement();
             StatusEffectType type = StatusEffectType.CUSTOM_EFFECT_01;

@@ -182,11 +182,12 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
 
             //INSERTED CODE
             ShieldHitEvent event = new ShieldHitEvent(this, var1, var2, var3, damage);
-            Server.broadcastMessage("Firing event");
             StarLoader.fireEvent(ShieldHitEvent.class, event);
             damage = event.getDamage();
             if(event.isCanceled()){
                 damage = 0;
+                var1.hasHit = false;
+                return;
             }
             ///
 
@@ -223,6 +224,9 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
             }
 
             var1.hasHit = true;
+            //INSERTED TO UPDATE
+            var1.setDamage(damage);
+            ///
         }
 
     }

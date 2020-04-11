@@ -2,10 +2,11 @@ package api.systems.addons.custom;
 
 import api.element.block.Blocks;
 import api.server.Server;
-import api.systems.Shield;
+import org.schema.common.util.StringTools;
 import org.schema.game.common.controller.elements.ManagerContainer;
-import org.schema.game.common.controller.elements.SingleModuleActivation;
-import org.schema.schine.graphicsengine.core.Timer;
+import org.schema.game.common.controller.elements.scanner.ScanAddOn;
+import org.schema.game.common.data.blockeffects.config.StatusEffectType;
+import org.schema.schine.common.language.Lng;
 
 import javax.vecmath.Vector3f;
 
@@ -17,7 +18,7 @@ public class ShieldHardenAddOn extends CustomAddOn{
 
     @Override
     public float getChargeRate() {
-        return 5F;//this.getConfigManager().apply(StatusEffectType.CUSTOM_EFFECT_02, 1F);
+        return 60;
     }
 
     @Override
@@ -42,8 +43,8 @@ public class ShieldHardenAddOn extends CustomAddOn{
 
     @Override
     public boolean isPlayerUsable() {
-        return true;
-        ///float apply = this.getConfigManager().apply(StatusEffectType.CUSTOM_EFFECT_01, 1F);
+        return true;//entityHasEffect(StatusEffectType.CUSTOM_EFFECT_05);
+        //float apply = this.getConfigManager().apply(StatusEffectType.CUSTOM_EFFECT_01, 1F);
         //return apply == 100;
     }
 
@@ -58,14 +59,20 @@ public class ShieldHardenAddOn extends CustomAddOn{
     }
 
     @Override
+    public void onDeactivateFromTime() {
+
+    }
+
+    @Override
     public boolean onExecute() {
-        //dischargeFully();
+        //this.dischargeFully();
+        this.dischargeToZero();
         return true;
     }
 
     @Override
     public void onActive() {
-        entity.setVelocity(new Vector3f(10,10,10));
+        this.getSegmentController().sendServerMessage("!! SHIELDS HARDENED !!", 1);
     }
 
     @Override

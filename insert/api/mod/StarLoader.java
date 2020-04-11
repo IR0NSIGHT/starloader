@@ -6,6 +6,7 @@ import api.listener.Listener;
 import api.listener.events.Event;
 import api.listener.events.ServerPingEvent;
 import api.listener.events.block.BlockActivateEvent;
+import api.server.Server;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.view.gui.shiphud.newhud.TargetPanel;
 import org.schema.game.common.data.player.PlayerState;
@@ -58,13 +59,12 @@ public class StarLoader {
         int id = getIdFromEvent(clazz);
         //DebugFile.log("Firing Event: " +clazz.getName());
         for (Listener listener : getListeners(id)) {
-            if(clazz == BlockActivateEvent.class){
-                DebugFile.log("Block activate for: ");
-            }
             try {
                 listener.onEvent(ev);
             }catch (Exception e){
                 DebugFile.log("Exception during event: " + clazz.getName());
+                DebugFile.logError(e, null);
+                Server.broadcastMessage("An error occurred during event: " + clazz);
 
             }
         }
