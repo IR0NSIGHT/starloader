@@ -8,28 +8,36 @@ import api.entity.Entity;
 import api.gui.custom.examples.*;
 import api.listener.Listener;
 import api.listener.events.CannonShootEvent;
+import api.listener.events.DamageBeamShootEvent;
 import api.listener.events.Event;
 import api.listener.events.StructureStatsCreateEvent;
 import api.listener.events.block.BlockActivateEvent;
 import api.listener.events.block.BlockModifyEvent;
 import api.listener.events.block.BlockSalvageEvent;
+import api.listener.events.calculate.ShieldCapacityCalculateEvent;
 import api.listener.events.gui.HudCreateEvent;
 import api.listener.events.register.RegisterAddonsEvent;
 import api.listener.events.register.RegisterEffectsEvent;
+import api.listener.events.systems.ShieldHitEvent;
 import api.main.GameClient;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.server.Server;
 import api.systems.ChamberType;
+import api.systems.addons.custom.CustomAddOn;
+import api.systems.addons.custom.ShieldHardenAddOn;
 import api.systems.addons.custom.TacticalJumpAddOn;
 import api.utils.StarRunnable;
 import api.utils.VecUtil;
+import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.controller.manager.ingame.PlayerInteractionControlManager;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.activation.AbstractUnit;
 import org.schema.game.common.controller.elements.activation.ActivationCollectionManager;
 import org.schema.game.common.controller.elements.activation.ActivationElementManager;
+import org.schema.game.common.controller.elements.shield.capacity.ShieldCapacityCollectionManager;
+import org.schema.game.common.controller.elements.shield.capacity.ShieldCapacityUnit;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.FactoryResource;
@@ -139,10 +147,43 @@ public class ModPlayground extends StarMod {
     public void onEnable() {
         DebugFile.log("Loading default mod...");
 
-        StarLoader.registerListener(BlockModifyEvent.class, new Listener() {
+        StarLoader.registerListener(ShieldHitEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
-                BlockModifyEvent e = (BlockModifyEvent) event;
+                ShieldHitEvent e = (ShieldHitEvent) event;
+                Server.broadcastMessage("proc event");
+                CustomAddOn customAddon = e.getEntity().getCustomAddon(ShieldHardenAddOn.class);
+                Server.broadcastMessage("custom addon: " + customAddon);
+                if(customAddon != null && customAddon.isActive()){
+                    Server.broadcastMessage("Canceled");
+                    e.setCanceled(true);
+                }
+            }
+        });
+
+        /*StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                ShieldCapacityCalculateEvent e = (ShieldCapacityCalculateEvent) event;
+                long bonusShields = 0;
+                ShieldCapacityUnit capacityUnit = ((ShieldCapacityCalculateEvent) event).getUnit();
+                Vector3i max = capacityUnit.getMax(new Vector3i());
+                Vector3i min = capacityUnit.getMin(new Vector3i());
+                int deltaX = Math.abs(max.x-min.x);
+                int deltaY = Math.abs(max.y-min.y);
+                int deltaZ = Math.abs(max.z-min.z);
+                int maxDelta = Math.max(Math.max(deltaX, deltaY), deltaZ);
+                Server.broadcastMessage(String.valueOf(maxDelta));
+                e.setShields((long) (e.getCapacity()*1.2));
+                e.addShields(bonusShields);
+            }
+        });*/
+
+        StarLoader.registerListener(DamageBeamShootEvent.class, new Listener() {
+
+            @Override
+            public void onEvent(Event event) {
+                DamageBeamShootEvent e = (DamageBeamShootEvent) event;
             }
         });
 
@@ -159,8 +200,6 @@ public class ModPlayground extends StarMod {
             public void onEvent(Event event) {
                 HudCreateEvent ev = (HudCreateEvent) event;
                 BasicInfoGroup bar = new BasicInfoGroup(ev);
-                CurrentEntityReactorBar currentEntityReactorBar = new CurrentEntityReactorBar();
-                ev.addElement(currentEntityReactorBar);
             }
         });
         final int[] t = {0};
@@ -242,6 +281,7 @@ public class ModPlayground extends StarMod {
                 RegisterAddonsEvent ev = (RegisterAddonsEvent) event;
                 //ev.getContainer().getSegmentController().getConfigManager().apply()
                 ev.addAddOn(new TacticalJumpAddOn(ev.getContainer()));
+                ev.addAddOn(new ShieldHardenAddOn(ev.getContainer()));
             }
         });
 

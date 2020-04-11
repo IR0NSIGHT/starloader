@@ -1,5 +1,6 @@
 package api.systems;
 
+import api.entity.Entity;
 import org.schema.game.common.controller.elements.ShieldLocal;
 
 public class Shield {
@@ -44,5 +45,9 @@ public class Shield {
 
     public float getPercent(){
         return internalShield.getPercentOne();
+    }
+
+    public Entity getEntity() {
+        return new Entity(internalShield.shieldLocalAddOn.getSegmentController());
     }
 }

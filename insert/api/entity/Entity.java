@@ -3,9 +3,13 @@ package api.entity;
 import api.element.block.Block;
 import api.element.block.Blocks;
 import api.faction.Faction;
+import api.server.Server;
 import api.systems.Reactor;
 import api.systems.Shield;
+import api.systems.addons.custom.CustomAddOn;
 import org.schema.game.client.data.PlayerControllable;
+import org.schema.game.client.view.gui.weapon.WeaponBottomBar;
+import org.schema.game.common.controller.PlayerUsableInterface;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.*;
 import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
@@ -245,7 +249,7 @@ public class Entity {
             }
             return shields;
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public ManagerContainer<?> getManagerContainer() {
@@ -330,5 +334,27 @@ public class Entity {
 
     public Ship toShip(){
         return new Ship(internalEntity);
+    }
+
+    public ArrayList<CustomAddOn> getCustomAddons(){
+
+        ArrayList<CustomAddOn> addons = new ArrayList<>();
+        ManagerContainer<?> manager = getManagerContainer();
+        for (PlayerUsableInterface playerUsableInterface : manager.getPlayerUsable()) {
+            if(playerUsableInterface instanceof CustomAddOn){
+                addons.add((CustomAddOn) playerUsableInterface);
+            }
+        }
+        return addons;
+    }
+    public CustomAddOn getCustomAddon(Class<? extends CustomAddOn> clazz){
+        for (CustomAddOn customAddon : getCustomAddons()) {
+            Server.broadcastMessage("Trying against CA: " + customAddon.getName());
+            if(customAddon.getClass().equals(clazz)){
+                Server.broadcastMessage("Found custom addon");
+                return customAddon;
+            }
+        }
+        return null;
     }
 }

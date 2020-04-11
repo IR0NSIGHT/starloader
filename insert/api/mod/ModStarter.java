@@ -130,6 +130,16 @@ public class ModStarter {
             //DebugFile.log("We are going to download some mods, so dont start the client yet");
             return true;
         }else{
+            //Force enable all client mods so i can mess around on breire
+            for (StarMod mod : StarLoader.starMods){
+                if(!mod.isEnabled()){
+                    if(EnabledModFile.getInstance().isClientEnabled(mod.getInfo())){
+                        mod.onEnable();
+                        mod.flagEnabled(true);
+                    }
+                }
+            }
+
             DebugFile.log("all good");
             return true;
         }

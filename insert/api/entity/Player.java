@@ -20,7 +20,7 @@ public class Player {
         playerState = state;
     }
 
-    public Faction getFaction() throws IOException {
+    public Faction getFaction() {
         GameServerState gameServerState = GameServerState.instance;
         int factionID = playerState.getFactionId();
         return new Faction(gameServerState.getFactionManager().getFaction(factionID));
@@ -77,7 +77,7 @@ public class Player {
 
     }
 
-    public Sector getSector() throws IOException {
+    public Sector getSector() {
         /**
          * Gets the player's current sector.
          */

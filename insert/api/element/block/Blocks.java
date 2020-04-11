@@ -1,8 +1,8 @@
 package api.element.block;
 
+import api.element.usable.PlayerUsableHelper;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
-import org.schema.game.common.data.explosion.ExplosionRunnable;
 
 public enum Blocks {
 
@@ -1435,12 +1435,9 @@ public enum Blocks {
         if(blocks == null) return EMPTY_SPACE;
         return blocks;
     }
-    static{
-        //Generate fast lookup
-        lookup = new Blocks[3000];
-        for (Blocks b : values()){
-            lookup[b.getId()] = b;
-        }
+
+    public long getPlayerUsableId(){
+        return PlayerUsableHelper.getPlayerUsableId(this);
     }
 
 }

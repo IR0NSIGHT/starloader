@@ -16,6 +16,7 @@ import org.schema.game.common.controller.ElementCountMap;
 import org.schema.game.common.controller.elements.ManagerContainer;
 import org.schema.game.common.controller.elements.RecharchableActivatableDurationSingleModule;
 import org.schema.game.common.controller.elements.VoidElementManager;
+import org.schema.game.common.controller.elements.power.reactor.ReactorBoostAddOn;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementKeyMap;
@@ -43,6 +44,7 @@ public class ScanAddOn extends RecharchableActivatableDurationSingleModule {
         //INSERTED CODE to do with custom add ons, in scanner so I dont have to mess with ManagerContainer
         RegisterAddonsEvent event = new RegisterAddonsEvent(var1);
         StarLoader.fireEvent(RegisterAddonsEvent.class, event);
+        ///
     }
 
     public int getDistance() {

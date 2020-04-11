@@ -31,13 +31,16 @@ public class BasicInfoGroup {
                     if(en.getEntityType() == EntityType.SHIP){
                         Ship ship = en.toShip();
                         if(!ship.isDocked()) {
-                            // if(en.getAttachedPlayers().size() > 0){
+                             if(en.getAttachedPlayers().size() > 0){
                             //if(!en.getAttachedPlayers().get(0).getName().equals(GameClient.getClientPlayerState().getName())){
                             controlledShips.add(ship);
                             //}
-                            //}
+                            }
                         }
                     }
+                }
+                for (BasicInfoPanel panel : panels) {
+                    panel.setEntity(null);
                 }
                 for (int i = 0; i < controlledShips.size(); i++) {
                     if(i > 5){

@@ -17,7 +17,7 @@ public class Faction {
 
     private org.schema.game.common.data.player.faction.Faction internalFaction;
 
-    public Faction(org.schema.game.common.data.player.faction.Faction internalFaction) throws IOException {
+    public Faction(org.schema.game.common.data.player.faction.Faction internalFaction) {
         this.internalFaction = internalFaction;
     }
 

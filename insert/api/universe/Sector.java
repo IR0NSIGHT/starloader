@@ -19,7 +19,7 @@ public class Sector {
 
     private org.schema.game.common.data.world.Sector internalSector;
 
-    public Sector(org.schema.game.common.data.world.Sector internalSector) throws IOException {
+    public Sector(org.schema.game.common.data.world.Sector internalSector) {
         this.internalSector = internalSector;
     }
 

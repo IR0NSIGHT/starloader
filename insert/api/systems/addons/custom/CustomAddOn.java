@@ -5,10 +5,13 @@
 
 package api.systems.addons.custom;
 
+import api.entity.Entity;
+import api.server.Server;
 import org.schema.common.util.StringTools;
 import org.schema.game.common.controller.elements.ManagerContainer;
 import org.schema.game.common.controller.elements.RecharchableActivatableDurationSingleModule;
 import org.schema.game.common.controller.elements.VoidElementManager;
+import org.schema.game.common.controller.elements.scanner.ScanAddOn;
 import org.schema.game.common.controller.elements.scanner.ScanAddOnChargeValueUpdate;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
@@ -22,8 +25,10 @@ import org.schema.schine.graphicsengine.core.Timer;
 import java.util.ArrayList;
 
 public abstract class CustomAddOn extends RecharchableActivatableDurationSingleModule {
+    Entity entity;
     public CustomAddOn(ManagerContainer<?> var1) {
         super(var1);
+        entity = new Entity(getSegmentController());
     }
 
     public void sendChargeUpdate() {
@@ -130,7 +135,9 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
 
     @Override
     public boolean executeModule() {
+        Server.broadcastMessage("Charges: " + this.getCharges());
         boolean success = super.executeModule();
+        Server.broadcastMessage("ChargesA: " + this.getCharges());
         onExecute();
         return success;
 
@@ -157,7 +164,7 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
     }
 
     protected boolean isDeactivatableManually() {
-        return true;
+        return false;
     }
 
     protected void onNoLongerConsumerActiveOrUsable(Timer var1) {
