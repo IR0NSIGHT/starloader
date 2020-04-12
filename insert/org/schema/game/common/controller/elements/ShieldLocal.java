@@ -174,61 +174,61 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
         return var2;
     }
 
-    public void process(ShieldHitCallback var1) {
-        if (this.shields > 0.0D && this.containsInRadius(var1)) {
-            boolean var2 = this.shieldLocalAddOn.getSegmentController().getConfigManager().apply(StatusEffectType.SHIELD_HOTSPOT_DPS, false);
-            boolean var3 = this.shieldLocalAddOn.getSegmentController().getConfigManager().apply(StatusEffectType.SHIELD_HOTSPOT_ALPHA, false);
+    public void process(ShieldHitCallback hit) {
+        if (this.shields > 0.0D && this.containsInRadius(hit)) {
+            boolean shieldDPS = this.shieldLocalAddOn.getSegmentController().getConfigManager().apply(StatusEffectType.SHIELD_HOTSPOT_DPS, false);
+            boolean shieldAlpha = this.shieldLocalAddOn.getSegmentController().getConfigManager().apply(StatusEffectType.SHIELD_HOTSPOT_ALPHA, false);
             float var4 = this.shieldLocalAddOn.getSegmentController().getConfigManager().apply(StatusEffectType.SHIELD_HOTSPOT_PERCENTAGE, 1.0F);
             float var5 = this.shieldLocalAddOn.getSegmentController().getConfigManager().apply(StatusEffectType.SHIELD_HOTSPOT_RANGE, 1.0F);
             boolean var6 = this.shieldLocalAddOn.getSegmentController().getConfigManager().apply(StatusEffectType.SHIELD_HOTSPOT_RECHARGE_MODE, false);
-            double damage = var1.getDamage();
+            double damage = hit.getDamage();
 
             //INSERTED CODE
-            ShieldHitEvent event = new ShieldHitEvent(this, var1, var2, var3, damage);
+            ShieldHitEvent event = new ShieldHitEvent(this, hit, shieldDPS, shieldAlpha, hit.getDamage());
             StarLoader.fireEvent(ShieldHitEvent.class, event);
             damage = event.getDamage();
             if(event.isCanceled()){
                 damage = 0;
-                var1.hasHit = false;
+                hit.hasHit = false;
                 return;
             }
             ///
 
 
             double var7 = 0.0D;
-            if (var3 || var2) {
-                if (var2) {
+            if (shieldAlpha || shieldDPS) {
+                if (shieldDPS) {
                     var7 = 1.0D;
-                } else if (var3) {
+                } else if (shieldAlpha) {
                     var7 = -1.0D;
                 }
 
-                if (!var1.hasHit) {
+                if (!hit.hasHit) {
                     double dmg = damage - var7 * (double) var5 * damage
                             + var7 * (double) var5 * damage * Math.min(damage / ((double) var4 * (var6 ? this.getRechargeRate() : this.getShieldCapacity())), 2.0D);
-                    var1.setDamage(dmg);
+                    hit.setDamage(dmg);
                     damage = dmg;
                 }
             }
 
             if (this.shields <= damage) {
-                if (!var1.hasHit) {
-                    var1.setDamage(damage - this.shields);
+                if (!hit.hasHit) {
+                    hit.setDamage(damage - this.shields);
                 }
 
                 this.shields = 0.0D;
-                var1.onShieldOutage(this);
+                hit.onShieldOutage(this);
             } else {
                 this.shields -= damage;
-                if (!var1.hasHit) {
-                    var1.setDamage(0.0D);
+                if (!hit.hasHit) {
+                    hit.setDamage(0.0D);
                 }
-                var1.onShieldDamage(this);
+                hit.onShieldDamage(this);
             }
 
-            var1.hasHit = true;
+            hit.hasHit = true;
             //INSERTED TO UPDATE
-            var1.setDamage(damage);
+            hit.setDamage(damage);
             ///
         }
 

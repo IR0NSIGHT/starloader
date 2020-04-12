@@ -69,15 +69,15 @@ public class DamageBeamHitHandlerSegmentController implements DamageBeamHitHandl
         this.dam = 0.0F;
     }
 
-    public int onBeamDamage(BeamState hittingBeam, int hits, BeamHandlerContainer<?> var3, SegmentPiece var4, Vector3f from, Vector3f to, Timer var7, Collection<Segment> var8) {
-        this.segmentPiece.setByReference(var4);
+    public int onBeamDamage(BeamState hittingBeam, int hits, BeamHandlerContainer<?> container, SegmentPiece segmentPiece, Vector3f from, Vector3f to, Timer var7, Collection<Segment> updatedSegments) {
+        this.segmentPiece.setByReference(segmentPiece);
 
         //hitController.getEffectContainer().get(HitReceiverType.SHIELD).getStrength(InterEffectHandler.InterEffectType.EM);
         if (!this.segmentPiece.isValid()) {
             System.err.println(this.segmentPiece.getSegmentController().getState() + " HITTTING INVALID PIECE");
             return 0;
         } else {
-            this.hitController = var4.getSegmentController();
+            this.hitController = segmentPiece.getSegmentController();
             if (this.hitController instanceof TransientSegmentController) {
                 ((TransientSegmentController)this.hitController).setTouched(true, true);
             }
@@ -166,7 +166,7 @@ public class DamageBeamHitHandlerSegmentController implements DamageBeamHitHandl
                 }
 
                 //INSERTED CODE
-                DamageBeamHitEvent event = new DamageBeamHitEvent(this, hitController, hittingBeam, hits, var3, var4, from, to, var8);
+                DamageBeamHitEvent event = new DamageBeamHitEvent(this, hitController, hittingBeam, hits, container, segmentPiece, from, to, updatedSegments);
                 StarLoader.fireEvent(DamageBeamHitEvent.class, event);
                 ///
 

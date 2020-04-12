@@ -340,15 +340,15 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
         return var1.isArmor();
     }
 
-    public ProjectileHandleState handle(Damager var1, ProjectileController var2, Vector3f var3, Vector3f var4, ProjectileParticleContainer var5, int var6, CubeRayCastResult var7) {
+    public ProjectileHandleState handle(Damager damager, ProjectileController var2, Vector3f var3, Vector3f var4, ProjectileParticleContainer var5, int var6, CubeRayCastResult var7) {
         Segment var8;
         if ((var8 = var7.getSegment()) == null) {
-            System.err.println(var1 + " ERROR: SEGMENT NULL: " + var7);
+            System.err.println(damager + " ERROR: SEGMENT NULL: " + var7);
             return ProjectileHandleState.PROJECTILE_NO_HIT;
         } else {
             SegmentController var9;
             if ((var9 = var8.getSegmentController()) instanceof ProjectileHittable) {
-                if (!var9.canBeDamagedBy(var1, DamageDealerType.PROJECTILE)) {
+                if (!var9.canBeDamagedBy(damager, DamageDealerType.PROJECTILE)) {
                     return ProjectileHandleState.PROJECTILE_NO_HIT_STOP;
                 } else {
                     this.shotHandler.hitSegController = var9;
@@ -368,7 +368,7 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
                     this.rayCallbackTraverse.rayFromWorld.set(var3);
                     this.rayCallbackTraverse.rayToWorld.set(var4);
                     this.rayCallbackTraverse.setFilter(new SegmentController[]{var9});
-                    this.rayCallbackTraverse.setOwner(var1);
+                    this.rayCallbackTraverse.setOwner(damager);
                     this.rayCallbackTraverse.setIgnoereNotPhysical(false);
                     this.rayCallbackTraverse.setIgnoreDebris(false);
                     this.rayCallbackTraverse.setRecordAllBlocks(false);
@@ -380,7 +380,7 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
 
 
                     //INSERTED CODE
-                    EntityDamageEvent event = new EntityDamageEvent(this.shotHandler.hitSegController, this.shotHandler, this, this.shotHandler.hitType, var1);
+                    EntityDamageEvent event = new EntityDamageEvent(this.shotHandler.hitSegController, this.shotHandler, this, this.shotHandler.hitType, damager);
                     StarLoader.fireEvent(EntityDamageEvent.class, event);
                     ///
 
@@ -391,7 +391,7 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
                     assert this.shotHandler.typesHit.size() == 0 : "not all hits consumed " + this.shotHandler.typesHit.size();
 
                     if (this.shotHandler.getResult() == ProjectileHandleState.PROJECTILE_HIT_STOP || this.shotHandler.getResult() == ProjectileHandleState.PROJECTILE_HIT_CONTINUE || this.shotHandler.getResult() == ProjectileHandleState.PROJECTILE_HIT_STOP_INVULNERABLE) {
-                        this.shotHandler.hitSegController.sendHitConfirmToDamager(var1, false);
+                        this.shotHandler.hitSegController.sendHitConfirmToDamager(damager, false);
                     }
 
                     if (this.rayCallbackTraverse.hasHit()) {

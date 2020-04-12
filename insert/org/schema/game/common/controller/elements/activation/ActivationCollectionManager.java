@@ -98,7 +98,7 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
         return new Tag(Type.STRUCT, (String)null, new Tag[]{this.destination == null ? new Tag(Type.BYTE, (String)null, (byte)0) : this.destination.toTag(), FinishTag.INST});
     }
 
-    public int onActivate(ActivationElementManager var1, SegmentPiece var2, boolean var3, boolean var4) {
+    public int onActivate(ActivationElementManager man, SegmentPiece piece, boolean var3, boolean var4) {
         if (!this.isOnServer()) {
             return 0;
         } else {
@@ -107,11 +107,11 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
                 System.err.println(this.getSegmentController().getState() + " " + this.getSegmentController() + " CANNOT ACTIVATE: totalSize: " + this.getTotalSize() + " / controlMap: " + (var5 != null ? var5.size() : 0) + "::: HashSet: " + var5);
                 return -1;
             } else {
-                assert var2.getAbsoluteIndex() == this.getControllerElement().getAbsoluteIndex() : var2 + "; " + this.getControllerElement();
+                assert piece.getAbsoluteIndex() == this.getControllerElement().getAbsoluteIndex() : piece + "; " + this.getControllerElement();
 
-                if (ElementKeyMap.isValidType(var2.getType())) {
+                if (ElementKeyMap.isValidType(piece.getType())) {
                     //INSERTED CODE
-                    BlockActivateEvent ev = new BlockActivateEvent(var1, var2, this);
+                    BlockActivateEvent ev = new BlockActivateEvent(man, piece, this);
                     StarLoader.fireEvent(BlockActivateEvent.class, ev);
                     if(ev.isCanceled()){
                         return 0;
@@ -122,11 +122,11 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
                     int var9;
                     int var10;
 
-                    if (var2.getType() == Blocks.AND_SIGNAL.getId()) {
-                        var6 = var2.getAbsoluteIndex();
+                    if (piece.getType() == Blocks.AND_SIGNAL.getId()) {
+                        var6 = piece.getAbsoluteIndex();
 
-                        for(var10 = 0; var10 < var1.getCollectionManagers().size(); ++var10) {
-                            var8 = (ActivationCollectionManager)var1.getCollectionManagers().get(var10);
+                        for(var10 = 0; var10 < man.getCollectionManagers().size(); ++var10) {
+                            var8 = (ActivationCollectionManager)man.getCollectionManagers().get(var10);
 
                             for(var9 = 0; var9 < var8.getElementCollections().size(); ++var9) {
                                 if (((AbstractUnit)var8.getElementCollections().get(var9)).contains(var6)) {
@@ -135,27 +135,27 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
                                 }
                             }
                         }
-                    } else if (var2.getType() != Blocks.OR_SIGNAL.getId()) {
-                        if (var2.getType() == Blocks.NOT_SIGNAL.getId()) {
+                    } else if (piece.getType() != Blocks.OR_SIGNAL.getId()) {
+                        if (piece.getType() == Blocks.NOT_SIGNAL.getId()) {
                             var4 = !var4;
-                        } else if (var2.getType() == Blocks.RANDOMIZER.getId()) {
+                        } else if (piece.getType() == Blocks.RANDOMIZER.getId()) {
                             var4 = Math.random() > 0.5D;
-                        } else if (!ElementKeyMap.isButton(var2.getType())) {
-                            if (var2.getType() == 667) {
+                        } else if (!ElementKeyMap.isButton(piece.getType())) {
+                            if (piece.getType() == 667) {
                                 if (var4) {
                                     var4 = !var3;
                                 } else {
                                     var4 = var3;
                                 }
                             } else {
-                                var2.getType();
+                                piece.getType();
                             }
                         }
                     } else {
-                        var6 = var2.getAbsoluteIndex();
+                        var6 = piece.getAbsoluteIndex();
 
-                        for(var10 = 0; var10 < var1.getCollectionManagers().size(); ++var10) {
-                            var8 = (ActivationCollectionManager)var1.getCollectionManagers().get(var10);
+                        for(var10 = 0; var10 < man.getCollectionManagers().size(); ++var10) {
+                            var8 = (ActivationCollectionManager)man.getCollectionManagers().get(var10);
 
                             for(var9 = 0; var9 < var8.getElementCollections().size(); ++var9) {
                                 if (((AbstractUnit)var8.getElementCollections().get(var9)).contains(var6)) {
@@ -170,12 +170,12 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
                         Iterator var11 = this.getElementCollections().iterator();
 
                         while(var11.hasNext()) {
-                            ((AbstractUnit)var11.next()).onActivate(this, var1, var2, var4);
+                            ((AbstractUnit)var11.next()).onActivate(this, man, piece, var4);
                         }
                     }
 
                     this.currentSignal = ((SendableSegmentController)this.getSegmentController()).signalId;
-                    var2.setActive(var4);
+                    piece.setActive(var4);
                 }
 
                 return var4 ? 1 : 0;

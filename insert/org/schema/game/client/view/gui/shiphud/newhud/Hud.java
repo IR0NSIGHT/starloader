@@ -86,36 +86,36 @@ public class Hud extends GUIElement {
     public static ArrayList<GUIElement> customElements = new ArrayList<>();
     ///
 
-    public Hud(GameClientState var1) {
-        super(var1);
-        this.radar = new Radar(var1);
-        this.powerBar = new PowerBar(var1);
-        this.reactorPowerBar = new ReactorPowerBar(var1);
-        this.speedBarFarRight = new SpeedBarFarRight(var1);
-        this.speedBarRight = new SpeedBarRight(var1);
-        this.shieldBarLeft = new ShieldBarLeftOld(var1);
-        this.shieldBarRight = new ShieldBarRightLocal(var1);
-        this.powerBatteryBar = new PowerBatteryBar(var1);
-        this.healthBar = new HealthBar(var1);
-        this.shipHPBar = new ShipHPBar(var1);
-        this.powerStabilizationBar = new PowerStabilizationBar(var1);
-        this.powerConsumptionBar = new PowerConsumptionBar(var1);
-        this.targetPanel = new TargetPanel(var1);
-        this.positiveEffectBar = new PositiveEffectBar(var1);
-        this.negativeEffectBar = new NegativeEffectBar(var1);
-        this.backgroundCrosshairHUD = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-c-gui-"), var1);
+    public Hud(GameClientState state) {
+        super(state);
+        this.radar = new Radar(state);
+        this.powerBar = new PowerBar(state);
+        this.reactorPowerBar = new ReactorPowerBar(state);
+        this.speedBarFarRight = new SpeedBarFarRight(state);
+        this.speedBarRight = new SpeedBarRight(state);
+        this.shieldBarLeft = new ShieldBarLeftOld(state);
+        this.shieldBarRight = new ShieldBarRightLocal(state);
+        this.powerBatteryBar = new PowerBatteryBar(state);
+        this.healthBar = new HealthBar(state);
+        this.shipHPBar = new ShipHPBar(state);
+        this.powerStabilizationBar = new PowerStabilizationBar(state);
+        this.powerConsumptionBar = new PowerConsumptionBar(state);
+        this.targetPanel = new TargetPanel(state);
+        this.positiveEffectBar = new PositiveEffectBar(state);
+        this.negativeEffectBar = new NegativeEffectBar(state);
+        this.backgroundCrosshairHUD = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-c-gui-"), state);
 
         //INSERTED CODE
-        HudCreateEvent event = new HudCreateEvent(this, var1);
+        HudCreateEvent event = new HudCreateEvent(this, state);
         StarLoader.fireEvent(HudCreateEvent.class, event);
         customElements.addAll(event.elements);
         ///
         //this.test = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-c-gui-"), var1);
 
-        this.backgroundCrosshair = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-simple-c-gui-"), var1);
-        this.hitNotification = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-hit-c-gui-"), var1);
-        this.helpManager = new HudContextHelpManager(var1);
-        this.indicator = new HudIndicatorOverlay(var1);
+        this.backgroundCrosshair = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-simple-c-gui-"), state);
+        this.hitNotification = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-hit-c-gui-"), state);
+        this.helpManager = new HudContextHelpManager(state);
+        this.indicator = new HudIndicatorOverlay(state);
     }
 
     public void cleanUp() {

@@ -500,9 +500,9 @@ public class PlayerState extends AbstractOwnerState implements FogOfWarReceiver,
 
     public void checkIfDiedOnServer() {
         if (!this.dieList.isEmpty()) {
-            Damager var1 = (Damager)this.dieList.get(this.dieList.size() - 1);
+            Damager from = (Damager)this.dieList.get(this.dieList.size() - 1);
             //INSERTED CODE
-            PlayerDeathEvent event = new PlayerDeathEvent(this, var1);
+            PlayerDeathEvent event = new PlayerDeathEvent(this, from);
             StarLoader.fireEvent(PlayerDeathEvent.class, event);
             ///
             System.err.println("[SERVER] PLAYER " + this + " died, removing ALL control units");
@@ -539,7 +539,7 @@ public class PlayerState extends AbstractOwnerState implements FogOfWarReceiver,
             }
 
             this.lastDeathTime = this.getState().getUpdateTime();
-            this.announceKill(var1);
+            this.announceKill(from);
             synchronized(this.getState().getLocalAndRemoteObjectContainer().getLocalObjects()) {
                 Iterator var8 = this.getState().getLocalAndRemoteObjectContainer().getLocalObjects().values().iterator();
 
@@ -547,7 +547,7 @@ public class PlayerState extends AbstractOwnerState implements FogOfWarReceiver,
                     AbstractCharacter var5;
                     Sendable var10;
                     if ((var10 = (Sendable)var8.next()) instanceof AbstractCharacter && (var5 = (AbstractCharacter)var10).getOwnerState() == this) {
-                        var5.destroy(var1);
+                        var5.destroy(from);
                         break;
                     }
                 }

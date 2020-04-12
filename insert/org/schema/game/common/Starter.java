@@ -1262,7 +1262,7 @@ public class Starter implements Observer {
 
     }
 
-    public static void startClient(HostPortLoginName server, boolean var1, GraphicsContext var2) {
+    public static void startClient(HostPortLoginName server, boolean startConnectDialog, GraphicsContext context) {
 
 
         //INSERTED CODE
@@ -1270,9 +1270,8 @@ public class Starter implements Observer {
         DebugFile.log("Connecting to server: " + loginName);
         boolean allUptoDate = ModStarter.preClientConnect(loginName, server.port);
         if(allUptoDate) {
-            ///
-            stopClient(var2);
-            clientRunnable = new ClientRunnable(server, var1, var2);
+            stopClient(context);
+            clientRunnable = new ClientRunnable(server, startConnectDialog, context);
             Thread var3;
 
             (var3 = new Thread(clientRunnable, "ClientThread")).setPriority(8);

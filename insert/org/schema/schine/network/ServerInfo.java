@@ -28,6 +28,7 @@ public class ServerInfo extends AbstractServerInfo {
     public boolean reachable;
 
     public ServerInfo(String host, int port, Object[] arr, long var4, String connectionType) {
+        //INSERTED CODE
         //Skip all of the info about players and version by starting at 7
         System.err.println("[Starloader][ServerInfo] Registering info for: " + host);
         for (int i = 7; i < arr.length; i++) {

@@ -84,29 +84,29 @@ public abstract class BeamElementManager<E extends BeamUnit<E, CM, EM>, CM exten
         }
     }
 
-    public void doShot(E var1, CM cm, ShootContainer var3, PlayerState var4, float var5, Timer var6, boolean var7) {
+    public void doShot(E c, CM m, ShootContainer var3, PlayerState var4, float var5, Timer var6, boolean var7) {
         ManagerModuleCollection var11 = null;
         short var8;
-        if (cm.getEffectConnectedElement() != -9223372036854775808L) {
-            var8 = (short)ElementCollection.getType(cm.getEffectConnectedElement());
+        if (m.getEffectConnectedElement() != -9223372036854775808L) {
+            var8 = (short)ElementCollection.getType(m.getEffectConnectedElement());
             var11 = this.getManagerContainer().getModulesControllerMap().get(var8);
         }
 
-        if (cm.getEffectConnectedElement() != -9223372036854775808L) {
-            var8 = (short)ElementCollection.getType(cm.getEffectConnectedElement());
+        if (m.getEffectConnectedElement() != -9223372036854775808L) {
+            var8 = (short)ElementCollection.getType(m.getEffectConnectedElement());
             var11 = this.getManagerContainer().getModulesControllerMap().get(var8);
             ControlBlockElementCollectionManager var9;
-            if ((var9 = CombinationAddOn.getEffect(cm.getEffectConnectedElement(), var11, this.getSegmentController())) != null) {
-                cm.setEffectTotal(var9.getTotalSize());
+            if ((var9 = CombinationAddOn.getEffect(m.getEffectConnectedElement(), var11, this.getSegmentController())) != null) {
+                m.setEffectTotal(var9.getTotalSize());
             }
         }
 
         ShootingRespose var10;
-        if (this.isCombinable() && cm.getSlaveConnectedElement() != -9223372036854775808L) {
-            var8 = (short)ElementCollection.getType(cm.getSlaveConnectedElement());
+        if (this.isCombinable() && m.getSlaveConnectedElement() != -9223372036854775808L) {
+            var8 = (short)ElementCollection.getType(m.getSlaveConnectedElement());
             ManagerModuleCollection var14 = this.getManagerContainer().getModulesControllerMap().get(var8);
-            var10 = this.handleAddOn(this, cm, var1, var14, var11, var3, (SimpleTransformableSendableObject)null, var4, var6, var5);
-            this.handleResponse(var10, var1, var3.weapontOutputWorldPos);
+            var10 = this.handleAddOn(this, m, c, var14, var11, var3, (SimpleTransformableSendableObject)null, var4, var6, var5);
+            this.handleResponse(var10, c, var3.weapontOutputWorldPos);
         } else {
             //INSERTED CODE FROM SM-DAMAGE-FIX
             //var2.setEffectTotal(0);
@@ -114,46 +114,46 @@ public abstract class BeamElementManager<E extends BeamUnit<E, CM, EM>, CM exten
 
             Vector3f var12;
             (var12 = new Vector3f()).set(var3.weapontOutputWorldPos);
-            var3.shootingDirTemp.scale(var1.getDistance());
+            var3.shootingDirTemp.scale(c.getDistance());
             var12.add(var3.shootingDirTemp);
-            BeamCommand var13;
-            (var13 = new BeamCommand()).minEffectiveRange = var1.getMinEffectiveRange();
-            var13.minEffectiveValue = var1.getMinEffectiveValue();
-            var13.maxEffectiveRange = var1.getMaxEffectiveRange();
-            var13.maxEffectiveValue = var1.getMaxEffectiveValue();
-            var13.currentTime = var6.currentTime;
-            var13.identifier = var1.getSignificator();
-            var13.relativePos.set((float)(var1.getOutput().x - 16), (float)(var1.getOutput().y - 16), (float)(var1.getOutput().z - 16));
-            var13.reloadCallback = var1;
-            var13.from.set(var3.weapontOutputWorldPos);
-            var13.to.set(var12);
-            var13.playerState = var4;
-            var13.beamTimeout = var1.getBurstTime() > 0.0F ? var1.getBurstTime() : var5;
-            var13.tickRate = var1.getTickRate();
-            var13.beamPower = var1.getBeamPower();
-            var13.cooldownSec = var1.getCoolDownSec();
-            var13.bursttime = var1.getBurstTime();
-            var13.initialTicks = var1.getInitialTicks();
-            var13.powerConsumedByTick = var1.getPowerConsumption();
-            var13.latchOn = var1.isLatchOn();
-            var13.checkLatchConnection = var1.isCheckLatchConnection();
-            var13.hitType = var1.getHitType();
-            var13.powerConsumedExtraByTick = 0.0F;
-            var13.railParent = this.getRailHitMultiplierParent();
-            var13.railChild = this.getRailHitMultiplierChild();
+            BeamCommand b;
+            (b = new BeamCommand()).minEffectiveRange = c.getMinEffectiveRange();
+            b.minEffectiveValue = c.getMinEffectiveValue();
+            b.maxEffectiveRange = c.getMaxEffectiveRange();
+            b.maxEffectiveValue = c.getMaxEffectiveValue();
+            b.currentTime = var6.currentTime;
+            b.identifier = c.getSignificator();
+            b.relativePos.set((float)(c.getOutput().x - 16), (float)(c.getOutput().y - 16), (float)(c.getOutput().z - 16));
+            b.reloadCallback = c;
+            b.from.set(var3.weapontOutputWorldPos);
+            b.to.set(var12);
+            b.playerState = var4;
+            b.beamTimeout = c.getBurstTime() > 0.0F ? c.getBurstTime() : var5;
+            b.tickRate = c.getTickRate();
+            b.beamPower = c.getBeamPower();
+            b.cooldownSec = c.getCoolDownSec();
+            b.bursttime = c.getBurstTime();
+            b.initialTicks = c.getInitialTicks();
+            b.powerConsumedByTick = c.getPowerConsumption();
+            b.latchOn = c.isLatchOn();
+            b.checkLatchConnection = c.isCheckLatchConnection();
+            b.hitType = c.getHitType();
+            b.powerConsumedExtraByTick = 0.0F;
+            b.railParent = this.getRailHitMultiplierParent();
+            b.railChild = this.getRailHitMultiplierChild();
             if (var4 != null && var4.isKeyDownOrSticky(KeyboardMappings.WALK)) {
-                var13.dontFade = true;
+                b.dontFade = true;
             }
 
-            var13.weaponId = cm.getUsableId();
-            var13.controllerPos = cm.getControllerPos();
-            var13.firendlyFire = var1.isFriendlyFire();
-            var13.penetrating = var1.isPenetrating();
-            var13.acidDamagePercent = var1.getAcidDamagePercentage();
+            b.weaponId = m.getUsableId();
+            b.controllerPos = m.getControllerPos();
+            b.firendlyFire = c.isFriendlyFire();
+            b.penetrating = c.isPenetrating();
+            b.acidDamagePercent = c.getAcidDamagePercentage();
 
             //INSERTED CODE
-            if(cm instanceof DamageBeamCollectionManager) {
-                DamageBeamShootEvent event = new DamageBeamShootEvent((DamageBeamUnit) var1, var13);
+            if(m instanceof DamageBeamCollectionManager) {
+                DamageBeamShootEvent event = new DamageBeamShootEvent((DamageBeamUnit) c, b);
                 StarLoader.fireEvent(DamageBeamShootEvent.class, event);
                 if(event.isCanceled()){
                     return;
@@ -161,8 +161,8 @@ public abstract class BeamElementManager<E extends BeamUnit<E, CM, EM>, CM exten
             }
             ///
 
-            var10 = cm.getHandler().addBeam(var13);
-            this.handleResponse(var10, var1, var3.weapontOutputWorldPos);
+            var10 = m.getHandler().addBeam(b);
+            this.handleResponse(var10, c, var3.weapontOutputWorldPos);
         }
     }
 
