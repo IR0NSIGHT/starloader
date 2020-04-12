@@ -134,8 +134,10 @@ public class SegmentControllerHpController implements SegmentControllerHpControl
         assert this.isOnServer();
 
         if (!this.segmentController.isCoreOverheating() && !this.isRebooting()) {
+            //INSERTED CODE
             EntityOverheatEvent event = new EntityOverheatEvent(this.segmentController, lastDamager);
             StarLoader.fireEvent(EntityOverheatEvent.class, event);
+            ///
 
             System.err.println("[SERVER] Overheating triggered for " + this.segmentController);
             Sendable var1 = (Sendable)this.segmentController.getState().getLocalAndRemoteObjectContainer().getLocalObjects().get(this.lastDamager);

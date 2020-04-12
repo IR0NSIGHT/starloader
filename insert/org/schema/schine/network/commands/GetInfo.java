@@ -53,9 +53,8 @@ public class GetInfo extends Command {
 
     }
     public void serverProcess(ServerProcessor var1, Object[] var2, ServerStateInterface var3, short var4) throws Exception {
+        //INSERTED CODE -- SENDS MOD INFO TO CLIENTS
         String version = String.valueOf(var3.getVersion());
-        //String var5 = var3.getServerName();
-        //String var5 = "⬛⬛⬛⬛⬛⬛⬛⬛ Briere 2 ⬛⬛⬛⬛⬛⬛⬛⬛ cool squares bro";
         long var8 = var3.getStartTime();
         int connectedClients = var3.getClients().size();
         int maxClients = var3.getMaxClients();

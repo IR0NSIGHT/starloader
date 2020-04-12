@@ -118,7 +118,6 @@ public class ConfigPool {
             //INSERTED CODE
             //Event:
 
-            //
             RegisterEffectsEvent event = new RegisterEffectsEvent();
             StarLoader.fireEvent(RegisterEffectsEvent.class, event);
 

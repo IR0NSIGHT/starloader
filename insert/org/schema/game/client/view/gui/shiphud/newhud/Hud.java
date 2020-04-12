@@ -103,9 +103,11 @@ public class Hud extends GUIElement {
         this.negativeEffectBar = new NegativeEffectBar(var1);
         this.backgroundCrosshairHUD = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-c-gui-"), var1);
 
+        //INSERTED CODE
         HudCreateEvent event = new HudCreateEvent(this, var1);
         StarLoader.fireEvent(HudCreateEvent.class, event);
         customElements.addAll(event.elements);
+        ///
         //this.test = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-c-gui-"), var1);
 
         this.backgroundCrosshair = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-simple-c-gui-"), var1);

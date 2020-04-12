@@ -11,6 +11,7 @@ import org.schema.common.util.StringTools;
 import org.schema.game.common.controller.elements.ManagerContainer;
 import org.schema.game.common.controller.elements.RecharchableActivatableDurationSingleModule;
 import org.schema.game.common.controller.elements.SingleModuleActivation;
+import org.schema.game.common.controller.elements.jumpprohibiter.InterdictionAddOn;
 import org.schema.game.common.controller.elements.scanner.ScanAddOnChargeValueUpdate;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
@@ -171,9 +172,7 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
     public abstract void onActive();
     public abstract void onInactive();
 
-    public String getName() {
-        return "CustomAddOn";
-    }
+    public abstract String getName();
 
     protected Type getServerRequestType() {
         return Type.SCAN;

@@ -151,14 +151,15 @@ public abstract class BeamElementManager<E extends BeamUnit<E, CM, EM>, CM exten
             var13.penetrating = var1.isPenetrating();
             var13.acidDamagePercent = var1.getAcidDamagePercentage();
 
+            //INSERTED CODE
             if(cm instanceof DamageBeamCollectionManager) {
-                //((DamageBeamCollectionManager)cm).updateAttackEffectSet();
                 DamageBeamShootEvent event = new DamageBeamShootEvent((DamageBeamUnit) var1, var13);
                 StarLoader.fireEvent(DamageBeamShootEvent.class, event);
                 if(event.isCanceled()){
                     return;
                 }
             }
+            ///
 
             var10 = cm.getHandler().addBeam(var13);
             this.handleResponse(var10, var1, var3.weapontOutputWorldPos);

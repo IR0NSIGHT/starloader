@@ -7,6 +7,7 @@ package org.schema.game.common.controller.elements.jumpdrive;
 
 import api.listener.events.ShipJumpEngageEvent;
 import api.mod.StarLoader;
+import api.systems.addons.custom.CustomAddOn;
 import org.schema.common.util.StringTools;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.data.GameStateInterface;
@@ -39,7 +40,6 @@ public class JumpAddOn extends RecharchableSingleModule {
     public int getDistance() {
         return (int)this.getConfigManager().apply(StatusEffectType.JUMP_DISTANCE, VoidElementManager.REACTOR_JUMP_DISTANCE_DEFAULT);
     }
-
     public void sendChargeUpdate() {
         if (this.isOnServer()) {
             JumpAddOnChargeValueUpdate var1;

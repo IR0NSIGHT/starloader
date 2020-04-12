@@ -86,4 +86,9 @@ public class TacticalJumpAddOn extends CustomAddOn{
     public void onInactive() {
 
     }
+
+    @Override
+    public String getName() {
+        return "Tactical Drive";
+    }
 }

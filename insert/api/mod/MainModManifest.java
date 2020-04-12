@@ -27,6 +27,7 @@ public class MainModManifest {
     private MainModManifest(){
         URL url = null;
         try {
+            //Simple text file for all mods
             url = new URL("https://pastebin.com/raw/0K56txqy");
             Scanner s = new Scanner(url.openStream());
             while (s.hasNext()){
@@ -39,6 +40,8 @@ public class MainModManifest {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            DebugFile.err("Failed to find main manifest");
+            DebugFile.logError(e, null);
         }
     }
     public String getURL(ModInfo info){

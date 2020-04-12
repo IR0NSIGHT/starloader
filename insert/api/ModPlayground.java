@@ -169,10 +169,11 @@ public class ModPlayground extends StarMod {
             }
         });
 
-        StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
+        /*StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
                 ShieldCapacityCalculateEvent e = (ShieldCapacityCalculateEvent) event;
+
                 long bonusShields = 0;
                 ShieldCapacityUnit capacityUnit = ((ShieldCapacityCalculateEvent) event).getUnit();
                 Vector3i max = capacityUnit.getMax(new Vector3i());
@@ -188,11 +189,10 @@ public class ModPlayground extends StarMod {
                 if(deltaZ <= 5)
                     smallAxes++;
                 if(smallAxes >= 2) {
-                    Server.broadcastMessage("Cap group <=5, granting 20% bonus");
                     e.setShields((long) (e.getCapacity() * 1.2));
                 }
             }
-        });
+        });*/
 
         StarLoader.registerListener(DamageBeamShootEvent.class, new Listener() {
 

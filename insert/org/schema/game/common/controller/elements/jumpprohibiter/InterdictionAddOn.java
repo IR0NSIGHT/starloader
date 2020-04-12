@@ -40,8 +40,11 @@ public class InterdictionAddOn extends RecharchableActivatableDurationSingleModu
     }
 
     public double getPowerConsumedPerSecondResting() {
-        double var1 = this.getConfigManager().apply(StatusEffectType.WARP_INTERDICTION_POWER_CONSUMPTION, this.getBasePowerConsumedPerSecond());
-        return this.isActive() ? this.getConfigManager().apply(StatusEffectType.WARP_INTERDICTION_ACTIVE_RESTING_POWER_CONS, var1) : this.getConfigManager().apply(StatusEffectType.WARP_INTERDICTION_INACTIVE_RESTING_POWER_CONS, var1);
+        double var1 =
+                this.getConfigManager().apply(StatusEffectType.WARP_INTERDICTION_POWER_CONSUMPTION, this.getBasePowerConsumedPerSecond());
+        return this.isActive() ?
+                this.getConfigManager().apply(StatusEffectType.WARP_INTERDICTION_ACTIVE_RESTING_POWER_CONS, var1) :
+                this.getConfigManager().apply(StatusEffectType.WARP_INTERDICTION_INACTIVE_RESTING_POWER_CONS, var1);
     }
 
     public double getPowerConsumedPerSecondCharging() {
@@ -49,7 +52,9 @@ public class InterdictionAddOn extends RecharchableActivatableDurationSingleModu
     }
 
     private double getBasePowerConsumedPerSecond() {
-        return (double)((float)PowerImplementation.getMinNeededFromReactorLevelRaw(this.getConfigManager().apply(StatusEffectType.WARP_INTERDICTION_STRENGTH, 1)) * VoidElementManager.REACTOR_RECHARGE_PERCENT_PER_SECOND * VoidElementManager.REACTOR_POWER_CAPACITY_MULTIPLIER);
+        return (double)((float)PowerImplementation.getMinNeededFromReactorLevelRaw(this.getConfigManager()
+                .apply(StatusEffectType.WARP_INTERDICTION_STRENGTH, 1))
+                * VoidElementManager.REACTOR_RECHARGE_PERCENT_PER_SECOND * VoidElementManager.REACTOR_POWER_CAPACITY_MULTIPLIER);
     }
 
     public PowerConsumerCategory getPowerConsumerCategory() {
@@ -209,7 +214,15 @@ public class InterdictionAddOn extends RecharchableActivatableDurationSingleModu
     }
 
     private void getCurrentInterdictionConfigGroup(Collection<ConfigGroup> var1) {
-        this.getContainer().getPowerInterface().getReactorSet().getAllReactorElementsWithConfig(this.getConfigManager().getConfigPool(), StatusEffectType.WARP_INTERDICTION_ACTIVE, var1);
+        this.getContainer().getPowerInterface().getReactorSet()
+                .getAllReactorElementsWithConfig(this.getConfigManager().getConfigPool(),
+                        StatusEffectType.WARP_INTERDICTION_ACTIVE, var1);
+        this.getContainer().getPowerInterface().getReactorSet()
+                .getAllReactorElementsWithConfig(this.getConfigManager().getConfigPool(),
+                        StatusEffectType.WARP_INTERDICTION_DISTANCE, var1);
+        this.getContainer().getPowerInterface().getReactorSet()
+                .getAllReactorElementsWithConfig(this.getConfigManager().getConfigPool(),
+                        StatusEffectType.WARP_INTERDICTION_STRENGTH, var1);
         System.err.println("[INTERDICTION_ADD_ON] " + this.getSegmentController().getState() + " " + this.getSegmentController() + " INTERDICT " + var1);
     }
 

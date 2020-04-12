@@ -79,4 +79,9 @@ public class ShieldHardenAddOn extends CustomAddOn{
     public void onInactive() {
 
     }
+
+    @Override
+    public String getName() {
+        return "Shield Harden";
+    }
 }

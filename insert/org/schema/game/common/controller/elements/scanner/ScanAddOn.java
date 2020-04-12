@@ -41,7 +41,7 @@ public class ScanAddOn extends RecharchableActivatableDurationSingleModule {
 
     public ScanAddOn(ManagerContainer<?> var1) {
         super(var1);
-        //INSERTED CODE to do with custom add ons, in scanner so I dont have to mess with ManagerContainer
+        //INSERTED CODE to do with custom add ons, in scanner so I dont have to decompile & mess with ManagerContainer
         RegisterAddonsEvent event = new RegisterAddonsEvent(var1);
         StarLoader.fireEvent(RegisterAddonsEvent.class, event);
         ///

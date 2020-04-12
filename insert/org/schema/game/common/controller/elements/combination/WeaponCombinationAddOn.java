@@ -55,6 +55,7 @@ public class WeaponCombinationAddOn extends CombinationAddOn<WeaponUnit, WeaponC
         }
         vector3f.normalize();
         vector3f.scale(weaponUnitModifier.outputSpeed);
+
         //INSERTED CODE
         CannonShootEvent event = new CannonShootEvent(weaponUnit);
         StarLoader.fireEvent(CannonShootEvent.class, event);

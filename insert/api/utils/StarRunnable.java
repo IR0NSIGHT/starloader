@@ -58,7 +58,9 @@ public abstract class StarRunnable {
             try {
                 runnable.tick();
             }catch (Exception e){
-                Server.broadcastMessage("A StarRunnable threw an error");
+                if(Server.isInitialized()) {
+                    Server.broadcastMessage("A StarRunnable threw an error");
+                }
                 DebugFile.log("A StarRunnable threw an error: ");
                 DebugFile.logError(e, null);
             }

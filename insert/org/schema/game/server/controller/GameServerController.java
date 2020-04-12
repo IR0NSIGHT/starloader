@@ -1111,7 +1111,10 @@ public class GameServerController extends ServerController implements MineInterf
                                             this.getSynchController().addNewSynchronizedObjectQueued(var161);
                                             var8.getInventory((Vector3i)null).incExistingAndSend((short)1, -1, var8.getNetworkObject());
 
-                                            EntitySpawnEvent event = new EntitySpawnEvent(var161.getSegmentController().getSector(new Vector3i()), var161);
+
+                                            //INSERTED CODE
+                                          ///  EntitySpawnEvent event = new EntitySpawnEvent(var161.getSegmentController().getSector(new Vector3i()), var161);
+                                            ///
 
                                             LogUtil.log().fine("[SPAWN] " + var8.getName() + " spawned new ship: \"" + var161.getRealName() + "\"");
                                         }

@@ -1282,6 +1282,7 @@ public class Starter implements Observer {
         }else{
             System.err.println("[Starloader] Not all mods up to date, not starting");
         }
+        /////////////
     }
 
     public static void startLocal() {

@@ -119,6 +119,8 @@ public class PlayerMessageController extends DrawerObservable {
                     var1 = (PlayerMessage)this.received.dequeue();
                 }
                 System.err.println("[PLAYERMESSAGE] " + this.channel.getState() + " Handle Received PlayerMessage: " + var1);
+
+                //INSERTED CODE
                 MailReceiveEvent event = new MailReceiveEvent(var1, this.channel, this.channel.isOnServer());
                 StarLoader.fireEvent(MailReceiveEvent.class, event);
                 if(!event.isCanceled()) {
@@ -128,6 +130,7 @@ public class PlayerMessageController extends DrawerObservable {
                         this.handleReceivedOnClient(var1);
                     }
                 }
+                /////
             }
         }
 

@@ -20,13 +20,17 @@ import org.schema.common.util.CompareTools;
 import org.schema.common.util.StringTools;
 import org.schema.common.util.linAlg.Vector3fTools;
 import org.schema.common.util.linAlg.Vector3i;
+import org.schema.game.client.view.cubes.CubeMeshBufferContainer;
 import org.schema.game.common.controller.SendableSegmentController;
+import org.schema.game.common.controller.elements.jumpdrive.JumpAddOn;
 import org.schema.game.common.controller.elements.power.reactor.PowerConsumer;
 import org.schema.game.common.controller.elements.power.reactor.PowerConsumer.PowerConsumerCategory;
 import org.schema.game.common.controller.elements.shield.capacity.ShieldCapacityUnit;
 import org.schema.game.common.controller.elements.shield.regen.ShieldRegenUnit;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementCollection;
+import org.schema.game.common.data.world.Sector;
+import org.schema.game.common.data.world.SegmentData;
 import org.schema.schine.common.language.Lng;
 import org.schema.schine.graphicsengine.core.Timer;
 import org.schema.schine.network.SerialializationInterface;
@@ -171,7 +175,6 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
     }
 
     public void process(ShieldHitCallback var1) {
-
         if (this.shields > 0.0D && this.containsInRadius(var1)) {
             boolean var2 = this.shieldLocalAddOn.getSegmentController().getConfigManager().apply(StatusEffectType.SHIELD_HOTSPOT_DPS, false);
             boolean var3 = this.shieldLocalAddOn.getSegmentController().getConfigManager().apply(StatusEffectType.SHIELD_HOTSPOT_ALPHA, false);

@@ -28,7 +28,6 @@ public class ServerInfo extends AbstractServerInfo {
     public boolean reachable;
 
     public ServerInfo(String host, int port, Object[] arr, long var4, String connectionType) {
-        //TODO Move this GetInfo some day, its not calling clientAnswerProcess so im moving it here for now
         //Skip all of the info about players and version by starting at 7
         System.err.println("[Starloader][ServerInfo] Registering info for: " + host);
         for (int i = 7; i < arr.length; i++) {
@@ -36,7 +35,7 @@ public class ServerInfo extends AbstractServerInfo {
             ServerModInfo.registerModInfo(ServerModInfo.getServerUID(host, port), ModInfo.fromString(serializedInfo));
         }
         //ServerModInfo.dumpModInfos();
-        //
+        ///
         this.host = host;
         this.port = port;
         this.infoVersion = (Byte)arr[0];

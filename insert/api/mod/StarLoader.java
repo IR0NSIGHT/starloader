@@ -27,16 +27,28 @@ public class StarLoader {
             listeners.add(new ArrayList<Listener>());
         }
     }
-    public static List<Player> getOnlinePlayers(){
-        return null;
-    }
-    public static Collection<PlayerState> getOnlinePlayerStates(){
-        return GameClientState.instance.getOnlinePlayersLowerCaseMap().values();
+    public static void clearListeners(){
+        listeners.clear();
+        for (int i = 0; i < 40; i++) {
+            listeners.add(new ArrayList<Listener>());
+        }
     }
 
     public static List<Listener> getListeners(int id){
         return listeners.get(id);
     }
+
+    public static void enableMod(StarMod mod){
+        DebugFile.log("== Enabling Mod " + mod.getInfo().toString());
+        mod.onEnable();
+        mod.flagEnabled(true);
+    }
+    public static void dumpModInfos(){
+        for (StarMod mod : StarLoader.starMods) {
+            DebugFile.log(mod.toString());
+        }
+    }
+
     private static int getIdFromEvent(Class<? extends Event> clazz){
         try {
             //Events have a static variable called id
@@ -64,7 +76,9 @@ public class StarLoader {
             }catch (Exception e){
                 DebugFile.log("Exception during event: " + clazz.getName());
                 DebugFile.logError(e, null);
-                Server.broadcastMessage("An error occurred during event: " + clazz);
+                if(Server.isInitialized()) {
+                    Server.broadcastMessage("An error occurred during event: " + clazz);
+                }
 
             }
         }

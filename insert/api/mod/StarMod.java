@@ -74,8 +74,10 @@ public class StarMod {
                 ", modDescription='" + modDescription + '\'' +
                 ", modVersion='" + modVersion + '\'' +
                 ", modSMVersion='" + modSMVersion + '\'' +
+                ", isEnabled=" + isEnabled +
                 '}';
     }
+
     //Gets the info that will be sent to the client
     public ModInfo getInfo(){
         return new ModInfo(modName, modVersion);
