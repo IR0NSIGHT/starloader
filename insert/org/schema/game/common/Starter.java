@@ -1262,17 +1262,17 @@ public class Starter implements Observer {
 
     }
 
-    public static void startClient(HostPortLoginName var0, boolean var1, GraphicsContext var2) {
+    public static void startClient(HostPortLoginName server, boolean var1, GraphicsContext var2) {
 
 
         //INSERTED CODE
-        String loginName = var0.host;
+        String loginName = server.host;
         DebugFile.log("Connecting to server: " + loginName);
-        boolean allUptoDate = ModStarter.preClientConnect(loginName, var0.port);
+        boolean allUptoDate = ModStarter.preClientConnect(loginName, server.port);
         if(allUptoDate) {
             ///
             stopClient(var2);
-            clientRunnable = new ClientRunnable(var0, var1, var2);
+            clientRunnable = new ClientRunnable(server, var1, var2);
             Thread var3;
 
             (var3 = new Thread(clientRunnable, "ClientThread")).setPriority(8);
@@ -1316,7 +1316,7 @@ public class Starter implements Observer {
         serverInitFinished = false;
         //INSERTED CODE
         ModStarter.preServerStart();
-        //
+        ///
         (new Thread(getServerRunnable(var0), "ServerThread")).start();
     }
 

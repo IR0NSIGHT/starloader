@@ -142,7 +142,7 @@ public class TargetPanel extends HudConfig {
         }
         //INSERTED CODE
         StarLoader.fireEvent(TargetPanelDrawEvent.class, new TargetPanelDrawEvent(this));
-        //
+        ///
     }
 
     public void onInit() {

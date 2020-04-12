@@ -1001,32 +1001,32 @@ public class PlayerState extends AbstractOwnerState implements FogOfWarReceiver,
         return this.getControllerState().isOwnerControlling(var1, var2);
     }
 
-    public void damage(float var1, Destroyable var2, Damager var3) {
+    public void damage(float damage, Destroyable destroyable, Damager from) {
         assert this.isOnServer();
         //INSERTED CODE
-        PlayerDamageEvent event = new PlayerDamageEvent(var1, var2, var3, this);
+        PlayerDamageEvent event = new PlayerDamageEvent(damage, destroyable, from, this);
         StarLoader.fireEvent(PlayerDamageEvent.class, event);
         if(event.isCanceled()){
             return;
         }
         ///
 
-        if (!this.isGodMode() && this.isVulnerable() && this.isDamageable(var3)) {
-            if (var1 > 0.0F) {
-                var3.sendHitConfirm((byte)3);
+        if (!this.isGodMode() && this.isVulnerable() && this.isDamageable(from)) {
+            if (damage > 0.0F) {
+                from.sendHitConfirm((byte)3);
             }
 
-            this.handleServerHealthAndCheckAliveOnServer(Math.max(0.0F, this.getHealth() - var1), var3);
+            this.handleServerHealthAndCheckAliveOnServer(Math.max(0.0F, this.getHealth() - damage), from);
         } else {
-            if (var3 != null && this.getState().getUpdateTime() > this.lastSentHitDeniedMessage + 2000L) {
+            if (from != null && this.getState().getUpdateTime() > this.lastSentHitDeniedMessage + 2000L) {
                 if (this.isGodMode()) {
-                    var3.sendServerMessage(new Object[]{315}, 3);
+                    from.sendServerMessage(new Object[]{315}, 3);
                     this.lastSentHitDeniedMessage = this.getState().getUpdateTime();
                     return;
                 }
 
                 if (this.isSpawnProtected()) {
-                    var3.sendServerMessage(new Object[]{316}, 3);
+                    from.sendServerMessage(new Object[]{316}, 3);
                     this.lastSentHitDeniedMessage = this.getState().getUpdateTime();
                 }
             }

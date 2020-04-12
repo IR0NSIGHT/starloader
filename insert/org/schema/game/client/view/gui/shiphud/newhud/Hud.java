@@ -82,7 +82,9 @@ public class Hud extends GUIElement {
     private PowerStabilizationBar powerStabilizationBar;
     private PowerConsumptionBar powerConsumptionBar;
 
+    //INSERTED CODE
     public static ArrayList<GUIElement> customElements = new ArrayList<>();
+    ///
 
     public Hud(GameClientState var1) {
         super(var1);
