@@ -3,19 +3,30 @@ package api.entity;
 import api.element.block.Block;
 import api.element.block.Blocks;
 import api.faction.Faction;
+import api.main.GameServer;
 import api.server.Server;
 import api.systems.Reactor;
 import api.systems.Shield;
+import api.systems.addons.JumpInterdictor;
 import api.systems.addons.custom.CustomAddOn;
+import api.universe.Sector;
+import org.apache.commons.lang3.StringUtils;
+import org.schema.common.util.StringTools;
+import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.client.view.gui.weapon.WeaponBottomBar;
 import org.schema.game.common.controller.PlayerUsableInterface;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.SpaceStation;
 import org.schema.game.common.controller.elements.*;
+import org.schema.game.common.controller.elements.jumpprohibiter.InterdictionAddOn;
 import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
 import org.schema.game.common.controller.elements.power.reactor.tree.ReactorTree;
 import org.schema.game.common.data.ManagedSegmentController;
+import org.schema.game.common.data.blockeffects.config.ConfigEntityManager;
+import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.player.PlayerState;
+import org.schema.game.common.data.world.Universe;
 import org.schema.schine.graphicsengine.core.GlUtil;
 import javax.vecmath.Vector3f;
 import java.io.IOException;
@@ -61,9 +72,15 @@ public class Entity {
 
     public String getName() {
         /**
-         * Gets the entity's current name.
+         * Gets the entity's current name + Pilot/Faction info.
          */
         return internalEntity.getName();
+    }
+    public String getRealName() {
+        /**
+         * Gets the entity's REAL name.
+         */
+        return internalEntity.getRealName();
     }
 
     public void setName(String name) {
@@ -78,6 +95,9 @@ public class Entity {
          * Gets the entity's total mass including docked entities.
          */
         return internalEntity.getMassWithDocks();
+    }
+    public boolean isDocked(){
+        return internalEntity.isDocked();
     }
 
     public void setMass(Float mass) {
@@ -354,5 +374,38 @@ public class Entity {
             }
         }
         return null;
+    }
+
+    public Sector getSector() {
+        if(GameServer.getServerState() != null){
+            org.schema.game.common.data.world.Sector sector = GameServer.getServerState().getUniverse().getSector(internalEntity.getSectorId());
+            return new Sector(sector);
+        }else{
+            //TODO what to do if client?
+            return null;
+        }
+    }
+
+    public boolean isStation() {
+        return internalEntity instanceof SpaceStation;
+    }
+    public boolean isShip() {
+        return internalEntity instanceof org.schema.game.common.controller.Ship;
+    }
+
+    public Vector3i getSectorPosition() {
+        return internalEntity.getSector(new Vector3i());
+    }
+
+    public String getMassString() {
+        return StringTools.massFormat(getMass());
+    }
+
+    public JumpInterdictor getInterdictionAddOn() {
+        return new JumpInterdictor(getManagerContainer().getInterdictionAddOn());
+    }
+
+    public ConfigEntityManager getConfigManager(){
+        return internalEntity.getConfigManager();
     }
 }

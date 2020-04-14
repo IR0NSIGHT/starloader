@@ -236,6 +236,7 @@ public class ToolsAndModsDialog extends PlayerButtonTilesInput implements MainMe
                 return ToolsAndModsDialog.this.isActive();
             }
         });
+        //INSERTED CODE
         final EnabledModFile modFile = EnabledModFile.getInstance();
         for (StarMod mod : StarLoader.starMods){
             final ModInfo modInfo = mod.getInfo();
@@ -283,6 +284,7 @@ public class ToolsAndModsDialog extends PlayerButtonTilesInput implements MainMe
                 }
             });
         }
+        ///
 
     }
 

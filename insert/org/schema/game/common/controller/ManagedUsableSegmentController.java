@@ -6,7 +6,6 @@
 package org.schema.game.common.controller;
 
 import api.listener.events.block.BlockSalvageEvent;
-import api.listener.events.client.BlockSalvageOnClientEvent;
 import api.mod.StarLoader;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import it.unimi.dsi.fastutil.ints.IntCollection;
@@ -14,12 +13,6 @@ import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import javax.vecmath.Vector3f;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.controller.manager.ingame.BlockBuffer;
 import org.schema.game.client.data.GameClientState;
@@ -48,12 +41,7 @@ import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementCollection;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.physics.RigidBodySegmentController;
-import org.schema.game.common.data.player.AbstractCharacter;
-import org.schema.game.common.data.player.AbstractOwnerState;
-import org.schema.game.common.data.player.ControllerStateInterface;
-import org.schema.game.common.data.player.ControllerStateUnit;
-import org.schema.game.common.data.player.PlayerCharacter;
-import org.schema.game.common.data.player.PlayerState;
+import org.schema.game.common.data.player.*;
 import org.schema.game.common.data.player.faction.FactionInterface;
 import org.schema.game.common.data.player.inventory.Inventory;
 import org.schema.game.common.data.player.inventory.InventoryHolder;
@@ -71,6 +59,9 @@ import org.schema.schine.network.StateInterface;
 import org.schema.schine.network.objects.NetworkObject;
 import org.schema.schine.network.objects.Sendable;
 import org.schema.schine.physics.Physical;
+
+import javax.vecmath.Vector3f;
+import java.util.*;
 
 public abstract class ManagedUsableSegmentController<E extends ManagedUsableSegmentController<E>> extends EditableSendableSegmentController implements PlayerControllable, Salvager, ShopperInterface, TransientSegmentController, SegmentControllerAIInterface, ProjecileDamager, PulseHandler, ManagedSegmentController<E>, FactionInterface, InventoryHolder, Physical {
     private final List<PlayerState> attachedPlayers = new ObjectArrayList();

@@ -5,28 +5,17 @@
 
 package org.schema.game.common.controller;
 
-import api.DebugFile;
 import api.listener.events.block.BlockSalvageEvent;
-import api.listener.events.client.BlockSalvageOnClientEvent;
 import api.mod.StarLoader;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import javax.vecmath.Vector3f;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.Starter;
-import org.schema.game.common.controller.elements.BeamState;
-import org.schema.game.common.controller.elements.FloatingRockManagerContainer;
-import org.schema.game.common.controller.elements.InventoryMap;
-import org.schema.game.common.controller.elements.ManagerContainer;
-import org.schema.game.common.controller.elements.PulseHandler;
+import org.schema.game.common.controller.elements.*;
 import org.schema.game.common.controller.elements.beam.harvest.SalvageElementManager;
 import org.schema.game.common.controller.elements.cargo.CargoCollectionManager;
 import org.schema.game.common.data.ManagedSegmentController;
@@ -42,7 +31,6 @@ import org.schema.game.common.data.player.inventory.NetworkInventoryInterface;
 import org.schema.game.common.data.world.RemoteSegment;
 import org.schema.game.common.data.world.Segment;
 import org.schema.game.common.data.world.Universe;
-import org.schema.game.common.data.world.SimpleTransformableSendableObject.EntityType;
 import org.schema.game.network.objects.NetworkSpaceStation;
 import org.schema.schine.graphicsengine.core.MouseEvent;
 import org.schema.schine.graphicsengine.core.Timer;
@@ -52,6 +40,12 @@ import org.schema.schine.network.objects.NetworkObject;
 import org.schema.schine.network.objects.Sendable;
 import org.schema.schine.resource.tag.Tag;
 import org.schema.schine.resource.tag.Tag.Type;
+
+import javax.vecmath.Vector3f;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 public class FloatingRockManaged extends FloatingRock implements PlayerControllable, Salvager, PulseHandler, ManagedSegmentController<FloatingRockManaged>, InventoryHolder {
     private final ArrayList<PlayerState> attachedPlayers = new ArrayList();

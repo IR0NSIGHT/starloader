@@ -6,6 +6,7 @@
 package org.schema.game.common.controller.elements.jumpdrive;
 
 import api.listener.events.ShipJumpEngageEvent;
+import api.listener.events.systems.InterdictionCheckEvent;
 import api.mod.StarLoader;
 import api.systems.addons.custom.CustomAddOn;
 import org.schema.common.util.StringTools;
@@ -93,12 +94,12 @@ public class JumpAddOn extends RecharchableSingleModule {
 
         GameServerState var1;
         Sector var2;
+        boolean retVal = false;
         if ((var2 = (var1 = (GameServerState)this.getState()).getUniverse().getSector(this.getSegmentController().getSectorId())) == null) {
             System.err.println("[SERVER][JUMP] " + this.getSegmentController() + " IS NOT IN A SECTOR " + this.getSegmentController().getSectorId());
-            return false;
         } else {
             Vector3i var3 = new Vector3i();
-
+/*
             for(int var4 = -1; var4 <= 1; ++var4) {
                 for(int var5 = -1; var5 <= 1; ++var5) {
                     for(int var6 = -1; var6 <= 1; ++var6) {
@@ -106,13 +107,20 @@ public class JumpAddOn extends RecharchableSingleModule {
                         Sector var7;
                         if ((var7 = var1.getUniverse().getSectorWithoutLoading(var3)) != null && var7.isInterdicting(this.getSegmentController(), var2)) {
                             this.getSegmentController().sendControllingPlayersServerMessage(new Object[]{43, var7.pos.toStringPure()}, 3);
-                            return true;
+                            retVal = true;
+                            break;
                         }
                     }
                 }
-            }
+            }*/
+        }
+        InterdictionCheckEvent event = new InterdictionCheckEvent(this, this.segmentController, false);
+        StarLoader.fireEvent(InterdictionCheckEvent.class, event);
 
-            return false;
+        if(!event.isCanceled()){
+            return event.isInterdicted();
+        }else{
+            return retVal;
         }
     }
 

@@ -6,9 +6,12 @@ import api.listener.Listener;
 import api.listener.events.Event;
 import api.listener.events.ServerPingEvent;
 import api.listener.events.block.BlockActivateEvent;
+import api.main.GameClient;
+import api.main.GameServer;
 import api.server.Server;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.view.gui.shiphud.newhud.TargetPanel;
+import org.schema.game.common.data.SendableGameState;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.network.objects.ChatMessage;
 
@@ -32,6 +35,15 @@ public class StarLoader {
         for (int i = 0; i < 40; i++) {
             listeners.add(new ArrayList<Listener>());
         }
+    }
+    public static SendableGameState getGameState(){
+        if(GameServer.getServerState() != null){
+            return GameServer.getServerState().getGameState();
+        }else if (GameClient.getClientState() != null){
+            return GameClient.getClientState().getGameState();
+        }
+        //Probably in the main menu or something
+        return null;
     }
 
     public static List<Listener> getListeners(int id){

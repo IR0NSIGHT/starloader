@@ -5,21 +5,28 @@ import api.entity.Player;
 import api.main.GameServer;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import org.schema.common.util.StringTools;
+import org.schema.game.client.controller.GameClientController;
 import org.schema.game.common.data.chat.AllChannel;
 import org.schema.game.common.data.chat.ChatChannel;
 import org.schema.game.common.data.player.PlayerState;
+import org.schema.game.common.data.player.playermessage.PlayerMessage;
 import org.schema.game.common.data.world.Universe;
 import org.schema.game.network.objects.ChatMessage;
+import org.schema.game.network.objects.remote.RemoteChatMessage;
+import org.schema.game.network.objects.remote.RemotePlayerMessage;
 import org.schema.game.server.data.GameServerState;
 import org.schema.game.server.data.PlayerNotFountException;
 import org.schema.game.server.data.ServerConfig;
 import org.schema.game.server.data.admin.AdminCommands;
+import org.schema.schine.common.language.Lng;
 import org.schema.schine.network.RegisteredClientInterface;
 import org.schema.schine.network.RegisteredClientOnServer;
+import org.schema.schine.network.commands.LoginRequest;
 import org.schema.schine.network.server.AdminLocalClient;
 import org.schema.schine.network.server.ServerController;
 import org.schema.schine.network.server.ServerMessage;
 
+import javax.vecmath.Vector4f;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -84,8 +91,9 @@ public class Server {
         return GameServer.getServerState() != null;
     }
     public static void sendMessage(PlayerState player, String message){
+        RegisteredClientOnServer registeredClientOnServer = GameServer.getServerState().getClients().get(player.getClientId());
         try {
-            getClientFromState(player).serverMessage(message);
+            registeredClientOnServer.serverMessage(message);
         } catch (IOException e) {
             e.printStackTrace();
         }

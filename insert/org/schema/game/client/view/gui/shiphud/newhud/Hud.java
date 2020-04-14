@@ -222,9 +222,11 @@ public class Hud extends GUIElement {
         }
 
         this.helpManager.draw();
+        //INSERTED CODE
         for (GUIElement element : customElements){
             element.draw();
         }
+        ///
         GlUtil.glPopMatrix();
     }
 
@@ -483,9 +485,11 @@ public class Hud extends GUIElement {
         this.powerStabilizationBar.update(var1);
         this.powerConsumptionBar.update(var1);
         this.radar.update(var1);
+        //INSERTED CODE
         for (GUIElement element : customElements){
             element.update(var1);
         }
+        ///
         this.helpManager.update(var1);
         if (!this.isExternalActive() || !(Controller.getCamera() instanceof InShipCamera)) {
             this.resetDrawnInShip();

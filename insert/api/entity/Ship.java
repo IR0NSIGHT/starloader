@@ -33,12 +33,6 @@ public class Ship extends Entity {
         return null;
     }
 
-    public boolean isDocked() {
-        /**
-         * Checks if the ship is currently docked.
-         */
-        return internalShip.isDocked();
-    }
 
     public Entity getDockedLocal() {
         /**

@@ -6,6 +6,7 @@ import api.entity.Ship;
 import api.entity.Station;
 import api.faction.Faction;
 import api.main.GameServer;
+import api.mod.StarLoader;
 import api.server.Server;
 import api.utils.StarRunnable;
 import api.utils.callbacks.EntitySpawnCallback;
@@ -62,11 +63,19 @@ public class Sector {
         return stations;
     }
 
-    public System getSystem() throws IOException {
+    public System getSystem() {
         /**
          * Gets the system the sector is in.
          */
-        return new System(GameServer.getServerState().getUniverse().getStellarSystemFromSecPos(getCoordinates()));
+        if(GameServer.getServerState() != null){
+            try {
+                return new System(GameServer.getServerState().getUniverse().getStellarSystemFromSecPos(getCoordinates()));
+            } catch (IOException e) {
+                return null;
+            }
+        }else{
+            return null;
+        }
     }
 
     public Vector3i getCoordinates() {
@@ -133,5 +142,25 @@ public class Sector {
                 }
             }.runTimer(1);
         }
+    }
+
+    /**
+     * Gets nearby sector based on cubic radius
+     * @param radius
+     * @return
+     */
+    public ArrayList<Sector> getNearbySectors(int radius){
+        ArrayList<Sector> sectors = new ArrayList<>();
+        Vector3i coordinates = this.getCoordinates();
+        for (int x = -radius; x < radius; x++) {
+            for (int y = -radius; y < radius; y++) {
+                for (int z = -radius; z < radius; z++) {
+                    org.schema.game.common.data.world.Sector sector = Universe.getUniverse().getSector(coordinates.x + x, coordinates.y + y, coordinates.z + z);
+                    sectors.add(new Sector(sector));
+
+                }
+            }
+        }
+        return sectors;
     }
 }

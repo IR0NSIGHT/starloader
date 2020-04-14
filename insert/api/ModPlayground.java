@@ -14,38 +14,50 @@ import api.listener.events.StructureStatsCreateEvent;
 import api.listener.events.block.BlockActivateEvent;
 import api.listener.events.block.BlockModifyEvent;
 import api.listener.events.block.BlockSalvageEvent;
+import api.listener.events.calculate.MaxPowerCalculateEvent;
 import api.listener.events.calculate.ShieldCapacityCalculateEvent;
 import api.listener.events.gui.HudCreateEvent;
 import api.listener.events.register.RegisterAddonsEvent;
 import api.listener.events.register.RegisterEffectsEvent;
+import api.listener.events.systems.InterdictionCheckEvent;
 import api.listener.events.systems.ShieldHitEvent;
 import api.main.GameClient;
+import api.main.GameServer;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.server.Server;
 import api.systems.ChamberType;
+import api.systems.addons.JumpInterdictor;
 import api.systems.addons.custom.CustomAddOn;
 import api.systems.addons.custom.ShieldHardenAddOn;
+import api.systems.addons.custom.SystemScannerAddOn;
 import api.systems.addons.custom.TacticalJumpAddOn;
 import api.utils.StarRunnable;
 import api.utils.VecUtil;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.controller.manager.ingame.PlayerInteractionControlManager;
+import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.activation.AbstractUnit;
 import org.schema.game.common.controller.elements.activation.ActivationCollectionManager;
 import org.schema.game.common.controller.elements.activation.ActivationElementManager;
+import org.schema.game.common.controller.elements.jumpprohibiter.InterdictionAddOn;
 import org.schema.game.common.controller.elements.shield.capacity.ShieldCapacityCollectionManager;
 import org.schema.game.common.controller.elements.shield.capacity.ShieldCapacityUnit;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.FactoryResource;
+import org.schema.game.common.data.world.Sector;
+import org.schema.game.common.data.world.SimpleTransformableSendableObject;
+import org.schema.game.common.data.world.Universe;
+import org.schema.game.server.data.GameServerState;
 
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class ModPlayground extends StarMod {
     public static void main(String[] args) {
@@ -57,6 +69,7 @@ public class ModPlayground extends StarMod {
         setModName("DefaultMod").setModAuthor("Jake").setModDescription("test").setModVersion("1.0").setModSMVersion("0.202");
         setModDescription("Default mod that is always loaded");
     }
+
     public static short xorId = 0;
 
     @Override
@@ -157,12 +170,12 @@ public class ModPlayground extends StarMod {
             public void onEvent(Event event) {
                 ShieldHitEvent e = (ShieldHitEvent) event;
                 CustomAddOn customAddon = e.getEntity().getCustomAddon(ShieldHardenAddOn.class);
-                if(customAddon != null && customAddon.isActive()){
-                    Server.broadcastMessage("damage reduced from " + e.getDamage() + " to " + (e.getDamage()*0.25));
-                    e.setDamage(e.getDamage()*0.25);
+                if (customAddon != null && customAddon.isActive()) {
+                    Server.broadcastMessage("damage reduced from " + e.getDamage() + " to " + (e.getDamage() * 0.25));
+                    e.setDamage(e.getDamage() * 0.25);
                     //e.setCanceled(true);
-                }else{
-                    if(customAddon == null) {
+                } else {
+                    if (customAddon == null) {
                         Server.broadcastMessage("rip");
                     }
                 }
@@ -219,18 +232,18 @@ public class ModPlayground extends StarMod {
             }
         });
         final int[] t = {0};
-        new StarRunnable(){
+        new StarRunnable() {
             @Override
             public void run() {
-                t[0]+=4;
+                t[0] += 4;
             }
         }.runTimer(1);
         StarLoader.registerListener(CannonShootEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
                 CannonShootEvent e = (CannonShootEvent) event;
-                Color hsb = Color.getHSBColor(((float) t[0] %360)/360F, 1F, 1F);
-                Vector4f tuple4f = new Vector4f(hsb.getRed()/255F, hsb.getGreen()/255F, hsb.getBlue()/255F, 1F);
+                Color hsb = Color.getHSBColor(((float) t[0] % 360) / 360F, 1F, 1F);
+                Vector4f tuple4f = new Vector4f(hsb.getRed() / 255F, hsb.getGreen() / 255F, hsb.getBlue() / 255F, 1F);
                 e.setColor(tuple4f);
             }
         });
@@ -241,25 +254,25 @@ public class ModPlayground extends StarMod {
                 final BlockActivateEvent event = (BlockActivateEvent) ev;
                 //Server.broadcastMessage("Activated block: " + event.getBlockType().getName());
                 //Server.broadcastMessage("At: " + event.getSegmentPiece().getAbsolutePos(new Vector3f()).toString());
-                if(event.getBlockId() == xorId){
+                if (event.getBlockId() == xorId) {
                     ActivationElementManager var1 = event.getManager();
                     Block block = event.getBlock();
                     long var6 = block.getInternalSegmentPiece().getAbsoluteIndex();
                     int activeSignals = 0;
-                    for(int i = 0; i < var1.getCollectionManagers().size(); ++i) {
-                        ActivationCollectionManager var8 = (ActivationCollectionManager)var1.getCollectionManagers().get(i);
-                        for(int j = 0; j < var8.getElementCollections().size(); ++j) {
-                            if (((AbstractUnit)var8.getElementCollections().get(j)).contains(var6)) {
+                    for (int i = 0; i < var1.getCollectionManagers().size(); ++i) {
+                        ActivationCollectionManager var8 = (ActivationCollectionManager) var1.getCollectionManagers().get(i);
+                        for (int j = 0; j < var8.getElementCollections().size(); ++j) {
+                            if (((AbstractUnit) var8.getElementCollections().get(j)).contains(var6)) {
                                 var8.getControllerElement().refresh();
-                                if(var8.getControllerElement().isActive()){
+                                if (var8.getControllerElement().isActive()) {
                                     activeSignals++;
                                 }
                             }
                         }
                     }
-                    if(activeSignals == 2){
+                    if (activeSignals == 2) {
                         block.getInternalSegmentPiece().setActive(true);
-                    }else{
+                    } else {
                         block.getInternalSegmentPiece().setActive(false);
                     }
                 }
@@ -278,16 +291,81 @@ public class ModPlayground extends StarMod {
                     }.runLater(1);
 
                 }
-
             }
         });
+
+        /*StarLoader.registerListener(MaxPowerCalculateEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                MaxPowerCalculateEvent e = (MaxPowerCalculateEvent) event;
+                float apply = e.getEntity().getConfigManager().apply(StatusEffectType.POWER_RECHARGE_EFFICIENCY, 1F);
+                Server.broadcastMessage(apply + ", " + e.getPower());
+                if(apply != 1F) {
+                    e.setPower(e.getPower()*100);
+                    Server.broadcastMessage(String.valueOf(e.getPower()));
+                }
+            }
+        });
+
+        StarLoader.registerListener(InterdictionCheckEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                InterdictionCheckEvent e = (InterdictionCheckEvent) event;
+                //Loop through all piloted ships, check if they have interdiction
+
+                GameServerState server = GameServer.getServerState();
+                if (server != null) {
+                    Universe universe = server.getUniverse();
+                    for (int x = -3; x <= 3; ++x) {
+                        for (int y = -3; y <= 3; ++y) {
+                            for (int z = -3; z <= 3; ++z) {
+                                Vector3i v = e.getEntity().getSectorPosition();
+                                v.add(x, y, z);
+                                Sector sector = universe.getSectorWithoutLoading(v);
+                                if(sector != null) {
+                                    for (SimpleTransformableSendableObject<?> entity : sector.getEntities()) {
+                                        if (entity instanceof SegmentController) {
+                                            Entity ship = new Entity((SegmentController) entity);
+                                            JumpInterdictor inter = ship.getInterdictionAddOn();
+                                            if (inter.isActive()) {
+                                                int strength = inter.getStrength();
+                                                int distance = inter.getDistance();
+                                                int inderdictorLevel = ship.getCurrentReactor().getLevel();
+                                                int jumperMax = e.getEntity().getCurrentReactor().getLevel();
+                                                int extraDelta = strength*20;
+                                                //50 = max,
+                                                //Interdiction condition: If Interdictor_max + (50*20) > Jumper_max
+                                                Server.broadcastMessage("Strength: " + inter.getStrength() + "Dist, " + distance + "IL, " + inderdictorLevel + ", jmax: " + jumperMax);
+                                                Vector3i sectorPosition = e.getEntity().getSectorPosition();
+                                                sectorPosition.sub(ship.getSectorPosition());
+                                                double d = sectorPosition.lengthSquared();
+                                                Server.broadcastMessage("D " + d);
+                                                if(d <= distance) {
+                                                    if (inderdictorLevel + extraDelta > jumperMax) {
+                                                        e.setInterdicted(true);
+                                                    } else {
+                                                        //nope
+                                                    }
+                                                }
+
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });*/
 
         StarLoader.registerListener(RegisterEffectsEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
                 RegisterEffectsEvent ev = (RegisterEffectsEvent) event;
-                for (StatusEffectType types : StatusEffectType.values()){
-                    if(types.name().contains("CUSTOM")){
+                for (StatusEffectType types : StatusEffectType.values()) {
+                    if (types.name().contains("CUSTOM")) {
                         ev.addEffectModifier(types, 10F);
                     }
                 }
@@ -300,6 +378,7 @@ public class ModPlayground extends StarMod {
                 //ev.getContainer().getSegmentController().getConfigManager().apply()
                 ev.addAddOn(new TacticalJumpAddOn(ev.getContainer()));
                 ev.addAddOn(new ShieldHardenAddOn(ev.getContainer()));
+                ev.addAddOn(new SystemScannerAddOn(ev.getContainer()));
             }
         });
 

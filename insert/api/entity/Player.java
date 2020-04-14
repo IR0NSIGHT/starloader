@@ -46,8 +46,8 @@ public class Player {
         Server.sendMessage(this.getPlayerState(), message);
     }
 
-    public void sendMail(String from, String to, String title, String contents) {
-        playerState.getClientChannel().getPlayerMessageController().serverSend(from, to, title,
+    public void sendMail(String from, String title, String contents) {
+        playerState.getClientChannel().getPlayerMessageController().serverSend(from, playerState.getName(), title,
                 contents);
     }
 
@@ -83,4 +83,5 @@ public class Player {
          */
         return new Sector(Universe.getUniverse().getSector(playerState.getCurrentSector()));
     }
+
 }
