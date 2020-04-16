@@ -74,7 +74,7 @@ public class BlockConfig {
         return info;
     }
 
-    private ArrayList<ElementInformation> elements = new ArrayList<>();
+    private ArrayList<ElementInformation> elements = new ArrayList<ElementInformation>();
     public ArrayList<ElementInformation> getElements(){
         return elements;
     }

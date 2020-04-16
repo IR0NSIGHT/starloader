@@ -69,13 +69,15 @@ public class Server {
             Field f = PlayerState.class.getDeclaredField("serverClient");
             f.setAccessible(true);
             return (RegisteredClientOnServer) f.get(state);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
         return null;
     }
     public static ArrayList<Player> getOnlinePlayers(){
-        ArrayList<Player> ret = new ArrayList<>();
+        ArrayList<Player> ret = new ArrayList<Player>();
         for (PlayerState pState : getServerState().getPlayerStatesByName().values()) {
             ret.add(new Player(pState));
         }

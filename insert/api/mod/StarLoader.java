@@ -21,10 +21,10 @@ import java.util.Collection;
 import java.util.List;
 
 public class StarLoader {
-    public static ArrayList<StarMod> starMods = new ArrayList<>();
+    public static ArrayList<StarMod> starMods = new ArrayList<StarMod>();
     //TODO assign each of these a id and use an array
     //Allocate size for 20 listeners
-    public static ArrayList<ArrayList<Listener>> listeners = new ArrayList<>();
+    public static ArrayList<ArrayList<Listener>> listeners = new ArrayList<ArrayList<Listener>>();
     static{
         for (int i = 0; i < 40; i++) {
             listeners.add(new ArrayList<Listener>());
@@ -66,7 +66,10 @@ public class StarLoader {
             //Events have a static variable called id
             return (Integer) clazz.getField("id").get(null);
             //I could also make it a hashmap<string, listener> and no id's would be needed... but whatever
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+            DebugFile.logError(e, null);
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
             DebugFile.logError(e, null);
         }

@@ -2098,7 +2098,8 @@ public class Sector implements Damager, DatabaseInsertable, ParticleHandler, Pul
                                 var16.printStackTrace();
                             }
                         } catch (Throwable var17) {
-                            throw var17;
+                            //Decompiler weirdness
+                            var17.printStackTrace();
                         }
                     }
                 }

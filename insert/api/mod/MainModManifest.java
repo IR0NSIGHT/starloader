@@ -23,7 +23,7 @@ public class MainModManifest {
             System.out.println(modInfo.toString());
         }
     }
-    private ArrayList<ModInfo> allModInfo = new ArrayList<>();
+    private ArrayList<ModInfo> allModInfo = new ArrayList<ModInfo>();
     private MainModManifest(){
         URL url = null;
         try {

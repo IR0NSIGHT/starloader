@@ -50,10 +50,10 @@ public abstract class StarRunnable {
     private void register(){
         registerQueue.add(this);
     }
-    private static ArrayList<StarRunnable> runnables = new ArrayList<>();
-    private static ArrayList<StarRunnable> registerQueue = new ArrayList<>();
+    private static ArrayList<StarRunnable> runnables = new ArrayList<StarRunnable>();
+    private static ArrayList<StarRunnable> registerQueue = new ArrayList<StarRunnable>();
     public static void tickAll(){
-        ArrayList<StarRunnable> list = new ArrayList<>();
+        ArrayList<StarRunnable> list = new ArrayList<StarRunnable>();
         for(StarRunnable runnable : runnables){
             try {
                 runnable.tick();

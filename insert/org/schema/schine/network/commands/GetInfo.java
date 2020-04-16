@@ -65,12 +65,12 @@ public class GetInfo extends Command {
         serverProcessor.setInfoPinger(true);
         //I am attaching the info to GetInfo, so that later there can be info about if a server is modded or not, and what mods it has.
         //Put all server mods into the return. To be moved later
-        ArrayList<ModInfo> serverMods = new ArrayList<>();
+        ArrayList<ModInfo> serverMods = new ArrayList<ModInfo>();
         for (StarMod mod : StarLoader.starMods) {
             serverMods.add(mod.getInfo());
         }
 
-        ArrayList<Object> clientReturn = new ArrayList<>();
+        ArrayList<Object> clientReturn = new ArrayList<Object>();
         clientReturn.add(INFO_VERSION);
         clientReturn.add(event.getVersion());
         clientReturn.add(event.getName());

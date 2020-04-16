@@ -50,4 +50,8 @@ public class Reactor {
     public double getUsagePercent() {
         return internalReactor.pw.getPowerConsumptionAsPercent();
     }
+
+    public void setBoost(float boost) {
+        internalReactor.pw.setReactorBoost(1);
+    }
 }

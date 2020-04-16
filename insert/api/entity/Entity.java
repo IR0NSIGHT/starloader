@@ -203,7 +203,7 @@ public class Entity {
          */
         if(hasAnyReactors()) {
             ManagerContainer<?> manager = getManagerContainer();
-            ArrayList<Reactor> reactors = new ArrayList<>();
+            ArrayList<Reactor> reactors = new ArrayList<Reactor>();
             if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.STATION)) {
                 if(manager instanceof ShipManagerContainer) {
                     List<MainReactorUnit> allReactors = manager.getPowerInterface().getMainReactors();
@@ -238,9 +238,9 @@ public class Entity {
         /**
          * Gets an ArrayList of ships currently docked to this entity.
          */
-        ArrayList<SegmentController> collection = new ArrayList<>();
+        ArrayList<SegmentController> collection = new ArrayList<SegmentController>();
         internalEntity.railController.getDockedRecusive(collection);
-        ArrayList<Ship> ships = new ArrayList<>();
+        ArrayList<Ship> ships = new ArrayList<Ship>();
         for (SegmentController controller : collection) {
             if(controller instanceof org.schema.game.common.controller.Ship){
                 ships.add(new Ship((org.schema.game.common.controller.Ship) controller));
@@ -261,7 +261,7 @@ public class Entity {
          * Gets an ArrayList of all the entity's shields. Returns null if the entity is not a ship or space station.
          */
         ManagerContainer<?> manager = getManagerContainer();
-        ArrayList<Shield> shields = new ArrayList<>();
+        ArrayList<Shield> shields = new ArrayList<Shield>();
         if(manager instanceof ShieldContainerInterface) {
             Collection<ShieldLocal> allShields = ((ShieldContainerInterface) manager).getShieldAddOn().getShieldLocalAddOn().getAllShields();
             for(ShieldLocal sh : allShields) {
@@ -269,7 +269,7 @@ public class Entity {
             }
             return shields;
         }
-        return new ArrayList<>();
+        return new ArrayList<Shield>();
     }
 
     public ManagerContainer<?> getManagerContainer() {
@@ -314,7 +314,7 @@ public class Entity {
         /**
          * Gets a Map of every block the entity has and how many of each are present. Does not include docked or root entities.
          */
-        HashMap<Blocks, Integer> blocks = new HashMap<>();
+        HashMap<Blocks, Integer> blocks = new HashMap<Blocks, Integer>();
 
         for(Blocks value : Blocks.values()) {
             blocks.put(value, getBlockAmount(value));
@@ -341,13 +341,13 @@ public class Entity {
         /**
          * Gets an arraylist of players currently attached to the entity.
          */
-        ArrayList<Player> pl = new ArrayList<>();
+        ArrayList<Player> pl = new ArrayList<Player>();
         if(internalEntity instanceof PlayerControllable) {
             for(PlayerState attachedPlayer : ((PlayerControllable) internalEntity).getAttachedPlayers()) {
                 pl.add(new Player(attachedPlayer));
             }
         } else {
-            return new ArrayList<>();
+            return new ArrayList<Player>();
         }
         return pl;
     }
@@ -358,7 +358,7 @@ public class Entity {
 
     public ArrayList<CustomAddOn> getCustomAddons(){
 
-        ArrayList<CustomAddOn> addons = new ArrayList<>();
+        ArrayList<CustomAddOn> addons = new ArrayList<CustomAddOn>();
         ManagerContainer<?> manager = getManagerContainer();
         for (PlayerUsableInterface playerUsableInterface : manager.getPlayerUsable()) {
             if(playerUsableInterface instanceof CustomAddOn){

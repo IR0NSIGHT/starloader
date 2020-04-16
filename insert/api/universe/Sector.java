@@ -28,7 +28,7 @@ public class Sector {
         /**
          * Gets all entities in the sector.
          */
-        ArrayList<Entity> entities = new ArrayList<>();
+        ArrayList<Entity> entities = new ArrayList<Entity>();
         for(SimpleTransformableSendableObject<?> internalEntity : internalSector.getEntities()) {
             if(internalEntity instanceof SegmentController) {
                 entities.add(new Entity((SegmentController) internalEntity));
@@ -41,7 +41,7 @@ public class Sector {
         /**
          * Gets all ships in the sector.
          */
-        ArrayList<Ship> ships = new ArrayList<>();
+        ArrayList<Ship> ships = new ArrayList<Ship>();
         for(SimpleTransformableSendableObject<?> internalEntity : internalSector.getEntities()) {
             if(internalEntity instanceof org.schema.game.common.controller.Ship) {
                 ships.add(new Ship((SegmentController) internalEntity));
@@ -54,7 +54,7 @@ public class Sector {
         /**
          * Gets all stations in the sector.
          */
-        ArrayList<Station> stations = new ArrayList<>();
+        ArrayList<Station> stations = new ArrayList<Station>();
         for(SimpleTransformableSendableObject<?> internalEntity : internalSector.getEntities()) {
             if(internalEntity.getType().equals(SimpleTransformableSendableObject.EntityType.SPACE_STATION)) {
                 stations.add(new Station((SegmentController) internalEntity));
@@ -150,7 +150,7 @@ public class Sector {
      * @return
      */
     public ArrayList<Sector> getNearbySectors(int radius){
-        ArrayList<Sector> sectors = new ArrayList<>();
+        ArrayList<Sector> sectors = new ArrayList<Sector>();
         Vector3i coordinates = this.getCoordinates();
         for (int x = -radius; x < radius; x++) {
             for (int y = -radius; y < radius; y++) {

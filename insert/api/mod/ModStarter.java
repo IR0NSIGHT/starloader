@@ -81,7 +81,7 @@ public class ModStarter {
         }
         if (serverMods == null) {
             DebugFile.log("Mods not found even after refresh... rip");
-            serverMods = new ArrayList<>();
+            serverMods = new ArrayList<ModInfo>();
         }
         if (serverHost.equals("localhost:4242")) {
             DebugFile.log("Connecting to own server, mods are already enabled by the server");

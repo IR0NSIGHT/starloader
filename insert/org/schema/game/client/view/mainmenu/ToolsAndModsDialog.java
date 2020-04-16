@@ -262,7 +262,7 @@ public class ToolsAndModsDialog extends PlayerButtonTilesInput implements MainMe
                             m.setAccessible(true);
                             m.invoke(g);
 
-                        } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 

@@ -28,10 +28,7 @@ import api.mod.StarMod;
 import api.server.Server;
 import api.systems.ChamberType;
 import api.systems.addons.JumpInterdictor;
-import api.systems.addons.custom.CustomAddOn;
-import api.systems.addons.custom.ShieldHardenAddOn;
-import api.systems.addons.custom.SystemScannerAddOn;
-import api.systems.addons.custom.TacticalJumpAddOn;
+import api.systems.addons.custom.*;
 import api.utils.StarRunnable;
 import api.utils.VecUtil;
 import org.schema.common.util.linAlg.Vector3i;
@@ -103,7 +100,7 @@ public class ModPlayground extends StarMod {
         //Add it to the config.
         config.add(imp);
 
-        ArrayList<FactoryResource> factoryResources = new ArrayList<>();
+        ArrayList<FactoryResource> factoryResources = new ArrayList<FactoryResource>();
         for (Blocks b : Blocks.values()) {
             if (b.name().endsWith("PAINT")) {
                 factoryResources.add(new FactoryResource(1, b.getId()));
@@ -294,18 +291,16 @@ public class ModPlayground extends StarMod {
             }
         });
 
-        /*StarLoader.registerListener(MaxPowerCalculateEvent.class, new Listener() {
+        StarLoader.registerListener(MaxPowerCalculateEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
                 MaxPowerCalculateEvent e = (MaxPowerCalculateEvent) event;
                 float apply = e.getEntity().getConfigManager().apply(StatusEffectType.POWER_RECHARGE_EFFICIENCY, 1F);
-                Server.broadcastMessage(apply + ", " + e.getPower());
                 if(apply != 1F) {
                     e.setPower(e.getPower()*100);
-                    Server.broadcastMessage(String.valueOf(e.getPower()));
                 }
             }
-        });
+        });/*
 
         StarLoader.registerListener(InterdictionCheckEvent.class, new Listener() {
             @Override
@@ -379,6 +374,7 @@ public class ModPlayground extends StarMod {
                 ev.addAddOn(new TacticalJumpAddOn(ev.getContainer()));
                 ev.addAddOn(new ShieldHardenAddOn(ev.getContainer()));
                 ev.addAddOn(new SystemScannerAddOn(ev.getContainer()));
+                ev.addAddOn(new HyperChargeAddOn(ev.getContainer()));
             }
         });
 

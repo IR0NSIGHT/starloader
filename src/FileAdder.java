@@ -7,7 +7,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class FileAdder {
-    static ArrayList<NamedInputStream> filesToAdd = new ArrayList<>();
+    static ArrayList<NamedInputStream> filesToAdd = new ArrayList<NamedInputStream>();
     public static void mkDefaults(){
         //Just need a class to get dir
         FileAdder base = new FileAdder();

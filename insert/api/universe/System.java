@@ -22,7 +22,7 @@ public class System {
         /**
          * Gets all the sectors inside the system. Currently doesn't work.
          */
-        ArrayList<Sector> sectors = new ArrayList<>();
+        ArrayList<Sector> sectors = new ArrayList<Sector>();
         //((VoidSystem) internalSystem).getSunSectorPosAbs(Galaxy.ge)
 
         //Todo:Figure out how to get all sectors in a system.

@@ -310,14 +310,6 @@ public class PowerImplementation extends Observable implements PowerInterface, U
         this.maxPower = this.calculatInitialMaxPower();
         this.currentMaxPower = this.calculatCurrentMaxPower();
 
-        //INSERTED CODE
-        /*MaxPowerCalculateEvent event = new MaxPowerCalculateEvent(this, this.maxPower);
-        StarLoader.fireEvent(MaxPowerCalculateEvent.class, event);
-
-        this.maxPower = event.getPower();
-        this.currentMaxPower = event.getPower();*/
-                ///
-
         this.flagStabilizerPathCalc();
         if (this.isOnServer()) {
             this.getSegmentController().getRuleEntityManager().triggerOnReactorActivityChange();
@@ -332,12 +324,19 @@ public class PowerImplementation extends Observable implements PowerInterface, U
     private double calculatInitialMaxPower() {
 
         double var1 = this.getStabilizationPowerEfficiency();
-        return Math.min(this.getActiveReactorInitialSize(), var1) * (double)VoidElementManager.REACTOR_POWER_CAPACITY_MULTIPLIER;
+        double v = Math.min(this.getActiveReactorInitialSize(), var1) * (double) VoidElementManager.REACTOR_POWER_CAPACITY_MULTIPLIER;
+        //INSERTED CODE
+        MaxPowerCalculateEvent event = new MaxPowerCalculateEvent(this, v);
+        StarLoader.fireEvent(MaxPowerCalculateEvent.class, event);
+        v = event.getPower();
+        ///
+        return v;
     }
 
     private double calculatCurrentMaxPower() {
         double var1 = this.getStabilizationPowerEfficiency();
-        return Math.min(this.getActiveReactorCurrentSize(), var1) * (double)VoidElementManager.REACTOR_POWER_CAPACITY_MULTIPLIER;
+        double v = Math.min(this.getActiveReactorCurrentSize(), var1) * (double) VoidElementManager.REACTOR_POWER_CAPACITY_MULTIPLIER;
+        return v;
     }
 
     public double getStabilizationPowerEfficiency() {
@@ -514,6 +513,7 @@ public class PowerImplementation extends Observable implements PowerInterface, U
 
             this.maxPower = this.calculatInitialMaxPower();
             this.currentMaxPower = this.calculatCurrentMaxPower();
+
             this.priorityQueue.updateLocal(var1, this);
             this.reactorSwitchCooldown = Math.max(0.0F, this.reactorSwitchCooldown - var1.getDelta());
             this.reactorRebootCooldown = Math.max(0.0F, this.reactorRebootCooldown - var1.getDelta());

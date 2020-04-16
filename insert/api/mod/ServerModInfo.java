@@ -9,12 +9,12 @@ public class ServerModInfo {
     public static String getServerUID(String name, int port){
         return name + ":" + port;
     }
-    private static HashMap<String, ArrayList<ModInfo>> serverModInfo = new HashMap<>();
+    private static HashMap<String, ArrayList<ModInfo>> serverModInfo = new HashMap<String, ArrayList<ModInfo>>();
     public static void registerModInfo(String serverUid, ModInfo info){
         DebugFile.log("[Client] Registering server mod info: " + info.toString() + ", for: " + serverUid);
         ArrayList<ModInfo> infos = serverModInfo.get(serverUid);
         if(infos == null){
-            ArrayList<ModInfo> emptyModList = new ArrayList<>();
+            ArrayList<ModInfo> emptyModList = new ArrayList<ModInfo>();
             serverModInfo.put(serverUid, emptyModList);
             infos = emptyModList;
         }
