@@ -52,6 +52,6 @@ public class Reactor {
     }
 
     public void setBoost(float boost) {
-        internalReactor.pw.setReactorBoost(1);
+        internalReactor.pw.setReactorBoost(boost);
     }
 }

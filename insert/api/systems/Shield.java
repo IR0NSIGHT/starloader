@@ -3,6 +3,8 @@ package api.systems;
 import api.entity.Entity;
 import org.schema.game.common.controller.elements.ShieldLocal;
 
+import java.lang.reflect.Field;
+
 public class Shield {
 
     private ShieldLocal internalShield;
@@ -49,5 +51,27 @@ public class Shield {
 
     public Entity getEntity() {
         return new Entity(internalShield.shieldLocalAddOn.getSegmentController());
+    }
+
+    public double getOutageTimeout(){
+        return internalShield.getRechargePrevented();
+    }
+    public void setOutageTimeout(float outage){
+        //todo not use refl
+        try {
+            Field f = ShieldLocal.class.getDeclaredField("preventRecharge");
+            f.setAccessible(true);
+            f.set(internalShield, outage);
+            update();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+    public void update(){
+        if(internalShield.shieldLocalAddOn.getSegmentController().isOnServer()) {
+            internalShield.shieldLocalAddOn.sendShieldUpdate(internalShield);
+        }
     }
 }

@@ -56,6 +56,7 @@ public class ShieldHitEvent extends Event {
         this.damage += damage;
     }
 
+
     public Shield getShield() {
         return shield;
     }

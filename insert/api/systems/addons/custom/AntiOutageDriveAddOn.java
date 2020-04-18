@@ -1,17 +1,17 @@
 package api.systems.addons.custom;
 
 import api.element.block.Blocks;
-import api.server.Server;
+import api.systems.Shield;
 import org.schema.game.common.controller.elements.ManagerContainer;
 
-public class HyperChargeAddOn extends CustomAddOn {
-    public HyperChargeAddOn(ManagerContainer<?> var1) {
+public class AntiOutageDriveAddOn extends CustomAddOn {
+    public AntiOutageDriveAddOn(ManagerContainer<?> var1) {
         super(var1);
     }
 
     @Override
     public float getChargeRate() {
-        return 90;
+        return 10;
     }
 
     @Override
@@ -26,38 +26,43 @@ public class HyperChargeAddOn extends CustomAddOn {
 
     @Override
     public long getUsableId() {
-        return Blocks.VARAT_CHARGED_CIRCUIT.getPlayerUsableId();
+        return Blocks.BLACK_LIGHT_0.getPlayerUsableId();
     }
 
     @Override
     public String getWeaponRowName() {
-        return "Hyper Charger";
+        return "Anti-Outage Drive";
     }
 
     @Override
     public short getWeaponRowIcon() {
-        return Blocks.VARAT_CHARGED_CIRCUIT.getId();
+        return Blocks.BLACK_LIGHT_0.getId();
     }
 
     @Override
     public float getDuration() {
-        return 0.5F;
+        return 4F;
     }
 
     @Override
     public void onDeactivateFromTime() {
-        entity.getCurrentReactor().setBoost(1F);
     }
 
     @Override
     public boolean onExecute() {
-        entity.getCurrentReactor().setBoost(100F);
         return true;
     }
 
     @Override
     public void onActive() {
 
+        Shield shield = this.entity.getLastHitShield();
+        if(shield != null){
+            shield.setOutageTimeout(0);
+            this.getSegmentController().sendServerMessage("!! Anti-Outage Active !!", 1);
+        }else{
+            this.getSegmentController().sendServerMessage("!! Last hit shield was null !!", 1);
+        }
     }
 
     @Override
@@ -67,6 +72,6 @@ public class HyperChargeAddOn extends CustomAddOn {
 
     @Override
     public String getName() {
-        return "Hyper Charger";
+        return "Anti-Outage Drive";
     }
 }

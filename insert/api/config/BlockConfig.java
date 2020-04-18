@@ -3,11 +3,14 @@ package api.config;
 import api.DebugFile;
 import api.element.block.Blocks;
 import api.element.block.FactoryType;
+import org.schema.game.client.view.gui.weapon.WeaponRowElement;
 import org.schema.game.common.controller.elements.beam.damageBeam.DamageBeamUnit;
+import org.schema.game.common.controller.elements.weapon.WeaponCollectionManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.element.FactoryResource;
+import org.schema.game.common.data.element.annotation.ElemType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

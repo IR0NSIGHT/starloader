@@ -65,6 +65,7 @@ public class ModPlayground extends StarMod {
     public void onGameStart() {
         setModName("DefaultMod").setModAuthor("Jake").setModDescription("test").setModVersion("1.0").setModSMVersion("0.202");
         setModDescription("Default mod that is always loaded");
+        this.forceEnable = true;
     }
 
     public static short xorId = 0;
@@ -375,6 +376,7 @@ public class ModPlayground extends StarMod {
                 ev.addAddOn(new ShieldHardenAddOn(ev.getContainer()));
                 ev.addAddOn(new SystemScannerAddOn(ev.getContainer()));
                 ev.addAddOn(new HyperChargeAddOn(ev.getContainer()));
+                ev.addAddOn(new AntiOutageDriveAddOn(ev.getContainer()));
             }
         });
 
