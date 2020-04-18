@@ -110,7 +110,7 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
                 assert piece.getAbsoluteIndex() == this.getControllerElement().getAbsoluteIndex() : piece + "; " + this.getControllerElement();
 
                 if (ElementKeyMap.isValidType(piece.getType())) {
-                    //INSERTED CODE
+                    //INSERTED CODE @129
                     BlockActivateEvent ev = new BlockActivateEvent(man, piece, this);
                     StarLoader.fireEvent(BlockActivateEvent.class, ev);
                     if(ev.isCanceled()){

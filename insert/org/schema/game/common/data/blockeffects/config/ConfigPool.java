@@ -115,7 +115,7 @@ public class ConfigPool {
                     this.add(var5);
                 }
             }
-            //INSERTED CODE
+            //INSERTED CODE @120
             //Event:
 
             RegisterEffectsEvent event = new RegisterEffectsEvent();

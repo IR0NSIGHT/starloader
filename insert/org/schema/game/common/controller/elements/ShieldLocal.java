@@ -162,7 +162,7 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
         if (var2 = this.containsInRadius((float)var1.getCoMOrigin().x, (float)var1.getCoMOrigin().y, (float)var1.getCoMOrigin().z)) {
             this.supportIds.add(var1.idPos);
             this.supportCoMIds.add(ElementCollection.getIndex(var1.getCoMOrigin()));
-            //INSERTED CODE
+            //INSERTED CODE @177
             this.shieldCapacity += (double)((float)var1.size() * VoidElementManager.SHIELD_LOCAL_CAPACITY_PER_BLOCK);
             ShieldCapacityCalculateEvent event = new ShieldCapacityCalculateEvent(var1, this, this.shieldCapacity);
             StarLoader.fireEvent(ShieldCapacityCalculateEvent.class, event);
@@ -183,12 +183,11 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
             boolean var6 = this.shieldLocalAddOn.getSegmentController().getConfigManager().apply(StatusEffectType.SHIELD_HOTSPOT_RECHARGE_MODE, false);
             double damage = hit.getDamage();
 
-            //INSERTED CODE
+            //INSERTED CODE @205
             ShieldHitEvent event = new ShieldHitEvent(this, hit, shieldDPS, shieldAlpha, hit.getDamage());
             StarLoader.fireEvent(ShieldHitEvent.class, event);
-            damage = event.getDamage();
+            hit.setDamage(event.getDamage());
             if(event.isCanceled()){
-                damage = 0;
                 hit.hasHit = false;
                 return;
             }

@@ -399,7 +399,7 @@ public class BlockProcessor {
         String var2 = String.valueOf(var1.absIndex);
         if (var1.segmentData != null) {
             this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "handleSeg");
-            int var3 = var1.size();
+            int size = var1.size();
             SegmentData var4 = var1.segmentData;
             p(var4.toString());
             try {
@@ -410,11 +410,11 @@ public class BlockProcessor {
                     p(var2);
                 }
 
-                int var5;
-                for(var5 = 0; var5 < var3; ++var5) {
-                    this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + var5);
-                    VoidSegmentPiece var6 = (VoidSegmentPiece)var1.get(var5);
-                    //INSERTED CODE
+                int i;
+                for(i = 0; i < size; ++i) {
+                    this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i);
+                    VoidSegmentPiece var6 = (VoidSegmentPiece)var1.get(i);
+                    //INSERTED CODE @550
                     BlockModifyEvent event = new BlockModifyEvent(var1, var6);
                     StarLoader.fireEvent(BlockModifyEvent.class, event);
                     ///
@@ -429,7 +429,7 @@ public class BlockProcessor {
                     short var7 = this.current.getType();
 
                     try {
-                        this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + var5 + "HandleChange");
+                        this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i + "HandleChange");
                         if (var6.onlyHitpointsChanged && (var6.isAlive() || this.current.getType() == 1)) {
                             short var23 = var6.getHitpointsByte();
                             var6.setDataByReference(this.current.getData());
@@ -462,13 +462,13 @@ public class BlockProcessor {
                             }
                         }
 
-                        this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + var5 + "HandleChange");
+                        this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i + "HandleChange");
 
                         assert var6.getSegment() != null;
 
-                        this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + var5 + "ProcessPiece");
+                        this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i + "ProcessPiece");
                         boolean var26 = this.processPiece(var6, var6.senderId, var6.controllerPos, var7, this.inventoryMods, false, this.emptySegments, this.segmentsAABBUpdateNeeded, this.con.getUpdateTime());
-                        this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + var5 + "ProcessPiece");
+                        this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i + "ProcessPiece");
                         if (this.isOnServer()) {
                             SegmentPiece var10;
                             if (!var26) {
@@ -502,7 +502,7 @@ public class BlockProcessor {
                         var18.printStackTrace();
                     }
 
-                    this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + var5);
+                    this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i);
                 }
 
                 if (var1.newSegment) {
@@ -513,9 +513,9 @@ public class BlockProcessor {
                 }
 
                 this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "controllerUpdate");
-                var5 = this.plProvider.connectionsFrom.size();
+                i = this.plProvider.connectionsFrom.size();
 
-                for(int var21 = 0; var21 < var5; ++var21) {
+                for(int var21 = 0; var21 < i; ++var21) {
                     long var22 = this.plProvider.connectionsFrom.getLong(var21);
                     long var27 = this.plProvider.connectionsTo.getLong(var21);
                     short var29 = this.plProvider.oldTypes.getShort(var21);

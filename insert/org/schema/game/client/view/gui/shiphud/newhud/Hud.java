@@ -82,7 +82,7 @@ public class Hud extends GUIElement {
     private PowerStabilizationBar powerStabilizationBar;
     private PowerConsumptionBar powerConsumptionBar;
 
-    //INSERTED CODE
+    //INSERTED CODE @86
     public static ArrayList<GUIElement> customElements = new ArrayList<GUIElement>();
     ///
 
@@ -105,7 +105,7 @@ public class Hud extends GUIElement {
         this.negativeEffectBar = new NegativeEffectBar(state);
         this.backgroundCrosshairHUD = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-c-gui-"), state);
 
-        //INSERTED CODE
+        //INSERTED CODE @112
         HudCreateEvent event = new HudCreateEvent(this, state);
         StarLoader.fireEvent(HudCreateEvent.class, event);
         customElements.addAll(event.elements);
@@ -222,7 +222,7 @@ public class Hud extends GUIElement {
         }
 
         this.helpManager.draw();
-        //INSERTED CODE
+        //INSERTED CODE @244
         for (GUIElement element : customElements){
             element.draw();
         }
@@ -245,7 +245,7 @@ public class Hud extends GUIElement {
         this.speedBarRight.onInit();
         this.backgroundCrosshairHUD.onInit();
         this.backgroundCrosshairHUD.getSprite().setTint(new Vector4f(1.0F, 1.0F, 1.0F, 1.0F));
-        //INSERTED CODE
+        //INSERTED CODE @279
         for (GUIElement element : customElements){
             element.onInit();
         }
@@ -485,7 +485,7 @@ public class Hud extends GUIElement {
         this.powerStabilizationBar.update(var1);
         this.powerConsumptionBar.update(var1);
         this.radar.update(var1);
-        //INSERTED CODE
+        //INSERTED CODE @569
         for (GUIElement element : customElements){
             element.update(var1);
         }

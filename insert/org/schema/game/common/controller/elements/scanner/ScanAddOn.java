@@ -41,7 +41,8 @@ public class ScanAddOn extends RecharchableActivatableDurationSingleModule {
 
     public ScanAddOn(ManagerContainer<?> man) {
         super(man);
-        //INSERTED CODE to do with custom add ons, in scanner so I dont have to decompile & mess with ManagerContainer
+        //INSERTED CODE @42
+        //to do with custom add ons, in scanner so I dont have to decompile & mess with ManagerContainer
         RegisterAddonsEvent event = new RegisterAddonsEvent(man);
         StarLoader.fireEvent(RegisterAddonsEvent.class, event);
         ///
@@ -154,7 +155,7 @@ public class ScanAddOn extends RecharchableActivatableDurationSingleModule {
     public float getActiveStrength() {
         return this.isActive() ? this.getConfigManager().apply(StatusEffectType.SCAN_STRENGTH, VoidElementManager.SCAN_STRENGTH_BASIC) : 0.0F;
     }
-    //INSERTED CODE
+    //INSERTED CODE @49
     @Override
     public boolean executeModule() {
         boolean success = super.executeModule();

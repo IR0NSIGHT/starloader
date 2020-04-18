@@ -1,4 +1,6 @@
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class SourceInstaller {
     //Installs starloader into Starmade from source
@@ -97,5 +100,33 @@ public class SourceInstaller {
     }
     public static void addInsertLines(){
 
+
+        Collection<File> files = FileUtils.listFiles(new File(sourceDir + "\\insert\\org"), null, true);
+        for (File f : files){
+            ArrayList<String> lines = readFileToBuffer(f);
+            ArrayList<Pair<Integer, String>> list = new ArrayList<Pair<Integer, String>>();
+            boolean reading = false;
+            int insertionNum = -1;
+            for (String line : lines) {
+                if(line.contains("//INSERTED CODE")){
+                    reading = true;
+                    insertionNum = Integer.parseInt(line.split(Pattern.quote("@"))[1]);
+                }
+                if(reading){
+                    list.add(new ImmutablePair<Integer, String>(insertionNum, line));
+                    insertionNum++;
+                    if(line.contains("///")){
+                        reading = false;
+                    }
+                }
+            }
+            try {
+                System.out.println(f.getCanonicalPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //Now that we've gathered all the insert lines, insert them
+
+        }
     }
 }

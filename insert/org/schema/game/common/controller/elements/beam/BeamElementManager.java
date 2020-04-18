@@ -108,9 +108,6 @@ public abstract class BeamElementManager<E extends BeamUnit<E, CM, EM>, CM exten
             var10 = this.handleAddOn(this, m, c, var14, var11, var3, (SimpleTransformableSendableObject)null, var4, var6, var5);
             this.handleResponse(var10, c, var3.weapontOutputWorldPos);
         } else {
-            //INSERTED CODE FROM SM-DAMAGE-FIX
-            //var2.setEffectTotal(0);
-            ///
 
             Vector3f var12;
             (var12 = new Vector3f()).set(var3.weapontOutputWorldPos);
@@ -151,7 +148,7 @@ public abstract class BeamElementManager<E extends BeamUnit<E, CM, EM>, CM exten
             b.penetrating = c.isPenetrating();
             b.acidDamagePercent = c.getAcidDamagePercentage();
 
-            //INSERTED CODE
+            //INSERTED CODE @159
             if(m instanceof DamageBeamCollectionManager) {
                 DamageBeamShootEvent event = new DamageBeamShootEvent((DamageBeamUnit) c, b);
                 StarLoader.fireEvent(DamageBeamShootEvent.class, event);

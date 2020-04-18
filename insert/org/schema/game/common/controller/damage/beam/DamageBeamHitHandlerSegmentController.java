@@ -165,7 +165,7 @@ public class DamageBeamHitHandlerSegmentController implements DamageBeamHitHandl
                     var16.activate(true);
                 }
 
-                //INSERTED CODE
+                //INSERTED CODE @179
                 DamageBeamHitEvent event = new DamageBeamHitEvent(this, hitController, hittingBeam, hits, container, segmentPiece, from, to, updatedSegments);
                 StarLoader.fireEvent(DamageBeamHitEvent.class, event);
                 ///

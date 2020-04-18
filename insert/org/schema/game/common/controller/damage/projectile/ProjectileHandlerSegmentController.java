@@ -379,7 +379,7 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
                     ((ModifiedDynamicsWorld)var2.getCurrentPhysics().getDynamicsWorld()).rayTest(var3, var4, this.rayCallbackTraverse);
 
 
-                    //INSERTED CODE
+                    //INSERTED CODE @721
                     EntityDamageEvent event = new EntityDamageEvent(this.shotHandler.hitSegController, this.shotHandler, this, this.shotHandler.hitType, damager);
                     StarLoader.fireEvent(EntityDamageEvent.class, event);
                     ///

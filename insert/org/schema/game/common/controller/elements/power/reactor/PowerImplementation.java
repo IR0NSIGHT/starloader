@@ -321,17 +321,18 @@ public class PowerImplementation extends Observable implements PowerInterface, U
         return this.container.getStabilizer();
     }
 
+    //REPLACE METHOD
     private double calculatInitialMaxPower() {
-
-        double var1 = this.getStabilizationPowerEfficiency();
-        double v = Math.min(this.getActiveReactorInitialSize(), var1) * (double) VoidElementManager.REACTOR_POWER_CAPACITY_MULTIPLIER;
+        double stabilization = this.getStabilizationPowerEfficiency();
         //INSERTED CODE
+        double v = Math.min(this.getActiveReactorInitialSize(), stabilization) * (double) VoidElementManager.REACTOR_POWER_CAPACITY_MULTIPLIER;
         MaxPowerCalculateEvent event = new MaxPowerCalculateEvent(this, v);
         StarLoader.fireEvent(MaxPowerCalculateEvent.class, event);
         v = event.getPower();
         ///
         return v;
     }
+    ///
 
     private double calculatCurrentMaxPower() {
         double var1 = this.getStabilizationPowerEfficiency();

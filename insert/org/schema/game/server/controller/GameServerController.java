@@ -1112,9 +1112,6 @@ public class GameServerController extends ServerController implements MineInterf
                                             var8.getInventory((Vector3i)null).incExistingAndSend((short)1, -1, var8.getNetworkObject());
 
 
-                                            //INSERTED CODE
-                                          ///  EntitySpawnEvent event = new EntitySpawnEvent(var161.getSegmentController().getSector(new Vector3i()), var161);
-                                            ///
 
                                             LogUtil.log().fine("[SPAWN] " + var8.getName() + " spawned new ship: \"" + var161.getRealName() + "\"");
                                         }
@@ -1270,10 +1267,10 @@ public class GameServerController extends ServerController implements MineInterf
                                         }
                                     }
                                 });
-                                //
+                                //INSERTED CODE @1234
                                 EntitySpawnEvent event = new EntitySpawnEvent(var156.spawnSectorId, spawn);
                                 StarLoader.fireEvent(EntitySpawnEvent.class, event);
-                                //
+                                ///
                             } catch (EntityAlreadyExistsException var105) {
                                 var105.printStackTrace();
 
@@ -1580,7 +1577,7 @@ public class GameServerController extends ServerController implements MineInterf
 
 
         }
-        //INSERTED CODE
+        //INSERTED CODE @1437
         StarRunnable.tickAll();
         ///
     }

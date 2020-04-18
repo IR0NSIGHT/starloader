@@ -13,11 +13,12 @@ public abstract class RecharchableActivatableDurationSingleModule extends Rechar
     public SingleModuleActivation activation;
 
     public RecharchableActivatableDurationSingleModule(ManagerContainer<?> var1) {
+
         super(var1);
     }
-
+    //MODIFIED METHOD
     public boolean executeModule() {
-        //MODIFIED METHOD
+
         if (this.getCharges() > 0) {
             if (this.getSegmentController().isOnServer()) {
 
@@ -32,9 +33,9 @@ public abstract class RecharchableActivatableDurationSingleModule extends Rechar
         }else{
             System.err.println("[SERVER][RECHARGE] NO CHRAGES FOR ACTIVATE " + this.getWeaponRowName() + "; " + this.getSegmentController());
         }
-////
         return false;
     }
+    ////
 
     public void dischargeFully() {
         super.dischargeFully();
