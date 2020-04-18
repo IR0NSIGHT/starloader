@@ -1262,10 +1262,8 @@ public class Starter implements Observer {
 
     }
 
+    //REPLACE METHOD
     public static void startClient(HostPortLoginName server, boolean startConnectDialog, GraphicsContext context) {
-
-
-        //INSERTED CODE
         String loginName = server.host;
         DebugFile.log("Connecting to server: " + loginName);
         boolean allUptoDate = ModStarter.preClientConnect(loginName, server.port);
@@ -1281,8 +1279,8 @@ public class Starter implements Observer {
         }else{
             System.err.println("[Starloader] Not all mods up to date, not starting");
         }
-        /////////////
     }
+    ///
 
     public static void startLocal() {
         startServer(false);

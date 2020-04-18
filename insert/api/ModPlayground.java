@@ -110,23 +110,19 @@ public class ModPlayground extends StarMod {
         BlockConfig.addRecipe(Blocks.FERTIKEEN_CAPSULE.getInfo(), FactoryType.ADVANCED, 5, factoryResources.toArray(new FactoryResource[0]));
 
         ElementInformation sh =
-                BlockConfig.newChamber("Shield Hardener", ChamberType.DEFENCE.getId(),
-                        new short[]{12, 42, 111, 86, 222, 333}, StatusEffectType.CUSTOM_EFFECT_05);
+                BlockConfig.newChamber("Shield Hardener", ChamberType.DEFENCE.getId(), StatusEffectType.CUSTOM_EFFECT_05);
         config.add(sh);
 
         ElementInformation creative =
-                BlockConfig.newChamber("Tactical Drive", ChamberType.MOBILITY.getId(),
-                        new short[]{86, 23, 45, 33, 99, 99}, StatusEffectType.CUSTOM_EFFECT_01);
+                BlockConfig.newChamber("Tactical Drive", ChamberType.MOBILITY.getId(), StatusEffectType.CUSTOM_EFFECT_01);
         config.add(creative);
 
         ElementInformation c2 =
-                BlockConfig.newChamber("Upward Jump", creative.getId(),
-                        new short[]{231}, StatusEffectType.CUSTOM_EFFECT_02);
+                BlockConfig.newChamber("Upward Jump", creative.getId(),StatusEffectType.CUSTOM_EFFECT_02);
         config.add(c2);
 
         ElementInformation bruh =
-                BlockConfig.newChamber("Bruh Jump", creative.getId(),
-                        new short[]{Blocks.CHABAZ_CAPSULE.getId()}, StatusEffectType.CUSTOM_EFFECT_03);
+                BlockConfig.newChamber("Bruh Jump", creative.getId(), StatusEffectType.CUSTOM_EFFECT_03);
         config.add(bruh);
 
         ElementInformation info = Blocks.THRUSTER_MODULE.getInfo();

@@ -89,9 +89,9 @@ public class JumpAddOn extends RecharchableSingleModule {
         return false;
     }
 
+    //REPLACE METHOD
     private boolean isInterdicted() {
         assert this.isOnServer();
-
         GameServerState var1;
         Sector var2;
         boolean retVal = false;
@@ -99,7 +99,7 @@ public class JumpAddOn extends RecharchableSingleModule {
             System.err.println("[SERVER][JUMP] " + this.getSegmentController() + " IS NOT IN A SECTOR " + this.getSegmentController().getSectorId());
         } else {
             Vector3i var3 = new Vector3i();
-/*
+
             for(int var4 = -1; var4 <= 1; ++var4) {
                 for(int var5 = -1; var5 <= 1; ++var5) {
                     for(int var6 = -1; var6 <= 1; ++var6) {
@@ -112,17 +112,18 @@ public class JumpAddOn extends RecharchableSingleModule {
                         }
                     }
                 }
-            }*/
+            }
         }
         InterdictionCheckEvent event = new InterdictionCheckEvent(this, this.segmentController, false);
         StarLoader.fireEvent(InterdictionCheckEvent.class, event);
 
-        if(!event.isCanceled()){
+        if(!event.useDefault){
             return event.isInterdicted();
         }else{
             return retVal;
         }
     }
+    //
 
     public void onChargedFullyNotAutocharged() {
         this.getSegmentController().popupOwnClientMessage(Lng.ORG_SCHEMA_GAME_COMMON_CONTROLLER_ELEMENTS_JUMPDRIVE_JUMPADDON_1, 1);

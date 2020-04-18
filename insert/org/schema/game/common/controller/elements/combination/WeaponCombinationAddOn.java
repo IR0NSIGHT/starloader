@@ -62,8 +62,8 @@ public class WeaponCombinationAddOn extends CombinationAddOn<WeaponUnit, WeaponC
         if(event.isCanceled()){
             return ShootingRespose.NO_POWER;
         }
-        ///
         ((WeaponElementManager)this.elementManager).getParticleController().addProjectile(((WeaponElementManager)this.elementManager).getSegmentController(), shootContainer.weapontOutputWorldPos, vector3f, weaponUnitModifier.outputDamage, weaponUnitModifier.outputDistance, weaponUnitModifier.outputAcidType, weaponUnitModifier.outputProjectileWidth, weaponUnit.getPenetrationDepth(weaponUnitModifier.outputDamage), weaponUnitModifier.outputImpactForce, usableId, event.getColor());
+        ///
         weaponCollectionManager.damageProduced += weaponUnitModifier.outputDamage;
         weaponCollectionManager.getElementManager().handleRecoil(weaponCollectionManager, weaponUnit, shootContainer.weapontOutputWorldPos, shootContainer.shootingDirTemp, weaponUnitModifier.outputRecoil, weaponUnitModifier.outputDamage);
         return ShootingRespose.FIRED;

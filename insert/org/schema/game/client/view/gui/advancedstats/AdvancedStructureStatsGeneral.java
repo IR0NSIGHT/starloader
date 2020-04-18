@@ -330,7 +330,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
         });
         //INSERTED CODE
         StarLoader.fireEvent(StructureStatsCreateEvent.class, new StructureStatsCreateEvent(StructureTab.GENERAL, this, pane));
-        //
+        ///
     }
 
     private int getTextDist() {

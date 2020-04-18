@@ -58,17 +58,24 @@ public class BlockConfig {
         ElementKeyMap.sortedByName.add(elementInformation);
         return elementInformation;
     }
-    public static ElementInformation newChamber(String name, short rootChamber, short[] ids, StatusEffectType appliedEffect){
-        ElementInformation info = newElement(name, ids);
+    public static ElementInformation newChamber(String name, short rootChamber, StatusEffectType appliedEffect){
+        //TODO find out why 640 is a chamber texture
+        ElementInformation info = newElement(name, new short[640]);
         info.blockResourceType = 2;
         info.sourceReference = 1085;
         info.chamberRoot = rootChamber;
         info.chamberParent = 1085;
         info.chamberPermission = 1;
         info.chamberPrerequisites.add((short) 1085);
-        info.placable = true;
+        info.placable = false;
         info.canActivate = true;
         info.systemBlock = true;
+
+        info.price = 100;
+        info.description = "A Custom chamber";
+        info.shoppable = false;
+        info.mass = 0.15F;
+
         info.chamberConfigGroupsLowerCase.add(appliedEffect.name().toLowerCase());
         ElementKeyMap.chamberAnyTypes.add(info.getId());
 

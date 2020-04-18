@@ -441,10 +441,6 @@ public class ElementKeyMap {
         lodShapeArray = new boolean[highestType + 1];
         Entry var2;
 
-        //inserted code
-        //informationKeyMap.put(var0.getId(), var0);
-        //infoArray[var0.getId()] = var0;
-        //
         for(Iterator var4 = informationKeyMap.entrySet().iterator(); var4.hasNext(); validArray[(Short)var2.getKey()] = true) {
             var2 = (Entry)var4.next();
             infoArray[(Short)var2.getKey()] = (ElementInformation)var2.getValue();
@@ -1175,7 +1171,7 @@ public class ElementKeyMap {
 
             //INSERTED CODE
             ModPlayground.initBlockData();
-            //
+            ///
 
             return;
         }

@@ -2245,31 +2245,23 @@ public class Sector implements Damager, DatabaseInsertable, ParticleHandler, Pul
     }
 
     public boolean isInterdicting(SegmentController var1, Sector var2) {
-        //INSERTED CODE/MODIFIED METHOD
-//        Server.broadcastMessage("=====Checking sector: " + this.pos.toString() + ", against: " + var1.getName());
         if (!this.getRemoteSector().getConfigManager().apply(StatusEffectType.WARP_INTERDICTION_ACTIVE, false)) {
-//            Server.broadcastMessage("Sector is not interdicted");
             return false;
         } else {
             int var3 = Math.abs(var2.pos.x - this.pos.x);
             int var4 = Math.abs(var2.pos.y - this.pos.y);
             int var7 = Math.abs(var2.pos.z - this.pos.z);
-            //int var5 = Math.max(0, this.getRemoteSector().getConfigManager().apply(StatusEffectType.WARP_INTERDICTION_DISTANCE, 1) - 1);
             int var6 = this.getRemoteSector().getConfigManager().apply(StatusEffectType.WARP_INTERDICTION_STRENGTH, 1);
             int var5 = 2;
-//            Server.broadcastMessage("x: " + var3 + ", y: " + var4 + ", z: " + var7 + ", distance: " + var5 + ", strength: " + var6 );
             if (var3 + var4 + var7 <= var5) {
                 if(var1.hasActiveReactors()) {
                     int reactorLevel = ((ManagedSegmentController<?>) var1).getManagerContainer().getPowerInterface().getActiveReactor().getLevel();
                     boolean b = var1.hasActiveReactors() && reactorLevel <= var6;
-//                    Server.broadcastMessage("Interdiction result: " + b);
                     return b;
                 }else{
-                    //not even possible
                     return false;
                 }
             } else {
-//                Server.broadcastMessage("Not enough range to interdict");
                 return false;
             }
         }

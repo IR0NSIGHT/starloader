@@ -10,6 +10,7 @@ public class InterdictionCheckEvent extends Event {
     private final Entity entity;
     private final JumpAddOn addOn;
     private boolean isInterdicted = false;
+    public boolean useDefault = true;
 
     public InterdictionCheckEvent(JumpAddOn jumpAddOn, SegmentController segmentController, boolean retVal) {
         this.addOn = jumpAddOn;
@@ -21,7 +22,7 @@ public class InterdictionCheckEvent extends Event {
 
     public void setInterdicted(boolean b) {
         isInterdicted = b;
-        setCanceled(false);
+        useDefault = false;
     }
 
     public Entity getEntity() {

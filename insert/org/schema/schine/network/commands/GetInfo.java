@@ -52,8 +52,8 @@ public class GetInfo extends Command {
         return min+((int) (Math.random()*(max-min)));
 
     }
+    //REPLACE METHOD
     public void serverProcess(ServerProcessor serverProcessor, Object[] parameters, ServerStateInterface state, short packetId) throws Exception {
-        //INSERTED CODE/MODIFIED METHOD -- SENDS MOD INFO TO CLIENTS
         String version = String.valueOf(state.getVersion());
         long var8 = state.getStartTime();
         int connectedClients = state.getClients().size();

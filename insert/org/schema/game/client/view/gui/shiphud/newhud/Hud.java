@@ -245,11 +245,11 @@ public class Hud extends GUIElement {
         this.speedBarRight.onInit();
         this.backgroundCrosshairHUD.onInit();
         this.backgroundCrosshairHUD.getSprite().setTint(new Vector4f(1.0F, 1.0F, 1.0F, 1.0F));
-
+        //INSERTED CODE
         for (GUIElement element : customElements){
             element.onInit();
         }
-
+        ///
         this.backgroundCrosshair.onInit();
         this.backgroundCrosshair.getSprite().setTint(new Vector4f(1.0F, 1.0F, 1.0F, 1.0F));
         this.hitNotification.onInit();

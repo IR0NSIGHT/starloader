@@ -1397,7 +1397,7 @@ public class GameClientController extends ClientController implements MineInterf
             this.getState().setWarped(false);
         }
 
-        //INSERTED CODE
+        //INSERTED CODE @1502
         //Prioritize server ticks on localhost
         if(!isLocalHost()) {
             StarRunnable.tickAll();
