@@ -1249,26 +1249,26 @@ public class GameServerController extends ServerController implements MineInterf
                     var145 = System.currentTimeMillis();
                     synchronized(this.state.getBluePrintsToSpawn()) {
                         while(!this.state.getBluePrintsToSpawn().isEmpty()) {
-                            final SegmentControllerOutline var156 = (SegmentControllerOutline)this.state.getBluePrintsToSpawn().remove(0);
+                            final SegmentControllerOutline outline = (SegmentControllerOutline)this.state.getBluePrintsToSpawn().remove(0);
 
                             try {
-                                var156.checkOkName();
-                                String var159 = "[BLUEPRINT][LOAD] " + var156.playerUID + " loaded " + var156.en.getName() + " as \"" + var156.realName + "\" in " + var156.spawnSectorId + " as faction " + var156.getFactionId();
+                                outline.checkOkName();
+                                String var159 = "[BLUEPRINT][LOAD] " + outline.playerUID + " loaded " + outline.en.getName() + " as \"" + outline.realName + "\" in " + outline.spawnSectorId + " as faction " + outline.getFactionId();
                                 LogUtil.log().fine(var159);
                                 System.err.println(var159);
-                                SegmentController spawn = var156.spawn(var156.spawnSectorId, var156.checkProspectedBlockCount, new ChildStats(false), new SegmentControllerSpawnCallbackDirect(this.state, var156.spawnSectorId) {
+                                SegmentController spawn = outline.spawn(outline.spawnSectorId, outline.checkProspectedBlockCount, new ChildStats(false), new SegmentControllerSpawnCallbackDirect(this.state, outline.spawnSectorId) {
                                     public void onNoDocker() {
                                         PlayerState var1;
-                                        if ((var1 = GameServerController.this.state.getPlayerFromNameIgnoreCaseWOException(var156.playerUID)) != null) {
+                                        if ((var1 = GameServerController.this.state.getPlayerFromNameIgnoreCaseWOException(outline.playerUID)) != null) {
                                             var1.sendServerMessagePlayerError(new Object[]{462});
-                                            System.err.println("[BLUEPRINT] no docker blocks on blueprint " + var156);
+                                            System.err.println("[BLUEPRINT] no docker blocks on blueprint " + outline);
                                         } else {
-                                            System.err.println("[BLUEPRINT] no docker blocks on blueprint (not a player spawner " + var156.playerUID + ") " + var156);
+                                            System.err.println("[BLUEPRINT] no docker blocks on blueprint (not a player spawner " + outline.playerUID + ") " + outline);
                                         }
                                     }
                                 });
-                                //INSERTED CODE @1234
-                                EntitySpawnEvent event = new EntitySpawnEvent(var156.spawnSectorId, spawn);
+                                //INSERTED CODE @1235
+                                EntitySpawnEvent event = new EntitySpawnEvent(outline.spawnSectorId, spawn);
                                 StarLoader.fireEvent(EntitySpawnEvent.class, event);
                                 ///
                             } catch (EntityAlreadyExistsException var105) {
@@ -1276,7 +1276,7 @@ public class GameServerController extends ServerController implements MineInterf
 
                                 try {
                                     PlayerState var166;
-                                    (var166 = this.getState().getPlayerFromName(var156.playerUID)).sendServerMessage(new ServerMessage(new Object[]{463}, 3, var166.getId()));
+                                    (var166 = this.getState().getPlayerFromName(outline.playerUID)).sendServerMessage(new ServerMessage(new Object[]{463}, 3, var166.getId()));
                                 } catch (PlayerNotFountException var104) {
                                     var104.printStackTrace();
                                 }

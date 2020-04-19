@@ -97,7 +97,7 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
     public abstract long getUsableId();//PlayerUsableInterface.whatever
 
     public void chargingMessage() {
-        this.getSegmentController().popupOwnClientMessage(Lng.ORG_SCHEMA_GAME_COMMON_CONTROLLER_ELEMENTS_SCANNER_SCANADDON_1, 1);
+        this.getSegmentController().popupOwnClientMessage("Custom add-on charging", 1);
     }
 
     public void onCooldown(long var1) {

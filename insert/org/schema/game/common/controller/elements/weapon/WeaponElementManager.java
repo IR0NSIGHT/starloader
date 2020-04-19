@@ -248,7 +248,7 @@ public class WeaponElementManager extends UsableCombinableControllableElementMan
         return this.combiSettings;
     }
 
-    void doShot(WeaponUnit var1, WeaponCollectionManager var2, ShootContainer var3, PlayerState var4, Timer var5) {
+    void doShot(WeaponUnit c, WeaponCollectionManager var2, ShootContainer var3, PlayerState var4, Timer var5) {
         ManagerModuleCollection var6 = null;
 
         var2.setEffectTotal(0);
@@ -266,32 +266,32 @@ public class WeaponElementManager extends UsableCombinableControllableElementMan
         if (var2.getSlaveConnectedElement() != -9223372036854775808L) {
             var7 = (short)ElementCollection.getType(var2.getSlaveConnectedElement());
             ManagerModuleCollection var11 = this.getManagerContainer().getModulesControllerMap().get(var7);
-            ShootingRespose var10 = this.handleAddOn(this, var2, var1, var11, var6, var3, (SimpleTransformableSendableObject)null, var4, var5, -1.0F);
-            this.handleResponse(var10, var1, var3.weapontOutputWorldPos);
-        } else if (var1.canUse(var5.currentTime, false)) {
+            ShootingRespose var10 = this.handleAddOn(this, var2, c, var11, var6, var3, (SimpleTransformableSendableObject)null, var4, var5, -1.0F);
+            this.handleResponse(var10, c, var3.weapontOutputWorldPos);
+        } else if (c.canUse(var5.currentTime, false)) {
             long var8 = var2.getUsableId();
-            if (!this.isUsingPowerReactors() && !this.consumePower(var1.getPowerConsumption())) {
-                this.handleResponse(ShootingRespose.NO_POWER, var1, var3.weapontOutputWorldPos);
+            if (!this.isUsingPowerReactors() && !this.consumePower(c.getPowerConsumption())) {
+                this.handleResponse(ShootingRespose.NO_POWER, c, var3.weapontOutputWorldPos);
             } else {
 
                 //INSERTED CODE @249
-                CannonShootEvent event = new CannonShootEvent(var1);
+                CannonShootEvent event = new CannonShootEvent(c);
                 StarLoader.fireEvent(CannonShootEvent.class, event);
                 if(event.isCanceled()){
                     return;
                 }
                 ///
 
-                var1.setStandardShotReloading();
+                c.setStandardShotReloading();
                 this.getParticleController().addProjectile(this.getSegmentController(),
-                        var3.weapontOutputWorldPos, var3.shootingDirTemp, var1.getDamage(), var1.getDistance(), var2.getAcidFormula().ordinal(),
-                        var1.getProjectileWidth(), var1.getPenetrationDepth(var1.getDamage()), var1.getImpactForce(), var8, event.getColor());
-                this.handleRecoil(var2, var1, var3.weapontOutputWorldPos, var3.shootingDirTemp, var1.getRecoil(), var1.getDamage());
-                var2.damageProduced += var1.getDamage();
-                this.handleResponse(ShootingRespose.FIRED, var1, var3.weapontOutputWorldPos);
+                        var3.weapontOutputWorldPos, var3.shootingDirTemp, c.getDamage(), c.getDistance(), var2.getAcidFormula().ordinal(),
+                        c.getProjectileWidth(), c.getPenetrationDepth(c.getDamage()), c.getImpactForce(), var8, event.getColor());
+                this.handleRecoil(var2, c, var3.weapontOutputWorldPos, var3.shootingDirTemp, c.getRecoil(), c.getDamage());
+                var2.damageProduced += c.getDamage();
+                this.handleResponse(ShootingRespose.FIRED, c, var3.weapontOutputWorldPos);
             }
         } else {
-            this.handleResponse(ShootingRespose.RELOADING, var1, var3.weapontOutputWorldPos);
+            this.handleResponse(ShootingRespose.RELOADING, c, var3.weapontOutputWorldPos);
         }
     }
 

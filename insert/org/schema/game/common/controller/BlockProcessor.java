@@ -395,15 +395,15 @@ public class BlockProcessor {
         System.err.println("[BP] " + s);
     }
 
-    private void handleSegment(BlockProcessor.PieceList var1) {
-        String var2 = String.valueOf(var1.absIndex);
-        if (var1.segmentData != null) {
+    private void handleSegment(BlockProcessor.PieceList e) {
+        String var2 = String.valueOf(e.absIndex);
+        if (e.segmentData != null) {
             this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "handleSeg");
-            int size = var1.size();
-            SegmentData var4 = var1.segmentData;
+            int size = e.size();
+            SegmentData var4 = e.segmentData;
             p(var4.toString());
             try {
-                if (var1.blocksModOrAdd > 0) {
+                if (e.blocksModOrAdd > 0) {
                     this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "onBlockAddedHandled");
                     this.con.onBlockAddedHandled();
                     this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "onBlockAddedHandled");
@@ -413,40 +413,40 @@ public class BlockProcessor {
                 int i;
                 for(i = 0; i < size; ++i) {
                     this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i);
-                    VoidSegmentPiece var6 = (VoidSegmentPiece)var1.get(i);
+                    VoidSegmentPiece segmentPiece = (VoidSegmentPiece)e.get(i);
                     //INSERTED CODE @550
-                    BlockModifyEvent event = new BlockModifyEvent(var1, var6);
+                    BlockModifyEvent event = new BlockModifyEvent(e, segmentPiece);
                     StarLoader.fireEvent(BlockModifyEvent.class, event);
                     ///
 
-                    assert var4 != null : var1.segment + "; " + var1.blocksModOrAdd + "; " + var1.size();
+                    assert var4 != null : e.segment + "; " + e.blocksModOrAdd + "; " + e.size();
 
-                    this.current.setByReference(var1.segment, (byte)ByteUtil.modUSeg(var6.voidPos.x), (byte)ByteUtil.modUSeg(var6.voidPos.y), (byte)ByteUtil.modUSeg(var6.voidPos.z));
-                    var6.setSegment(this.current.getSegment());
-                    var6.x = this.current.x;
-                    var6.y = this.current.y;
-                    var6.z = this.current.z;
+                    this.current.setByReference(e.segment, (byte)ByteUtil.modUSeg(segmentPiece.voidPos.x), (byte)ByteUtil.modUSeg(segmentPiece.voidPos.y), (byte)ByteUtil.modUSeg(segmentPiece.voidPos.z));
+                    segmentPiece.setSegment(this.current.getSegment());
+                    segmentPiece.x = this.current.x;
+                    segmentPiece.y = this.current.y;
+                    segmentPiece.z = this.current.z;
                     short var7 = this.current.getType();
 
                     try {
                         this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i + "HandleChange");
-                        if (var6.onlyHitpointsChanged && (var6.isAlive() || this.current.getType() == 1)) {
-                            short var23 = var6.getHitpointsByte();
-                            var6.setDataByReference(this.current.getData());
-                            var6.setHitpointsByte(var23);
-                            var6.onlyHitpointsChanged = false;
-                        } else if (var6.onlyActiveChanged) {
-                            boolean var8 = var6.isActive();
-                            var6.setDataByReference(this.current.getData());
-                            var6.setActive(var8);
-                            var6.onlyHitpointsChanged = false;
+                        if (segmentPiece.onlyHitpointsChanged && (segmentPiece.isAlive() || this.current.getType() == 1)) {
+                            short var23 = segmentPiece.getHitpointsByte();
+                            segmentPiece.setDataByReference(this.current.getData());
+                            segmentPiece.setHitpointsByte(var23);
+                            segmentPiece.onlyHitpointsChanged = false;
+                        } else if (segmentPiece.onlyActiveChanged) {
+                            boolean var8 = segmentPiece.isActive();
+                            segmentPiece.setDataByReference(this.current.getData());
+                            segmentPiece.setActive(var8);
+                            segmentPiece.onlyHitpointsChanged = false;
                         }
 
-                        if (!this.isOnServer() && var6.getType() == 0 && var6.isDead()) {
+                        if (!this.isOnServer() && segmentPiece.getType() == 0 && segmentPiece.isDead()) {
                             float var25 = 1.0F / (float)Math.max(1, ShardDrawer.shardsAddedFromNTBlocks);
                             if (Math.random() < (double)var25) {
                                 Vector3f var9;
-                                (var9 = new Vector3f()).set((float)var6.voidPos.x, (float)var6.voidPos.y, (float)var6.voidPos.z);
+                                (var9 = new Vector3f()).set((float)segmentPiece.voidPos.x, (float)segmentPiece.voidPos.y, (float)segmentPiece.voidPos.z);
                                 var9.x -= 16.0F;
                                 var9.y -= 16.0F;
                                 var9.z -= 16.0F;
@@ -457,17 +457,17 @@ public class BlockProcessor {
                             this.con.onBlockKill(this.current, (Damager)null);
                         } else {
                             int var24;
-                            if ((var24 = (this.current.getType() != 0 ? this.current.getHitpointsFull() : 0) - var6.getHitpointsFull()) > 0) {
+                            if ((var24 = (this.current.getType() != 0 ? this.current.getHitpointsFull() : 0) - segmentPiece.getHitpointsFull()) > 0) {
                                 this.con.onBlockDamage(this.current.getAbsoluteIndex(), this.current.getType(), var24, DamageDealerType.GENERAL, (Damager)null);
                             }
                         }
 
                         this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i + "HandleChange");
 
-                        assert var6.getSegment() != null;
+                        assert segmentPiece.getSegment() != null;
 
                         this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i + "ProcessPiece");
-                        boolean var26 = this.processPiece(var6, var6.senderId, var6.controllerPos, var7, this.inventoryMods, false, this.emptySegments, this.segmentsAABBUpdateNeeded, this.con.getUpdateTime());
+                        boolean var26 = this.processPiece(segmentPiece, segmentPiece.senderId, segmentPiece.controllerPos, var7, this.inventoryMods, false, this.emptySegments, this.segmentsAABBUpdateNeeded, this.con.getUpdateTime());
                         this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i + "ProcessPiece");
                         if (this.isOnServer()) {
                             SegmentPiece var10;
@@ -479,21 +479,21 @@ public class BlockProcessor {
                                 SegmentPiece var11 = new SegmentPiece(var10);
                                 this.con.sendBlockMod(new RemoteSegmentPiece(var11, this.isOnServer()));
                             } else {
-                                var6.forceClientSegmentAdd = var1.newSegment;
-                                (var10 = new SegmentPiece(var6)).forceClientSegmentAdd = var1.newSegment;
+                                segmentPiece.forceClientSegmentAdd = e.newSegment;
+                                (var10 = new SegmentPiece(segmentPiece)).forceClientSegmentAdd = e.newSegment;
                                 RemoteSegmentPiece var28 = new RemoteSegmentPiece(var10, this.isOnServer());
                                 this.con.sendBlockMod(var28);
                             }
                         }
 
-                        if (var26 && var6.getType() != 0 && var6.getType() != var7) {
+                        if (var26 && segmentPiece.getType() != 0 && segmentPiece.getType() != var7) {
                             this.plProvider.oldTypes.add(var7);
-                            if (ElementKeyMap.getInfoFast(var6.getType()).getControlledBy().contains(Short.valueOf((short)1)) && this.con instanceof Ship) {
+                            if (ElementKeyMap.getInfoFast(segmentPiece.getType()).getControlledBy().contains(Short.valueOf((short)1)) && this.con instanceof Ship) {
                                 this.plProvider.connectionsFrom.add(ElementCollection.getIndex(Ship.core));
-                                this.plProvider.connectionsTo.add(var6.getAbsoluteIndex());
-                            } else if (var6.controllerPos != -9223372036854775808L) {
-                                this.plProvider.connectionsFrom.add(var6.controllerPos);
-                                this.plProvider.connectionsTo.add(var6.getAbsoluteIndex());
+                                this.plProvider.connectionsTo.add(segmentPiece.getAbsoluteIndex());
+                            } else if (segmentPiece.controllerPos != -9223372036854775808L) {
+                                this.plProvider.connectionsFrom.add(segmentPiece.controllerPos);
+                                this.plProvider.connectionsTo.add(segmentPiece.getAbsoluteIndex());
                             }
                         }
                     } catch (IOException var17) {
@@ -505,10 +505,10 @@ public class BlockProcessor {
                     this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i);
                 }
 
-                if (var1.newSegment) {
+                if (e.newSegment) {
                     this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "addImmediate");
-                    this.con.getSegmentBuffer().addImmediate(var1.segment);
-                    this.con.getSegmentBuffer().updateBB(var1.segment);
+                    this.con.getSegmentBuffer().addImmediate(e.segment);
+                    this.con.getSegmentBuffer().updateBB(e.segment);
                     this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "addImmediate");
                 }
 
@@ -559,7 +559,7 @@ public class BlockProcessor {
 
             }
 
-            this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", String.valueOf(var1.absIndex), "handleSeg");
+            this.getState().getDebugTimer().end(this.con, "SendableSegmentController", "DelayedMods", "Handle", String.valueOf(e.absIndex), "handleSeg");
         }
     }
 

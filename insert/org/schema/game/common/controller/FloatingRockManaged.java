@@ -153,43 +153,44 @@ public class FloatingRockManaged extends FloatingRock implements PlayerControlla
         this.setNetworkObject(new NetworkSpaceStation(this.getState(), this));
     }
 
-    public int handleSalvage(BeamState var1, int var2, BeamHandlerContainer<?> var3, Vector3f var4, SegmentPiece var5, Timer var6, Collection<Segment> var7) {
-        float var16 = (float)var2 * var1.getPower();
+    public int handleSalvage(BeamState beam, int beamHits, BeamHandlerContainer<?> var3, Vector3f to, SegmentPiece hitPiece, Timer var6, Collection<Segment> updatedSegments) {
+        float var16 = (float)beamHits * beam.getPower();
         if (System.currentTimeMillis() - this.lastSalvage > 10000L) {
             this.salvageDamage = 0.0F;
         }
 
         this.salvageDamage += var16;
         this.lastSalvage = System.currentTimeMillis();
-        if (this.isOnServer() && var2 > 0 && this.salvageDamage >= SalvageElementManager.SALVAGE_DAMAGE_NEEDED_PER_BLOCK) {
+        if (this.isOnServer() && beamHits > 0 && this.salvageDamage >= SalvageElementManager.SALVAGE_DAMAGE_NEEDED_PER_BLOCK) {
             this.setTouched(true, true);
             short var17;
-            if (ElementKeyMap.isValidType(var17 = var5.getType()) && ElementKeyMap.isValidType(ElementKeyMap.getInfoFast(var17).getSourceReference())) {
+            if (ElementKeyMap.isValidType(var17 = hitPiece.getType()) && ElementKeyMap.isValidType(ElementKeyMap.getInfoFast(var17).getSourceReference())) {
                 var17 = (short)ElementKeyMap.getInfoFast(var17).getSourceReference();
             }
 
-            byte var18 = var5.getOrientation();
+            byte var18 = hitPiece.getOrientation();
 
-            //INSERTED CODE
+            //INSERTED CODE @206
             //Note: this is when an ASTEROID mines something,
             //ship mining asteroid is in ManagedUsableSegmentController
-            BlockSalvageEvent event = new BlockSalvageEvent(var1, var2, var4, var5, var7);
+            BlockSalvageEvent event = new BlockSalvageEvent(beam,
+                    beamHits, to, hitPiece, updatedSegments);
             StarLoader.fireEvent(BlockSalvageEvent.class, event);
             if(event.isCanceled()){
-                return var2;
+                return beamHits;
             }
             ///
 
 
-            if (var5.getSegment().removeElement(var5.getPos(this.tmpLocalPos), false)) {
+            if (hitPiece.getSegment().removeElement(hitPiece.getPos(this.tmpLocalPos), false)) {
                 this.onSalvaged(var3);
-                var7.add(var5.getSegment());
-                ((RemoteSegment)var5.getSegment()).setLastChanged(System.currentTimeMillis());
-                var5.refresh();
+                updatedSegments.add(hitPiece.getSegment());
+                ((RemoteSegment)hitPiece.getSegment()).setLastChanged(System.currentTimeMillis());
+                hitPiece.refresh();
 
-                assert var5.getType() == 0;
+                assert hitPiece.getType() == 0;
 
-                if (var5.getSegment().getSegmentController().isScrap()) {
+                if (hitPiece.getSegment().getSegmentController().isScrap()) {
                     if (Universe.getRandom().nextFloat() > 0.5F) {
                         var17 = 546;
                     } else {
@@ -197,11 +198,11 @@ public class FloatingRockManaged extends FloatingRock implements PlayerControlla
                     }
                 }
 
-                var5.setHitpointsByte(1);
-                var5.getSegment().getSegmentController().sendBlockSalvage(var5);
+                hitPiece.setHitpointsByte(1);
+                hitPiece.getSegment().getSegmentController().sendBlockSalvage(hitPiece);
                 Short2ObjectOpenHashMap var10;
                 LongOpenHashSet var11;
-                if ((var10 = this.getControlElementMap().getControllingMap().get(ElementCollection.getIndex(var1.controllerPos))) != null && (var11 = (LongOpenHashSet)var10.get((short)120)) != null && var11.size() > 0) {
+                if ((var10 = this.getControlElementMap().getControllingMap().get(ElementCollection.getIndex(beam.controllerPos))) != null && (var11 = (LongOpenHashSet)var10.get((short)120)) != null && var11.size() > 0) {
                     LongIterator var13 = var11.iterator();
 
                     while(var13.hasNext()) {
@@ -210,7 +211,7 @@ public class FloatingRockManaged extends FloatingRock implements PlayerControlla
                         if ((var15 = this.getManagerContainer().getInventory(ElementCollection.getPosFromIndex(var19, new Vector3i()))) != null && var15.canPutIn(var17, 1)) {
                             int var14 = var15.incExistingOrNextFreeSlot(var17, 1);
                             this.getManagerContainer().sendInventoryDelayed(var15, var14);
-                            var14 = this.getMiningBonus(var5.getSegment().getSegmentController());
+                            var14 = this.getMiningBonus(hitPiece.getSegment().getSegmentController());
                             if (ElementKeyMap.hasResourceInjected(var17, var18) && var15.canPutIn(ElementKeyMap.orientationToResIDMapping[var18], var14)) {
                                 var14 = var15.incExistingOrNextFreeSlot(ElementKeyMap.orientationToResIDMapping[var18], var14);
                                 this.getManagerContainer().sendInventoryDelayed(var15, var14);
@@ -222,14 +223,14 @@ public class FloatingRockManaged extends FloatingRock implements PlayerControlla
                     PlayerState var12;
                     (var12 = (PlayerState)this.getAttachedPlayers().get(0)).modDelayPersonalInventory(var17, 1);
                     if (ElementKeyMap.hasResourceInjected(var17, var18)) {
-                        int var8 = this.getMiningBonus(var5.getSegment().getSegmentController());
+                        int var8 = this.getMiningBonus(hitPiece.getSegment().getSegmentController());
                         var12.modDelayPersonalInventory(ElementKeyMap.orientationToResIDMapping[var18], var8);
                     }
                 }
             }
         }
 
-        return var2;
+        return beamHits;
     }
 
     public List<PlayerState> getAttachedPlayers() {

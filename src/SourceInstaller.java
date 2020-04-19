@@ -1,3 +1,4 @@
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -24,6 +25,7 @@ public class SourceInstaller {
             deleteApi();
             addApi();
             stripInsertLines();
+            addInsertLines();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,21 +101,29 @@ public class SourceInstaller {
         }
     }
     public static void addInsertLines(){
+        Collection<File> srcFiles = FileUtils.listFiles(new File(sourceDir + "\\src\\org"), null, true);
+        srcFiles.addAll(FileUtils.listFiles(new File(sourceDir + "\\schine\\src"), null, true));
 
-
-        Collection<File> files = FileUtils.listFiles(new File(sourceDir + "\\insert\\org"), null, true);
+        Collection<File> files = FileUtils.listFiles(new File("insert\\org\\"), null, true);
         for (File f : files){
             ArrayList<String> lines = readFileToBuffer(f);
-            ArrayList<Pair<Integer, String>> list = new ArrayList<Pair<Integer, String>>();
+            ArrayList<CodeBlock> list = new ArrayList<CodeBlock>();
+            CodeBlock currentCodeBlock = null;
             boolean reading = false;
             int insertionNum = -1;
             for (String line : lines) {
                 if(line.contains("//INSERTED CODE")){
                     reading = true;
-                    insertionNum = Integer.parseInt(line.split(Pattern.quote("@"))[1]);
+                    try {
+                        currentCodeBlock = new CodeBlock(Integer.parseInt(line.split(Pattern.quote("@"))[1]));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        System.out.println("Error: " + line + ", in" + f.getName());
+                    }
+                    list.add(currentCodeBlock);
                 }
                 if(reading){
-                    list.add(new ImmutablePair<Integer, String>(insertionNum, line));
+                    currentCodeBlock.getLines().add(line);
                     insertionNum++;
                     if(line.contains("///")){
                         reading = false;
@@ -125,8 +135,58 @@ public class SourceInstaller {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //Now that we've gathered all the insert lines, insert them
+            //Now that we've gathered all the insert lines, insert them.
+            //le jank has arrived
+            File toInsertFile = null;
+            for (File srcFile : srcFiles) {
+                if(srcFile.getName().equals(f.getName())){
+                    toInsertFile = srcFile;
+                    break;
+                }
+            }
+            if(toInsertFile != null){
+                ArrayList<String> srcLines = readFileToBuffer(toInsertFile);
+                FileWriter writer = null;
+                try {
+                    writer = new FileWriter(toInsertFile, false);
+                    int lineNum = 0;
+                    for (String line : srcLines) {
+                        lineNum++;
+                        writer.write(line);
+                        writer.write("\n");
+                        for (CodeBlock block : list){
+                            if(block.getLine() == lineNum){
+                                for (String blockLine : block.getLines()) {
+                                    writer.write(blockLine);
+                                    writer.write("\n");
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
 
         }
+    }
+}
+class CodeBlock{
+    private int line;
+    private ArrayList<String> lines = new ArrayList<String>();
+
+    CodeBlock(int line){
+        this.line = line;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public ArrayList<String> getLines() {
+        return lines;
     }
 }

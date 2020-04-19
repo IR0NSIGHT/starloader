@@ -461,36 +461,36 @@ public class Hud extends GUIElement {
         this.indicator.onSectorChange();
     }
 
-    public void update(Timer var1) {
-        this.indicator.update(var1);
+    public void update(Timer timer) {
+        this.indicator.update(timer);
         if (this.updateSine) {
-            this.sinusTimerUtil.update(var1);
+            this.sinusTimerUtil.update(timer);
         }
 
-        this.testSinusTimerUtil.update(var1);
+        this.testSinusTimerUtil.update(timer);
         this.positiveEffectBar.updateOrientation();
         this.negativeEffectBar.updateOrientation();
-        this.positiveEffectBar.update(var1);
-        this.negativeEffectBar.update(var1);
-        this.targetPanel.update(var1);
-        this.powerBatteryBar.update(var1);
-        this.powerBar.update(var1);
-        this.reactorPowerBar.update(var1);
-        this.speedBarFarRight.update(var1);
-        this.speedBarRight.update(var1);
-        this.shieldBarLeft.update(var1);
-        this.shieldBarRight.update(var1);
-        this.healthBar.update(var1);
-        this.shipHPBar.update(var1);
-        this.powerStabilizationBar.update(var1);
-        this.powerConsumptionBar.update(var1);
-        this.radar.update(var1);
+        this.positiveEffectBar.update(timer);
+        this.negativeEffectBar.update(timer);
+        this.targetPanel.update(timer);
+        this.powerBatteryBar.update(timer);
+        this.powerBar.update(timer);
+        this.reactorPowerBar.update(timer);
+        this.speedBarFarRight.update(timer);
+        this.speedBarRight.update(timer);
+        this.shieldBarLeft.update(timer);
+        this.shieldBarRight.update(timer);
+        this.healthBar.update(timer);
+        this.shipHPBar.update(timer);
+        this.powerStabilizationBar.update(timer);
+        this.powerConsumptionBar.update(timer);
+        this.radar.update(timer);
         //INSERTED CODE @569
         for (GUIElement element : customElements){
-            element.update(var1);
+            element.update(timer);
         }
         ///
-        this.helpManager.update(var1);
+        this.helpManager.update(timer);
         if (!this.isExternalActive() || !(Controller.getCamera() instanceof InShipCamera)) {
             this.resetDrawnInShip();
         }

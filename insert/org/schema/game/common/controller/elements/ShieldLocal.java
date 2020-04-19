@@ -157,18 +157,18 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
         return this.containsInRadius(var2, var3, var4);
     }
 
-    public boolean addCapacityUnitIfContains(ShieldCapacityUnit var1) {
+    public boolean addCapacityUnitIfContains(ShieldCapacityUnit cap) {
         boolean var2;
-        if (var2 = this.containsInRadius((float)var1.getCoMOrigin().x, (float)var1.getCoMOrigin().y, (float)var1.getCoMOrigin().z)) {
-            this.supportIds.add(var1.idPos);
-            this.supportCoMIds.add(ElementCollection.getIndex(var1.getCoMOrigin()));
+        if (var2 = this.containsInRadius((float)cap.getCoMOrigin().x, (float)cap.getCoMOrigin().y, (float)cap.getCoMOrigin().z)) {
+            this.supportIds.add(cap.idPos);
+            this.supportCoMIds.add(ElementCollection.getIndex(cap.getCoMOrigin()));
             //INSERTED CODE @177
-            this.shieldCapacity += (double)((float)var1.size() * VoidElementManager.SHIELD_LOCAL_CAPACITY_PER_BLOCK);
-            ShieldCapacityCalculateEvent event = new ShieldCapacityCalculateEvent(var1, this, this.shieldCapacity);
+            this.shieldCapacity += (double)((float)cap.size() * VoidElementManager.SHIELD_LOCAL_CAPACITY_PER_BLOCK);
+            ShieldCapacityCalculateEvent event = new ShieldCapacityCalculateEvent(cap, this, this.shieldCapacity);
             StarLoader.fireEvent(ShieldCapacityCalculateEvent.class, event);
             this.shieldCapacity = event.getCapacity();
             ///
-            this.capacityIntegrity = Math.min(this.capacityIntegrity, var1.getIntegrity());
+            this.capacityIntegrity = Math.min(this.capacityIntegrity, cap.getIntegrity());
         }
 
         return var2;
