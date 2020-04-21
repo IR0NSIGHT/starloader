@@ -12,6 +12,7 @@ import javax.vecmath.Vector4f;
 
 import api.listener.events.DamageBeamShootEvent;
 import api.mod.StarLoader;
+import api.systems.modules.custom.CustomShipBeamElement;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.view.gui.structurecontrol.ControllerManagerGUI;
@@ -44,6 +45,7 @@ import org.schema.schine.input.InputState;
 import org.schema.schine.input.KeyboardMappings;
 
 public abstract class BeamElementManager<E extends BeamUnit<E, CM, EM>, CM extends BeamCollectionManager<E, CM, EM>, EM extends BeamElementManager<E, CM, EM>> extends UsableCombinableControllableElementManager<E, CM, EM, BeamCombiSettings> implements BlockActivationListenerInterface, IntegrityBasedInterface {
+
     public final ShootContainer shootContainer = new ShootContainer();
     private final BeamCombiSettings combiSettings = new BeamCombiSettings();
     private static GUITextOverlay chargesText;

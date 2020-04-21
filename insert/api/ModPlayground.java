@@ -17,6 +17,7 @@ import api.listener.events.block.BlockSalvageEvent;
 import api.listener.events.calculate.MaxPowerCalculateEvent;
 import api.listener.events.calculate.ShieldCapacityCalculateEvent;
 import api.listener.events.gui.HudCreateEvent;
+import api.listener.events.register.ElementRegisterEvent;
 import api.listener.events.register.RegisterAddonsEvent;
 import api.listener.events.register.RegisterEffectsEvent;
 import api.listener.events.systems.InterdictionCheckEvent;
@@ -29,6 +30,8 @@ import api.server.Server;
 import api.systems.ChamberType;
 import api.systems.addons.JumpInterdictor;
 import api.systems.addons.custom.*;
+import api.systems.modules.custom.CustomShipBeamElement;
+import api.systems.modules.custom.example.disruptor.CustomBeamUnit;
 import api.utils.StarRunnable;
 import api.utils.VecUtil;
 import org.schema.common.util.linAlg.Vector3i;
@@ -39,7 +42,10 @@ import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.activation.AbstractUnit;
 import org.schema.game.common.controller.elements.activation.ActivationCollectionManager;
 import org.schema.game.common.controller.elements.activation.ActivationElementManager;
+import org.schema.game.common.controller.elements.beam.BeamCommand;
+import org.schema.game.common.controller.elements.beam.tractorbeam.TractorBeamHandler;
 import org.schema.game.common.controller.elements.jumpprohibiter.InterdictionAddOn;
+import org.schema.game.common.controller.elements.pulse.push.PushPulseElementManager;
 import org.schema.game.common.controller.elements.shield.capacity.ShieldCapacityCollectionManager;
 import org.schema.game.common.controller.elements.shield.capacity.ShieldCapacityUnit;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
@@ -125,7 +131,10 @@ public class ModPlayground extends StarMod {
                 BlockConfig.newChamber("Bruh Jump", creative.getId(), StatusEffectType.CUSTOM_EFFECT_03);
         config.add(bruh);
 
-        ElementInformation info = Blocks.THRUSTER_MODULE.getInfo();
+        /*ElementInformation info = Blocks.FERTIKEEN_INGOT.getInfo();
+        info.controlling.add(Blocks.HYLAT_INGOT.getId());
+        info.controlledBy.add(Blocks.SHIP_CORE.getId());
+        Blocks.HYLAT_INGOT.getInfo().controlledBy.add(Blocks.FERTIKEEN_INGOT.getId());*/
         //info.signal = true;
 
 
@@ -200,6 +209,94 @@ public class ModPlayground extends StarMod {
                 }
             }
         });*/
+
+        StarLoader.registerListener(ElementRegisterEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                ElementRegisterEvent e = (ElementRegisterEvent) event;
+                e.addElement(new CustomShipBeamElement() {
+                    @Override
+                    public float getPowerConsumption(CustomBeamUnit unit) {
+                        return 10;
+                    }
+
+                    @Override
+                    public float getBeamPower(CustomBeamUnit unit) {
+                        return 10;
+                    }
+
+                    @Override
+                    public double getRestingPowerConsumption(CustomBeamUnit unit) {
+                        return 5;
+                    }
+
+                    @Override
+                    public double getReloadingPowerConsumption(CustomBeamUnit unit) {
+                        return 1;
+                    }
+
+                    @Override
+                    public double getParentHitMultiplier() {
+                        return 1;
+                    }
+
+                    @Override
+                    public double getChildHitMultiplier() {
+                        return 1;
+                    }
+
+                    @Override
+                    public Blocks getControllerBlock() {
+                        return Blocks.FERTIKEEN_INGOT;
+                    }
+
+                    @Override
+                    public Blocks getModuleBlock() {
+                        return Blocks.HYLAT_INGOT;
+                    }
+
+                    @Override
+                    public float getTickRate() {
+                        return 100;
+                    }
+
+                    @Override
+                    public float getCooldown() {
+                        return 0;
+                    }
+
+                    @Override
+                    public float getBurstTime() {
+                        return 1000;
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "epic beam";
+                    }
+
+                    @Override
+                    public float getBaseDistance() {
+                        return 1000;
+                    }
+
+                    @Override
+                    public boolean isLatch() {
+                        return true;
+                    }
+
+                    @Override
+                    public float getDamage(CustomBeamUnit unit) {
+                        return 11;
+                    }
+
+                    @Override
+                    public void fireBeam(BeamCommand beam) {
+                        beam.to.add(new Vector3f(0,50,0));
+                    }
+                });
+            }
+        });
 
         StarLoader.registerListener(DamageBeamShootEvent.class, new Listener() {
 

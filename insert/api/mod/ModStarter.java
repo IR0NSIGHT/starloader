@@ -138,7 +138,7 @@ public class ModStarter {
 
         //Force enable any test mods
         for (StarMod starMod : StarLoader.starMods) {
-            if(!starMod.isEnabled() && starMod.forceEnable){
+            if(!starMod.isEnabled() && starMod.forceEnable && EnabledModFile.getInstance().isClientEnabled(starMod.getInfo())){
                 StarLoader.enableMod(starMod);
             }
         }

@@ -60,7 +60,7 @@ public class BlockConfig {
     }
     public static ElementInformation newChamber(String name, short rootChamber, StatusEffectType appliedEffect){
         //TODO find out why 640 is a chamber texture
-        ElementInformation info = newElement(name, new short[640]);
+        ElementInformation info = newElement(name, new short[]{640});
         info.blockResourceType = 2;
         info.sourceReference = 1085;
         info.chamberRoot = rootChamber;
