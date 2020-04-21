@@ -168,22 +168,7 @@ public class ModPlayground extends StarMod {
     public void onEnable() {
         DebugFile.log("Loading default mod...");
 
-        StarLoader.registerListener(ShieldHitEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                ShieldHitEvent e = (ShieldHitEvent) event;
-                CustomAddOn customAddon = e.getEntity().getCustomAddon(ShieldHardenAddOn.class);
-                if (customAddon != null && customAddon.isActive()) {
-                    Server.broadcastMessage("damage reduced from " + e.getDamage() + " to " + (e.getDamage() * 0.25));
-                    e.setDamage(e.getDamage() * 0.25);
-                    //e.setCanceled(true);
-                } else {
-                    if (customAddon == null) {
-                        Server.broadcastMessage("rip");
-                    }
-                }
-            }
-        });
+
 
         /*StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
             @Override
@@ -210,94 +195,6 @@ public class ModPlayground extends StarMod {
             }
         });*/
 
-        StarLoader.registerListener(ElementRegisterEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                ElementRegisterEvent e = (ElementRegisterEvent) event;
-                e.addElement(new CustomShipBeamElement() {
-                    @Override
-                    public float getPowerConsumption(CustomBeamUnit unit) {
-                        return 10;
-                    }
-
-                    @Override
-                    public float getBeamPower(CustomBeamUnit unit) {
-                        return 10;
-                    }
-
-                    @Override
-                    public double getRestingPowerConsumption(CustomBeamUnit unit) {
-                        return 5;
-                    }
-
-                    @Override
-                    public double getReloadingPowerConsumption(CustomBeamUnit unit) {
-                        return 1;
-                    }
-
-                    @Override
-                    public double getParentHitMultiplier() {
-                        return 1;
-                    }
-
-                    @Override
-                    public double getChildHitMultiplier() {
-                        return 1;
-                    }
-
-                    @Override
-                    public Blocks getControllerBlock() {
-                        return Blocks.FERTIKEEN_INGOT;
-                    }
-
-                    @Override
-                    public Blocks getModuleBlock() {
-                        return Blocks.HYLAT_INGOT;
-                    }
-
-                    @Override
-                    public float getTickRate() {
-                        return 100;
-                    }
-
-                    @Override
-                    public float getCooldown() {
-                        return 0;
-                    }
-
-                    @Override
-                    public float getBurstTime() {
-                        return 1000;
-                    }
-
-                    @Override
-                    public String getName() {
-                        return "epic beam";
-                    }
-
-                    @Override
-                    public float getBaseDistance() {
-                        return 1000;
-                    }
-
-                    @Override
-                    public boolean isLatch() {
-                        return true;
-                    }
-
-                    @Override
-                    public float getDamage(CustomBeamUnit unit) {
-                        return 11;
-                    }
-
-                    @Override
-                    public void fireBeam(BeamCommand beam) {
-                        beam.to.add(new Vector3f(0,50,0));
-                    }
-                });
-            }
-        });
-
         StarLoader.registerListener(DamageBeamShootEvent.class, new Listener() {
 
             @Override
@@ -322,6 +219,8 @@ public class ModPlayground extends StarMod {
                 BasicInfoGroup bar = new BasicInfoGroup(ev);
             }
         });
+
+
         final int[] t = {0};
         new StarRunnable() {
             @Override
@@ -339,116 +238,6 @@ public class ModPlayground extends StarMod {
             }
         });
 
-        StarLoader.registerListener(BlockActivateEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event ev) {
-                final BlockActivateEvent event = (BlockActivateEvent) ev;
-                //Server.broadcastMessage("Activated block: " + event.getBlockType().getName());
-                //Server.broadcastMessage("At: " + event.getSegmentPiece().getAbsolutePos(new Vector3f()).toString());
-                if (event.getBlockId() == xorId) {
-                    ActivationElementManager var1 = event.getManager();
-                    Block block = event.getBlock();
-                    long var6 = block.getInternalSegmentPiece().getAbsoluteIndex();
-                    int activeSignals = 0;
-                    for (int i = 0; i < var1.getCollectionManagers().size(); ++i) {
-                        ActivationCollectionManager var8 = (ActivationCollectionManager) var1.getCollectionManagers().get(i);
-                        for (int j = 0; j < var8.getElementCollections().size(); ++j) {
-                            if (((AbstractUnit) var8.getElementCollections().get(j)).contains(var6)) {
-                                var8.getControllerElement().refresh();
-                                if (var8.getControllerElement().isActive()) {
-                                    activeSignals++;
-                                }
-                            }
-                        }
-                    }
-                    if (activeSignals == 2) {
-                        block.getInternalSegmentPiece().setActive(true);
-                    } else {
-                        block.getInternalSegmentPiece().setActive(false);
-                    }
-                }
-                if (event.getBlockId() == Blocks.THRUSTER_MODULE.getId()) {
-                    final Entity entity = event.getEntity();
-                    //entity.internalEntity.getPhysicsObject().applyCentralForce(new Vector3f(10,10,10));
-                    final Vector3f v = entity.getVelocity();
-                    v.add(VecUtil.scale(entity.getDirection(), 15F));
-                    entity.setVelocity(v);
-
-                    new StarRunnable() {
-                        @Override
-                        public void run() {
-                            entity.setVelocity(v);
-                        }
-                    }.runLater(1);
-
-                }
-            }
-        });
-
-        StarLoader.registerListener(MaxPowerCalculateEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                MaxPowerCalculateEvent e = (MaxPowerCalculateEvent) event;
-                float apply = e.getEntity().getConfigManager().apply(StatusEffectType.POWER_RECHARGE_EFFICIENCY, 1F);
-                if(apply != 1F) {
-                    e.setPower(e.getPower()*100);
-                }
-            }
-        });/*
-
-        StarLoader.registerListener(InterdictionCheckEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                InterdictionCheckEvent e = (InterdictionCheckEvent) event;
-                //Loop through all piloted ships, check if they have interdiction
-
-                GameServerState server = GameServer.getServerState();
-                if (server != null) {
-                    Universe universe = server.getUniverse();
-                    for (int x = -3; x <= 3; ++x) {
-                        for (int y = -3; y <= 3; ++y) {
-                            for (int z = -3; z <= 3; ++z) {
-                                Vector3i v = e.getEntity().getSectorPosition();
-                                v.add(x, y, z);
-                                Sector sector = universe.getSectorWithoutLoading(v);
-                                if(sector != null) {
-                                    for (SimpleTransformableSendableObject<?> entity : sector.getEntities()) {
-                                        if (entity instanceof SegmentController) {
-                                            Entity ship = new Entity((SegmentController) entity);
-                                            JumpInterdictor inter = ship.getInterdictionAddOn();
-                                            if (inter.isActive()) {
-                                                int strength = inter.getStrength();
-                                                int distance = inter.getDistance();
-                                                int inderdictorLevel = ship.getCurrentReactor().getLevel();
-                                                int jumperMax = e.getEntity().getCurrentReactor().getLevel();
-                                                int extraDelta = strength*20;
-                                                //50 = max,
-                                                //Interdiction condition: If Interdictor_max + (50*20) > Jumper_max
-                                                Server.broadcastMessage("Strength: " + inter.getStrength() + "Dist, " + distance + "IL, " + inderdictorLevel + ", jmax: " + jumperMax);
-                                                Vector3i sectorPosition = e.getEntity().getSectorPosition();
-                                                sectorPosition.sub(ship.getSectorPosition());
-                                                double d = sectorPosition.lengthSquared();
-                                                Server.broadcastMessage("D " + d);
-                                                if(d <= distance) {
-                                                    if (inderdictorLevel + extraDelta > jumperMax) {
-                                                        e.setInterdicted(true);
-                                                    } else {
-                                                        //nope
-                                                    }
-                                                }
-
-
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });*/
-
         StarLoader.registerListener(RegisterEffectsEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
@@ -458,18 +247,6 @@ public class ModPlayground extends StarMod {
                         ev.addEffectModifier(types, 10F);
                     }
                 }
-            }
-        });
-        StarLoader.registerListener(RegisterAddonsEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                RegisterAddonsEvent ev = (RegisterAddonsEvent) event;
-                //ev.getContainer().getSegmentController().getConfigManager().apply()
-                ev.addAddOn(new TacticalJumpAddOn(ev.getContainer()));
-                ev.addAddOn(new ShieldHardenAddOn(ev.getContainer()));
-                ev.addAddOn(new SystemScannerAddOn(ev.getContainer()));
-                ev.addAddOn(new HyperChargeAddOn(ev.getContainer()));
-                ev.addAddOn(new AntiOutageDriveAddOn(ev.getContainer()));
             }
         });
 
@@ -489,34 +266,5 @@ public class ModPlayground extends StarMod {
             }
         });*/
         //This is to register a new listener to listen for StructureStatsCreateEvent
-        StarLoader.registerListener(StructureStatsCreateEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                final StructureStatsCreateEvent e = ((StructureStatsCreateEvent) event);
-                e.addStatLabel(20, new StatLabelResult() {
-                    @Override
-                    public String getValue() {
-                        //SegmentControllers are ships or stations.
-                        //It's going to take a while to get used to naming, dont worry about it.
-                        SegmentController ship = e.getCurrentShip();
-                        if (ship != null) {
-                            return String.valueOf(ship.railController.getDockedCount());
-                        }
-                        return "No ship";
-                    }
-
-                    @Override
-                    public int getStatDistance() {
-                        //Controls how far to the right it is.
-                        return 30;
-                    }
-
-                    @Override
-                    public String getName() {
-                        return "Docked Entities: ";
-                    }
-                });
-            }
-        });
     }
 }

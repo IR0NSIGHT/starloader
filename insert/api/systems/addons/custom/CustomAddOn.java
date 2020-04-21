@@ -23,7 +23,7 @@ import org.schema.schine.common.language.Lng;
 import org.schema.schine.graphicsengine.core.Timer;
 
 public abstract class CustomAddOn extends RecharchableActivatableDurationSingleModule {
-    Entity entity;
+    public Entity entity;
     public CustomAddOn(ManagerContainer<?> var1) {
         super(var1);
         entity = new Entity(getSegmentController());

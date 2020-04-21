@@ -51,6 +51,7 @@ public class ModStarter {
         FileUtils.copyInputStreamToFile(openConnection.getInputStream(), new File(fileName));
     }
     public static void disableAllMods(){
+        DebugFile.log("==== Disabling All Mods ====");
         for (StarMod mod : StarLoader.starMods) {
             if (mod.isEnabled()) {
                 mod.onDisable();
@@ -61,9 +62,7 @@ public class ModStarter {
         StarRunnable.deleteAll();
     }
     public static boolean preClientConnect(String serverHost, int serverPort) {
-        DebugFile.log("Disabling existing mods:");
-        disableAllMods();
-        //TODO only enable the ones that are enabled on the server, and the ones that are set to force enable
+
         DebugFile.log("Enabling mods...");
         ArrayList<ModInfo> serverMods = ServerModInfo.getServerInfo(ServerModInfo.getServerUID(serverHost, serverPort));
         if (serverMods == null) {
@@ -83,9 +82,10 @@ public class ModStarter {
             DebugFile.log("Mods not found even after refresh... rip");
             serverMods = new ArrayList<ModInfo>();
         }
-        if (serverHost.equals("localhost:4242")) {
+        if (serverHost.equals("localhost")) {
             DebugFile.log("Connecting to own server, mods are already enabled by the server");
         } else {
+            disableAllMods();
             for (StarMod mod : StarLoader.starMods) {
                 System.err.println("[Client] >>> Found mod: " + mod.modName);
                 //DebugFile.log("Mod info WAS found");
