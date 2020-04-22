@@ -7,10 +7,14 @@ import api.server.Server;
 import api.universe.Sector;
 import api.universe.Universe;
 import org.schema.common.util.linAlg.Vector3i;
+import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.data.player.ControllerStateUnit;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 
 public class Player {
 
@@ -57,6 +61,18 @@ public class Player {
 
     public PlayerState getPlayerState() {
         return this.playerState;
+    }
+
+    public Entity getCurrentEntity(){
+        Set<ControllerStateUnit> units = getPlayerState().getControllerState().getUnits();
+        if(units.isEmpty()){
+            return null;
+        }
+        ControllerStateUnit unit = units.iterator().next();
+        if(unit != null && unit.playerControllable instanceof SegmentController){
+            return new Entity((SegmentController) unit.playerControllable);
+        }
+        return null;
     }
 
     private PlayerState getPlayerStateFromName(String playerName) {

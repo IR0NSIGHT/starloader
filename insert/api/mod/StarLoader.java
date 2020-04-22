@@ -1,23 +1,14 @@
 package api.mod;
 
 import api.DebugFile;
-import api.entity.Player;
 import api.listener.Listener;
 import api.listener.events.Event;
-import api.listener.events.ServerPingEvent;
-import api.listener.events.block.BlockActivateEvent;
 import api.main.GameClient;
 import api.main.GameServer;
 import api.server.Server;
-import org.schema.game.client.data.GameClientState;
-import org.schema.game.client.view.gui.shiphud.newhud.TargetPanel;
 import org.schema.game.common.data.SendableGameState;
-import org.schema.game.common.data.player.PlayerState;
-import org.schema.game.network.objects.ChatMessage;
 
-import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class StarLoader {

@@ -14,6 +14,7 @@ import api.mod.ModInfo;
 import api.mod.ServerModInfo;
 import api.mod.StarLoader;
 import api.mod.StarMod;
+import org.schema.game.common.data.chat.ChannelRouter;
 import org.schema.schine.network.Command;
 import org.schema.schine.network.NetworkProcessor;
 import org.schema.schine.network.client.ClientStateInterface;

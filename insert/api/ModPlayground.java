@@ -5,6 +5,7 @@ import api.element.block.Block;
 import api.element.block.Blocks;
 import api.element.block.FactoryType;
 import api.entity.Entity;
+import api.entity.Player;
 import api.gui.custom.examples.*;
 import api.listener.Listener;
 import api.listener.events.CannonShootEvent;
@@ -17,6 +18,8 @@ import api.listener.events.block.BlockSalvageEvent;
 import api.listener.events.calculate.MaxPowerCalculateEvent;
 import api.listener.events.calculate.ShieldCapacityCalculateEvent;
 import api.listener.events.gui.HudCreateEvent;
+import api.listener.events.player.PlayerChatEvent;
+import api.listener.events.player.PlayerCommandEvent;
 import api.listener.events.register.ElementRegisterEvent;
 import api.listener.events.register.RegisterAddonsEvent;
 import api.listener.events.register.RegisterEffectsEvent;
@@ -194,6 +197,37 @@ public class ModPlayground extends StarMod {
                 }
             }
         });*/
+        StarLoader.registerListener(PlayerChatEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                PlayerChatEvent e = (PlayerChatEvent) event;
+                e.getMessage().getStartColor().set(0,1,0,1);
+            }
+        });
+        StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                PlayerCommandEvent e = (PlayerCommandEvent) event;
+                Player p = e.player;
+                if(e.command.equalsIgnoreCase("test")){
+                    Entity currentEntity = p.getCurrentEntity();
+                    if(currentEntity == null){
+                        p.sendServerMessage("You are in: nothing, thanks for playing");
+                    }else{
+                        p.sendServerMessage("You are in: " + currentEntity.getUID());
+                    }
+                }else{
+                    p.sendServerMessage(e.toString());
+                }
+            }
+        });
+        StarLoader.registerListener(DamageBeamShootEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                DamageBeamShootEvent e = (DamageBeamShootEvent) event;
+                //e.getBeamWeapon().getUnit().elementCollectionManager.getColor()
+            }
+        });
 
         StarLoader.registerListener(DamageBeamShootEvent.class, new Listener() {
 

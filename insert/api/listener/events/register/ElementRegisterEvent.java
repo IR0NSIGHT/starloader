@@ -4,6 +4,7 @@ import api.element.block.Blocks;
 import api.listener.events.Event;
 import api.systems.modules.custom.CustomShipBeamElement;
 import org.schema.game.common.controller.elements.ShipManagerContainer;
+import org.schema.game.common.controller.elements.UsableControllableElementManager;
 
 import java.util.ArrayList;
 
@@ -19,11 +20,18 @@ public class ElementRegisterEvent extends Event {
     public void registerElement(CustomShipBeamElement beamElement){
         customs.add(beamElement);
     }
-
     public ArrayList<CustomShipBeamElement> getCustoms() {
         return customs;
     }
 
+
+    public ArrayList<UsableControllableElementManager<?,?,?>> internalManagers = new ArrayList<UsableControllableElementManager<?,?,?>>();
+    public void addInternal(UsableControllableElementManager<?,?,?> manager){
+        internalManagers.add(manager);
+    }
+
+    //Not finished
+    @Deprecated
     public void addElement(CustomShipBeamElement e) {
         customs.add(e);
         //Set elements as controllers, for ease of use.

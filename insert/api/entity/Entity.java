@@ -82,6 +82,9 @@ public class Entity {
          */
         return internalEntity.getRealName();
     }
+    public String getUID(){
+        return internalEntity.getUniqueIdentifier();
+    }
 
     public void setName(String name) {
         /**
