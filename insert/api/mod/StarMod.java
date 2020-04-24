@@ -1,6 +1,8 @@
 package api.mod;
 
 import api.config.BlockConfig;
+import api.entity.Station;
+import api.mod.config.FileConfiguration;
 
 public class StarMod {
     public String modName;
@@ -87,4 +89,13 @@ public class StarMod {
     public void onBlockConfigLoad(BlockConfig config){
 
     }
+    //
+    private FileConfiguration config = null;
+    public FileConfiguration getConfig(){
+        if(config == null){
+            config = new FileConfiguration(this);
+        }
+        return config;
+    }
+    //
 }

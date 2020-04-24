@@ -5,6 +5,7 @@
 
 package org.schema.game.common.controller.elements.power.reactor;
 
+import api.listener.events.calculate.CurrentPowerCalculateEvent;
 import api.listener.events.calculate.MaxPowerCalculateEvent;
 import api.mod.StarLoader;
 import api.server.Server;
@@ -331,12 +332,16 @@ public class PowerImplementation extends Observable implements PowerInterface, U
         return v;
     }
     //
-
+    //REPLACE METHOD
     private double calculatCurrentMaxPower() {
-        double var1 = this.getStabilizationPowerEfficiency();
-        double v = Math.min(this.getActiveReactorCurrentSize(), var1) * (double) VoidElementManager.REACTOR_POWER_CAPACITY_MULTIPLIER;
+        double stabilization = this.getStabilizationPowerEfficiency();
+        double v = Math.min(this.getActiveReactorCurrentSize(), stabilization) * (double) VoidElementManager.REACTOR_POWER_CAPACITY_MULTIPLIER;
+        CurrentPowerCalculateEvent event = new CurrentPowerCalculateEvent(this, v);
+        StarLoader.fireEvent(CurrentPowerCalculateEvent.class, event);
+        v = event.getPower();
         return v;
     }
+    //
 
     public double getStabilizationPowerEfficiency() {
         return this.getStabilization() * (1.0D / (double)VoidElementManager.REACTOR_STABILIZATION_POWER_EFFECTIVE_FULL);

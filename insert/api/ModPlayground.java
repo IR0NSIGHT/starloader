@@ -15,6 +15,7 @@ import api.listener.events.StructureStatsCreateEvent;
 import api.listener.events.block.BlockActivateEvent;
 import api.listener.events.block.BlockModifyEvent;
 import api.listener.events.block.BlockSalvageEvent;
+import api.listener.events.calculate.CurrentPowerCalculateEvent;
 import api.listener.events.calculate.MaxPowerCalculateEvent;
 import api.listener.events.calculate.ShieldCapacityCalculateEvent;
 import api.listener.events.gui.HudCreateEvent;
@@ -29,6 +30,7 @@ import api.main.GameClient;
 import api.main.GameServer;
 import api.mod.StarLoader;
 import api.mod.StarMod;
+import api.mod.config.FileConfiguration;
 import api.server.Server;
 import api.systems.ChamberType;
 import api.systems.addons.JumpInterdictor;
@@ -81,81 +83,15 @@ public class ModPlayground extends StarMod {
 
     @Override
     public void onBlockConfigLoad(BlockConfig config) {
-        //Create a new block called 'Impervium Armor'
-        //The short list is the block texture ids, make sure to give it a list of size 1,3 or 6.
-        final ElementInformation imp = BlockConfig.newElement("Impervium Armor", new short[]{124});
-        imp.setBuildIconNum(Blocks.GREY_ADVANCED_ARMOR.getId());
-        //Give it lotss of health
-        imp.setMaxHitPointsE(100000);
-        imp.setArmorValue(1000);
-        //Make it emit light
-        imp.lightSource = true;
-        imp.lightSourceColor.set(new Vector4f(1F, 0F, 1F, 1F));
-
-        /*imp.blended = true;
-        new StarRunnable(){
-            @Override
-            public void run() {
-                Color hsb = Color.getHSBColor(((float)ticksRan%360)/360F, 1F, 1F);
-                Vector4f tuple4f = new Vector4f(hsb.getRed()/255F, hsb.getGreen()/255F, hsb.getBlue()/255F, 1F);
-                Server.broadcastMessage(tuple4f.toString());
-                imp.lightSourceColor.set(tuple4f);
-            }
-        }.runTimer(1);*/
-        //Make it activatable,
-        imp.setCanActivate(true);
-
-        //Give it a recipe that uses red paint
-        BlockConfig.addRecipe(imp, FactoryType.ADVANCED, 5, new FactoryResource(1, Blocks.RED_PAINT.getId()));
-        //Add it to the config.
-        config.add(imp);
-
-        ArrayList<FactoryResource> factoryResources = new ArrayList<FactoryResource>();
-        for (Blocks b : Blocks.values()) {
-            if (b.name().endsWith("PAINT")) {
-                factoryResources.add(new FactoryResource(1, b.getId()));
-            }
-        }
-        BlockConfig.addRecipe(Blocks.FERTIKEEN_CAPSULE.getInfo(), FactoryType.ADVANCED, 5, factoryResources.toArray(new FactoryResource[0]));
-
-        ElementInformation sh =
-                BlockConfig.newChamber("Shield Hardener", ChamberType.DEFENCE.getId(), StatusEffectType.CUSTOM_EFFECT_05);
-        config.add(sh);
-
-        ElementInformation creative =
-                BlockConfig.newChamber("Tactical Drive", ChamberType.MOBILITY.getId(), StatusEffectType.CUSTOM_EFFECT_01);
-        config.add(creative);
-
-        ElementInformation c2 =
-                BlockConfig.newChamber("Upward Jump", creative.getId(),StatusEffectType.CUSTOM_EFFECT_02);
-        config.add(c2);
-
-        ElementInformation bruh =
-                BlockConfig.newChamber("Bruh Jump", creative.getId(), StatusEffectType.CUSTOM_EFFECT_03);
-        config.add(bruh);
-
-        /*ElementInformation info = Blocks.FERTIKEEN_INGOT.getInfo();
-        info.controlling.add(Blocks.HYLAT_INGOT.getId());
-        info.controlledBy.add(Blocks.SHIP_CORE.getId());
-        Blocks.HYLAT_INGOT.getInfo().controlledBy.add(Blocks.FERTIKEEN_INGOT.getId());*/
-        //info.signal = true;
-
-
-        //Doesnt work (not sure why
-        ElementInformation xor = BlockConfig.newElement("XOR gate", new short[]{745});
-        xor.signal = true;
-        xor.setBuildIconNum(745);
-        xor.setHasActivationTexure(true);
-        config.add(xor);
-
-        xorId = xor.getId();
 
     }
 
     public static void initBlockData() {
         final BlockConfig config = new BlockConfig();
         for (StarMod mod : StarLoader.starMods) {
-            mod.onBlockConfigLoad(config);
+            if(mod.isEnabled()) {
+                mod.onBlockConfigLoad(config);
+            }
         }
         /*for (ElementInformation element : config.getElements()) {
             try {
@@ -197,11 +133,12 @@ public class ModPlayground extends StarMod {
                 }
             }
         });*/
-        StarLoader.registerListener(PlayerChatEvent.class, new Listener() {
+        getConfig().saveDefault("this is a: test");
+        StarLoader.registerListener(CurrentPowerCalculateEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
-                PlayerChatEvent e = (PlayerChatEvent) event;
-                e.getMessage().getStartColor().set(0,1,0,1);
+                CurrentPowerCalculateEvent e = (CurrentPowerCalculateEvent) event;
+
             }
         });
         StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
@@ -221,30 +158,6 @@ public class ModPlayground extends StarMod {
                 }
             }
         });
-        StarLoader.registerListener(DamageBeamShootEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                DamageBeamShootEvent e = (DamageBeamShootEvent) event;
-                //e.getBeamWeapon().getUnit().elementCollectionManager.getColor()
-            }
-        });
-
-        StarLoader.registerListener(DamageBeamShootEvent.class, new Listener() {
-
-            @Override
-            public void onEvent(Event event) {
-                DamageBeamShootEvent e = (DamageBeamShootEvent) event;
-                //e.getBeamWeapon().getUnit().elementCollectionManager.getColor()
-            }
-        });
-
-        StarLoader.registerListener(BlockSalvageEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event e) {
-                BlockSalvageEvent event = (BlockSalvageEvent) e;
-                GameClient.spawnBlockParticle(event.getBlock().getType().getId(), event.getBeamEntity().getInternalBeam().hitPoint);
-            }
-        });
 
         StarLoader.registerListener(HudCreateEvent.class, new Listener() {
             @Override
@@ -255,22 +168,22 @@ public class ModPlayground extends StarMod {
         });
 
 
-        final int[] t = {0};
-        new StarRunnable() {
-            @Override
-            public void run() {
-                t[0] += 4;
-            }
-        }.runTimer(1);
-        StarLoader.registerListener(CannonShootEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                CannonShootEvent e = (CannonShootEvent) event;
-                Color hsb = Color.getHSBColor(((float) t[0] % 360) / 360F, 1F, 1F);
-                Vector4f tuple4f = new Vector4f(hsb.getRed() / 255F, hsb.getGreen() / 255F, hsb.getBlue() / 255F, 1F);
-                e.setColor(tuple4f);
-            }
-        });
+//        final int[] t = {0};
+//        new StarRunnable() {
+//            @Override
+//            public void run() {
+//                t[0] += 4;
+//            }
+//        }.runTimer(1);
+//        StarLoader.registerListener(CannonShootEvent.class, new Listener() {
+//            @Override
+//            public void onEvent(Event event) {
+//                CannonShootEvent e = (CannonShootEvent) event;
+//                Color hsb = Color.getHSBColor(((float) t[0] % 360) / 360F, 1F, 1F);
+//                Vector4f tuple4f = new Vector4f(hsb.getRed() / 255F, hsb.getGreen() / 255F, hsb.getBlue() / 255F, 1F);
+//                e.setColor(tuple4f);
+//            }
+//        });
 
         StarLoader.registerListener(RegisterEffectsEvent.class, new Listener() {
             @Override
@@ -283,22 +196,5 @@ public class ModPlayground extends StarMod {
                 }
             }
         });
-
-        /*StarLoader.registerListener(EntityScanEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                EntityScanEvent e = ((EntityScanEvent) event);
-                SegmentController internalEntity = e.getEntity().internalEntity;
-                Server.broadcastMessage("1");
-                if(internalEntity instanceof ManagedSegmentController){
-                    Server.broadcastMessage("2");
-                    ManagerContainer manager = ((ManagedSegmentController) internalEntity).getManagerContainer();
-                    ActivationBeamElementManager activationBeamElementManager = new ActivationBeamElementManager(internalEntity);
-                    manager.addUpdatable(activationBeamElementManager);
-                    Server.broadcastMessage("3");
-                }
-            }
-        });*/
-        //This is to register a new listener to listen for StructureStatsCreateEvent
     }
 }

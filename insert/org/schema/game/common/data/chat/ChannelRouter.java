@@ -43,6 +43,7 @@ import org.schema.game.network.objects.ChatChannelModification.ChannelModType;
 import org.schema.game.network.objects.ChatMessage.ChatMessageType;
 import org.schema.game.network.objects.remote.RemoteChatChannel;
 import org.schema.game.network.objects.remote.RemoteChatMessage;
+import org.schema.game.network.objects.remote.RemoteChatMessageBuffer;
 import org.schema.game.server.data.FactionState;
 import org.schema.game.server.data.GameServerState;
 import org.schema.game.server.data.PlayerNotFountException;
