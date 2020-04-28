@@ -6,6 +6,7 @@ import api.listener.events.Event;
 import api.main.GameClient;
 import api.main.GameServer;
 import api.server.Server;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.schema.game.common.data.SendableGameState;
 
 import java.util.ArrayList;
@@ -88,5 +89,13 @@ public class StarLoader {
 
             }
         }
+    }
+    private static ArrayList<ImmutablePair<String, String>> commands = new ArrayList<ImmutablePair<String, String>>();
+    public static void registerCommand(String name, String desc) {
+        commands.add(new ImmutablePair<String, String>(name, desc));
+    }
+
+    public static ArrayList<ImmutablePair<String, String>> getCommands() {
+        return commands;
     }
 }

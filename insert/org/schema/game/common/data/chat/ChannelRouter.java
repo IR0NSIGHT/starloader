@@ -10,6 +10,7 @@ import api.listener.events.player.PlayerChatEvent;
 import api.listener.events.player.PlayerCommandEvent;
 import api.main.GameServer;
 import api.mod.StarLoader;
+import api.server.Server;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayFIFOQueue;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -147,9 +148,8 @@ public class ChannelRouter implements DiskWritable {
 
     public void receive(ChatMessage var1) {
         System.err.println("[CHANNELROUTER] RECEIVED MESSAGE ON " + this.state + ": " + var1.toDetailString());
-
         //INSERTED CODE
-        if(var1.text.startsWith("!") && GameServer.getServerState() != null){
+        if(var1.text.startsWith("!") && GameServer.getServerState() != null && this.isOnServer()){
             try {
                 PlayerState playerFromName = GameServer.getServerState().getPlayerFromName(var1.sender);
                 PlayerCommandEvent event = new PlayerCommandEvent(var1.text.split(" ")[0].replaceAll("!", ""), new Player(playerFromName), var1.text.split(" "));

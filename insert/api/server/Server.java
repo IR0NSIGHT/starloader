@@ -1,11 +1,13 @@
 package api.server;
 
 import api.DebugFile;
+import api.entity.Entity;
 import api.entity.Player;
 import api.main.GameServer;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import org.schema.common.util.StringTools;
 import org.schema.game.client.controller.GameClientController;
+import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.data.chat.AllChannel;
 import org.schema.game.common.data.chat.ChatChannel;
 import org.schema.game.common.data.player.PlayerState;
@@ -85,6 +87,13 @@ public class Server {
     }
     public static ObjectCollection<RegisteredClientOnServer> getClients(){
         return getServerState().getClients().values();
+    }
+    public ArrayList<Entity> getLoadedEntities(){
+        ArrayList<Entity> list = new ArrayList<Entity>();
+        for (SegmentController e : Server.getServerState().getSegmentControllersByName().values()) {
+            list.add(new Entity(e));
+        }
+        return list;
     }
     public static GameServerState getServerState(){
         return GameServerState.instance;

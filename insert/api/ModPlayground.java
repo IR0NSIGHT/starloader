@@ -6,6 +6,7 @@ import api.element.block.Blocks;
 import api.element.block.FactoryType;
 import api.entity.Entity;
 import api.entity.Player;
+import api.entity.Station;
 import api.gui.custom.examples.*;
 import api.listener.Listener;
 import api.listener.events.CannonShootEvent;
@@ -13,6 +14,7 @@ import api.listener.events.DamageBeamShootEvent;
 import api.listener.events.Event;
 import api.listener.events.StructureStatsCreateEvent;
 import api.listener.events.block.BlockActivateEvent;
+import api.listener.events.block.BlockKillEvent;
 import api.listener.events.block.BlockModifyEvent;
 import api.listener.events.block.BlockSalvageEvent;
 import api.listener.events.calculate.CurrentPowerCalculateEvent;
@@ -39,11 +41,13 @@ import api.systems.modules.custom.CustomShipBeamElement;
 import api.systems.modules.custom.example.disruptor.CustomBeamUnit;
 import api.utils.StarRunnable;
 import api.utils.VecUtil;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.controller.manager.ingame.PlayerInteractionControlManager;
 import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.client.view.gui.advanced.tools.StatLabelResult;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.SendableSegmentController;
 import org.schema.game.common.controller.elements.activation.AbstractUnit;
 import org.schema.game.common.controller.elements.activation.ActivationCollectionManager;
 import org.schema.game.common.controller.elements.activation.ActivationElementManager;
@@ -59,6 +63,7 @@ import org.schema.game.common.data.element.FactoryResource;
 import org.schema.game.common.data.world.Sector;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.game.common.data.world.Universe;
+import org.schema.game.mod.listeners.SegmentControllerListener;
 import org.schema.game.server.data.GameServerState;
 
 import javax.vecmath.Vector3f;
@@ -107,6 +112,20 @@ public class ModPlayground extends StarMod {
     public void onEnable() {
         DebugFile.log("Loading default mod...");
 
+        //HELP COMMAND
+        StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                PlayerCommandEvent e = (PlayerCommandEvent) event;
+                if(e.command.equalsIgnoreCase("help")){
+                    Player player = e.player;
+                    player.sendServerMessage("### COMMANDS: ###");
+                    for (ImmutablePair<String, String> command : StarLoader.getCommands()) {
+                        player.sendServerMessage(command.left + ": " + command.right);
+                    }
+                }
+            }
+        });
 
 
         /*StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
@@ -134,13 +153,7 @@ public class ModPlayground extends StarMod {
             }
         });*/
         getConfig().saveDefault("this is a: test");
-        StarLoader.registerListener(CurrentPowerCalculateEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                CurrentPowerCalculateEvent e = (CurrentPowerCalculateEvent) event;
 
-            }
-        });
         StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
@@ -153,8 +166,6 @@ public class ModPlayground extends StarMod {
                     }else{
                         p.sendServerMessage("You are in: " + currentEntity.getUID());
                     }
-                }else{
-                    p.sendServerMessage(e.toString());
                 }
             }
         });

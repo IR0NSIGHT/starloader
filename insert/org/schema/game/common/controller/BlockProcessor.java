@@ -417,6 +417,9 @@ public class BlockProcessor {
                     //INSERTED CODE @550
                     BlockModifyEvent event = new BlockModifyEvent(e, segmentPiece);
                     StarLoader.fireEvent(BlockModifyEvent.class, event);
+                    if(event.isCanceled()){
+                        return;
+                    }
                     ///
 
                     assert var4 != null : e.segment + "; " + e.blocksModOrAdd + "; " + e.size();

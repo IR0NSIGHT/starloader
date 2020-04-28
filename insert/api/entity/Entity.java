@@ -259,6 +259,14 @@ public class Entity {
         return getShields().get(i);
     }
 
+    public void setVulnerable(boolean val){
+        internalEntity.setVulnerable(val);
+    }
+
+    public boolean isVulnerable(){
+        return internalEntity.isVulnerable();
+    }
+
     public ArrayList<Shield> getShields() {
         /**
          * Gets an ArrayList of all the entity's shields. Returns null if the entity is not a ship or space station.
@@ -410,5 +418,9 @@ public class Entity {
 
     public ConfigEntityManager getConfigManager(){
         return internalEntity.getConfigManager();
+    }
+
+    public Station toStation() {
+        return new Station(internalEntity);
     }
 }

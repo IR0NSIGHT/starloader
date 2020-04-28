@@ -5,6 +5,7 @@ import api.entity.Entity;
 import api.entity.Ship;
 import api.entity.Station;
 import api.faction.Faction;
+import api.main.GameClient;
 import api.main.GameServer;
 import api.mod.StarLoader;
 import api.server.Server;

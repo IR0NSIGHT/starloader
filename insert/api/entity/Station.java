@@ -78,4 +78,8 @@ public class Station extends Entity {
         }
         return new Player(pState);
     }
+
+    public void takeControlOfSystem() {
+        getSector().getSystem().claim(this);
+    }
 }

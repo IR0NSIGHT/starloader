@@ -2,12 +2,11 @@ package api.mod.config;
 
 import api.DebugFile;
 import api.mod.StarMod;
-import org.schema.game.common.controller.elements.scanner.ScanAddOn;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class FileConfiguration {
@@ -85,5 +84,9 @@ public class FileConfiguration {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Set<String> getKeys() {
+        return values.keySet();
     }
 }
