@@ -9,6 +9,7 @@ public class StarMod {
     public String modVersion;
     public String modSMVersion;
     private boolean isEnabled = false;
+
     public boolean isEnabled(){
         return isEnabled;
     }

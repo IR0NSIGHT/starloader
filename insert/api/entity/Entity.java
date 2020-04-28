@@ -5,6 +5,7 @@ import api.element.block.Blocks;
 import api.faction.Faction;
 import api.systems.Reactor;
 import api.systems.Shield;
+import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.*;
@@ -328,7 +329,24 @@ public class Entity {
         return pl;
     }
 
-    public Ship toShip(){
+    public ArrayList<Block> getBlocksInArea(Vector3i min, Vector3i max) {
+        /**
+         * Gets all the blocks in a specified area on the entity;
+         */
+        ArrayList<Block> blocks = new ArrayList<>();
+
+        for(int y = min.y; y < max.y; y ++) {
+            for(int x = min.x; x < max.x; x ++) {
+                for(int z = min.z; z < max.z; z ++) {
+                    blocks.add(getBlockAt(x, y, z));
+                }
+            }
+        }
+
+        return blocks;
+    }
+
+    public Ship toShip() {
         return new Ship(internalEntity);
     }
 }

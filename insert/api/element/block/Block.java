@@ -11,7 +11,6 @@ import org.schema.game.common.controller.elements.weapon.WeaponCollectionManager
 import org.schema.game.common.controller.elements.weapon.WeaponElementManager;
 import org.schema.game.common.data.SegmentPiece;
 import org.schema.game.common.data.element.*;
-
 import java.util.List;
 
 public class Block {
