@@ -42,29 +42,36 @@ public class WeaponCombinationAddOn extends CombinationAddOn<WeaponUnit, WeaponC
         super(weaponElementManager, gameStateInterface);
     }
 
-    public ShootingRespose handle(final WeaponUnitModifier weaponUnitModifier, final WeaponCollectionManager weaponCollectionManager, final WeaponUnit weaponUnit, final ControlBlockElementCollectionManager<?, ?, ?> controlBlockElementCollectionManager, final ControlBlockElementCollectionManager<?, ?, ?> controlBlockElementCollectionManager2, final ShootContainer shootContainer, final SimpleTransformableSendableObject simpleTransformableSendableObject) {
-        weaponUnitModifier.handle(weaponUnit, controlBlockElementCollectionManager, CombinationAddOn.getRatio(weaponCollectionManager, controlBlockElementCollectionManager));
-        final long usableId = weaponCollectionManager.getUsableId();
-        weaponUnit.setShotReloading((long)weaponUnitModifier.outputReload);
-        final Vector3f vector3f = new Vector3f(shootContainer.shootingDirTemp);
-        if (weaponUnitModifier.outputAimable) {
-            vector3f.set((Tuple3f)shootContainer.shootingDirTemp);
+    public ShootingRespose handle(final WeaponUnitModifier mod, final WeaponCollectionManager weaponCollectionManager, final WeaponUnit firingUnit, final ControlBlockElementCollectionManager<?, ?, ?> controlBlockElementCollectionManager, final ControlBlockElementCollectionManager<?, ?, ?> controlBlockElementCollectionManager2, final ShootContainer shootContainer, final SimpleTransformableSendableObject simpleTransformableSendableObject) {
+        mod.handle(firingUnit, controlBlockElementCollectionManager, CombinationAddOn.getRatio(weaponCollectionManager, controlBlockElementCollectionManager));
+        final long weaponId = weaponCollectionManager.getUsableId();
+        firingUnit.setShotReloading((long)mod.outputReload);
+        final Vector3f dir = new Vector3f(shootContainer.shootingDirTemp);
+        if (mod.outputAimable) {
+            dir.set((Tuple3f)shootContainer.shootingDirTemp);
         }
         else {
-            vector3f.set((Tuple3f)shootContainer.shootingDirStraightTemp);
+            dir.set((Tuple3f)shootContainer.shootingDirStraightTemp);
         }
-        vector3f.normalize();
-        vector3f.scale(weaponUnitModifier.outputSpeed);
-        //INSERTED CODE
-        CannonShootEvent event = new CannonShootEvent(weaponUnit);
+        dir.normalize();
+        dir.scale(mod.outputSpeed);
+
+        //INSERTED CODE @89
+        CannonShootEvent event = new CannonShootEvent(firingUnit);
         StarLoader.fireEvent(CannonShootEvent.class, event);
         if(event.isCanceled()){
             return ShootingRespose.NO_POWER;
         }
+        ((WeaponElementManager)this.elementManager).getParticleController()
+                .addProjectile(((WeaponElementManager)this.elementManager).getSegmentController(),
+                        shootContainer.weapontOutputWorldPos, dir,
+                        mod.outputDamage, mod.outputDistance,
+                        mod.outputAcidType, mod.outputProjectileWidth,
+                        firingUnit.getPenetrationDepth(mod.outputDamage),
+                        mod.outputImpactForce, weaponId, event.getColor());
         ///
-        ((WeaponElementManager)this.elementManager).getParticleController().addProjectile(((WeaponElementManager)this.elementManager).getSegmentController(), shootContainer.weapontOutputWorldPos, vector3f, weaponUnitModifier.outputDamage, weaponUnitModifier.outputDistance, weaponUnitModifier.outputAcidType, weaponUnitModifier.outputProjectileWidth, weaponUnit.getPenetrationDepth(weaponUnitModifier.outputDamage), weaponUnitModifier.outputImpactForce, usableId, event.getColor());
-        weaponCollectionManager.damageProduced += weaponUnitModifier.outputDamage;
-        weaponCollectionManager.getElementManager().handleRecoil(weaponCollectionManager, weaponUnit, shootContainer.weapontOutputWorldPos, shootContainer.shootingDirTemp, weaponUnitModifier.outputRecoil, weaponUnitModifier.outputDamage);
+        weaponCollectionManager.damageProduced += mod.outputDamage;
+        weaponCollectionManager.getElementManager().handleRecoil(weaponCollectionManager, firingUnit, shootContainer.weapontOutputWorldPos, shootContainer.shootingDirTemp, mod.outputRecoil, mod.outputDamage);
         return ShootingRespose.FIRED;
     }
 

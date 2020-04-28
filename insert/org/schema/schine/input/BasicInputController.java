@@ -89,15 +89,15 @@ public class BasicInputController {
             if (Display.isActive()) {
                 if (this.wasDisplayActive) {
                     while(Keyboard.next()) {
-                        KeyboardEvent var6;
-                        (var6 = new KeyboardEvent()).charEvent = true;
-                        var6.charac = Keyboard.getEventCharacter();
-                        var6.key = Keyboard.getEventKey();
-                        var6.state = Keyboard.getEventKeyState();
-                        //INSERTED CODE
-                        StarLoader.fireEvent(KeyPressEvent.class, new KeyPressEvent(var6));
-                        //
-                        var10.add(var6);
+                        KeyboardEvent e;
+                        (e = new KeyboardEvent()).charEvent = true;
+                        e.charac = Keyboard.getEventCharacter();
+                        e.key = Keyboard.getEventKey();
+                        e.state = Keyboard.getEventKeyState();
+                        //INSERTED CODE @109
+                        StarLoader.fireEvent(KeyPressEvent.class, new KeyPressEvent(e));
+                        ///
+                        var10.add(e);
                     }
 
                     while(this.joystick.next()) {

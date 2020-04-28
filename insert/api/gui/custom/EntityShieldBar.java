@@ -21,6 +21,9 @@ public abstract class EntityShieldBar extends CustomHudBar {
 
     @Override
     public float getFilled() {
+        if(entity == null){
+            return 0F;
+        }
         Shield lastHitShield = entity.getLastHitShield();
         if(lastHitShield == null){
             return 0F;

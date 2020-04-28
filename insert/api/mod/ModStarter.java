@@ -41,7 +41,7 @@ public class ModStarter {
 
     public static void downloadFile(URL url, String fileName) throws IOException, NoSuchAlgorithmException, KeyManagementException {
         final URLConnection openConnection = url.openConnection();
-        openConnection.setConnectTimeout(10000000);
+        openConnection.setConnectTimeout(20000);
         openConnection.setRequestProperty("User-Agent", "StarMade-Client");
         //Fixes some errors with java 7 not downloading properly
         SSLContext ssl = SSLContext.getInstance("TLSv1.2");
@@ -50,18 +50,22 @@ public class ModStarter {
         //
         FileUtils.copyInputStreamToFile(openConnection.getInputStream(), new File(fileName));
     }
-    public static boolean preClientConnect(String serverHost, int serverPort){
-        DebugFile.log("Disabling existing mods:");
-        for (StarMod mod : StarLoader.starMods){
-            if(mod.isEnabled()) {
+    public static void disableAllMods(){
+        DebugFile.log("==== Disabling All Mods ====");
+        for (StarMod mod : StarLoader.starMods) {
+            if (mod.isEnabled()) {
                 mod.onDisable();
                 mod.flagEnabled(false);
             }
         }
-        //TODO only enable the ones that are enabled on the server, and the ones that are set to force enable
+        StarLoader.clearListeners();
+        StarRunnable.deleteAll();
+    }
+    public static boolean preClientConnect(String serverHost, int serverPort) {
+
         DebugFile.log("Enabling mods...");
         ArrayList<ModInfo> serverMods = ServerModInfo.getServerInfo(ServerModInfo.getServerUID(serverHost, serverPort));
-        if(serverMods == null) {
+        if (serverMods == null) {
             DebugFile.log("Mod info not found for: " + serverHost + ":" + serverPort + " This is likely because they direct connected");
             GameClient.setLoadString("Getting server mod info...");
             StarMadeNetUtil starMadeNetUtil = new StarMadeNetUtil();
@@ -74,19 +78,20 @@ public class ModStarter {
                 e.printStackTrace();
             }
         }
-        if(serverMods == null){
+        if (serverMods == null) {
             DebugFile.log("Mods not found even after refresh... rip");
-            serverMods = new ArrayList<>() ;
+            serverMods = new ArrayList<ModInfo>();
         }
-        if(serverHost.equals("localhost:4242")){
+        if (serverHost.equals("localhost")) {
             DebugFile.log("Connecting to own server, mods are already enabled by the server");
-        }else {
+        } else {
+            disableAllMods();
             for (StarMod mod : StarLoader.starMods) {
                 System.err.println("[Client] >>> Found mod: " + mod.modName);
                 //DebugFile.log("Mod info WAS found");
                 for (ModInfo serverMod : serverMods) {
                     DebugFile.log("le test: " + serverMod.name);
-                    if (serverMod.name.equals(mod.modName)){ //|| EnabledModFile.getInstance().isClientEnabled(mod.getInfo())) {
+                    if (serverMod.name.equals(mod.modName)) { //|| EnabledModFile.getInstance().isClientEnabled(mod.getInfo())) {
                         DebugFile.log("[Client] >>> Correct mod name: " + serverMod.name);
                         if (serverMod.version.equals(mod.modVersion)) {
                             serverMods.remove(serverMod);
@@ -100,10 +105,10 @@ public class ModStarter {
             }
         }
         //DebugFile.log(serverMods.toString());
-        if(serverMods != null && !serverMods.isEmpty()){
+        if (!serverMods.isEmpty()) {
             //Now we need to download them from the client
             DebugFile.log("=== DEPENDENCIES NOT MET, DOWNLOADING MODS ===");
-            for(ModInfo sMod : serverMods){
+            for (ModInfo sMod : serverMods) {
                 sMod.fetchDownloadURL();
                 DebugFile.log("WE NEED TO DOWNLOAD: " + sMod.toString());
                 try {
@@ -128,20 +133,27 @@ public class ModStarter {
             }
             //JOptionPane.showMessageDialog(null, "We are going to need to download some mods... fancy gui coming later");
             //DebugFile.log("We are going to download some mods, so dont start the client yet");
-            return true;
-        }else{
-            DebugFile.log("all good");
-            return true;
+
         }
+
+        //Force enable any test mods
+        for (StarMod starMod : StarLoader.starMods) {
+            if(!starMod.isEnabled() && starMod.forceEnable && EnabledModFile.getInstance().isClientEnabled(starMod.getInfo())){
+                StarLoader.enableMod(starMod);
+            }
+        }
+
+        DebugFile.log("===== Done downloading, listing mods =====");
+        StarLoader.dumpModInfos();
+        DebugFile.log("==========================================");
+        return true;
     }
     public static void postClientConnect(){
 
     }
+    //TODO: add this, currently just disables them on server join
     public static void onClientLeave(){
-        StarRunnable.deleteAll();
-        for (StarMod mod : StarLoader.starMods){
-            mod.onDisable();
-        }
+        disableAllMods();
     }
 
     public static void main(String[] args) {

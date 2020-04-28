@@ -24,7 +24,7 @@ import java.util.Set;
 
 public class GameClient {
     public static ArrayList<Entity> getNearbyEntities(){
-        ArrayList<Entity> entities = new ArrayList<>();
+        ArrayList<Entity> entities = new ArrayList<Entity>();
         for (SimpleTransformableSendableObject<?> value : getClientState().getCurrentSectorEntities().values()) {
             if(value instanceof SegmentController) {
                 entities.add(new Entity((SegmentController) value));

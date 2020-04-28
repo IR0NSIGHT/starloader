@@ -27,25 +27,25 @@ public class ServerInfo extends AbstractServerInfo {
     public String ip;
     public boolean reachable;
 
-    public ServerInfo(String host, int port, Object[] arr, long var4, String connectionType) {
-        //TODO Move this GetInfo some day, its not calling clientAnswerProcess so im moving it here for now
+    public ServerInfo(String host, int port, Object[] returnValues, long var4, String connectionType) {
+        //INSERTED CODE @32
         //Skip all of the info about players and version by starting at 7
         System.err.println("[Starloader][ServerInfo] Registering info for: " + host);
-        for (int i = 7; i < arr.length; i++) {
-            String serializedInfo = (String) arr[i];
+        for (int i = 7; i < returnValues.length; i++) {
+            String serializedInfo = (String) returnValues[i];
             ServerModInfo.registerModInfo(ServerModInfo.getServerUID(host, port), ModInfo.fromString(serializedInfo));
         }
         //ServerModInfo.dumpModInfos();
-        //
+        ///
         this.host = host;
         this.port = port;
-        this.infoVersion = (Byte)arr[0];
-        this.version = arr[1].toString();
-        this.name = (String)arr[2];
-        this.desc = (String)arr[3];
-        this.startTime = (Long)arr[4];
-        this.playerCount = (Integer)arr[5];
-        this.maxPlayers = (Integer)arr[6];
+        this.infoVersion = (Byte)returnValues[0];
+        this.version = returnValues[1].toString();
+        this.name = (String)returnValues[2];
+        this.desc = (String)returnValues[3];
+        this.startTime = (Long)returnValues[4];
+        this.playerCount = (Integer)returnValues[5];
+        this.maxPlayers = (Integer)returnValues[6];
         this.ping = var4;
         this.connType = connectionType;
     }

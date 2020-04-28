@@ -1262,17 +1262,14 @@ public class Starter implements Observer {
 
     }
 
-    public static void startClient(HostPortLoginName var0, boolean var1, GraphicsContext var2) {
-
-
-        //INSERTED CODE
-        String loginName = var0.host;
+    //REPLACE METHOD
+    public static void startClient(HostPortLoginName server, boolean startConnectDialog, GraphicsContext context) {
+        String loginName = server.host;
         DebugFile.log("Connecting to server: " + loginName);
-        boolean allUptoDate = ModStarter.preClientConnect(loginName, var0.port);
+        boolean allUptoDate = ModStarter.preClientConnect(loginName, server.port);
         if(allUptoDate) {
-            ///
-            stopClient(var2);
-            clientRunnable = new ClientRunnable(var0, var1, var2);
+            stopClient(context);
+            clientRunnable = new ClientRunnable(server, startConnectDialog, context);
             Thread var3;
 
             (var3 = new Thread(clientRunnable, "ClientThread")).setPriority(8);
@@ -1283,6 +1280,7 @@ public class Starter implements Observer {
             System.err.println("[Starloader] Not all mods up to date, not starting");
         }
     }
+    ///
 
     public static void startLocal() {
         startServer(false);
@@ -1313,9 +1311,9 @@ public class Starter implements Observer {
 
     public static void startServer(boolean var0) {
         serverInitFinished = false;
-        //INSERTED CODE
+        //INSERTED CODE @1608
         ModStarter.preServerStart();
-        //
+        ///
         (new Thread(getServerRunnable(var0), "ServerThread")).start();
     }
 

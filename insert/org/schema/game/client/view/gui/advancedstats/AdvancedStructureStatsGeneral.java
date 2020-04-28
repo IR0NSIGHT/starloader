@@ -32,9 +32,9 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
         super(var1);
     }
 
-    public void build(GUIContentPane var1, GUIDockableDirtyInterface var2) {
-        var1.setTextBoxHeightLast(30);
-        this.addLabel(var1.getContent(0), 0, 0, new LabelResult() {
+    public void build(GUIContentPane pane, GUIDockableDirtyInterface var2) {
+        pane.setTextBoxHeightLast(30);
+        this.addLabel(pane.getContent(0), 0, 0, new LabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_19;
             }
@@ -43,7 +43,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return FontSize.BIG;
             }
         });
-        this.addStatLabel(var1.getContent(0), 0, 1, new StatLabelResult() {
+        this.addStatLabel(pane.getContent(0), 0, 1, new StatLabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_20;
             }
@@ -60,7 +60,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return AdvancedStructureStatsGeneral.this.getTextDist();
             }
         });
-        this.addStatLabel(var1.getContent(0), 0, 2, new StatLabelResult() {
+        this.addStatLabel(pane.getContent(0), 0, 2, new StatLabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_21;
             }
@@ -77,7 +77,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return AdvancedStructureStatsGeneral.this.getTextDist();
             }
         });
-        this.addStatLabel(var1.getContent(0), 0, 3, new StatLabelResult() {
+        this.addStatLabel(pane.getContent(0), 0, 3, new StatLabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_22;
             }
@@ -94,7 +94,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return AdvancedStructureStatsGeneral.this.getTextDist();
             }
         });
-        this.addLabel(var1.getContent(0), 0, 4, new LabelResult() {
+        this.addLabel(pane.getContent(0), 0, 4, new LabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_0;
             }
@@ -103,7 +103,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return FontSize.BIG;
             }
         });
-        this.addStatLabel(var1.getContent(0), 0, 5, new StatLabelResult() {
+        this.addStatLabel(pane.getContent(0), 0, 5, new StatLabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_1;
             }
@@ -122,7 +122,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return AdvancedStructureStatsGeneral.this.getTextDist();
             }
         });
-        this.addStatLabel(var1.getContent(0), 0, 6, new StatLabelResult() {
+        this.addStatLabel(pane.getContent(0), 0, 6, new StatLabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_2;
             }
@@ -139,7 +139,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return AdvancedStructureStatsGeneral.this.getTextDist();
             }
         });
-        this.addStatLabel(var1.getContent(0), 0, 7, new StatLabelResult() {
+        this.addStatLabel(pane.getContent(0), 0, 7, new StatLabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_3;
             }
@@ -156,7 +156,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return AdvancedStructureStatsGeneral.this.getTextDist();
             }
         });
-        this.addStatLabel(var1.getContent(0), 0, 8, new StatLabelResult() {
+        this.addStatLabel(pane.getContent(0), 0, 8, new StatLabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_4;
             }
@@ -173,7 +173,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return AdvancedStructureStatsGeneral.this.getTextDist();
             }
         });
-        this.addLabel(var1.getContent(0), 0, 9, new LabelResult() {
+        this.addLabel(pane.getContent(0), 0, 9, new LabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_5;
             }
@@ -182,7 +182,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return FontSize.BIG;
             }
         });
-        this.addStatLabel(var1.getContent(0), 0, 10, new StatLabelResult() {
+        this.addStatLabel(pane.getContent(0), 0, 10, new StatLabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_6;
             }
@@ -200,7 +200,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return AdvancedStructureStatsGeneral.this.getTextDist();
             }
         });
-        this.addStatLabel(var1.getContent(0), 0, 14, new StatLabelResult() {
+        this.addStatLabel(pane.getContent(0), 0, 14, new StatLabelResult() {
             public String getName() {
                 return "Blocks (inc. docks)";
             }
@@ -217,7 +217,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return AdvancedStructureStatsGeneral.this.getTextDist();
             }
         });
-        this.addStatLabel(var1.getContent(0), 0, 11, new StatLabelResult() {
+        this.addStatLabel(pane.getContent(0), 0, 11, new StatLabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_8;
             }
@@ -234,7 +234,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return AdvancedStructureStatsGeneral.this.getTextDist();
             }
         });
-        this.addStatLabel(var1.getContent(0), 0, 12, new StatLabelResult() {
+        this.addStatLabel(pane.getContent(0), 0, 12, new StatLabelResult() {
             public String getName() {
                 return Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_10;
             }
@@ -251,7 +251,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return AdvancedStructureStatsGeneral.this.getTextDist();
             }
         });
-        this.addButton(var1.getContent(0), 0, 13, new ButtonResult() {
+        this.addButton(pane.getContent(0), 0, 13, new ButtonResult() {
             public ButtonCallback initCallback() {
                 return new ButtonCallback() {
                     public void pressedRightMouse() {
@@ -328,9 +328,9 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return HButtonColor.BLUE;
             }
         });
-        //INSERTED CODE
-        StarLoader.fireEvent(StructureStatsCreateEvent.class, new StructureStatsCreateEvent(StructureTab.GENERAL, this, var1));
-        //
+        //INSERTED CODE @362
+        StarLoader.fireEvent(StructureStatsCreateEvent.class, new StructureStatsCreateEvent(StructureTab.GENERAL, this, pane));
+        ///
     }
 
     private int getTextDist() {

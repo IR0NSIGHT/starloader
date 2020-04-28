@@ -3,16 +3,30 @@ package api.entity;
 import api.element.block.Block;
 import api.element.block.Blocks;
 import api.faction.Faction;
+import api.main.GameServer;
+import api.server.Server;
 import api.systems.Reactor;
 import api.systems.Shield;
+import api.systems.addons.JumpInterdictor;
+import api.systems.addons.custom.CustomAddOn;
+import api.universe.Sector;
+import org.apache.commons.lang3.StringUtils;
+import org.schema.common.util.StringTools;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.data.PlayerControllable;
+import org.schema.game.client.view.gui.weapon.WeaponBottomBar;
+import org.schema.game.common.controller.PlayerUsableInterface;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.SpaceStation;
 import org.schema.game.common.controller.elements.*;
+import org.schema.game.common.controller.elements.jumpprohibiter.InterdictionAddOn;
 import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
 import org.schema.game.common.controller.elements.power.reactor.tree.ReactorTree;
 import org.schema.game.common.data.ManagedSegmentController;
+import org.schema.game.common.data.blockeffects.config.ConfigEntityManager;
+import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.player.PlayerState;
+import org.schema.game.common.data.world.Universe;
 import org.schema.schine.graphicsengine.core.GlUtil;
 import javax.vecmath.Vector3f;
 import java.io.IOException;
@@ -58,9 +72,18 @@ public class Entity {
 
     public String getName() {
         /**
-         * Gets the entity's current name.
+         * Gets the entity's current name + Pilot/Faction info.
          */
         return internalEntity.getName();
+    }
+    public String getRealName() {
+        /**
+         * Gets the entity's REAL name.
+         */
+        return internalEntity.getRealName();
+    }
+    public String getUID(){
+        return internalEntity.getUniqueIdentifier();
     }
 
     public void setName(String name) {
@@ -75,6 +98,9 @@ public class Entity {
          * Gets the entity's total mass including docked entities.
          */
         return internalEntity.getMassWithDocks();
+    }
+    public boolean isDocked(){
+        return internalEntity.isDocked();
     }
 
     public void setMass(Float mass) {
@@ -180,7 +206,7 @@ public class Entity {
          */
         if(hasAnyReactors()) {
             ManagerContainer<?> manager = getManagerContainer();
-            ArrayList<Reactor> reactors = new ArrayList<>();
+            ArrayList<Reactor> reactors = new ArrayList<Reactor>();
             if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.STATION)) {
                 if(manager instanceof ShipManagerContainer) {
                     List<MainReactorUnit> allReactors = manager.getPowerInterface().getMainReactors();
@@ -215,9 +241,9 @@ public class Entity {
         /**
          * Gets an ArrayList of ships currently docked to this entity.
          */
-        ArrayList<SegmentController> collection = new ArrayList<>();
+        ArrayList<SegmentController> collection = new ArrayList<SegmentController>();
         internalEntity.railController.getDockedRecusive(collection);
-        ArrayList<Ship> ships = new ArrayList<>();
+        ArrayList<Ship> ships = new ArrayList<Ship>();
         for (SegmentController controller : collection) {
             if(controller instanceof org.schema.game.common.controller.Ship){
                 ships.add(new Ship((org.schema.game.common.controller.Ship) controller));
@@ -233,12 +259,20 @@ public class Entity {
         return getShields().get(i);
     }
 
+    public void setVulnerable(boolean val){
+        internalEntity.setVulnerable(val);
+    }
+
+    public boolean isVulnerable(){
+        return internalEntity.isVulnerable();
+    }
+
     public ArrayList<Shield> getShields() {
         /**
          * Gets an ArrayList of all the entity's shields. Returns null if the entity is not a ship or space station.
          */
         ManagerContainer<?> manager = getManagerContainer();
-        ArrayList<Shield> shields = new ArrayList<>();
+        ArrayList<Shield> shields = new ArrayList<Shield>();
         if(manager instanceof ShieldContainerInterface) {
             Collection<ShieldLocal> allShields = ((ShieldContainerInterface) manager).getShieldAddOn().getShieldLocalAddOn().getAllShields();
             for(ShieldLocal sh : allShields) {
@@ -246,7 +280,7 @@ public class Entity {
             }
             return shields;
         }
-        return null;
+        return new ArrayList<Shield>();
     }
 
     public ManagerContainer<?> getManagerContainer() {
@@ -291,7 +325,7 @@ public class Entity {
         /**
          * Gets a Map of every block the entity has and how many of each are present. Does not include docked or root entities.
          */
-        HashMap<Blocks, Integer> blocks = new HashMap<>();
+        HashMap<Blocks, Integer> blocks = new HashMap<Blocks, Integer>();
 
         for(Blocks value : Blocks.values()) {
             blocks.put(value, getBlockAmount(value));
@@ -318,35 +352,75 @@ public class Entity {
         /**
          * Gets an arraylist of players currently attached to the entity.
          */
-        ArrayList<Player> pl = new ArrayList<>();
+        ArrayList<Player> pl = new ArrayList<Player>();
         if(internalEntity instanceof PlayerControllable) {
             for(PlayerState attachedPlayer : ((PlayerControllable) internalEntity).getAttachedPlayers()) {
                 pl.add(new Player(attachedPlayer));
             }
         } else {
-            return new ArrayList<>();
+            return new ArrayList<Player>();
         }
         return pl;
     }
 
-    public ArrayList<Block> getBlocksInArea(Vector3i min, Vector3i max) {
-        /**
-         * Gets all the blocks in a specified area on the entity;
-         */
-        ArrayList<Block> blocks = new ArrayList<>();
-
-        for(int y = min.y; y < max.y; y ++) {
-            for(int x = min.x; x < max.x; x ++) {
-                for(int z = min.z; z < max.z; z ++) {
-                    blocks.add(getBlockAt(x, y, z));
-                }
-            }
-        }
-
-        return blocks;
+    public Ship toShip(){
+        return new Ship(internalEntity);
     }
 
-    public Ship toShip() {
-        return new Ship(internalEntity);
+    public ArrayList<CustomAddOn> getCustomAddons(){
+
+        ArrayList<CustomAddOn> addons = new ArrayList<CustomAddOn>();
+        ManagerContainer<?> manager = getManagerContainer();
+        for (PlayerUsableInterface playerUsableInterface : manager.getPlayerUsable()) {
+            if(playerUsableInterface instanceof CustomAddOn){
+                addons.add((CustomAddOn) playerUsableInterface);
+            }
+        }
+        return addons;
+    }
+    public CustomAddOn getCustomAddon(Class<? extends CustomAddOn> clazz){
+        for (CustomAddOn customAddon : getCustomAddons()) {
+            if(customAddon.getClass().equals(clazz)){
+                return customAddon;
+            }
+        }
+        return null;
+    }
+
+    public Sector getSector() {
+        if(GameServer.getServerState() != null){
+            org.schema.game.common.data.world.Sector sector = GameServer.getServerState().getUniverse().getSector(internalEntity.getSectorId());
+            return new Sector(sector);
+        }else{
+            //TODO what to do if client?
+            return null;
+        }
+    }
+
+    public boolean isStation() {
+        return internalEntity instanceof SpaceStation;
+    }
+    public boolean isShip() {
+        return internalEntity instanceof org.schema.game.common.controller.Ship;
+    }
+
+    public Vector3i getSectorPosition() {
+        return internalEntity.getSector(new Vector3i());
+    }
+
+    public String getMassString() {
+        return StringTools.massFormat(getMass());
+    }
+
+    public JumpInterdictor getInterdictionAddOn() {
+        return new JumpInterdictor(getManagerContainer().getInterdictionAddOn());
+    }
+
+    public ConfigEntityManager getConfigManager(){
+        return internalEntity.getConfigManager();
+    }
+
+    public Station toStation() {
+        return new Station(internalEntity);
     }
 }

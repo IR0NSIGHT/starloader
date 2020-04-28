@@ -82,36 +82,40 @@ public class Hud extends GUIElement {
     private PowerStabilizationBar powerStabilizationBar;
     private PowerConsumptionBar powerConsumptionBar;
 
-    public static ArrayList<GUIElement> customElements = new ArrayList<>();
+    //INSERTED CODE @86
+    public static ArrayList<GUIElement> customElements = new ArrayList<GUIElement>();
+    ///
 
-    public Hud(GameClientState var1) {
-        super(var1);
-        this.radar = new Radar(var1);
-        this.powerBar = new PowerBar(var1);
-        this.reactorPowerBar = new ReactorPowerBar(var1);
-        this.speedBarFarRight = new SpeedBarFarRight(var1);
-        this.speedBarRight = new SpeedBarRight(var1);
-        this.shieldBarLeft = new ShieldBarLeftOld(var1);
-        this.shieldBarRight = new ShieldBarRightLocal(var1);
-        this.powerBatteryBar = new PowerBatteryBar(var1);
-        this.healthBar = new HealthBar(var1);
-        this.shipHPBar = new ShipHPBar(var1);
-        this.powerStabilizationBar = new PowerStabilizationBar(var1);
-        this.powerConsumptionBar = new PowerConsumptionBar(var1);
-        this.targetPanel = new TargetPanel(var1);
-        this.positiveEffectBar = new PositiveEffectBar(var1);
-        this.negativeEffectBar = new NegativeEffectBar(var1);
-        this.backgroundCrosshairHUD = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-c-gui-"), var1);
+    public Hud(GameClientState state) {
+        super(state);
+        this.radar = new Radar(state);
+        this.powerBar = new PowerBar(state);
+        this.reactorPowerBar = new ReactorPowerBar(state);
+        this.speedBarFarRight = new SpeedBarFarRight(state);
+        this.speedBarRight = new SpeedBarRight(state);
+        this.shieldBarLeft = new ShieldBarLeftOld(state);
+        this.shieldBarRight = new ShieldBarRightLocal(state);
+        this.powerBatteryBar = new PowerBatteryBar(state);
+        this.healthBar = new HealthBar(state);
+        this.shipHPBar = new ShipHPBar(state);
+        this.powerStabilizationBar = new PowerStabilizationBar(state);
+        this.powerConsumptionBar = new PowerConsumptionBar(state);
+        this.targetPanel = new TargetPanel(state);
+        this.positiveEffectBar = new PositiveEffectBar(state);
+        this.negativeEffectBar = new NegativeEffectBar(state);
+        this.backgroundCrosshairHUD = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-c-gui-"), state);
 
-        HudCreateEvent event = new HudCreateEvent(this, var1);
+        //INSERTED CODE @112
+        HudCreateEvent event = new HudCreateEvent(this, state);
         StarLoader.fireEvent(HudCreateEvent.class, event);
         customElements.addAll(event.elements);
+        ///
         //this.test = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-c-gui-"), var1);
 
-        this.backgroundCrosshair = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-simple-c-gui-"), var1);
-        this.hitNotification = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-hit-c-gui-"), var1);
-        this.helpManager = new HudContextHelpManager(var1);
-        this.indicator = new HudIndicatorOverlay(var1);
+        this.backgroundCrosshair = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-simple-c-gui-"), state);
+        this.hitNotification = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-hit-c-gui-"), state);
+        this.helpManager = new HudContextHelpManager(state);
+        this.indicator = new HudIndicatorOverlay(state);
     }
 
     public void cleanUp() {
@@ -218,9 +222,11 @@ public class Hud extends GUIElement {
         }
 
         this.helpManager.draw();
+        //INSERTED CODE @244
         for (GUIElement element : customElements){
             element.draw();
         }
+        ///
         GlUtil.glPopMatrix();
     }
 
@@ -239,11 +245,11 @@ public class Hud extends GUIElement {
         this.speedBarRight.onInit();
         this.backgroundCrosshairHUD.onInit();
         this.backgroundCrosshairHUD.getSprite().setTint(new Vector4f(1.0F, 1.0F, 1.0F, 1.0F));
-
+        //INSERTED CODE @279
         for (GUIElement element : customElements){
             element.onInit();
         }
-
+        ///
         this.backgroundCrosshair.onInit();
         this.backgroundCrosshair.getSprite().setTint(new Vector4f(1.0F, 1.0F, 1.0F, 1.0F));
         this.hitNotification.onInit();
@@ -455,34 +461,36 @@ public class Hud extends GUIElement {
         this.indicator.onSectorChange();
     }
 
-    public void update(Timer var1) {
-        this.indicator.update(var1);
+    public void update(Timer timer) {
+        this.indicator.update(timer);
         if (this.updateSine) {
-            this.sinusTimerUtil.update(var1);
+            this.sinusTimerUtil.update(timer);
         }
 
-        this.testSinusTimerUtil.update(var1);
+        this.testSinusTimerUtil.update(timer);
         this.positiveEffectBar.updateOrientation();
         this.negativeEffectBar.updateOrientation();
-        this.positiveEffectBar.update(var1);
-        this.negativeEffectBar.update(var1);
-        this.targetPanel.update(var1);
-        this.powerBatteryBar.update(var1);
-        this.powerBar.update(var1);
-        this.reactorPowerBar.update(var1);
-        this.speedBarFarRight.update(var1);
-        this.speedBarRight.update(var1);
-        this.shieldBarLeft.update(var1);
-        this.shieldBarRight.update(var1);
-        this.healthBar.update(var1);
-        this.shipHPBar.update(var1);
-        this.powerStabilizationBar.update(var1);
-        this.powerConsumptionBar.update(var1);
-        this.radar.update(var1);
+        this.positiveEffectBar.update(timer);
+        this.negativeEffectBar.update(timer);
+        this.targetPanel.update(timer);
+        this.powerBatteryBar.update(timer);
+        this.powerBar.update(timer);
+        this.reactorPowerBar.update(timer);
+        this.speedBarFarRight.update(timer);
+        this.speedBarRight.update(timer);
+        this.shieldBarLeft.update(timer);
+        this.shieldBarRight.update(timer);
+        this.healthBar.update(timer);
+        this.shipHPBar.update(timer);
+        this.powerStabilizationBar.update(timer);
+        this.powerConsumptionBar.update(timer);
+        this.radar.update(timer);
+        //INSERTED CODE @569
         for (GUIElement element : customElements){
-            element.update(var1);
+            element.update(timer);
         }
-        this.helpManager.update(var1);
+        ///
+        this.helpManager.update(timer);
         if (!this.isExternalActive() || !(Controller.getCamera() instanceof InShipCamera)) {
             this.resetDrawnInShip();
         }

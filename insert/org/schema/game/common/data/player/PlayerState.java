@@ -500,9 +500,9 @@ public class PlayerState extends AbstractOwnerState implements FogOfWarReceiver,
 
     public void checkIfDiedOnServer() {
         if (!this.dieList.isEmpty()) {
-            Damager var1 = (Damager)this.dieList.get(this.dieList.size() - 1);
-            //INSERTED CODE
-            PlayerDeathEvent event = new PlayerDeathEvent(this, var1);
+            Damager from = (Damager)this.dieList.get(this.dieList.size() - 1);
+            //INSERTED CODE @475
+            PlayerDeathEvent event = new PlayerDeathEvent(this, from);
             StarLoader.fireEvent(PlayerDeathEvent.class, event);
             ///
             System.err.println("[SERVER] PLAYER " + this + " died, removing ALL control units");
@@ -539,7 +539,7 @@ public class PlayerState extends AbstractOwnerState implements FogOfWarReceiver,
             }
 
             this.lastDeathTime = this.getState().getUpdateTime();
-            this.announceKill(var1);
+            this.announceKill(from);
             synchronized(this.getState().getLocalAndRemoteObjectContainer().getLocalObjects()) {
                 Iterator var8 = this.getState().getLocalAndRemoteObjectContainer().getLocalObjects().values().iterator();
 
@@ -547,7 +547,7 @@ public class PlayerState extends AbstractOwnerState implements FogOfWarReceiver,
                     AbstractCharacter var5;
                     Sendable var10;
                     if ((var10 = (Sendable)var8.next()) instanceof AbstractCharacter && (var5 = (AbstractCharacter)var10).getOwnerState() == this) {
-                        var5.destroy(var1);
+                        var5.destroy(from);
                         break;
                     }
                 }
@@ -1001,32 +1001,32 @@ public class PlayerState extends AbstractOwnerState implements FogOfWarReceiver,
         return this.getControllerState().isOwnerControlling(var1, var2);
     }
 
-    public void damage(float var1, Destroyable var2, Damager var3) {
+    public void damage(float damage, Destroyable destroyable, Damager from) {
         assert this.isOnServer();
-        //INSERTED CODE
-        PlayerDamageEvent event = new PlayerDamageEvent(var1, var2, var3, this);
+        //INSERTED CODE @1085
+        PlayerDamageEvent event = new PlayerDamageEvent(damage, destroyable, from, this);
         StarLoader.fireEvent(PlayerDamageEvent.class, event);
         if(event.isCanceled()){
             return;
         }
         ///
 
-        if (!this.isGodMode() && this.isVulnerable() && this.isDamageable(var3)) {
-            if (var1 > 0.0F) {
-                var3.sendHitConfirm((byte)3);
+        if (!this.isGodMode() && this.isVulnerable() && this.isDamageable(from)) {
+            if (damage > 0.0F) {
+                from.sendHitConfirm((byte)3);
             }
 
-            this.handleServerHealthAndCheckAliveOnServer(Math.max(0.0F, this.getHealth() - var1), var3);
+            this.handleServerHealthAndCheckAliveOnServer(Math.max(0.0F, this.getHealth() - damage), from);
         } else {
-            if (var3 != null && this.getState().getUpdateTime() > this.lastSentHitDeniedMessage + 2000L) {
+            if (from != null && this.getState().getUpdateTime() > this.lastSentHitDeniedMessage + 2000L) {
                 if (this.isGodMode()) {
-                    var3.sendServerMessage(new Object[]{315}, 3);
+                    from.sendServerMessage(new Object[]{315}, 3);
                     this.lastSentHitDeniedMessage = this.getState().getUpdateTime();
                     return;
                 }
 
                 if (this.isSpawnProtected()) {
-                    var3.sendServerMessage(new Object[]{316}, 3);
+                    from.sendServerMessage(new Object[]{316}, 3);
                     this.lastSentHitDeniedMessage = this.getState().getUpdateTime();
                 }
             }

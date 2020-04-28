@@ -2,10 +2,14 @@ package api.entity;
 
 import api.element.block.Blocks;
 import org.schema.common.util.linAlg.Vector3i;
+import org.schema.game.client.view.gui.advancedstats.AdvancedStructureStatsGeneral;
+import org.schema.game.client.view.gui.advancedstats.AdvancedStructureStatsThruster;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.ai.AIConfiguationElements;
 import org.schema.game.common.controller.ai.Types;
+import org.schema.game.common.controller.elements.ShipManagerContainer;
 import org.schema.game.common.data.explosion.ExplosionCollisionSegmentCallback;
+import org.schema.schine.common.language.Lng;
 
 public class Ship extends Entity {
 
@@ -33,12 +37,6 @@ public class Ship extends Entity {
         return null;
     }
 
-    public boolean isDocked() {
-        /**
-         * Checks if the ship is currently docked.
-         */
-        return internalShip.isDocked();
-    }
 
     public Entity getDockedLocal() {
         /**
@@ -114,6 +112,17 @@ public class Ship extends Entity {
 
         return null;
     }
+    public ShipManagerContainer getShipManagerContainer(){
+        return (ShipManagerContainer) getManagerContainer();
+    }
+
+    public float getThrustMassRatio(){
+        return getShipManagerContainer().getThrusterElementManager().getThrustMassRatio();
+    }
+    public float getThrust(){
+        return getShipManagerContainer().getThrusterElementManager().getActualThrust();
+    }
+
     public boolean isAiControlled(){
         return internalShip.isAIControlled();
     }

@@ -37,7 +37,7 @@ public class EnabledModFile {
         file.setClientEnabled(new ModInfo("bruhstar", "0.01"), false);
         System.out.println(file.isClientEnabled(new ModInfo("bruhstar", "0.01")));
     }
-    private ArrayList<String> enabledMods = new ArrayList<>();
+    private ArrayList<String> enabledMods = new ArrayList<String>();
     private EnabledModFile(){
         try {
             File source = new File("clientmods.txt");

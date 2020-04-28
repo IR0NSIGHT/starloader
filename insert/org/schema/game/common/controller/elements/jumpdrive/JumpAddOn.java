@@ -6,7 +6,9 @@
 package org.schema.game.common.controller.elements.jumpdrive;
 
 import api.listener.events.ShipJumpEngageEvent;
+import api.listener.events.systems.InterdictionCheckEvent;
 import api.mod.StarLoader;
+import api.systems.addons.custom.CustomAddOn;
 import org.schema.common.util.StringTools;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.data.GameStateInterface;
@@ -39,7 +41,6 @@ public class JumpAddOn extends RecharchableSingleModule {
     public int getDistance() {
         return (int)this.getConfigManager().apply(StatusEffectType.JUMP_DISTANCE, VoidElementManager.REACTOR_JUMP_DISTANCE_DEFAULT);
     }
-
     public void sendChargeUpdate() {
         if (this.isOnServer()) {
             JumpAddOnChargeValueUpdate var1;
@@ -60,7 +61,7 @@ public class JumpAddOn extends RecharchableSingleModule {
         if (this.getSegmentController().isOnServer()) {
             if (this.getCharges() > 0) {
                 if (!this.isInterdicted()) {
-                    //INSERTED CODE
+                    //INSERTED CODE @73
                     Vector3i oldSector = this.getSegmentController().getSector(new Vector3i());
                     ShipJumpEngageEvent event = new ShipJumpEngageEvent(this.getSegmentController(), this, oldSector);
                     StarLoader.fireEvent(ShipJumpEngageEvent.class, event);
@@ -88,14 +89,14 @@ public class JumpAddOn extends RecharchableSingleModule {
         return false;
     }
 
+    //REPLACE METHOD
     private boolean isInterdicted() {
         assert this.isOnServer();
-
         GameServerState var1;
         Sector var2;
+        boolean retVal = false;
         if ((var2 = (var1 = (GameServerState)this.getState()).getUniverse().getSector(this.getSegmentController().getSectorId())) == null) {
             System.err.println("[SERVER][JUMP] " + this.getSegmentController() + " IS NOT IN A SECTOR " + this.getSegmentController().getSectorId());
-            return false;
         } else {
             Vector3i var3 = new Vector3i();
 
@@ -106,15 +107,23 @@ public class JumpAddOn extends RecharchableSingleModule {
                         Sector var7;
                         if ((var7 = var1.getUniverse().getSectorWithoutLoading(var3)) != null && var7.isInterdicting(this.getSegmentController(), var2)) {
                             this.getSegmentController().sendControllingPlayersServerMessage(new Object[]{43, var7.pos.toStringPure()}, 3);
-                            return true;
+                            retVal = true;
+                            break;
                         }
                     }
                 }
             }
+        }
+        InterdictionCheckEvent event = new InterdictionCheckEvent(this, this.segmentController, false);
+        StarLoader.fireEvent(InterdictionCheckEvent.class, event);
 
-            return false;
+        if(!event.useDefault){
+            return event.isInterdicted();
+        }else{
+            return retVal;
         }
     }
+    //
 
     public void onChargedFullyNotAutocharged() {
         this.getSegmentController().popupOwnClientMessage(Lng.ORG_SCHEMA_GAME_COMMON_CONTROLLER_ELEMENTS_JUMPDRIVE_JUMPADDON_1, 1);

@@ -6,7 +6,6 @@
 package org.schema.game.common.controller;
 
 import api.listener.events.block.BlockSalvageEvent;
-import api.listener.events.client.BlockSalvageOnClientEvent;
 import api.mod.StarLoader;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import it.unimi.dsi.fastutil.ints.IntCollection;
@@ -14,12 +13,6 @@ import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import javax.vecmath.Vector3f;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.controller.manager.ingame.BlockBuffer;
 import org.schema.game.client.data.GameClientState;
@@ -48,12 +41,7 @@ import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementCollection;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.physics.RigidBodySegmentController;
-import org.schema.game.common.data.player.AbstractCharacter;
-import org.schema.game.common.data.player.AbstractOwnerState;
-import org.schema.game.common.data.player.ControllerStateInterface;
-import org.schema.game.common.data.player.ControllerStateUnit;
-import org.schema.game.common.data.player.PlayerCharacter;
-import org.schema.game.common.data.player.PlayerState;
+import org.schema.game.common.data.player.*;
 import org.schema.game.common.data.player.faction.FactionInterface;
 import org.schema.game.common.data.player.inventory.Inventory;
 import org.schema.game.common.data.player.inventory.InventoryHolder;
@@ -71,6 +59,9 @@ import org.schema.schine.network.StateInterface;
 import org.schema.schine.network.objects.NetworkObject;
 import org.schema.schine.network.objects.Sendable;
 import org.schema.schine.physics.Physical;
+
+import javax.vecmath.Vector3f;
+import java.util.*;
 
 public abstract class ManagedUsableSegmentController<E extends ManagedUsableSegmentController<E>> extends EditableSendableSegmentController implements PlayerControllable, Salvager, ShopperInterface, TransientSegmentController, SegmentControllerAIInterface, ProjecileDamager, PulseHandler, ManagedSegmentController<E>, FactionInterface, InventoryHolder, Physical {
     private final List<PlayerState> attachedPlayers = new ObjectArrayList();
@@ -299,16 +290,16 @@ public abstract class ManagedUsableSegmentController<E extends ManagedUsableSegm
         return this.transientTouched;
     }
 
-    public int handleSalvage(BeamState var1, int var2, BeamHandlerContainer<?> var3, Vector3f var4, SegmentPiece var5, Timer var6, Collection<Segment> var7) {
-        this.segmentPiece.setByReference(var5.getSegment(), var5.x, var5.y, var5.z);
-        float var16 = (float)var2 * var1.getPower();
+    public int handleSalvage(BeamState beam, int beamHits, BeamHandlerContainer<?> var3, Vector3f to, SegmentPiece segmentPiece, Timer var6, Collection<Segment> updatedSegments) {
+        this.segmentPiece.setByReference(segmentPiece.getSegment(), segmentPiece.x, segmentPiece.y, segmentPiece.z);
+        float var16 = (float)beamHits * beam.getPower();
         if (System.currentTimeMillis() - this.lastSalvage > 10000L) {
             this.salvageDamage = 0.0F;
         }
 
         this.salvageDamage += var16;
         this.lastSalvage = System.currentTimeMillis();
-        if (this.isOnServer() && var2 > 0 && this.salvageDamage >= SalvageElementManager.SALVAGE_DAMAGE_NEEDED_PER_BLOCK) {
+        if (this.isOnServer() && beamHits > 0 && this.salvageDamage >= SalvageElementManager.SALVAGE_DAMAGE_NEEDED_PER_BLOCK) {
             if (this instanceof TransientSegmentController) {
                 this.setTouched(true, true);
             }
@@ -322,12 +313,12 @@ public abstract class ManagedUsableSegmentController<E extends ManagedUsableSegm
             byte var18 = this.segmentPiece.getOrientation();
             if (this.segmentPiece.getSegment().removeElement(this.segmentPiece.getPos(this.tmpLocalPos), false)) {
 
-                //INSERTED CODE
+                //INSERTED CODE @379
                 //Note that this currently only calls for the server.
-                BlockSalvageEvent event = new BlockSalvageEvent(var1, var2, var4, var5, var7);
+                BlockSalvageEvent event = new BlockSalvageEvent(beam, (int) salvageDamage, to, segmentPiece, updatedSegments);
                 StarLoader.fireEvent(BlockSalvageEvent.class, event);
                 if(event.isCanceled()){
-                    return var2;
+                    return beamHits;
                 }
                 ///
                 if(this.isOnServer()) {
@@ -340,7 +331,7 @@ public abstract class ManagedUsableSegmentController<E extends ManagedUsableSegm
                     }
 
 
-                    var7.add(var5.getSegment());
+                    updatedSegments.add(segmentPiece.getSegment());
                     ((RemoteSegment) this.segmentPiece.getSegment()).setLastChanged(System.currentTimeMillis());
                     this.segmentPiece.refresh();
 
@@ -358,7 +349,7 @@ public abstract class ManagedUsableSegmentController<E extends ManagedUsableSegm
                     this.segmentPiece.getSegment().getSegmentController().sendBlockSalvage(this.segmentPiece);
                     Short2ObjectOpenHashMap var10;
                     LongOpenHashSet var11;
-                    if ((var10 = this.getControlElementMap().getControllingMap().get(ElementCollection.getIndex(var1.controllerPos))) != null && (var11 = (LongOpenHashSet) var10.get((short) 120)) != null && var11.size() > 0) {
+                    if ((var10 = this.getControlElementMap().getControllingMap().get(ElementCollection.getIndex(beam.controllerPos))) != null && (var11 = (LongOpenHashSet) var10.get((short) 120)) != null && var11.size() > 0) {
                         LongIterator var13 = var11.iterator();
 
                         while (var13.hasNext()) {
@@ -388,7 +379,7 @@ public abstract class ManagedUsableSegmentController<E extends ManagedUsableSegm
         }
 
         this.segmentPiece.reset();
-        return var2;
+        return beamHits;
     }
 
     public void initFromNetworkObject(NetworkObject var1) {

@@ -12,7 +12,7 @@ public class HudCreateEvent extends Event {
     public static int id = idLog++;
     private Hud hud;
     private GameClientState state;
-    public ArrayList<GUIElement> elements = new ArrayList<>();
+    public ArrayList<GUIElement> elements = new ArrayList<GUIElement>();
     public HudCreateEvent(Hud hud, GameClientState state){
 
         this.hud = hud;

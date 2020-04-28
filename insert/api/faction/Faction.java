@@ -3,6 +3,7 @@ package api.faction;
 import api.entity.Player;
 import api.entity.Station;
 import api.main.GameServer;
+import api.mod.StarLoader;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.data.player.PlayerState;
@@ -17,7 +18,14 @@ public class Faction {
 
     private org.schema.game.common.data.player.faction.Faction internalFaction;
 
-    public Faction(org.schema.game.common.data.player.faction.Faction internalFaction) throws IOException {
+    public static Faction fromId(int id){
+        if(id == 0){
+            return null;
+        }
+        return new Faction(StarLoader.getGameState().getFactionManager().getFaction(id));
+    }
+
+    public Faction(org.schema.game.common.data.player.faction.Faction internalFaction) {
         this.internalFaction = internalFaction;
     }
 

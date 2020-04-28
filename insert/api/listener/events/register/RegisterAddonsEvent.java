@@ -8,15 +8,15 @@ import java.util.ArrayList;
 
 public class RegisterAddonsEvent extends Event {
     public static int id = idLog++;
-    private ManagerContainer container;
-    public RegisterAddonsEvent(ManagerContainer container){
+    private ManagerContainer<?> container;
+    public RegisterAddonsEvent(ManagerContainer<?> container){
         this.container = container;
     }
-    public ManagerContainer getContainer() {
+    public ManagerContainer<?> getContainer() {
         return container;
     }
 
-    public ArrayList<CustomAddOn> addons = new ArrayList<>();
+    public ArrayList<CustomAddOn> addons = new ArrayList<CustomAddOn>();
     public void addAddOn(CustomAddOn addOn){
         addons.add(addOn);
     }

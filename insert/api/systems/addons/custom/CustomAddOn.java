@@ -5,10 +5,13 @@
 
 package api.systems.addons.custom;
 
+import api.entity.Entity;
+import api.server.Server;
 import org.schema.common.util.StringTools;
 import org.schema.game.common.controller.elements.ManagerContainer;
 import org.schema.game.common.controller.elements.RecharchableActivatableDurationSingleModule;
-import org.schema.game.common.controller.elements.VoidElementManager;
+import org.schema.game.common.controller.elements.SingleModuleActivation;
+import org.schema.game.common.controller.elements.jumpprohibiter.InterdictionAddOn;
 import org.schema.game.common.controller.elements.scanner.ScanAddOnChargeValueUpdate;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
@@ -19,11 +22,14 @@ import org.schema.game.network.objects.valueUpdate.ValueUpdate.ValTypes;
 import org.schema.schine.common.language.Lng;
 import org.schema.schine.graphicsengine.core.Timer;
 
-import java.util.ArrayList;
-
 public abstract class CustomAddOn extends RecharchableActivatableDurationSingleModule {
+    public Entity entity;
     public CustomAddOn(ManagerContainer<?> var1) {
         super(var1);
+        entity = new Entity(getSegmentController());
+    }
+    public boolean entityHasEffect(StatusEffectType type){
+        return this.getConfigManager().apply(type, 1F) == 10F;
     }
 
     public void sendChargeUpdate() {
@@ -46,6 +52,15 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
 
     public abstract float getChargeRate();
 
+    public void dischargeToZero(){
+        this.setCharge(0);
+        this.setCharges(0);
+        SingleModuleActivation mod = this.activation;
+        //this.activation = null;
+        this.sendChargeUpdate();
+        //this.activation = mod;
+    }
+
     public float getChargeRateFull() {
         return getChargeRate();
        // float var1 = VoidElementManager.SCAN_CHARGE_NEEDED;
@@ -53,7 +68,7 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
     }
 
     public boolean canExecute() {
-        return true;
+        return !this.isActive();
     }
 
     public abstract double getPowerConsumedPerSecondResting();
@@ -82,7 +97,7 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
     public abstract long getUsableId();//PlayerUsableInterface.whatever
 
     public void chargingMessage() {
-        this.getSegmentController().popupOwnClientMessage(Lng.ORG_SCHEMA_GAME_COMMON_CONTROLLER_ELEMENTS_SCANNER_SCANADDON_1, 1);
+        this.getSegmentController().popupOwnClientMessage("Custom add-on charging", 1);
     }
 
     public void onCooldown(long var1) {
@@ -90,7 +105,7 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
     }
 
     public void onUnpowered() {
-        this.getSegmentController().popupOwnClientMessage("Custom addon unpowered", 3);
+        this.getSegmentController().popupOwnClientMessage("Add-on Unpowered", 3);
     }
 
     public String getTagId() {
@@ -130,34 +145,41 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
 
     @Override
     public boolean executeModule() {
-        boolean success = super.executeModule();
-        onExecute();
-        return success;
-
-
+        if(this.getCharge() >= 1) {
+            boolean success = super.executeModule();
+            if (success) {
+                onExecute();
+            }
+            return success;
+        }
+        return false;
+    }
+    public void onDeactivateFromTime(){
     }
 
     public void update(Timer var1) {
+        boolean active = this.activation != null;
         super.update(var1);
         if (this.isActive()) {
             onActive();
         }else{
             onInactive();
         }
+        if(active && this.activation == null){
+            this.onDeactivateFromTime();
+        }
     }
     public abstract void onActive();
     public abstract void onInactive();
 
-    public String getName() {
-        return "CustomAddOn";
-    }
+    public abstract String getName();
 
     protected Type getServerRequestType() {
         return Type.SCAN;
     }
 
     protected boolean isDeactivatableManually() {
-        return true;
+        return false;
     }
 
     protected void onNoLongerConsumerActiveOrUsable(Timer var1) {

@@ -14,6 +14,7 @@ import api.mod.ModInfo;
 import api.mod.ServerModInfo;
 import api.mod.StarLoader;
 import api.mod.StarMod;
+import org.schema.game.common.data.chat.ChannelRouter;
 import org.schema.schine.network.Command;
 import org.schema.schine.network.NetworkProcessor;
 import org.schema.schine.network.client.ClientStateInterface;
@@ -52,26 +53,25 @@ public class GetInfo extends Command {
         return min+((int) (Math.random()*(max-min)));
 
     }
-    public void serverProcess(ServerProcessor var1, Object[] var2, ServerStateInterface var3, short var4) throws Exception {
-        String version = String.valueOf(var3.getVersion());
-        //String var5 = var3.getServerName();
-        //String var5 = "⬛⬛⬛⬛⬛⬛⬛⬛ Briere 2 ⬛⬛⬛⬛⬛⬛⬛⬛ cool squares bro";
-        long var8 = var3.getStartTime();
-        int connectedClients = var3.getClients().size();
-        int maxClients = var3.getMaxClients();
-        ServerPingEvent event = new ServerPingEvent(version, var3.getServerName(), var3.getServerDesc(), connectedClients, maxClients);
+    //REPLACE METHOD
+    public void serverProcess(ServerProcessor serverProcessor, Object[] parameters, ServerStateInterface state, short packetId) throws Exception {
+        String version = String.valueOf(state.getVersion());
+        long var8 = state.getStartTime();
+        int connectedClients = state.getClients().size();
+        int maxClients = state.getMaxClients();
+        ServerPingEvent event = new ServerPingEvent(version, state.getServerName(), state.getServerDesc(), connectedClients, maxClients);
         StarLoader.fireEvent(ServerPingEvent.class, event);
 
-        System.err.println("[SERVER] This client is an info ping (server-lists): " + var1.getClientIp() + "; PID: " + var1.id);
-        var1.setInfoPinger(true);
+        System.err.println("[SERVER] This client is an info ping (server-lists): " + serverProcessor.getClientIp() + "; PID: " + serverProcessor.id);
+        serverProcessor.setInfoPinger(true);
         //I am attaching the info to GetInfo, so that later there can be info about if a server is modded or not, and what mods it has.
         //Put all server mods into the return. To be moved later
-        ArrayList<ModInfo> serverMods = new ArrayList<>();
+        ArrayList<ModInfo> serverMods = new ArrayList<ModInfo>();
         for (StarMod mod : StarLoader.starMods) {
             serverMods.add(mod.getInfo());
         }
 
-        ArrayList<Object> clientReturn = new ArrayList<>();
+        ArrayList<Object> clientReturn = new ArrayList<Object>();
         clientReturn.add(INFO_VERSION);
         clientReturn.add(event.getVersion());
         clientReturn.add(event.getName());
@@ -82,9 +82,9 @@ public class GetInfo extends Command {
         for (ModInfo mod : serverMods){
             clientReturn.add(mod.serialize());
         }
-        this.createReturnToClient(var3, var1, var4, clientReturn.toArray());
+        this.createReturnToClient(state, serverProcessor, packetId, clientReturn.toArray());
         //this.createReturnToClient(var3, var1, var4, new Object[]{INFO_VERSION, event.getVersion(), event.getName(), event.getDescription(), var8, event.getPlayers(), event.getMaxPlayers()});
-        var1.disconnectAfterSent();
+        serverProcessor.disconnectAfterSent();
     }
 
     public void writeAndCommitParametriziedCommand(Object[] var1, int var2, int var3, short var4, NetworkProcessor var5) throws IOException {

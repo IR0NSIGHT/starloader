@@ -57,7 +57,7 @@ public class Station extends Entity {
          * Gets an arraylist of players that own the station's shop. Returns null if the station doesn't have a shop or the shop has no owners.
          */
         if(hasShop()) {
-            ArrayList<Player> shopOwners = new ArrayList<>();
+            ArrayList<Player> shopOwners = new ArrayList<Player>();
             for(String internalPlayerName : internalStation.getShopOwners()) {
                 shopOwners.add(getPlayerFromName(internalPlayerName));
             }
@@ -77,5 +77,9 @@ public class Station extends Entity {
             e.printStackTrace();
         }
         return new Player(pState);
+    }
+
+    public void takeControlOfSystem() {
+        getSector().getSystem().claim(this);
     }
 }

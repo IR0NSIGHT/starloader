@@ -236,6 +236,7 @@ public class ToolsAndModsDialog extends PlayerButtonTilesInput implements MainMe
                 return ToolsAndModsDialog.this.isActive();
             }
         });
+        //INSERTED CODE @265
         final EnabledModFile modFile = EnabledModFile.getInstance();
         for (StarMod mod : StarLoader.starMods){
             final ModInfo modInfo = mod.getInfo();
@@ -261,7 +262,7 @@ public class ToolsAndModsDialog extends PlayerButtonTilesInput implements MainMe
                             m.setAccessible(true);
                             m.invoke(g);
 
-                        } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -283,6 +284,7 @@ public class ToolsAndModsDialog extends PlayerButtonTilesInput implements MainMe
                 }
             });
         }
+        ///
 
     }
 

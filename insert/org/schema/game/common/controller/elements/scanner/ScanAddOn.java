@@ -16,6 +16,7 @@ import org.schema.game.common.controller.ElementCountMap;
 import org.schema.game.common.controller.elements.ManagerContainer;
 import org.schema.game.common.controller.elements.RecharchableActivatableDurationSingleModule;
 import org.schema.game.common.controller.elements.VoidElementManager;
+import org.schema.game.common.controller.elements.power.reactor.ReactorBoostAddOn;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementKeyMap;
@@ -38,11 +39,13 @@ public class ScanAddOn extends RecharchableActivatableDurationSingleModule {
     private long currentCargoScanningStart;
     private int lastScanned;
 
-    public ScanAddOn(ManagerContainer<?> var1) {
-        super(var1);
-        //INSERTED CODE to do with custom add ons, in scanner so I dont have to mess with ManagerContainer
-        RegisterAddonsEvent event = new RegisterAddonsEvent(var1);
+    public ScanAddOn(ManagerContainer<?> man) {
+        super(man);
+        //INSERTED CODE @42
+        //to do with custom add ons, in scanner so I dont have to decompile & mess with ManagerContainer
+        RegisterAddonsEvent event = new RegisterAddonsEvent(man);
         StarLoader.fireEvent(RegisterAddonsEvent.class, event);
+        ///
     }
 
     public int getDistance() {
@@ -152,19 +155,17 @@ public class ScanAddOn extends RecharchableActivatableDurationSingleModule {
     public float getActiveStrength() {
         return this.isActive() ? this.getConfigManager().apply(StatusEffectType.SCAN_STRENGTH, VoidElementManager.SCAN_STRENGTH_BASIC) : 0.0F;
     }
-
+    //INSERTED CODE @49
     @Override
     public boolean executeModule() {
         boolean success = super.executeModule();
         AbstractOwnerState ownerState = this.getSegmentController().getOwnerState();
         EntityScanEvent event = new EntityScanEvent(this, success, ownerState, this.getSegmentController());
         StarLoader.fireEvent(EntityScanEvent.class, event);
-        //if(ownerState instanceof PlayerState) {
-        //GameServer.getServerState().scanOnServer(null, (PlayerState) ownerState);
-        //}
+
         return success;
     }
-
+    ///
     public void update(Timer var1) {
         super.update(var1);
         if (this.isActive()) {

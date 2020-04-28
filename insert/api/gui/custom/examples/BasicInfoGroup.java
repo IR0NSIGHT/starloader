@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class BasicInfoGroup {
     //6 BasicInfoPanels
-    ArrayList<BasicInfoPanel> panels = new ArrayList<>();
+    ArrayList<BasicInfoPanel> panels = new ArrayList<BasicInfoPanel>();
     public BasicInfoGroup(HudCreateEvent ev){
         for (int i = 0; i < 6; i++) {
             BasicInfoPanel e = new BasicInfoPanel(ev);
@@ -26,18 +26,21 @@ public class BasicInfoGroup {
         new StarRunnable(){
             @Override
             public void run() {
-                ArrayList<Ship> controlledShips = new ArrayList<>();
+                ArrayList<Ship> controlledShips = new ArrayList<Ship>();
                 for(Entity en : GameClient.getNearbyEntities()) {
                     if(en.getEntityType() == EntityType.SHIP){
                         Ship ship = en.toShip();
                         if(!ship.isDocked()) {
-                            // if(en.getAttachedPlayers().size() > 0){
+                             if(en.getAttachedPlayers().size() > 0){
                             //if(!en.getAttachedPlayers().get(0).getName().equals(GameClient.getClientPlayerState().getName())){
                             controlledShips.add(ship);
                             //}
-                            //}
+                            }
                         }
                     }
+                }
+                for (BasicInfoPanel panel : panels) {
+                    panel.setEntity(null);
                 }
                 for (int i = 0; i < controlledShips.size(); i++) {
                     if(i > 5){

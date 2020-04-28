@@ -69,15 +69,15 @@ public class DamageBeamHitHandlerSegmentController implements DamageBeamHitHandl
         this.dam = 0.0F;
     }
 
-    public int onBeamDamage(BeamState var1, int var2, BeamHandlerContainer<?> var3, SegmentPiece var4, Vector3f var5, Vector3f var6, Timer var7, Collection<Segment> var8) {
-        this.segmentPiece.setByReference(var4);
+    public int onBeamDamage(BeamState hittingBeam, int hits, BeamHandlerContainer<?> container, SegmentPiece segmentPiece, Vector3f from, Vector3f to, Timer var7, Collection<Segment> updatedSegments) {
+        this.segmentPiece.setByReference(segmentPiece);
 
         //hitController.getEffectContainer().get(HitReceiverType.SHIELD).getStrength(InterEffectHandler.InterEffectType.EM);
         if (!this.segmentPiece.isValid()) {
             System.err.println(this.segmentPiece.getSegmentController().getState() + " HITTTING INVALID PIECE");
             return 0;
         } else {
-            this.hitController = var4.getSegmentController();
+            this.hitController = segmentPiece.getSegmentController();
             if (this.hitController instanceof TransientSegmentController) {
                 ((TransientSegmentController)this.hitController).setTouched(true, true);
             }
@@ -88,7 +88,7 @@ public class DamageBeamHitHandlerSegmentController implements DamageBeamHitHandl
 
             this.segmentPiece.getType();
             ElementInformation var11 = this.segmentPiece.getInfo();
-            this.damager = var1.getHandler().getBeamShooter();
+            this.damager = hittingBeam.getHandler().getBeamShooter();
             if (!this.hitController.checkAttack(this.damager, true, true)) {
                 return 0;
             } else {
@@ -102,28 +102,28 @@ public class DamageBeamHitHandlerSegmentController implements DamageBeamHitHandl
                 this.defenseArmor.add(VoidElementManager.armorEffectConfiguration);
                 this.defenseBlock.setEffect(this.hitController.getEffectContainer().get(HitReceiverType.BLOCK));
                 this.defenseBlock.add(VoidElementManager.basicEffectConfiguration);
-                this.weaponId = var1.weaponId;
-                float var12 = (float)var2 * var1.getPowerByBeamLength();
+                this.weaponId = hittingBeam.weaponId;
+                float var12 = (float)hits * hittingBeam.getPowerByBeamLength();
                 this.dam = var12;
-                if (var1.beamType == 6) {
-                    this.dam = FastMath.ceil((float)var11.getMaxHitPointsFull() / (float)var11.getMaxHitPointsByte()) * (float)((int)((float)var2 * var1.getPowerByBeamLength()));
+                if (hittingBeam.beamType == 6) {
+                    this.dam = FastMath.ceil((float)var11.getMaxHitPointsFull() / (float)var11.getMaxHitPointsByte()) * (float)((int)((float)hits * hittingBeam.getPowerByBeamLength()));
                 }
 
-                this.hitType = var1.hitType;
+                this.hitType = hittingBeam.hitType;
                 this.dam *= this.hitController.getDamageTakenMultiplier(this.damageDealerType);
                 if (this.damager != null) {
                     this.dam *= this.damager.getDamageGivenMultiplier();
                 }
 
                 boolean var13 = false;
-                if (!var1.ignoreShield && this.hitController instanceof ManagedSegmentController && ((ManagedSegmentController)this.hitController).getManagerContainer() instanceof ShieldContainerInterface) {
+                if (!hittingBeam.ignoreShield && this.hitController instanceof ManagedSegmentController && ((ManagedSegmentController)this.hitController).getManagerContainer() instanceof ShieldContainerInterface) {
                     ShieldContainerInterface var14;
                     ShieldAddOn var15 = (var14 = (ShieldContainerInterface)((ManagedSegmentController)this.hitController).getManagerContainer()).getShieldAddOn();
                     if (this.hitController.isUsingLocalShields()) {
                         if (var15.isUsingLocalShieldsAtLeastOneActive() || this.hitController.railController.isDockedAndExecuted()) {
                             try {
                                 float var10000 = this.dam;
-                                this.dam = (float)var15.handleShieldHit(this.damager, this.defenseShield, var1.hitPoint, var1.hitSectorId, this.damageDealerType, this.hitType, (double)this.dam, this.weaponId);
+                                this.dam = (float)var15.handleShieldHit(this.damager, this.defenseShield, hittingBeam.hitPoint, hittingBeam.hitSectorId, this.damageDealerType, this.hitType, (double)this.dam, this.weaponId);
                             } catch (SectorNotFoundException var10) {
                                 var10.printStackTrace();
                                 this.dam = 0.0F;
@@ -137,7 +137,7 @@ public class DamageBeamHitHandlerSegmentController implements DamageBeamHitHandl
                     } else {
                         if (var15.getShields() > 0.0D || this.hitController.railController.isDockedAndExecuted()) {
                             try {
-                                this.dam = (float)var15.handleShieldHit(this.damager, this.defenseShield, var1.hitPoint, var1.hitSectorId, this.damageDealerType, this.hitType, (double)this.dam, this.weaponId);
+                                this.dam = (float)var15.handleShieldHit(this.damager, this.defenseShield, hittingBeam.hitPoint, hittingBeam.hitSectorId, this.damageDealerType, this.hitType, (double)this.dam, this.weaponId);
                             } catch (SectorNotFoundException var9) {
                                 var9.printStackTrace();
                                 this.dam = 0.0F;
@@ -154,10 +154,10 @@ public class DamageBeamHitHandlerSegmentController implements DamageBeamHitHandl
                 }
 
                 this.hitController.sendHitConfirmToDamager(this.damager, var13);
-                this.dam = (float)var1.calcPreviousArmorDamageReduction(this.dam);
+                this.dam = (float)hittingBeam.calcPreviousArmorDamageReduction(this.dam);
                 this.dam = this.hitController.getHpController().onHullDamage(this.damager, this.dam, this.segmentPiece.getType(), this.damageDealerType);
-                if (this.doDamageOnBlock(this.segmentPiece, var1) && var11.isArmor()) {
-                    var1.getHandler().onArmorBlockKilled(var1, var11.getArmorValue());
+                if (this.doDamageOnBlock(this.segmentPiece, hittingBeam) && var11.isArmor()) {
+                    hittingBeam.getHandler().onArmorBlockKilled(hittingBeam, var11.getArmorValue());
                 }
 
                 CollisionObject var16;
@@ -165,11 +165,13 @@ public class DamageBeamHitHandlerSegmentController implements DamageBeamHitHandl
                     var16.activate(true);
                 }
 
-                DamageBeamHitEvent event = new DamageBeamHitEvent(this, hitController, var1, var2, var3, var4, var5, var6, var8);
+                //INSERTED CODE @179
+                DamageBeamHitEvent event = new DamageBeamHitEvent(this, hitController, hittingBeam, hits, container, segmentPiece, from, to, updatedSegments);
                 StarLoader.fireEvent(DamageBeamHitEvent.class, event);
+                ///
 
                 Starter.modManager.onSegmentControllerDamageTaken(this.hitController);
-                return var2;
+                return hits;
             }
         }
     }

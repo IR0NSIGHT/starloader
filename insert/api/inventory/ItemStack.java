@@ -52,7 +52,7 @@ public class ItemStack {
     }
 
     public static ArrayList<ItemStack> getAllRawResources(){
-        ArrayList<ItemStack> ret = new ArrayList<>();
+        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
         for (short type : ElementKeyMap.typeList()) {
             ElementInformation info = ElementKeyMap.getInfo(type);
             String name = info.getName().toLowerCase();

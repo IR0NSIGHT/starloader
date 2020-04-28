@@ -12,7 +12,7 @@ public class Cannon {
     private WeaponUnit unit;
     private WeaponElementManager elementManager;
     private WeaponCollectionManager collectionManager;
-
+    //TODO add combination add-on
     public Cannon(WeaponUnit unit) {
         this.unit = unit;
         this.collectionManager = unit.elementCollectionManager;

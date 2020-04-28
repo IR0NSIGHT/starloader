@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Reactor {
 
-    private ReactorTree internalReactor;
+    public ReactorTree internalReactor;
 
     public Reactor(ReactorTree internalReactor) {
         this.internalReactor = internalReactor;
@@ -49,5 +49,9 @@ public class Reactor {
     }
     public double getUsagePercent() {
         return internalReactor.pw.getPowerConsumptionAsPercent();
+    }
+
+    public void setBoost(float boost) {
+        internalReactor.pw.setReactorBoost(boost);
     }
 }

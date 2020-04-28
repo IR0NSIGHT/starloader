@@ -3,11 +3,14 @@ package api.config;
 import api.DebugFile;
 import api.element.block.Blocks;
 import api.element.block.FactoryType;
+import org.schema.game.client.view.gui.weapon.WeaponRowElement;
 import org.schema.game.common.controller.elements.beam.damageBeam.DamageBeamUnit;
+import org.schema.game.common.controller.elements.weapon.WeaponCollectionManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.element.FactoryResource;
+import org.schema.game.common.data.element.annotation.ElemType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -55,17 +58,24 @@ public class BlockConfig {
         ElementKeyMap.sortedByName.add(elementInformation);
         return elementInformation;
     }
-    public static ElementInformation newChamber(String name, short rootChamber, short[] ids, StatusEffectType appliedEffect){
-        ElementInformation info = newElement(name, ids);
+    public static ElementInformation newChamber(String name, short rootChamber, StatusEffectType appliedEffect){
+        //TODO find out why 640 is a chamber texture
+        ElementInformation info = newElement(name, new short[]{640});
         info.blockResourceType = 2;
         info.sourceReference = 1085;
-        info.chamberRoot = 1011;
+        info.chamberRoot = rootChamber;
         info.chamberParent = 1085;
         info.chamberPermission = 1;
         info.chamberPrerequisites.add((short) 1085);
-        info.placable = true;
+        info.placable = false;
         info.canActivate = true;
         info.systemBlock = true;
+
+        info.price = 100;
+        info.description = "A Custom chamber";
+        info.shoppable = false;
+        info.mass = 0.15F;
+
         info.chamberConfigGroupsLowerCase.add(appliedEffect.name().toLowerCase());
         ElementKeyMap.chamberAnyTypes.add(info.getId());
 
@@ -74,7 +84,7 @@ public class BlockConfig {
         return info;
     }
 
-    private ArrayList<ElementInformation> elements = new ArrayList<>();
+    private ArrayList<ElementInformation> elements = new ArrayList<ElementInformation>();
     public ArrayList<ElementInformation> getElements(){
         return elements;
     }
