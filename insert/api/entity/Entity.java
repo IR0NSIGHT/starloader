@@ -28,6 +28,7 @@ import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.common.data.world.Universe;
 import org.schema.schine.graphicsengine.core.GlUtil;
+
 import javax.vecmath.Vector3f;
 import java.io.IOException;
 import java.util.*;
@@ -43,7 +44,7 @@ public class Entity {
         /**
          * Gets the faction the entity is currently part of. Returns null if the entity has no faction.
          */
-        if(internalEntity.isInExitingFaction()) {
+        if (internalEntity.isInExitingFaction()) {
             return new Faction(internalEntity.getFaction());
         }
         return null;
@@ -76,13 +77,15 @@ public class Entity {
          */
         return internalEntity.getName();
     }
+
     public String getRealName() {
         /**
          * Gets the entity's REAL name.
          */
         return internalEntity.getRealName();
     }
-    public String getUID(){
+
+    public String getUID() {
         return internalEntity.getUniqueIdentifier();
     }
 
@@ -99,7 +102,8 @@ public class Entity {
          */
         return internalEntity.getMassWithDocks();
     }
-    public boolean isDocked(){
+
+    public boolean isDocked() {
         return internalEntity.isDocked();
     }
 
@@ -121,7 +125,7 @@ public class Entity {
         /**
          * Gets the entity's current speed. Returns 0 if the entity is immobile.
          */
-        if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.PLANETSEGMENT) || getEntityType().equals(EntityType.ASTEROID)) {
+        if (getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.PLANETSEGMENT) || getEntityType().equals(EntityType.ASTEROID)) {
             return internalEntity.getSpeedCurrent();
         } else {
             return 0;
@@ -132,7 +136,7 @@ public class Entity {
         /**
          * Gets the entity's max speed. Returns 0 if the entity is immobile.
          */
-        if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.PLANETSEGMENT) || getEntityType().equals(EntityType.ASTEROID)) {
+        if (getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.PLANETSEGMENT) || getEntityType().equals(EntityType.ASTEROID)) {
             return internalEntity.getMaxServerSpeed();
         } else {
             return 0;
@@ -178,11 +182,11 @@ public class Entity {
         /**
          * Gets the entity's currently active Reactor. Returns null if the entity doesn't have any reactors.
          */
-        if(hasAnyReactors()) {
+        if (hasAnyReactors()) {
             ManagerContainer<?> manager = getManagerContainer();
             if (getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.STATION)) {
                 ReactorTree activeReactor = manager.getPowerInterface().getActiveReactor();
-                if(activeReactor != null) {
+                if (activeReactor != null) {
                     return new Reactor(activeReactor);
                 }
             }
@@ -194,7 +198,7 @@ public class Entity {
         /**
          * Gets the specified reactor from the entity. Returns null if the entity doesn't have any reactors.
          */
-        if(hasAnyReactors()) {
+        if (hasAnyReactors()) {
             return getReactors().get(i);
         }
         return null;
@@ -204,11 +208,11 @@ public class Entity {
         /**
          * Gets an ArrayList of all the entity's reactors. Returns null if the entity doesn't have any reactors.
          */
-        if(hasAnyReactors()) {
+        if (hasAnyReactors()) {
             ManagerContainer<?> manager = getManagerContainer();
             ArrayList<Reactor> reactors = new ArrayList<Reactor>();
-            if(getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.STATION)) {
-                if(manager instanceof ShipManagerContainer) {
+            if (getEntityType().equals(EntityType.SHIP) || getEntityType().equals(EntityType.STATION)) {
+                if (manager instanceof ShipManagerContainer) {
                     List<MainReactorUnit> allReactors = manager.getPowerInterface().getMainReactors();
                     for (MainReactorUnit reactorUnit : allReactors) {
                         reactors.add(new Reactor(reactorUnit.getPowerInterface().getActiveReactor()));
@@ -224,7 +228,7 @@ public class Entity {
         /**
          * Sets the entity's velocity. Doesn't do anything if the entity is immobile.
          */
-        if(getEntityType() != EntityType.STATION && getEntityType() != EntityType.SHOP && getEntityType() != EntityType.PLANETCORE) {
+        if (getEntityType() != EntityType.STATION && getEntityType() != EntityType.SHOP && getEntityType() != EntityType.PLANETCORE) {
             //Stations, Shops, and Planet Cores shouldn't have velocity
             internalEntity.getPhysicsObject().setLinearVelocity(direction);
         }
@@ -245,7 +249,7 @@ public class Entity {
         internalEntity.railController.getDockedRecusive(collection);
         ArrayList<Ship> ships = new ArrayList<Ship>();
         for (SegmentController controller : collection) {
-            if(controller instanceof org.schema.game.common.controller.Ship){
+            if (controller instanceof org.schema.game.common.controller.Ship) {
                 ships.add(new Ship((org.schema.game.common.controller.Ship) controller));
             }
         }
@@ -259,11 +263,11 @@ public class Entity {
         return getShields().get(i);
     }
 
-    public void setVulnerable(boolean val){
+    public void setVulnerable(boolean val) {
         internalEntity.setVulnerable(val);
     }
 
-    public boolean isVulnerable(){
+    public boolean isVulnerable() {
         return internalEntity.isVulnerable();
     }
 
@@ -273,9 +277,9 @@ public class Entity {
          */
         ManagerContainer<?> manager = getManagerContainer();
         ArrayList<Shield> shields = new ArrayList<Shield>();
-        if(manager instanceof ShieldContainerInterface) {
+        if (manager instanceof ShieldContainerInterface) {
             Collection<ShieldLocal> allShields = ((ShieldContainerInterface) manager).getShieldAddOn().getShieldLocalAddOn().getAllShields();
-            for(ShieldLocal sh : allShields) {
+            for (ShieldLocal sh : allShields) {
                 shields.add(new Shield(sh));
             }
             return shields;
@@ -295,13 +299,25 @@ public class Entity {
          * Gets the entity's type.
          */
         EntityType entityType = null;
-        switch(internalEntity.getType()){
-            case SPACE_STATION: entityType = EntityType.STATION; break;
-            case SHIP: entityType = EntityType.SHIP; break;
-            case ASTEROID: entityType = EntityType.ASTEROID; break;
-            case PLANET_CORE: entityType = EntityType.PLANETCORE; break;
-            case PLANET_SEGMENT: entityType = EntityType.PLANETSEGMENT; break;
-            case SHOP: entityType = EntityType.SHOP; break;
+        switch (internalEntity.getType()) {
+            case SPACE_STATION:
+                entityType = EntityType.STATION;
+                break;
+            case SHIP:
+                entityType = EntityType.SHIP;
+                break;
+            case ASTEROID:
+                entityType = EntityType.ASTEROID;
+                break;
+            case PLANET_CORE:
+                entityType = EntityType.PLANETCORE;
+                break;
+            case PLANET_SEGMENT:
+                entityType = EntityType.PLANETSEGMENT;
+                break;
+            case SHOP:
+                entityType = EntityType.SHOP;
+                break;
         }
         return entityType;
     }
@@ -310,8 +326,8 @@ public class Entity {
         return internalEntity.isOnServer();
     }
 
-    public Block getBlockAt(int x, int y, int z){
-        return new Block(internalEntity.getSegmentBuffer().getPointUnsave(x,y,z));
+    public Block getBlockAt(int x, int y, int z) {
+        return new Block(internalEntity.getSegmentBuffer().getPointUnsave(x, y, z));
     }
 
     public int getBlockAmount(Blocks block) {
@@ -327,7 +343,7 @@ public class Entity {
          */
         HashMap<Blocks, Integer> blocks = new HashMap<Blocks, Integer>();
 
-        for(Blocks value : Blocks.values()) {
+        for (Blocks value : Blocks.values()) {
             blocks.put(value, getBlockAmount(value));
         }
         return blocks;
@@ -338,9 +354,9 @@ public class Entity {
          * Gets the shield group last hit by any damage.
          */
         ManagerContainer<?> manager = getManagerContainer();
-        if(manager instanceof ShieldContainerInterface){
+        if (manager instanceof ShieldContainerInterface) {
             ShieldLocal lastHitShield = ((ShieldContainerInterface) manager).getShieldAddOn().getShieldLocalAddOn().getLastHitShield();
-            if(lastHitShield == null){
+            if (lastHitShield == null) {
                 return null;
             }
             return new Shield(lastHitShield);
@@ -353,8 +369,8 @@ public class Entity {
          * Gets an arraylist of players currently attached to the entity.
          */
         ArrayList<Player> pl = new ArrayList<Player>();
-        if(internalEntity instanceof PlayerControllable) {
-            for(PlayerState attachedPlayer : ((PlayerControllable) internalEntity).getAttachedPlayers()) {
+        if (internalEntity instanceof PlayerControllable) {
+            for (PlayerState attachedPlayer : ((PlayerControllable) internalEntity).getAttachedPlayers()) {
                 pl.add(new Player(attachedPlayer));
             }
         } else {
@@ -363,24 +379,25 @@ public class Entity {
         return pl;
     }
 
-    public Ship toShip(){
+    public Ship toShip() {
         return new Ship(internalEntity);
     }
 
-    public ArrayList<CustomAddOn> getCustomAddons(){
+    public ArrayList<CustomAddOn> getCustomAddons() {
 
         ArrayList<CustomAddOn> addons = new ArrayList<CustomAddOn>();
         ManagerContainer<?> manager = getManagerContainer();
         for (PlayerUsableInterface playerUsableInterface : manager.getPlayerUsable()) {
-            if(playerUsableInterface instanceof CustomAddOn){
+            if (playerUsableInterface instanceof CustomAddOn) {
                 addons.add((CustomAddOn) playerUsableInterface);
             }
         }
         return addons;
     }
-    public CustomAddOn getCustomAddon(Class<? extends CustomAddOn> clazz){
+
+    public CustomAddOn getCustomAddon(Class<? extends CustomAddOn> clazz) {
         for (CustomAddOn customAddon : getCustomAddons()) {
-            if(customAddon.getClass().equals(clazz)){
+            if (customAddon.getClass().equals(clazz)) {
                 return customAddon;
             }
         }
@@ -388,10 +405,10 @@ public class Entity {
     }
 
     public Sector getSector() {
-        if(GameServer.getServerState() != null){
+        if (GameServer.getServerState() != null) {
             org.schema.game.common.data.world.Sector sector = GameServer.getServerState().getUniverse().getSector(internalEntity.getSectorId());
             return new Sector(sector);
-        }else{
+        } else {
             //TODO what to do if client?
             return null;
         }
@@ -400,6 +417,7 @@ public class Entity {
     public boolean isStation() {
         return internalEntity instanceof SpaceStation;
     }
+
     public boolean isShip() {
         return internalEntity instanceof org.schema.game.common.controller.Ship;
     }
@@ -416,11 +434,29 @@ public class Entity {
         return new JumpInterdictor(getManagerContainer().getInterdictionAddOn());
     }
 
-    public ConfigEntityManager getConfigManager(){
+    public ConfigEntityManager getConfigManager() {
         return internalEntity.getConfigManager();
     }
 
     public Station toStation() {
         return new Station(internalEntity);
     }
+
+    public ArrayList<Block> getBlocksInArea(Vector3i min, Vector3i max) {
+        /**
+         * Gets all the blocks in a specified area on the entity;
+         */
+        ArrayList<Block> blocks = new ArrayList<>();
+
+        for (int y = min.y; y < max.y; y++) {
+            for (int x = min.x; x < max.x; x++) {
+                for (int z = min.z; z < max.z; z++) {
+                    blocks.add(getBlockAt(x, y, z));
+                }
+            }
+        }
+
+        return blocks;
+    }
+
 }
