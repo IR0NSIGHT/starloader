@@ -40,6 +40,7 @@ public class Server {
     public Server() {
 
     }
+
     /*public static void executeAdminCommand(String command){
         Only works if superadmin is enabled
         GameServer.getServerState().executeAdminCommand((String) ServerConfig.SUPER_ADMIN_PASSWORD.getCurrentState(), command, GameServer.getServerState().getAdminLocalClient());
@@ -57,7 +58,8 @@ public class Server {
         }
         //registeredClientInterface.executedAdminCommand();
     }
-    public static void broadcastMessage(String message){
+
+    public static void broadcastMessage(String message) {
         for (RegisteredClientOnServer client : getClients()) {
             try {
                 client.serverMessage(message);
@@ -66,7 +68,8 @@ public class Server {
             }
         }
     }
-    public static RegisteredClientOnServer getClientFromState(PlayerState state){
+
+    public static RegisteredClientOnServer getClientFromState(PlayerState state) {
         try {
             Field f = PlayerState.class.getDeclaredField("serverClient");
             f.setAccessible(true);
@@ -78,30 +81,36 @@ public class Server {
         }
         return null;
     }
-    public static ArrayList<Player> getOnlinePlayers(){
+
+    public static ArrayList<Player> getOnlinePlayers() {
         ArrayList<Player> ret = new ArrayList<Player>();
         for (PlayerState pState : getServerState().getPlayerStatesByName().values()) {
             ret.add(new Player(pState));
         }
         return ret;
     }
-    public static ObjectCollection<RegisteredClientOnServer> getClients(){
+
+    public static ObjectCollection<RegisteredClientOnServer> getClients() {
         return getServerState().getClients().values();
     }
-    public ArrayList<Entity> getLoadedEntities(){
+
+    public ArrayList<Entity> getLoadedEntities() {
         ArrayList<Entity> list = new ArrayList<Entity>();
         for (SegmentController e : Server.getServerState().getSegmentControllersByName().values()) {
             list.add(new Entity(e));
         }
         return list;
     }
-    public static GameServerState getServerState(){
+
+    public static GameServerState getServerState() {
         return GameServerState.instance;
     }
-    public static boolean isInitialized(){
+
+    public static boolean isInitialized() {
         return GameServer.getServerState() != null;
     }
-    public static void sendMessage(PlayerState player, String message){
+
+    public static void sendMessage(PlayerState player, String message) {
         RegisteredClientOnServer registeredClientOnServer = GameServer.getServerState().getClients().get(player.getClientId());
         try {
             registeredClientOnServer.serverMessage(message);
@@ -109,7 +118,8 @@ public class Server {
             e.printStackTrace();
         }
     }
-    public static PlayerState getPlayer(String name){
+
+    public static PlayerState getPlayer(String name) {
         try {
             return getServerState().getPlayerFromName(name);
         } catch (PlayerNotFountException e) {

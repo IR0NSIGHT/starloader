@@ -17,43 +17,47 @@ public class StarLoader {
     //TODO assign each of these a id and use an array
     //Allocate size for 20 listeners
     public static ArrayList<ArrayList<Listener>> listeners = new ArrayList<ArrayList<Listener>>();
-    static{
+
+    static {
         for (int i = 0; i < 40; i++) {
             listeners.add(new ArrayList<Listener>());
         }
     }
-    public static void clearListeners(){
+
+    public static void clearListeners() {
         listeners.clear();
         for (int i = 0; i < 40; i++) {
             listeners.add(new ArrayList<Listener>());
         }
     }
-    public static SendableGameState getGameState(){
-        if(GameServer.getServerState() != null){
+
+    public static SendableGameState getGameState() {
+        if (GameServer.getServerState() != null) {
             return GameServer.getServerState().getGameState();
-        }else if (GameClient.getClientState() != null){
+        } else if (GameClient.getClientState() != null) {
             return GameClient.getClientState().getGameState();
         }
         //Probably in the main menu or something
         return null;
     }
 
-    public static List<Listener> getListeners(int id){
+    public static List<Listener> getListeners(int id) {
         return listeners.get(id);
     }
 
-    public static void enableMod(StarMod mod){
+    public static void enableMod(StarMod mod) {
         DebugFile.log("== Enabling Mod " + mod.getInfo().toString());
         mod.onEnable();
         mod.flagEnabled(true);
     }
-    public static void dumpModInfos(){
+
+    public static void dumpModInfos() {
         for (StarMod mod : StarLoader.starMods) {
             DebugFile.log(mod.toString());
         }
     }
 
-    private static int getIdFromEvent(Class<? extends Event> clazz){
+    private static int getIdFromEvent(Class<? extends Event> clazz) {
         try {
             //Events have a static variable called id
             return (Integer) clazz.getField("id").get(null);
@@ -67,6 +71,7 @@ public class StarLoader {
         }
         return 0;
     }
+
     public static void registerListener(Class<? extends Event> clazz, Listener l) {
         DebugFile.log("Registering listener " + clazz.getName());
         int id = getIdFromEvent(clazz);
@@ -74,23 +79,25 @@ public class StarLoader {
     }
 
     //fire event methods:
-    public static void fireEvent(Class<? extends Event> clazz, Event ev){
+    public static void fireEvent(Class<? extends Event> clazz, Event ev) {
         int id = getIdFromEvent(clazz);
         //DebugFile.log("Firing Event: " +clazz.getName());
         for (Listener listener : getListeners(id)) {
             try {
                 listener.onEvent(ev);
-            }catch (Exception e){
+            } catch (Exception e) {
                 DebugFile.log("Exception during event: " + clazz.getName());
                 DebugFile.logError(e, null);
-                if(Server.isInitialized()) {
+                if (Server.isInitialized()) {
                     Server.broadcastMessage("An error occurred during event: " + clazz);
                 }
 
             }
         }
     }
+
     private static ArrayList<ImmutablePair<String, String>> commands = new ArrayList<ImmutablePair<String, String>>();
+
     public static void registerCommand(String name, String desc) {
         commands.add(new ImmutablePair<String, String>(name, desc));
     }

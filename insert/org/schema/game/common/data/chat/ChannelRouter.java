@@ -146,20 +146,20 @@ public class ChannelRouter implements DiskWritable {
         return var4;
     }
 
-    public void receive(ChatMessage var1) {
-        System.err.println("[CHANNELROUTER] RECEIVED MESSAGE ON " + this.state + ": " + var1.toDetailString());
-        //INSERTED CODE
-        if(var1.text.startsWith("!") && GameServer.getServerState() != null && this.isOnServer()){
+    public void receive(ChatMessage message) {
+        System.err.println("[CHANNELROUTER] RECEIVED MESSAGE ON " + this.state + ": " + message.toDetailString());
+        //INSERTED CODE @152
+        if(message.text.startsWith("!") && GameServer.getServerState() != null && this.isOnServer()){
             try {
-                PlayerState playerFromName = GameServer.getServerState().getPlayerFromName(var1.sender);
-                PlayerCommandEvent event = new PlayerCommandEvent(var1.text.split(" ")[0].replaceAll("!", ""), new Player(playerFromName), var1.text.split(" "));
+                PlayerState playerFromName = GameServer.getServerState().getPlayerFromName(message.sender);
+                PlayerCommandEvent event = new PlayerCommandEvent(message.text.split(" ")[0].replaceAll("!", ""), new Player(playerFromName), message.text.split(" "));
                 StarLoader.fireEvent(PlayerCommandEvent.class, event);
             } catch (PlayerNotFountException e) {
                 e.printStackTrace();
             }
 
         }else {
-            PlayerChatEvent event = new PlayerChatEvent(var1, this);
+            PlayerChatEvent event = new PlayerChatEvent(message, this);
             StarLoader.fireEvent(PlayerChatEvent.class, event);
             if (event.isCanceled()) {
                 return;
@@ -169,30 +169,30 @@ public class ChannelRouter implements DiskWritable {
 
         PlayerState var2;
         if (this.isOnServer()) {
-            if ((var2 = ((GameServerState)this.state).getPlayerFromNameIgnoreCaseWOException(var1.sender)) != null) {
+            if ((var2 = ((GameServerState)this.state).getPlayerFromNameIgnoreCaseWOException(message.sender)) != null) {
                 var2.getRuleEntityManager().triggerPlayerChat();
             }
 
-            this.log(var1);
-            this.sendAsServer(var1);
+            this.log(message);
+            this.sendAsServer(message);
         } else {
             if (!this.isOnServer() && this.state.isPassive()) {
                 Iterator var3 = ((GameClientState)this.state).getChatListeners().iterator();
 
                 while(var3.hasNext()) {
-                    ((ChatListener)var3.next()).notifyOfChat(var1);
+                    ((ChatListener)var3.next()).notifyOfChat(message);
                 }
             }
 
-            var2 = (PlayerState)((GameClientState)this.state).getOnlinePlayersLowerCaseMap().get(var1.sender.toLowerCase(Locale.ENGLISH));
-            if (!((GameClientState)this.state).getPlayer().isIgnored(var1.sender) || var2.getNetworkObject().isAdminClient.get()) {
-                if (var1.receiverType == ChatMessageType.DIRECT) {
-                    String var7 = DirectChatChannel.getChannelName(var1.sender, var1.receiver);
+            var2 = (PlayerState)((GameClientState)this.state).getOnlinePlayersLowerCaseMap().get(message.sender.toLowerCase(Locale.ENGLISH));
+            if (!((GameClientState)this.state).getPlayer().isIgnored(message.sender) || var2.getNetworkObject().isAdminClient.get()) {
+                if (message.receiverType == ChatMessageType.DIRECT) {
+                    String var7 = DirectChatChannel.getChannelName(message.sender, message.receiver);
                     ChatChannel var4;
                     if ((var4 = (ChatChannel)this.channels.get(var7)) == null) {
-                        PlayerState var5 = (PlayerState)((GameClientState)this.state).getOnlinePlayersLowerCaseMap().get(var1.receiver.toLowerCase(Locale.ENGLISH));
+                        PlayerState var5 = (PlayerState)((GameClientState)this.state).getOnlinePlayersLowerCaseMap().get(message.receiver.toLowerCase(Locale.ENGLISH));
                         if (var2 == null || var5 == null) {
-                            ((GameClientState)this.state).getController().popupAlertTextMessage(StringTools.format(Lng.ORG_SCHEMA_GAME_COMMON_DATA_CHAT_CHANNELROUTER_1, new Object[]{var1.sender, var1.receiver}), 0.0F);
+                            ((GameClientState)this.state).getController().popupAlertTextMessage(StringTools.format(Lng.ORG_SCHEMA_GAME_COMMON_DATA_CHAT_CHANNELROUTER_1, new Object[]{message.sender, message.receiver}), 0.0F);
                             return;
                         }
 
@@ -205,17 +205,17 @@ public class ChannelRouter implements DiskWritable {
                         assert this.channels.size() > 0;
                     }
 
-                    var4.receive(var1);
+                    var4.receive(message);
                     return;
                 }
 
                 ChatChannel var6;
-                if ((var6 = (ChatChannel)this.channels.get(var1.receiver)) != null) {
-                    var6.receive(var1);
+                if ((var6 = (ChatChannel)this.channels.get(message.receiver)) != null) {
+                    var6.receive(message);
                     return;
                 }
 
-                ((GameClientState)this.state).getController().popupAlertTextMessage(StringTools.format(Lng.ORG_SCHEMA_GAME_COMMON_DATA_CHAT_CHANNELROUTER_2, new Object[]{var1.sender, var1.receiver}), 0.0F);
+                ((GameClientState)this.state).getController().popupAlertTextMessage(StringTools.format(Lng.ORG_SCHEMA_GAME_COMMON_DATA_CHAT_CHANNELROUTER_2, new Object[]{message.sender, message.receiver}), 0.0F);
             }
 
         }
