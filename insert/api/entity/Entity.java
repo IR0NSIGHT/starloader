@@ -446,7 +446,7 @@ public class Entity {
         /**
          * Gets all the blocks in a specified area on the entity;
          */
-        ArrayList<Block> blocks = new ArrayList<>();
+        ArrayList<Block> blocks = new ArrayList<Block>();
 
         for (int y = min.y; y < max.y; y++) {
             for (int x = min.x; x < max.x; x++) {

@@ -1156,23 +1156,23 @@ public abstract class SendableSegmentController extends SegmentController implem
 
     }
 
-    public void onBlockKill(SegmentPiece var1, Damager var2) {
-        if (var1.getType() == 0) {
-            System.err.println(this.getState() + " WARNING: Killed an air block (should not happen) " + var1);
+    public void onBlockKill(SegmentPiece piece, Damager from) {
+        if (piece.getType() == 0) {
+            System.err.println(this.getState() + " WARNING: Killed an air block (should not happen) " + piece);
         } else if (this.isOnServer()) {
-            this.railController.getRoot().onDamageServerRootObject((float)var1.getInfo().getMaxHitPointsFull(), var2);
+            this.railController.getRoot().onDamageServerRootObject((float)piece.getInfo().getMaxHitPointsFull(), from);
         }
-        //INSERTED CODE
-        BlockKillEvent event = new BlockKillEvent(var1, this, var2);
+        //INSERTED CODE @1299
+        BlockKillEvent event = new BlockKillEvent(piece, this, from);
         StarLoader.fireEvent(BlockKillEvent.class, event);
         if(event.isCanceled()){
             return;
         }
         ///
 
-        this.blockProcessor.onBlockChanged((RemoteSegment)var1.getSegment());
+        this.blockProcessor.onBlockChanged((RemoteSegment)piece.getSegment());
         if (this instanceof ManagedSegmentController) {
-            ((ManagedSegmentController)this).getManagerContainer().onBlockKill(var1.getAbsoluteIndex(), var1.getType(), var2);
+            ((ManagedSegmentController)this).getManagerContainer().onBlockKill(piece.getAbsoluteIndex(), piece.getType(), from);
         }
 
     }
