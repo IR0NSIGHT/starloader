@@ -21,7 +21,7 @@ public class Installer {
         JarInputStream inputS = new JarInputStream(oldJarInputStream);
 
 
-        ArrayList<NamedInputStream> resources = new ArrayList<>();
+        ArrayList<NamedInputStream> resources = new ArrayList<NamedInputStream>();
         for (NamedInputStream s : FileAdder.filesToAdd){
             resources.add(s);
             System.out.println("Added " + s.getName());
