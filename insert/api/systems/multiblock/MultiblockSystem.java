@@ -1,18 +1,22 @@
 package api.systems.multiblock;
 
-import api.element.block.Blocks;
-import java.util.ArrayList;
+import java.util.Map;
 
 public class MultiblockSystem {
 
     private String controllerName;
-    private ArrayList<Blocks[][][]> layouts;
+    private char[][][] layout;
+    public Map<Character, String> blocks;
 
     public MultiblockSystem(String controllerName) {
         this.controllerName = controllerName;
     }
 
-    public void setLayout(int level, Blocks[][][] layout) {
-        layouts.set(level, layout);
+    public void setLayout(char[][][] charLayout) {
+        this.layout = layout;
+    }
+
+    public void setBlock(char character, String blockName) {
+        blocks.put(character, blockName);
     }
 }
