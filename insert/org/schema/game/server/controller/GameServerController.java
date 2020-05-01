@@ -2639,6 +2639,10 @@ public class GameServerController extends ServerController implements MineInterf
         var1.spawnedOnce = true;
         var1.setAlive(true);
         var1.lastSpawnedThisSession(System.currentTimeMillis());
+        //INSERTED CODE @1235
+        PlayerSpawnEvent event = new PlayerSpawnEvent(var1.getCurrentSector(), var3);
+        StarLoader.fireEvent(PlayerSpawnEvent.class, event);
+        ///
     }
 
     public void triggerForcedSave() {
