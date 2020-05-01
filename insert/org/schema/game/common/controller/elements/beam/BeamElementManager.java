@@ -12,7 +12,6 @@ import javax.vecmath.Vector4f;
 
 import api.listener.events.DamageBeamShootEvent;
 import api.mod.StarLoader;
-import api.systems.modules.custom.CustomShipBeamElement;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.view.gui.structurecontrol.ControllerManagerGUI;
