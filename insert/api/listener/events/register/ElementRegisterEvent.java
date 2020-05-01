@@ -7,7 +7,6 @@ import org.schema.game.common.controller.elements.UsableControllableElementManag
 import java.util.ArrayList;
 
 public class ElementRegisterEvent extends Event {
-    public static int id = idLog++;
     private ShipManagerContainer container;
 
     public ElementRegisterEvent(ShipManagerContainer container){

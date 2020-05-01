@@ -5,7 +5,6 @@ import org.schema.schine.input.KeyboardEvent;
 
 @ClientEvent
 public class KeyPressEvent extends Event{
-    public static int id = 5;
     private KeyboardEvent event;
 
     public KeyPressEvent(KeyboardEvent event) {

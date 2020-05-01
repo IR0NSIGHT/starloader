@@ -6,7 +6,6 @@ import org.schema.game.common.controller.damage.Damager;
 import org.schema.game.common.data.player.PlayerState;
 
 public class PlayerDeathEvent extends Event {
-    public static int id = idLog++;
     private Player player;
     private Damager damager;
 

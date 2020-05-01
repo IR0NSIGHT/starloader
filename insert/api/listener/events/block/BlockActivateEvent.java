@@ -9,7 +9,6 @@ import org.schema.game.common.data.SegmentPiece;
 
 public class BlockActivateEvent extends Event {
 
-    public static int id = idLog++;
     private final ActivationElementManager manager;
     private final Block block;
     private final Entity entity;

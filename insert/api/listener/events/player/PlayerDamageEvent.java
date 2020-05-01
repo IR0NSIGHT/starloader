@@ -7,7 +7,6 @@ import org.schema.game.common.data.player.Destroyable;
 import org.schema.game.common.data.player.PlayerState;
 
 public class PlayerDamageEvent extends Event {
-    public static int id = idLog++;
     private final float damage;
     private final Destroyable destroyable;
     private final Damager damager;

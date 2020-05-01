@@ -8,7 +8,6 @@ import org.schema.game.common.controller.damage.Damager;
 import org.schema.game.common.data.SegmentPiece;
 
 public class BlockKillEvent extends Event {
-    public static int id = idLog++;
     private final Damager damager;
     private final Entity entity;
     private final Block block;

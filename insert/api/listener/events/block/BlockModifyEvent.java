@@ -6,7 +6,6 @@ import org.schema.game.common.controller.BlockProcessor;
 import org.schema.game.common.data.VoidSegmentPiece;
 
 public class BlockModifyEvent extends Event {
-    public static int id = idLog++;
     private Block block;
     private BlockProcessor.PieceList pieces;
 

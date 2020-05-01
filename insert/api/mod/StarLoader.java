@@ -10,25 +10,15 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.schema.game.common.data.SendableGameState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class StarLoader {
     public static ArrayList<StarMod> starMods = new ArrayList<StarMod>();
-    //TODO assign each of these a id and use an array
-    //Allocate size for 20 listeners
-    public static ArrayList<ArrayList<Listener>> listeners = new ArrayList<ArrayList<Listener>>();
-
-    static {
-        for (int i = 0; i < 40; i++) {
-            listeners.add(new ArrayList<Listener>());
-        }
-    }
+    public static HashMap<Class<? extends Event>, ArrayList<Listener>> listeners = new HashMap<>();
 
     public static void clearListeners() {
         listeners.clear();
-        for (int i = 0; i < 40; i++) {
-            listeners.add(new ArrayList<Listener>());
-        }
     }
 
     public static SendableGameState getGameState() {
@@ -41,8 +31,8 @@ public class StarLoader {
         return null;
     }
 
-    public static List<Listener> getListeners(int id) {
-        return listeners.get(id);
+    public static List<Listener> getListeners(Class<? extends Event> clazz) {
+        return listeners.get(clazz);
     }
 
     public static void enableMod(StarMod mod) {
@@ -57,32 +47,25 @@ public class StarLoader {
         }
     }
 
-    private static int getIdFromEvent(Class<? extends Event> clazz) {
-        try {
-            //Events have a static variable called id
-            return (Integer) clazz.getField("id").get(null);
-            //I could also make it a hashmap<string, listener> and no id's would be needed... but whatever
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            DebugFile.logError(e, null);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            DebugFile.logError(e, null);
-        }
-        return 0;
-    }
-
     public static void registerListener(Class<? extends Event> clazz, Listener l) {
         DebugFile.log("Registering listener " + clazz.getName());
-        int id = getIdFromEvent(clazz);
-        getListeners(id).add(l);
+        List<Listener> listeners = StarLoader.getListeners(clazz);
+        if (listeners == null) {
+            ArrayList<Listener> new_listeners = new ArrayList<>();
+            new_listeners.add(l);
+            StarLoader.listeners.put(clazz, new_listeners);
+        } else {
+            listeners.add(l);
+        }
     }
 
     //fire event methods:
     public static void fireEvent(Class<? extends Event> clazz, Event ev) {
-        int id = getIdFromEvent(clazz);
         //DebugFile.log("Firing Event: " +clazz.getName());
-        for (Listener listener : getListeners(id)) {
+        List<Listener> lstners = getListeners(clazz);
+        if (lstners == null) // Avoid iterating on null Event listeners
+            return ;
+        for (Listener listener : lstners) {
             try {
                 listener.onEvent(ev);
             } catch (Exception e) {

@@ -8,7 +8,6 @@ import org.schema.game.common.controller.elements.weapon.WeaponUnit;
 import javax.vecmath.Vector4f;
 
 public class CannonShootEvent extends Event {
-    public static int id = idLog++;
     Cannon cannon;
 
     public CannonShootEvent(WeaponUnit unit){
