@@ -9,7 +9,6 @@ import org.schema.game.common.controller.elements.shield.capacity.ShieldCapacity
 import java.util.ArrayList;
 
 public class ShieldCapacityCalculateEvent extends Event {
-    public static int id = idLog++;
     private final ShieldCapacityUnit unit;
     private final Shield shield;
     private double capacity;

@@ -9,7 +9,6 @@ import org.schema.game.common.controller.elements.jumpdrive.JumpAddOn;
 
 @ServerEvent
 public class ShipJumpEngageEvent extends Event {
-    public static int id = 9;
     private final SegmentController controller;
     private final JumpAddOn addOn;
     private Vector3i originalSector;

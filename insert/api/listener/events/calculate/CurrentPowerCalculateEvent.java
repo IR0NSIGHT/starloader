@@ -5,7 +5,6 @@ import api.listener.events.Event;
 import org.schema.game.common.controller.elements.power.reactor.PowerImplementation;
 
 public class CurrentPowerCalculateEvent extends Event {
-    public static int id = idLog++;
     private final PowerImplementation impl;
     private double power;
     private Entity entity;

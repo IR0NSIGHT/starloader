@@ -7,7 +7,6 @@ import org.schema.game.common.controller.elements.ManagerContainer;
 import java.util.ArrayList;
 
 public class RegisterAddonsEvent extends Event {
-    public static int id = idLog++;
     private ManagerContainer<?> container;
     public RegisterAddonsEvent(ManagerContainer<?> container){
         this.container = container;

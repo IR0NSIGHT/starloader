@@ -6,7 +6,6 @@ import org.schema.game.common.controller.elements.beam.BeamUnit;
 import org.schema.game.common.controller.elements.beam.damageBeam.DamageBeamUnit;
 
 public class DamageBeamShootEvent extends Event {
-    public static int id = idLog++;
     DamageBeam beamWeapon;
     private BeamCommand command;
 

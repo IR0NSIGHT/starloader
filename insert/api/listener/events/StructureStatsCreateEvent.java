@@ -9,7 +9,6 @@ import org.schema.game.common.controller.SegmentController;
 import org.schema.schine.graphicsengine.forms.gui.newgui.GUIContentPane;
 
 public class StructureStatsCreateEvent extends Event {
-    public static int id = 3;
     private StructureTab tab;
     private AdvancedStructureStatsGUISGroup group;
     private GUIContentPane contentPane;
