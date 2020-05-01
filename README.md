@@ -3,7 +3,8 @@
 StarLoader is a mod API, as well as a program to replace starmades .java files with your own.
 
 ## I want to make a mod
-See [Api Documentation]
+See [Getting Started](https://gitlab.com/generic-username/starloader/-/wikis/home)\
+Also see: [Api Documentation](https://starloader-api.readthedocs.io/en/latest/?)
 
 ## Installation (IntelliJ)
  - Clone into a new project
@@ -15,7 +16,7 @@ See [Api Documentation]
  - Done!
  
 ## Installation (Eclipse)
-[WIP]
+WIP
 
 ## ModPlayground.java
 This file allows you to play around with the event system and modding in general. Take a look around
@@ -23,7 +24,7 @@ This file allows you to play around with the event system and modding in general
 It is located in insert/api
 
 ## Replacing classes
- - Everything in insert/api and insert/org replace the existing starmade classes.
+ - Everything in insert/api and insert/org will replace the existing starmade classes.
  - If you want to make your own, decompile the file you want to add stuff to, then copy its contents to the correct folder.
  - You can tell if you got the right folder because the 'package org.schema.whatever' will NOT have an error
  - Once enough functionality is in place, mod makers shouldn't have to use this.
