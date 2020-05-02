@@ -46,6 +46,7 @@ public class StarLoader {
             DebugFile.log(mod.toString());
         }
     }
+
     public static void registerListener(Class<? extends Event> clazz, Listener l) {
         registerListener(clazz, l, null);
     }
