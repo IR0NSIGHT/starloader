@@ -5,8 +5,6 @@ import org.schema.game.common.data.player.playermessage.PlayerMessage;
 
 public class MailReceiveEvent extends Event{
 
-    public static int id = 6;
-
     private final PlayerMessage message;
     private final ClientChannel channel;
     private final boolean onServer;

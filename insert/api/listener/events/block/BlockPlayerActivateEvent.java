@@ -11,7 +11,6 @@ import org.schema.game.common.data.player.PlayerState;
 
 public class BlockPlayerActivateEvent extends Event {
 
-    public static int id = idLog ++;
     private final ActivationElementManager manager;
     private final Block block;
     private final Entity entity;

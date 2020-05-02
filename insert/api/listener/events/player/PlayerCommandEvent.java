@@ -7,7 +7,6 @@ import org.schema.game.common.controller.EditableSendableSegmentController;
 import java.util.Arrays;
 
 public class PlayerCommandEvent extends Event {
-    public static int id = idLog++;
     public final String command;
     public final Player player;
     public final String[] args;

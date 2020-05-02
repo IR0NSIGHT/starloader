@@ -13,7 +13,6 @@ import javax.vecmath.Vector3f;
 import java.util.Collection;
 
 public class DamageBeamHitEvent extends Event{
-    public static int id = 10;
     private final DamageBeamHitHandlerSegmentController inst;
     private final SegmentController hitSegment;
     BeamEntity beamEntity;
