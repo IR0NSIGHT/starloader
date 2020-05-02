@@ -14,7 +14,6 @@ import java.util.Collection;
 
 @ServerEvent
 public class BlockSalvageEvent extends Event {
-    public static int id = idLog++;
     private BeamEntity beamEntity;
     private final int salvagePower;
     private final Vector3f direction;

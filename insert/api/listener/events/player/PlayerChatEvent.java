@@ -5,7 +5,6 @@ import org.schema.game.common.data.chat.ChannelRouter;
 import org.schema.game.network.objects.ChatMessage;
 
 public class PlayerChatEvent extends Event {
-    public static int id = idLog++;
     private ChatMessage message;
     private ChannelRouter channelRouter;
 

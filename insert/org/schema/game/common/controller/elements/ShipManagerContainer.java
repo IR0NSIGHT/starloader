@@ -7,14 +7,7 @@ package org.schema.game.common.controller.elements;
 
 import api.listener.events.register.ElementRegisterEvent;
 import api.mod.StarLoader;
-import api.systems.modules.custom.CustomShipBeamElement;
-import api.systems.modules.custom.example.disruptor.CustomBeamCollectionManager;
-import api.systems.modules.custom.example.disruptor.CustomBeamElementManager;
-import api.systems.modules.custom.example.disruptor.CustomBeamUnit;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import org.schema.common.util.ByteUtil;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.common.util.linAlg.Vector4i;
@@ -94,18 +87,8 @@ import org.schema.game.common.controller.elements.missile.dumb.DumbMissileUnit;
 import org.schema.game.common.controller.elements.power.PowerAddOn;
 import org.schema.game.common.controller.elements.power.PowerCollectionManager;
 import org.schema.game.common.controller.elements.power.PowerUnit;
-import org.schema.game.common.controller.elements.power.reactor.MainReactorCollectionManager;
-import org.schema.game.common.controller.elements.power.reactor.MainReactorElementManager;
-import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
-import org.schema.game.common.controller.elements.power.reactor.StabilizerCollectionManager;
-import org.schema.game.common.controller.elements.power.reactor.StabilizerElementManager;
-import org.schema.game.common.controller.elements.power.reactor.StabilizerUnit;
-import org.schema.game.common.controller.elements.power.reactor.chamber.ConduitCollectionManager;
-import org.schema.game.common.controller.elements.power.reactor.chamber.ConduitElementManager;
-import org.schema.game.common.controller.elements.power.reactor.chamber.ConduitUnit;
-import org.schema.game.common.controller.elements.power.reactor.chamber.ReactorChamberCollectionManager;
-import org.schema.game.common.controller.elements.power.reactor.chamber.ReactorChamberElementManager;
-import org.schema.game.common.controller.elements.power.reactor.chamber.ReactorChamberUnit;
+import org.schema.game.common.controller.elements.power.reactor.*;
+import org.schema.game.common.controller.elements.power.reactor.chamber.*;
 import org.schema.game.common.controller.elements.powerbattery.PowerBatteryCollectionManager;
 import org.schema.game.common.controller.elements.powerbattery.PowerBatteryUnit;
 import org.schema.game.common.controller.elements.powercap.PowerCapacityCollectionManager;
@@ -165,6 +148,10 @@ import org.schema.schine.resource.tag.FinishTag;
 import org.schema.schine.resource.tag.Tag;
 import org.schema.schine.resource.tag.Tag.Type;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 public class ShipManagerContainer extends ManagerContainer<Ship> implements ActivationManagerInterface, DoorContainerInterface, EffectManagerContainer, ExplosiveManagerContainerInterface, JumpProhibiterModuleInterface, ManagerThrustInterface, MissileModuleInterface, PulseManagerInterface, RailManagerInterface, SalvageManagerContainer, ShieldContainerInterface, TransporterModuleInterface, TriggerManagerInterface, WeaponManagerInterface, DockingBlockManagerInterface, ScannerManagerInterface {
     private PowerAddOn powerAddOn;
     private ShieldAddOn shieldAddOn;
@@ -195,9 +182,6 @@ public class ShipManagerContainer extends ManagerContainer<Ship> implements Acti
     private ManagerModuleCollection<FixedDockingBlockUnit, FixedDockingBlockCollectionManager, FixedDockingBlockElementManager> fixedDockingBlock;
     private ManagerModuleCollection<RepairUnit, RepairBeamCollectionManager, RepairElementManager> repair;
     private ManagerModuleCollection<TractorUnit, TractorBeamCollectionManager, TractorElementManager> tractorBeam;
-
-    private ManagerModuleCollection<CustomBeamUnit, CustomBeamCollectionManager, CustomBeamElementManager> disruptorBeam;
-
     private ManagerModuleCollection<WeaponUnit, WeaponCollectionManager, WeaponElementManager> weapon;
     private ManagerModuleCollection<JumpDriveUnit, JumpDriveCollectionManager, JumpDriveElementManager> jumpDrive;
     private ManagerModuleCollection<JumpInhibitorUnit, JumpInhibitorCollectionManager, JumpInhibitorElementManager> jumpProhibiter;

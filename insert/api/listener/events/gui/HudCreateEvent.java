@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class HudCreateEvent extends Event {
-    public static int id = idLog++;
     private Hud hud;
     private GameClientState state;
     public ArrayList<GUIElement> elements = new ArrayList<GUIElement>();
