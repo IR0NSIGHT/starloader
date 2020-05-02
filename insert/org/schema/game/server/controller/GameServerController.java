@@ -1112,10 +1112,8 @@ public class GameServerController extends ServerController implements MineInterf
                                             this.getSynchController().addNewSynchronizedObjectQueued(var161);
                                             var8.getInventory((Vector3i)null).incExistingAndSend((short)1, -1, var8.getNetworkObject());
 
-
-
                                             LogUtil.log().fine("[SPAWN] " + var8.getName() + " spawned new ship: \"" + var161.getRealName() + "\"");
-                                            //INSERTED CODE @1235
+                                            //INSERTED CODE
                                             EntitySpawnEvent event = new EntitySpawnEvent(var161.getRemoteSector().getServerSector().pos, var161);
                                             StarLoader.fireEvent(EntitySpawnEvent.class, event);
                                             ///
@@ -1133,7 +1131,7 @@ public class GameServerController extends ServerController implements MineInterf
                                     try {
                                         Vehicle var9 = var7.getVehicle(this.state);
                                         this.getSynchController().addNewSynchronizedObjectQueued(var9);
-                                        //INSERTED CODE @1235
+                                        //INSERTED CODE
                                         EntitySpawnEvent event = new EntitySpawnEvent(var9.getRemoteSector().getServerSector().pos, var9);
                                         StarLoader.fireEvent(EntitySpawnEvent.class, event);
                                         ///
@@ -1168,7 +1166,7 @@ public class GameServerController extends ServerController implements MineInterf
                                                 var8.modCreditsServer((long)(-this.getState().getGameState().getStationCost()));
                                                 this.getSynchController().addNewSynchronizedObjectQueued(var181);
                                                 LogUtil.log().fine("[SPAWN] " + var8.getName() + " spawned new station: \"" + var181.getRealName() + "\"");
-                                                //INSERTED CODE @1235
+                                                //INSERTED CODE
                                                 EntitySpawnEvent event = new EntitySpawnEvent(var181.getRemoteSector().getServerSector().pos, var181);
                                                 StarLoader.fireEvent(EntitySpawnEvent.class, event);
                                                 ///
@@ -2639,7 +2637,7 @@ public class GameServerController extends ServerController implements MineInterf
         var1.spawnedOnce = true;
         var1.setAlive(true);
         var1.lastSpawnedThisSession(System.currentTimeMillis());
-        //INSERTED CODE @1235
+        //INSERTED CODE
         PlayerSpawnEvent event = new PlayerSpawnEvent(var1.getCurrentSector(), var3);
         StarLoader.fireEvent(PlayerSpawnEvent.class, event);
         ///
