@@ -67,7 +67,7 @@ public class ModPlayground extends StarMod {
                     }
                 }
             }
-        });
+        }, this);
 
 
         /*StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
@@ -102,6 +102,7 @@ public class ModPlayground extends StarMod {
                 PlayerCommandEvent e = (PlayerCommandEvent) event;
                 Player p = e.player;
                 if(e.command.equalsIgnoreCase("test")){
+                    DebugFile.log("Test called", getMod());
                     Entity currentEntity = p.getCurrentEntity();
                     if(currentEntity == null){
                         p.sendServerMessage("You are in: nothing, thanks for playing");

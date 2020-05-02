@@ -1,5 +1,6 @@
 package api.listener.events;
 
+import api.entity.Entity;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.Ship;
@@ -19,5 +20,9 @@ public class EntitySpawnEvent extends Event {
 
     public SegmentController getController() {
         return controller;
+    }
+
+    public Entity getEntity(){
+        return new Entity(controller);
     }
 }

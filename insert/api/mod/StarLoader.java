@@ -15,7 +15,7 @@ import java.util.List;
 
 public class StarLoader {
     public static ArrayList<StarMod> starMods = new ArrayList<StarMod>();
-    public static HashMap<Class<? extends Event>, ArrayList<Listener>> listeners = new HashMap<>();
+    public static HashMap<Class<? extends Event>, ArrayList<Listener>> listeners = new HashMap<Class<? extends Event>, ArrayList<Listener>>();
 
     public static void clearListeners() {
         listeners.clear();
@@ -46,12 +46,17 @@ public class StarLoader {
             DebugFile.log(mod.toString());
         }
     }
-
     public static void registerListener(Class<? extends Event> clazz, Listener l) {
+        registerListener(clazz, l, null);
+    }
+
+    public static void registerListener(Class<? extends Event> clazz, Listener l, StarMod mod) {
+
         DebugFile.log("Registering listener " + clazz.getName());
         List<Listener> listeners = StarLoader.getListeners(clazz);
+        l.setMod(mod);
         if (listeners == null) {
-            ArrayList<Listener> new_listeners = new ArrayList<>();
+            ArrayList<Listener> new_listeners = new ArrayList<Listener>();
             new_listeners.add(l);
             StarLoader.listeners.put(clazz, new_listeners);
         } else {
