@@ -6,7 +6,6 @@ import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.data.player.PlayerCharacter;
 
 public class PlayerSpawnEvent extends Event {
-    public static int id = idLog++;
     private final Vector3i sector;
     private PlayerCharacter player;
 
