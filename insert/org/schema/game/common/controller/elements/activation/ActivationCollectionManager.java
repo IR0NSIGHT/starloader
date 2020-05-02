@@ -112,7 +112,7 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
                 if (ElementKeyMap.isValidType(piece.getType())) {
                     //INSERTED CODE @129
                     BlockActivateEvent ev = new BlockActivateEvent(man, piece, this);
-                    StarLoader.fireEvent(BlockActivateEvent.class, ev);
+                    StarLoader.fireEvent(BlockActivateEvent.class, ev, this.isOnServer());
                     if(ev.isCanceled()){
                         return 0;
                     }

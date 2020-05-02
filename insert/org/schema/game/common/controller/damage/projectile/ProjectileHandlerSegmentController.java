@@ -381,7 +381,7 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
 
                     //INSERTED CODE @721
                     EntityDamageEvent event = new EntityDamageEvent(this.shotHandler.hitSegController, this.shotHandler, this, this.shotHandler.hitType, damager);
-                    StarLoader.fireEvent(EntityDamageEvent.class, event);
+                    StarLoader.fireEvent(EntityDamageEvent.class, event, this.isOnServer());
                     ///
 
                     if (this.shotHandler.typesHit.size() > 0) {

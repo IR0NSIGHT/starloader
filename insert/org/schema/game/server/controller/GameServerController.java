@@ -1115,7 +1115,7 @@ public class GameServerController extends ServerController implements MineInterf
                                             LogUtil.log().fine("[SPAWN] " + var8.getName() + " spawned new ship: \"" + var161.getRealName() + "\"");
                                             //INSERTED CODE
                                             EntitySpawnEvent event = new EntitySpawnEvent(var161.getRemoteSector().getServerSector().pos, var161);
-                                            StarLoader.fireEvent(EntitySpawnEvent.class, event);
+                                            StarLoader.fireEvent(EntitySpawnEvent.class, event, true);
                                             ///
                                         }
                                     } catch (EntityAlreadyExistsException var109) {
@@ -1133,7 +1133,7 @@ public class GameServerController extends ServerController implements MineInterf
                                         this.getSynchController().addNewSynchronizedObjectQueued(var9);
                                         //INSERTED CODE
                                         EntitySpawnEvent event = new EntitySpawnEvent(var9.getRemoteSector().getServerSector().pos, var9);
-                                        StarLoader.fireEvent(EntitySpawnEvent.class, event);
+                                        StarLoader.fireEvent(EntitySpawnEvent.class, event, true);
                                         ///
                                     } catch (EntityAlreadyExistsException var108) {
                                         var108.printStackTrace();
@@ -1168,7 +1168,7 @@ public class GameServerController extends ServerController implements MineInterf
                                                 LogUtil.log().fine("[SPAWN] " + var8.getName() + " spawned new station: \"" + var181.getRealName() + "\"");
                                                 //INSERTED CODE
                                                 EntitySpawnEvent event = new EntitySpawnEvent(var181.getRemoteSector().getServerSector().pos, var181);
-                                                StarLoader.fireEvent(EntitySpawnEvent.class, event);
+                                                StarLoader.fireEvent(EntitySpawnEvent.class, event, true);
                                                 ///
                                             } else if (var11 >= var10) {
                                                 var8.sendServerMessagePlayerError(new Object[]{460, var10});
@@ -1280,7 +1280,7 @@ public class GameServerController extends ServerController implements MineInterf
                                 });
                                 //INSERTED CODE @1234
                                 EntitySpawnEvent event = new EntitySpawnEvent(outline.spawnSectorId, spawn);
-                                StarLoader.fireEvent(EntitySpawnEvent.class, event);
+                                StarLoader.fireEvent(EntitySpawnEvent.class, event, true);
                                 ///
                             } catch (EntityAlreadyExistsException var105) {
                                 var105.printStackTrace();
@@ -2639,7 +2639,7 @@ public class GameServerController extends ServerController implements MineInterf
         var1.lastSpawnedThisSession(System.currentTimeMillis());
         //INSERTED CODE
         PlayerSpawnEvent event = new PlayerSpawnEvent(var1.getCurrentSector(), var3);
-        StarLoader.fireEvent(PlayerSpawnEvent.class, event);
+        StarLoader.fireEvent(PlayerSpawnEvent.class, event, true);
         ///
     }
 

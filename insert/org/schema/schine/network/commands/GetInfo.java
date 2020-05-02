@@ -60,7 +60,7 @@ public class GetInfo extends Command {
         int connectedClients = state.getClients().size();
         int maxClients = state.getMaxClients();
         ServerPingEvent event = new ServerPingEvent(version, state.getServerName(), state.getServerDesc(), connectedClients, maxClients);
-        StarLoader.fireEvent(ServerPingEvent.class, event);
+        StarLoader.fireEvent(ServerPingEvent.class, event, true);
 
         System.err.println("[SERVER] This client is an info ping (server-lists): " + serverProcessor.getClientIp() + "; PID: " + serverProcessor.id);
         serverProcessor.setInfoPinger(true);

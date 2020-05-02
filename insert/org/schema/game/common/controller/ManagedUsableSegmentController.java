@@ -316,7 +316,7 @@ public abstract class ManagedUsableSegmentController<E extends ManagedUsableSegm
                 //INSERTED CODE @379
                 //Note that this currently only calls for the server.
                 BlockSalvageEvent event = new BlockSalvageEvent(beam, (int) salvageDamage, to, segmentPiece, updatedSegments);
-                StarLoader.fireEvent(BlockSalvageEvent.class, event);
+                StarLoader.fireEvent(BlockSalvageEvent.class, event, this.isOnServer());
                 if(event.isCanceled()){
                     return beamHits;
                 }

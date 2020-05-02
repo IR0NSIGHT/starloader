@@ -1164,7 +1164,7 @@ public abstract class SendableSegmentController extends SegmentController implem
         }
         //INSERTED CODE @1298
         BlockKillEvent event = new BlockKillEvent(piece, this, from);
-        StarLoader.fireEvent(BlockKillEvent.class, event);
+        StarLoader.fireEvent(BlockKillEvent.class, event, this.isOnServer());
         if(event.isCanceled()){
             return;
         }

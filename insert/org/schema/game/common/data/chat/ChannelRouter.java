@@ -153,14 +153,14 @@ public class ChannelRouter implements DiskWritable {
             try {
                 PlayerState playerFromName = GameServer.getServerState().getPlayerFromName(message.sender);
                 PlayerCommandEvent event = new PlayerCommandEvent(message.text.split(" ")[0].replaceAll("!", ""), new Player(playerFromName), message.text.split(" "));
-                StarLoader.fireEvent(PlayerCommandEvent.class, event);
+                StarLoader.fireEvent(PlayerCommandEvent.class, event, this.isOnServer());
             } catch (PlayerNotFountException e) {
                 e.printStackTrace();
             }
 
         }else {
             PlayerChatEvent event = new PlayerChatEvent(message, this);
-            StarLoader.fireEvent(PlayerChatEvent.class, event);
+            StarLoader.fireEvent(PlayerChatEvent.class, event, this.isOnServer());
             if (event.isCanceled()) {
                 return;
             }

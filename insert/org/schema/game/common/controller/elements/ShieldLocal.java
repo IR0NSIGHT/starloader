@@ -165,7 +165,7 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
             //INSERTED CODE @178
             this.shieldCapacity += (double)((float)cap.size() * VoidElementManager.SHIELD_LOCAL_CAPACITY_PER_BLOCK);
             ShieldCapacityCalculateEvent event = new ShieldCapacityCalculateEvent(cap, this, this.shieldCapacity);
-            StarLoader.fireEvent(ShieldCapacityCalculateEvent.class, event);
+            StarLoader.fireEvent(ShieldCapacityCalculateEvent.class, event, this.shieldLocalAddOn.getSegmentController().isOnServer());
             this.shieldCapacity = event.getCapacity();
             ///
             this.capacityIntegrity = Math.min(this.capacityIntegrity, cap.getIntegrity());
@@ -185,7 +185,7 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
 
             //INSERTED CODE @205
             ShieldHitEvent event = new ShieldHitEvent(this, hit, shieldDPS, shieldAlpha, hit.getDamage());
-            StarLoader.fireEvent(ShieldHitEvent.class, event);
+            StarLoader.fireEvent(ShieldHitEvent.class, event, this.shieldLocalAddOn.getSegmentController().isOnServer());
             hit.setDamage(event.getDamage());
             if(event.isCanceled()){
                 hit.hasHit = false;
