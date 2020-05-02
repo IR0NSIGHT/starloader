@@ -12,7 +12,6 @@ import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import javax.vecmath.Vector3f;
 
 public class ShieldHitEvent extends Event {
-    public static int id = idLog++;
     private Shield shield;
     ShieldHitCallback shieldHit;
     private final boolean isLowDamage;

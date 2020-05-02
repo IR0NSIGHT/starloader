@@ -6,7 +6,6 @@ import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.jumpdrive.JumpAddOn;
 
 public class InterdictionCheckEvent extends Event {
-    public static int id = idLog++;
     private final Entity entity;
     private final JumpAddOn addOn;
     private boolean isInterdicted = false;
