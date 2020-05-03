@@ -12,6 +12,7 @@ import api.listener.events.register.RegisterEffectsEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.schema.game.client.view.GameResourceLoader;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 
 public class ModPlayground extends StarMod {
@@ -34,9 +35,11 @@ public class ModPlayground extends StarMod {
     }
 
     public static void initBlockData() {
+        DebugFile.log("Initializing block data for enabled mods: ");
         final BlockConfig config = new BlockConfig();
         for (StarMod mod : StarLoader.starMods) {
             if(mod.isEnabled()) {
+                DebugFile.log("Initializing block for mod: " + mod.modName);
                 mod.onBlockConfigLoad(config);
             }
         }
@@ -118,6 +121,7 @@ public class ModPlayground extends StarMod {
             public void onEvent(Event event) {
                 HudCreateEvent ev = (HudCreateEvent) event;
                 BasicInfoGroup bar = new BasicInfoGroup(ev);
+                DebugFile.log("DUMPING DATA OF CUBETEXTURE3D");
             }
         });
 
