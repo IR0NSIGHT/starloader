@@ -35,7 +35,6 @@ public class ModStarter {
             mod.flagEnabled(true);
             DebugFile.log("[Server] <<< Enabled: " + mod.modName);
         }
-        ModPlayground.initBlockData();
     }
     public static void postServerStart(){
         //whatever lol
@@ -136,7 +135,6 @@ public class ModStarter {
                 //DebugFile.log("We are going to download some mods, so dont start the client yet");
 
             }
-            ModPlayground.initBlockData();
         }
         //Force enable any test mods
         for (StarMod starMod : StarLoader.starMods) {
