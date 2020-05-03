@@ -64,7 +64,7 @@ public class JumpAddOn extends RecharchableSingleModule {
                     //INSERTED CODE @73
                     Vector3i oldSector = this.getSegmentController().getSector(new Vector3i());
                     ShipJumpEngageEvent event = new ShipJumpEngageEvent(this.getSegmentController(), this, oldSector);
-                    StarLoader.fireEvent(ShipJumpEngageEvent.class, event);
+                    StarLoader.fireEvent(ShipJumpEngageEvent.class, event, this.isOnServer());
                     if(event.isCanceled()){
                         return false;
                     }
@@ -115,7 +115,7 @@ public class JumpAddOn extends RecharchableSingleModule {
             }
         }
         InterdictionCheckEvent event = new InterdictionCheckEvent(this, this.segmentController, false);
-        StarLoader.fireEvent(InterdictionCheckEvent.class, event);
+        StarLoader.fireEvent(InterdictionCheckEvent.class, event, this.isOnServer());
 
         if(!event.useDefault){
             return event.isInterdicted();

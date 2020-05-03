@@ -175,7 +175,7 @@ public class FloatingRockManaged extends FloatingRock implements PlayerControlla
             //ship mining asteroid is in ManagedUsableSegmentController
             BlockSalvageEvent event = new BlockSalvageEvent(beam,
                     beamHits, to, hitPiece, updatedSegments);
-            StarLoader.fireEvent(BlockSalvageEvent.class, event);
+            StarLoader.fireEvent(BlockSalvageEvent.class, event, this.isOnServer());
             if(event.isCanceled()){
                 return beamHits;
             }

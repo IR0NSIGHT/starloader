@@ -7,14 +7,12 @@ public class MailReceiveEvent extends Event{
 
     private final PlayerMessage message;
     private final ClientChannel channel;
-    private final boolean onServer;
     private boolean canceled = false;
 
-    public MailReceiveEvent(PlayerMessage message, ClientChannel channel, boolean onServer) {
+    public MailReceiveEvent(PlayerMessage message, ClientChannel channel) {
 
         this.message = message;
         this.channel = channel;
-        this.onServer = onServer;
     }
     public void setCanceled(boolean c){
         canceled = c;
@@ -32,7 +30,4 @@ public class MailReceiveEvent extends Event{
         return channel;
     }
 
-    public boolean isOnServer() {
-        return onServer;
-    }
 }

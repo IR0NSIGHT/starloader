@@ -44,7 +44,7 @@ public class ScanAddOn extends RecharchableActivatableDurationSingleModule {
         //INSERTED CODE @42
         //to do with custom add ons, in scanner so I dont have to decompile & mess with ManagerContainer
         RegisterAddonsEvent event = new RegisterAddonsEvent(man);
-        StarLoader.fireEvent(RegisterAddonsEvent.class, event);
+        StarLoader.fireEvent(RegisterAddonsEvent.class, event, this.isOnServer());
         ///
     }
 
@@ -161,7 +161,7 @@ public class ScanAddOn extends RecharchableActivatableDurationSingleModule {
         boolean success = super.executeModule();
         AbstractOwnerState ownerState = this.getSegmentController().getOwnerState();
         EntityScanEvent event = new EntityScanEvent(this, success, ownerState, this.getSegmentController());
-        StarLoader.fireEvent(EntityScanEvent.class, event);
+        StarLoader.fireEvent(EntityScanEvent.class, event, this.isOnServer());
 
         return success;
     }

@@ -46,6 +46,7 @@ public class StarLoader {
             DebugFile.log(mod.toString());
         }
     }
+
     public static void registerListener(Class<? extends Event> clazz, Listener l) {
         registerListener(clazz, l, null);
     }
@@ -65,8 +66,9 @@ public class StarLoader {
     }
 
     //fire event methods:
-    public static void fireEvent(Class<? extends Event> clazz, Event ev) {
+    public static void fireEvent(Class<? extends Event> clazz, Event ev, boolean isServer) {
         //DebugFile.log("Firing Event: " +clazz.getName());
+        ev.server = isServer;
         List<Listener> lstners = getListeners(clazz);
         if (lstners == null) // Avoid iterating on null Event listeners
             return ;

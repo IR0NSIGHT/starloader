@@ -119,7 +119,7 @@ public class ConfigPool {
             //Event:
 
             RegisterEffectsEvent event = new RegisterEffectsEvent();
-            StarLoader.fireEvent(RegisterEffectsEvent.class, event);
+            StarLoader.fireEvent(RegisterEffectsEvent.class, event, true);
 
             for (Pair<StatusEffectType, Float> effect : event.registeredEffects) {
                 ConfigGroup group = new ConfigGroup(effect.getLeft().name());

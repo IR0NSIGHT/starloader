@@ -58,7 +58,7 @@ public class WeaponCombinationAddOn extends CombinationAddOn<WeaponUnit, WeaponC
 
         //INSERTED CODE @89
         CannonShootEvent event = new CannonShootEvent(firingUnit);
-        StarLoader.fireEvent(CannonShootEvent.class, event);
+        StarLoader.fireEvent(CannonShootEvent.class, event, weaponCollectionManager.isOnServer());
         if(event.isCanceled()){
             return ShootingRespose.NO_POWER;
         }
