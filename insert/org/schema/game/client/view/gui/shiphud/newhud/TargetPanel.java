@@ -140,7 +140,7 @@ public class TargetPanel extends HudConfig {
 
             GlUtil.glPopMatrix();
         }
-        //INSERTED CODE @155
+        //INSERTED CODE @153
         StarLoader.fireEvent(TargetPanelDrawEvent.class, new TargetPanelDrawEvent(this));
         ///
     }

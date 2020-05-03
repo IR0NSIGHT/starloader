@@ -1267,7 +1267,7 @@ public class GameServerController extends ServerController implements MineInterf
                                         }
                                     }
                                 });
-                                //INSERTED CODE @1235
+                                //INSERTED CODE @1234
                                 EntitySpawnEvent event = new EntitySpawnEvent(outline.spawnSectorId, spawn);
                                 StarLoader.fireEvent(EntitySpawnEvent.class, event);
                                 ///

@@ -1311,7 +1311,7 @@ public class Starter implements Observer {
 
     public static void startServer(boolean var0) {
         serverInitFinished = false;
-        //INSERTED CODE @1608
+        //INSERTED CODE @1613
         ModStarter.preServerStart();
         ///
         (new Thread(getServerRunnable(var0), "ServerThread")).start();

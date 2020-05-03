@@ -100,10 +100,10 @@ public class JumpAddOn extends RecharchableSingleModule {
         } else {
             Vector3i var3 = new Vector3i();
 
-            for(int var4 = -1; var4 <= 1; ++var4) {
-                for(int var5 = -1; var5 <= 1; ++var5) {
-                    for(int var6 = -1; var6 <= 1; ++var6) {
-                        var3.set(var2.pos.x + var6, var2.pos.y + var5, var2.pos.z + var4);
+            for(int x = -1; x <= 1; ++x) {
+                for(int y = -1; y <= 1; ++y) {
+                    for(int z = -1; z <= 1; ++z) {
+                        var3.set(var2.pos.x + z, var2.pos.y + y, var2.pos.z + x);
                         Sector var7;
                         if ((var7 = var1.getUniverse().getSectorWithoutLoading(var3)) != null && var7.isInterdicting(this.getSegmentController(), var2)) {
                             this.getSegmentController().sendControllingPlayersServerMessage(new Object[]{43, var7.pos.toStringPure()}, 3);

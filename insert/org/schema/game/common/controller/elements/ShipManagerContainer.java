@@ -423,7 +423,7 @@ public class ShipManagerContainer extends ManagerContainer<Ship> implements Acti
         this.modules.add(this.repair = new ManagerModuleCollection(new RepairElementManager(this.getSegmentController()), (short)39, (short)30));
         this.modules.add(this.tractorBeam = new ManagerModuleCollection(new TractorElementManager(this.getSegmentController()), (short)360, (short)361));
 
-        //INSERTED CODE @600
+        //INSERTED CODE @599
         ElementRegisterEvent event = new ElementRegisterEvent(this);
         StarLoader.fireEvent(ElementRegisterEvent.class, event);
 
