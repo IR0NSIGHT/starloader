@@ -42,9 +42,9 @@ public class WeaponCombinationAddOn extends CombinationAddOn<WeaponUnit, WeaponC
         super(weaponElementManager, gameStateInterface);
     }
 
-    public ShootingRespose handle(final WeaponUnitModifier mod, final WeaponCollectionManager weaponCollectionManager, final WeaponUnit firingUnit, final ControlBlockElementCollectionManager<?, ?, ?> controlBlockElementCollectionManager, final ControlBlockElementCollectionManager<?, ?, ?> controlBlockElementCollectionManager2, final ShootContainer shootContainer, final SimpleTransformableSendableObject simpleTransformableSendableObject) {
-        mod.handle(firingUnit, controlBlockElementCollectionManager, CombinationAddOn.getRatio(weaponCollectionManager, controlBlockElementCollectionManager));
-        final long weaponId = weaponCollectionManager.getUsableId();
+    public ShootingRespose handle(final WeaponUnitModifier mod, final WeaponCollectionManager fireingCollection, final WeaponUnit firingUnit, final ControlBlockElementCollectionManager<?, ?, ?> controlBlockElementCollectionManager, final ControlBlockElementCollectionManager<?, ?, ?> controlBlockElementCollectionManager2, final ShootContainer shootContainer, final SimpleTransformableSendableObject simpleTransformableSendableObject) {
+        mod.handle(firingUnit, controlBlockElementCollectionManager, CombinationAddOn.getRatio(fireingCollection, controlBlockElementCollectionManager));
+        final long weaponId = fireingCollection.getUsableId();
         firingUnit.setShotReloading((long)mod.outputReload);
         final Vector3f dir = new Vector3f(shootContainer.shootingDirTemp);
         if (mod.outputAimable) {
@@ -58,7 +58,7 @@ public class WeaponCombinationAddOn extends CombinationAddOn<WeaponUnit, WeaponC
 
         //INSERTED CODE @89
         CannonShootEvent event = new CannonShootEvent(firingUnit);
-        StarLoader.fireEvent(CannonShootEvent.class, event, weaponCollectionManager.isOnServer());
+        StarLoader.fireEvent(CannonShootEvent.class, event, fireingCollection.isOnServer());
         if(event.isCanceled()){
             return ShootingRespose.NO_POWER;
         }
@@ -70,8 +70,8 @@ public class WeaponCombinationAddOn extends CombinationAddOn<WeaponUnit, WeaponC
                         firingUnit.getPenetrationDepth(mod.outputDamage),
                         mod.outputImpactForce, weaponId, event.getColor());
         ///
-        weaponCollectionManager.damageProduced += mod.outputDamage;
-        weaponCollectionManager.getElementManager().handleRecoil(weaponCollectionManager, firingUnit, shootContainer.weapontOutputWorldPos, shootContainer.shootingDirTemp, mod.outputRecoil, mod.outputDamage);
+        fireingCollection.damageProduced += mod.outputDamage;
+        fireingCollection.getElementManager().handleRecoil(fireingCollection, firingUnit, shootContainer.weapontOutputWorldPos, shootContainer.shootingDirTemp, mod.outputRecoil, mod.outputDamage);
         return ShootingRespose.FIRED;
     }
 
