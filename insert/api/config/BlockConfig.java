@@ -23,6 +23,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class BlockConfig {
     public static void addRecipe(ElementInformation info, FactoryType type, int bakeTime, FactoryResource... resources){
@@ -76,7 +77,7 @@ public class BlockConfig {
         info.shoppable = false;
         info.mass = 0.15F;
 
-        info.chamberConfigGroupsLowerCase.add(appliedEffect.name().toLowerCase());
+        info.chamberConfigGroupsLowerCase.add(appliedEffect.name().toLowerCase(Locale.ENGLISH));
         ElementKeyMap.chamberAnyTypes.add(info.getId());
 
         ElementInformation parentInfo = ElementKeyMap.getInfo(rootChamber);

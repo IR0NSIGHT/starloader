@@ -20,6 +20,8 @@ import org.schema.game.common.controller.elements.weapon.WeaponElementManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 
+import java.util.Locale;
+
 public class ModPlayground extends StarMod {
     public static void main(String[] args) {
 
@@ -77,7 +79,7 @@ public class ModPlayground extends StarMod {
             @Override
             public void onEvent(Event event) {
                 PlayerCommandEvent e = (PlayerCommandEvent) event;
-                if(e.command.equalsIgnoreCase("help")){
+                if(e.command.toLowerCase(Locale.ENGLISH).equals("help")){
                     Player player = e.player;
                     player.sendServerMessage("### COMMANDS: ###");
                     for (ImmutablePair<String, String> command : StarLoader.getCommands()) {
@@ -125,7 +127,7 @@ public class ModPlayground extends StarMod {
             public void onEvent(Event event) {
                 PlayerCommandEvent e = (PlayerCommandEvent) event;
                 Player p = e.player;
-                if(e.command.equalsIgnoreCase("test")){
+                if(e.command.toLowerCase(Locale.ENGLISH).equals("test")){
                     DebugFile.log("Test called", getMod());
                     Entity currentEntity = p.getCurrentEntity();
                     if(currentEntity == null){
