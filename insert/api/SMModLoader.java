@@ -33,8 +33,9 @@ public class SMModLoader {
     public static StarMod loadModFromJar(ClassLoader loader, JarFile jf) throws IOException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
         DebugFile.log("Loading Mod: " + jf.getName());
         System.out.println("Loading mod: " + jf.getName());
-        Class<?> c = loader.loadClass(jf.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS));
-        Object o = c.getConstructors()[0].newInstance();
+        try {
+            Class<?> c = loader.loadClass(jf.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS));
+            Object o = c.getConstructors()[0].newInstance();
         DebugFile.log("Creating mod...");
         if (!(o instanceof StarMod)) {
             DebugFile.err("Failed to load plugin! not instanceof StarMod.");
@@ -50,6 +51,11 @@ public class SMModLoader {
                 StarLoader.starMods.add(sMod);
             }
             return sMod;
+        }
+        }catch (Exception e){
+            DebugFile.err("Error loading mod: " + jf.getName());
+            DebugFile.logError(e, null);
+            return null;
         }
     }
 
