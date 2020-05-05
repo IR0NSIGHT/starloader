@@ -11,6 +11,7 @@ public class StarMod {
     public String modVersion;
     public String modSMVersion;
     public boolean forceEnable;
+    public boolean serverSide = false;
     private boolean isEnabled = false;
 
     public boolean isEnabled(){
@@ -66,6 +67,10 @@ public class StarMod {
         this.modSMVersion = modSMVersion;
         return this;
     }
+    public StarMod setServerSide(boolean server){
+        serverSide = server;
+        return this;
+    }
     public boolean isValid(){
         return modName != null && modVersion != null;
     }
@@ -98,5 +103,10 @@ public class StarMod {
         }
         return config;
     }
+
+    public boolean isServerSide() {
+        return serverSide;
+    }
+
     //
 }

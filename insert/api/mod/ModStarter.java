@@ -27,7 +27,7 @@ import java.util.jar.JarFile;
 
 public class ModStarter {
     public static void preServerStart(){
-        //Enable all mods for now, later there will be a gui to turn them on or off
+        //Enable all mods in the mods folder
         DebugFile.log("[Server] Enabling mods...");
         for (StarMod mod : StarLoader.starMods){
             DebugFile.log("[Server] >>> Enabling: " + mod.modName);

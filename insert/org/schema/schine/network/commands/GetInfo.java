@@ -68,7 +68,11 @@ public class GetInfo extends Command {
         //Put all server mods into the return. To be moved later
         ArrayList<ModInfo> serverMods = new ArrayList<ModInfo>();
         for (StarMod mod : StarLoader.starMods) {
-            serverMods.add(mod.getInfo());
+            //Dont send server-side mods to clients
+            //Maybe we should in the future, but for now its fine.
+            if(!mod.isServerSide()) {
+                serverMods.add(mod.getInfo());
+            }
         }
 
         ArrayList<Object> clientReturn = new ArrayList<Object>();
