@@ -1,6 +1,7 @@
 package api;
 
 import api.config.BlockConfig;
+import api.element.block.Blocks;
 import api.entity.Entity;
 import api.entity.Player;
 import api.gui.custom.examples.BasicInfoGroup;
@@ -8,12 +9,16 @@ import api.listener.Listener;
 import api.listener.events.Event;
 import api.listener.events.gui.HudCreateEvent;
 import api.listener.events.player.PlayerCommandEvent;
+import api.listener.events.register.ElementRegisterEvent;
 import api.listener.events.register.RegisterEffectsEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.schema.game.client.view.GameResourceLoader;
+import org.schema.game.common.controller.elements.ManagerModuleCollection;
+import org.schema.game.common.controller.elements.weapon.WeaponElementManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
+import org.schema.game.common.data.element.ElementInformation;
 
 public class ModPlayground extends StarMod {
     public static void main(String[] args) {
@@ -31,6 +36,16 @@ public class ModPlayground extends StarMod {
 
     @Override
     public void onBlockConfigLoad(BlockConfig config) {
+        registerComputerModulePair(Blocks.FERTIKEEN_INGOT, Blocks.HYLAT_INGOT);
+    }
+    public void registerComputerModulePair(Blocks computer, Blocks module){
+        ElementInformation comp = computer.getInfo();
+        comp.mainCombinationController = true;
+        comp.systemBlock = true;
+        comp.controlledBy.add(Blocks.SHIP_CORE.getId());
+        comp.controlling.add(module.getId());
+
+        module.getInfo().controlledBy.add(computer.getId());
 
     }
 
@@ -72,7 +87,13 @@ public class ModPlayground extends StarMod {
             }
         }, this);
 
-
+        StarLoader.registerListener(ElementRegisterEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                ElementRegisterEvent e = (ElementRegisterEvent) event;
+                e.addInternal(new ManagerModuleCollection(new WeaponElementManager(e.getSegmentController()), Blocks.FERTIKEEN_INGOT.getId(), Blocks.HYLAT_INGOT.getId()));
+            }
+        }, this);
         /*StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {

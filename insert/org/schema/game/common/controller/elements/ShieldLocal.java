@@ -162,13 +162,13 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
         if (var2 = this.containsInRadius((float)cap.getCoMOrigin().x, (float)cap.getCoMOrigin().y, (float)cap.getCoMOrigin().z)) {
             this.supportIds.add(cap.idPos);
             this.supportCoMIds.add(ElementCollection.getIndex(cap.getCoMOrigin()));
-            //INSERTED CODE @178
             this.shieldCapacity += (double)((float)cap.size() * VoidElementManager.SHIELD_LOCAL_CAPACITY_PER_BLOCK);
+            this.capacityIntegrity = Math.min(this.capacityIntegrity, cap.getIntegrity());
+            //INSERTED CODE @178
             ShieldCapacityCalculateEvent event = new ShieldCapacityCalculateEvent(cap, this, this.shieldCapacity);
             StarLoader.fireEvent(ShieldCapacityCalculateEvent.class, event, this.shieldLocalAddOn.getSegmentController().isOnServer());
             this.shieldCapacity = event.getCapacity();
             ///
-            this.capacityIntegrity = Math.min(this.capacityIntegrity, cap.getIntegrity());
         }
 
         return var2;

@@ -1588,7 +1588,7 @@ public class GameServerController extends ServerController implements MineInterf
 
 
         }
-        //INSERTED CODE @1437
+        //INSERTED CODE @1540
         StarRunnable.tickAll();
         ///
     }
