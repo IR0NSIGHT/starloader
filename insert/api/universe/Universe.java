@@ -44,8 +44,11 @@ public class Universe {
      * Gets a sector using it's vector coordinates.
      */
     public api.universe.Sector getSector(Vector3i sectorCoords) {
+        return getSector(sectorCoords, true);
+    }
+    public api.universe.Sector getSector(Vector3i sectorCoords, boolean load) {
         try {
-            Sector sector = GameServer.getServerState().getUniverse().getSector(sectorCoords, true);
+            Sector sector = GameServer.getServerState().getUniverse().getSector(sectorCoords, load);
             if(sector == null){
                 return null;
             }
