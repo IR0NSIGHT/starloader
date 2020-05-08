@@ -1,5 +1,6 @@
 package api.listener.events;
 
+import api.entity.Entity;
 import api.listener.type.ServerEvent;
 import api.main.GameClient;
 import api.main.GameServer;
@@ -16,11 +17,13 @@ public class ShipJumpEngageEvent extends Event {
     private final SegmentController controller;
     private Vector3i originalSector;
     private Vector3i newSector;
+    private Entity entity;
 
     public ShipJumpEngageEvent(SegmentController controller, Vector3i originalSector, Vector3i newSector){
         this.controller = controller;
         this.originalSector = originalSector;
         this.newSector = newSector;
+        this.entity = new Entity(controller);
     }
 
     public SegmentController getController() {
@@ -35,5 +38,9 @@ public class ShipJumpEngageEvent extends Event {
     }
     public Sector getDestination(){
         return Universe.getUniverse().getSector(newSector);
+    }
+
+    public Entity getEntity() {
+        return entity;
     }
 }

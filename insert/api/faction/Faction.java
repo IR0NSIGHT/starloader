@@ -7,6 +7,7 @@ import api.mod.StarLoader;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.data.player.PlayerState;
+import org.schema.game.common.data.player.faction.FactionRelation;
 import org.schema.game.common.data.world.Sector;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.game.server.data.GameServerState;
@@ -58,7 +59,9 @@ public class Faction {
     public void addMember(Player player) {
         player.getPlayerState().getFactionController().forceJoinOnServer(internalFaction.getIdFaction());
     }
-
+    public FactionRelation.RType getRelationTo(Faction other){
+        return internalFaction.getRelationshipWithFactionOrPlayer(other.getID());
+    }
     public void removeMember(Player player) {
         player.getPlayerState().getFactionController().leaveFaction();
     }

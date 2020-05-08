@@ -53,16 +53,12 @@ public class System {
     public void resetClaim(){
         internalSystem.setOwnerFaction(0);
     }
-
+    public boolean isClaimed(){
+        return getOwnerFaction().getID() != 0;
+    }
     public void claim(Entity e){
         internalSystem.setOwnerUID(e.getUID());
-        try {
-            internalSystem.setOwnerFaction(e.getFaction().getID());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            //Not in a faction
-            internalSystem.setOwnerFaction(0);
-        }
+        internalSystem.setOwnerFaction(e.getFaction().getID());
         internalSystem.getOwnerPos().set(e.getSectorPosition());
         GameServerState server = GameServer.getServerState();
         try {

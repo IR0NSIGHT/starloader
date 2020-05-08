@@ -40,7 +40,7 @@ public class Entity {
         internalEntity = controller;
     }
 
-    public Faction getFaction() throws IOException {
+    public Faction getFaction() {
         /**
          * Gets the faction the entity is currently part of. Returns null if the entity has no faction.
          */
