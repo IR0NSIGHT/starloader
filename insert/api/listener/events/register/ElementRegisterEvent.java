@@ -3,6 +3,7 @@ package api.listener.events.register;
 import api.entity.Entity;
 import api.listener.events.Event;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.elements.ManagerModule;
 import org.schema.game.common.controller.elements.ManagerModuleCollection;
 import org.schema.game.common.controller.elements.ShipManagerContainer;
 import org.schema.game.common.controller.elements.UsableControllableElementManager;
@@ -17,8 +18,8 @@ public class ElementRegisterEvent extends Event {
         this.container = container;
     }
 
-    private ArrayList<ManagerModuleCollection> modules = new ArrayList<ManagerModuleCollection>();
-    public void addInternal(ManagerModuleCollection manager){
+    private ArrayList<ManagerModule> modules = new ArrayList<ManagerModule>();
+    public void addModuleCollection(ManagerModule manager){
         modules.add(manager);
     }
 
@@ -29,7 +30,7 @@ public class ElementRegisterEvent extends Event {
         return new Entity(container.getSegmentController());
     }
 
-    public ArrayList<ManagerModuleCollection> getModules() {
+    public ArrayList<ManagerModule> getModules() {
         return modules;
     }
 }

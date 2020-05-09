@@ -427,7 +427,7 @@ public class ShipManagerContainer extends ManagerContainer<Ship> implements Acti
         ElementRegisterEvent event = new ElementRegisterEvent(this);
         StarLoader.fireEvent(ElementRegisterEvent.class, event, this.isOnServer());
 
-        for (ManagerModuleCollection moduleCollection : event.getModules()) {
+        for (ManagerModule moduleCollection : event.getModules()) {
             this.modules.add(moduleCollection);
         }
         ///

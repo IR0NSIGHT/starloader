@@ -34,6 +34,9 @@ public class System {
     }
     public Faction getOwnerFaction(){
         org.schema.game.common.data.player.faction.Faction internalFaction = StarLoader.getGameState().getFactionManager().getFaction(internalSystem.getOwnerFaction());
+        if(internalFaction == null){
+            return null;
+        }
         return new Faction(internalFaction);
     }
 
@@ -54,7 +57,11 @@ public class System {
         internalSystem.setOwnerFaction(0);
     }
     public boolean isClaimed(){
-        return getOwnerFaction().getID() != 0;
+        Faction ownerFaction = getOwnerFaction();
+        if(ownerFaction == null){
+            return false;
+        }
+        return ownerFaction.getID() != 0;
     }
     public void claim(Entity e){
         internalSystem.setOwnerUID(e.getUID());

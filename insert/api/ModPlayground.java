@@ -14,7 +14,6 @@ import api.listener.events.register.RegisterEffectsEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.schema.game.client.view.GameResourceLoader;
 import org.schema.game.common.controller.elements.ManagerModuleCollection;
 import org.schema.game.common.controller.elements.weapon.WeaponElementManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
@@ -93,7 +92,7 @@ public class ModPlayground extends StarMod {
             @Override
             public void onEvent(Event event) {
                 ElementRegisterEvent e = (ElementRegisterEvent) event;
-                e.addInternal(new ManagerModuleCollection(new WeaponElementManager(e.getSegmentController()), Blocks.FERTIKEEN_INGOT.getId(), Blocks.HYLAT_INGOT.getId()));
+                e.addModuleCollection(new ManagerModuleCollection(new WeaponElementManager(e.getSegmentController()), Blocks.FERTIKEEN_INGOT.getId(), Blocks.HYLAT_INGOT.getId()));
             }
         }, this);
         /*StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
@@ -139,12 +138,19 @@ public class ModPlayground extends StarMod {
             }
         });
 
+        StarLoader.registerListener(ElementRegisterEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event event) {
+                ElementRegisterEvent ev = (ElementRegisterEvent) event;
+                //ev.addModuleCollection(new ManagerModuleCollection());
+            }
+        });
+
         StarLoader.registerListener(HudCreateEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
                 HudCreateEvent ev = (HudCreateEvent) event;
                 BasicInfoGroup bar = new BasicInfoGroup(ev);
-                DebugFile.log("DUMPING DATA OF CUBETEXTURE3D");
             }
         });
 
