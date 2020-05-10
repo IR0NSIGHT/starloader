@@ -79,7 +79,11 @@ public class Station extends Entity {
         return new Player(pState);
     }
 
-    public void takeControlOfSystem() {
+    public boolean takeControlOfSystem() {
+        if(this.getFaction() == null){
+            return false;
+        }
         getSector().getSystem().claim(this);
+        return true;
     }
 }
