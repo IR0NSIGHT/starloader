@@ -276,7 +276,7 @@ public class WeaponElementManager extends UsableCombinableControllableElementMan
 
                 //INSERTED CODE @249
                 CannonShootEvent event = new CannonShootEvent(c);
-                StarLoader.fireEvent(CannonShootEvent.class, event);
+                StarLoader.fireEvent(CannonShootEvent.class, event, this.isOnServer());
                 if(event.isCanceled()){
                     return;
                 }

@@ -107,7 +107,7 @@ public class Hud extends GUIElement {
 
         //INSERTED CODE @112
         HudCreateEvent event = new HudCreateEvent(this, state);
-        StarLoader.fireEvent(HudCreateEvent.class, event);
+        StarLoader.fireEvent(HudCreateEvent.class, event, false);
         customElements.addAll(event.elements);
         ///
         //this.test = new GUIOverlay(Controller.getResLoader().getSprite("crosshair-c-gui-"), var1);

@@ -136,7 +136,7 @@ public class SegmentControllerHpController implements SegmentControllerHpControl
         if (!this.segmentController.isCoreOverheating() && !this.isRebooting()) {
             //INSERTED CODE @206
             EntityOverheatEvent event = new EntityOverheatEvent(this.segmentController, lastDamager);
-            StarLoader.fireEvent(EntityOverheatEvent.class, event);
+            StarLoader.fireEvent(EntityOverheatEvent.class, event, this.isOnServer());
             ///
 
             System.err.println("[SERVER] Overheating triggered for " + this.segmentController);

@@ -5,7 +5,7 @@ import api.entity.EntityType;
 import api.entity.Player;
 import org.schema.game.common.data.player.catalog.CatalogManager;
 import org.schema.game.common.data.player.catalog.CatalogPermission;
-import org.schema.game.server.controller.BluePrintController;;
+import org.schema.game.server.controller.BluePrintController;
 import org.schema.game.server.data.blueprintnw.BlueprintClassification;
 import org.schema.game.server.data.blueprintnw.BlueprintEntry;
 import java.io.IOException;

@@ -416,7 +416,7 @@ public class BlockProcessor {
                     VoidSegmentPiece segmentPiece = (VoidSegmentPiece)e.get(i);
                     //INSERTED CODE @550
                     BlockModifyEvent event = new BlockModifyEvent(e, segmentPiece);
-                    StarLoader.fireEvent(BlockModifyEvent.class, event);
+                    StarLoader.fireEvent(BlockModifyEvent.class, event, this.isOnServer());
                     if(event.isCanceled()){
                         return;
                     }

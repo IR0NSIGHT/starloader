@@ -95,7 +95,7 @@ public class BasicInputController {
                         e.key = Keyboard.getEventKey();
                         e.state = Keyboard.getEventKeyState();
                         //INSERTED CODE @109
-                        StarLoader.fireEvent(KeyPressEvent.class, new KeyPressEvent(e));
+                        StarLoader.fireEvent(KeyPressEvent.class, new KeyPressEvent(e), false);
                         ///
                         var10.add(e);
                     }

@@ -60,7 +60,7 @@ public class GetInfo extends Command {
         int connectedClients = state.getClients().size();
         int maxClients = state.getMaxClients();
         ServerPingEvent event = new ServerPingEvent(version, state.getServerName(), state.getServerDesc(), connectedClients, maxClients);
-        StarLoader.fireEvent(ServerPingEvent.class, event);
+        StarLoader.fireEvent(ServerPingEvent.class, event, true);
 
         System.err.println("[SERVER] This client is an info ping (server-lists): " + serverProcessor.getClientIp() + "; PID: " + serverProcessor.id);
         serverProcessor.setInfoPinger(true);
@@ -68,7 +68,11 @@ public class GetInfo extends Command {
         //Put all server mods into the return. To be moved later
         ArrayList<ModInfo> serverMods = new ArrayList<ModInfo>();
         for (StarMod mod : StarLoader.starMods) {
-            serverMods.add(mod.getInfo());
+            //Dont send server-side mods to clients
+            //Maybe we should in the future, but for now its fine.
+            if(!mod.isServerSide()) {
+                serverMods.add(mod.getInfo());
+            }
         }
 
         ArrayList<Object> clientReturn = new ArrayList<Object>();

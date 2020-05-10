@@ -162,13 +162,13 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
         if (var2 = this.containsInRadius((float)cap.getCoMOrigin().x, (float)cap.getCoMOrigin().y, (float)cap.getCoMOrigin().z)) {
             this.supportIds.add(cap.idPos);
             this.supportCoMIds.add(ElementCollection.getIndex(cap.getCoMOrigin()));
-            //INSERTED CODE @177
             this.shieldCapacity += (double)((float)cap.size() * VoidElementManager.SHIELD_LOCAL_CAPACITY_PER_BLOCK);
+            this.capacityIntegrity = Math.min(this.capacityIntegrity, cap.getIntegrity());
+            //INSERTED CODE @178
             ShieldCapacityCalculateEvent event = new ShieldCapacityCalculateEvent(cap, this, this.shieldCapacity);
-            StarLoader.fireEvent(ShieldCapacityCalculateEvent.class, event);
+            StarLoader.fireEvent(ShieldCapacityCalculateEvent.class, event, this.shieldLocalAddOn.getSegmentController().isOnServer());
             this.shieldCapacity = event.getCapacity();
             ///
-            this.capacityIntegrity = Math.min(this.capacityIntegrity, cap.getIntegrity());
         }
 
         return var2;
@@ -185,7 +185,7 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
 
             //INSERTED CODE @205
             ShieldHitEvent event = new ShieldHitEvent(this, hit, shieldDPS, shieldAlpha, hit.getDamage());
-            StarLoader.fireEvent(ShieldHitEvent.class, event);
+            StarLoader.fireEvent(ShieldHitEvent.class, event, this.shieldLocalAddOn.getSegmentController().isOnServer());
             hit.setDamage(event.getDamage());
             if(event.isCanceled()){
                 hit.hasHit = false;

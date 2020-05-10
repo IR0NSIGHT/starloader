@@ -5,7 +5,9 @@
 
 package org.schema.game.common.data.element;
 
+import api.DebugFile;
 import api.ModPlayground;
+import api.mod.ModStarter;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -1168,11 +1170,9 @@ public class ElementKeyMap {
             doorTypes.trim();
 
             assert checkConflicts();
-
-            //INSERTED CODE @1280
+            //INSERTED CODE @1613
             ModPlayground.initBlockData();
             ///
-
             return;
         }
 

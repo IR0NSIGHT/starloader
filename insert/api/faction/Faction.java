@@ -7,10 +7,12 @@ import api.mod.StarLoader;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.data.player.PlayerState;
+import org.schema.game.common.data.player.faction.FactionRelation;
 import org.schema.game.common.data.world.Sector;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.game.server.data.GameServerState;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +48,7 @@ public class Faction {
     }
 
     public List<Player> getMembers() {
-        List<Player> members = null;
+        List<Player> members = new ArrayList<Player>();
         GameServerState gameServerState = GameServerState.instance;
         for(String uid : internalFaction.getMembersUID().keySet()) {
             Player player = new Player(getPlayerStateFromUID(uid));
@@ -58,13 +60,15 @@ public class Faction {
     public void addMember(Player player) {
         player.getPlayerState().getFactionController().forceJoinOnServer(internalFaction.getIdFaction());
     }
-
+    public FactionRelation.RType getRelationTo(Faction other){
+        return internalFaction.getRelationshipWithFactionOrPlayer(other.getID());
+    }
     public void removeMember(Player player) {
         player.getPlayerState().getFactionController().leaveFaction();
     }
 
     public List<Player> getActiveMembers() {
-        List<Player> activeMembers = null;
+        List<Player> activeMembers = new ArrayList<Player>();
         for(Player player : getMembers()) {
             if(internalFaction.getMembersUID().get(player.getPlayerState().getUniqueIdentifier()).isActiveMember()) {
                 activeMembers.add(player);
@@ -74,7 +78,7 @@ public class Faction {
     }
 
     public List<Player> getInactiveMembers() {
-        List<Player> inactiveMembers = null;
+        List<Player> inactiveMembers = new ArrayList<Player>();
         for(Player player : getMembers()) {
             if(!internalFaction.getMembersUID().get(player.getPlayerState().getUniqueIdentifier()).isActiveMember()) {
                 inactiveMembers.add(player);
@@ -83,7 +87,7 @@ public class Faction {
         return inactiveMembers;
     }
 
-    public List<Faction> getAllies() throws IOException {
+    public List<Faction> getAllies() {
         List<Faction> allies = null;
         for(org.schema.game.common.data.player.faction.Faction internalAlly : internalFaction.getFriends()) {
             Faction faction = new Faction(internalAlly);
@@ -92,8 +96,8 @@ public class Faction {
         return allies;
     }
 
-    public List<Faction> getEnemies() throws IOException {
-        List<Faction> enemies = null;
+    public List<Faction> getEnemies() {
+        List<Faction> enemies = new ArrayList<Faction>();
         for(org.schema.game.common.data.player.faction.Faction internalEnemy : internalFaction.getEnemies()) {
             Faction faction = new Faction(internalEnemy);
             enemies.add(faction);
@@ -110,7 +114,7 @@ public class Faction {
     }
 
     public List<Player> getPersonalEnemies() {
-        List<Player> personalEnemies = null;
+        List<Player> personalEnemies = new ArrayList<Player>();
         for(String uid : internalFaction.getPersonalEnemies()) {
             personalEnemies.add(new Player(getPlayerStateFromUID(uid)));
         }

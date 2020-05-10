@@ -25,6 +25,7 @@ import org.schema.game.common.controller.elements.power.reactor.tree.ReactorTree
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.ConfigEntityManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
+import org.schema.game.common.data.element.ElementCollection;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.common.data.world.Universe;
 import org.schema.schine.graphicsengine.core.GlUtil;
@@ -40,7 +41,7 @@ public class Entity {
         internalEntity = controller;
     }
 
-    public Faction getFaction() throws IOException {
+    public Faction getFaction() {
         /**
          * Gets the faction the entity is currently part of. Returns null if the entity has no faction.
          */
@@ -457,6 +458,9 @@ public class Entity {
         }
 
         return blocks;
+    }
+    public ArrayList<ElementCollectionManager> getECM(Class<? extends ElementCollectionManager> ecm){
+        return null;
     }
 
 }

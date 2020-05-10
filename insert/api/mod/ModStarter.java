@@ -1,6 +1,7 @@
 package api.mod;
 
 import api.DebugFile;
+import api.ModPlayground;
 import api.SMModLoader;
 import api.main.GameClient;
 import api.main.GameServer;
@@ -26,7 +27,7 @@ import java.util.jar.JarFile;
 
 public class ModStarter {
     public static void preServerStart(){
-        //Enable all mods for now, later there will be a gui to turn them on or off
+        //Enable all mods in the mods folder
         DebugFile.log("[Server] Enabling mods...");
         for (StarMod mod : StarLoader.starMods){
             DebugFile.log("[Server] >>> Enabling: " + mod.modName);
@@ -103,39 +104,38 @@ public class ModStarter {
                     }
                 }
             }
-        }
-        //DebugFile.log(serverMods.toString());
-        if (!serverMods.isEmpty()) {
-            //Now we need to download them from the client
-            DebugFile.log("=== DEPENDENCIES NOT MET, DOWNLOADING MODS ===");
-            for (ModInfo sMod : serverMods) {
-                sMod.fetchDownloadURL();
-                DebugFile.log("WE NEED TO DOWNLOAD: " + sMod.toString());
-                try {
-                    String fileName = "mods/" + sMod.name + ".jar";
-                    GameClient.setLoadString("Downloading mod: " + sMod.name);
-                    downloadFile(new URL(sMod.downloadURL), fileName);
-                    DebugFile.log("Successfully downloaded mod: " + sMod.name + ", version: " + sMod.version + ", from: " + sMod.downloadURL + ", into: " + sMod.name + ".jar");
-                    //Get file, convert to URL
-                    URL[] url = new URL[]{new File(fileName).toURI().toURL()};
-                    GameClient.setLoadString("Done downloading, Loading mod: " + sMod.name);
-                    StarMod starMod = SMModLoader.loadModFromJar(new URLClassLoader(url), new JarFile(fileName));
-                    GameClient.setLoadString("Mod loaded, enabling mod...");
-                    starMod.onEnable();
-                    starMod.flagEnabled(true);
+            //DebugFile.log(serverMods.toString());
+            if (!serverMods.isEmpty()) {
+                //Now we need to download them from the client
+                DebugFile.log("=== DEPENDENCIES NOT MET, DOWNLOADING MODS ===");
+                for (ModInfo sMod : serverMods) {
+                    sMod.fetchDownloadURL();
+                    DebugFile.log("WE NEED TO DOWNLOAD: " + sMod.toString());
+                    try {
+                        String fileName = "mods/" + sMod.name + ".jar";
+                        GameClient.setLoadString("Downloading mod: " + sMod.name);
+                        downloadFile(new URL(sMod.downloadURL), fileName);
+                        DebugFile.log("Successfully downloaded mod: " + sMod.name + ", version: " + sMod.version + ", from: " + sMod.downloadURL + ", into: " + sMod.name + ".jar");
+                        //Get file, convert to URL
+                        URL[] url = new URL[]{new File(fileName).toURI().toURL()};
+                        GameClient.setLoadString("Done downloading, Loading mod: " + sMod.name);
+                        StarMod starMod = SMModLoader.loadModFromJar(new URLClassLoader(url), new JarFile(fileName));
+                        GameClient.setLoadString("Mod loaded, enabling mod...");
+                        starMod.onEnable();
+                        starMod.flagEnabled(true);
 
-                } catch (Exception e) {
-                    DebugFile.log("Failed to download, reason: ");
-                    DebugFile.logError(e, null);
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Failed to download mods... please send in starloader.log and log/starmade0.log");
+                    } catch (Exception e) {
+                        DebugFile.log("Failed to download, reason: ");
+                        DebugFile.logError(e, null);
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Failed to download mods... please send in starloader.log and log/starmade0.log");
+                    }
                 }
+                //JOptionPane.showMessageDialog(null, "We are going to need to download some mods... fancy gui coming later");
+                //DebugFile.log("We are going to download some mods, so dont start the client yet");
+
             }
-            //JOptionPane.showMessageDialog(null, "We are going to need to download some mods... fancy gui coming later");
-            //DebugFile.log("We are going to download some mods, so dont start the client yet");
-
         }
-
         //Force enable any test mods
         for (StarMod starMod : StarLoader.starMods) {
             if(!starMod.isEnabled() && starMod.forceEnable && EnabledModFile.getInstance().isClientEnabled(starMod.getInfo())){

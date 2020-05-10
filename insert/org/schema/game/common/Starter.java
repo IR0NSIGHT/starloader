@@ -511,6 +511,9 @@ public class Starter implements Observer {
     }
 
     public static void initializeServer(boolean var0) throws SecurityException, IOException {
+        //INSERTED CODE @665
+        ModStarter.preServerStart();
+        ///
         DatabaseIndex.registerDriver();
         importCustom(var0);
     }
@@ -1311,9 +1314,7 @@ public class Starter implements Observer {
 
     public static void startServer(boolean var0) {
         serverInitFinished = false;
-        //INSERTED CODE @1608
-        ModStarter.preServerStart();
-        ///
+
         (new Thread(getServerRunnable(var0), "ServerThread")).start();
     }
 

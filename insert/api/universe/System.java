@@ -34,6 +34,9 @@ public class System {
     }
     public Faction getOwnerFaction(){
         org.schema.game.common.data.player.faction.Faction internalFaction = StarLoader.getGameState().getFactionManager().getFaction(internalSystem.getOwnerFaction());
+        if(internalFaction == null){
+            return null;
+        }
         return new Faction(internalFaction);
     }
 
@@ -53,16 +56,16 @@ public class System {
     public void resetClaim(){
         internalSystem.setOwnerFaction(0);
     }
-
+    public boolean isClaimed(){
+        Faction ownerFaction = getOwnerFaction();
+        if(ownerFaction == null){
+            return false;
+        }
+        return ownerFaction.getID() != 0;
+    }
     public void claim(Entity e){
         internalSystem.setOwnerUID(e.getUID());
-        try {
-            internalSystem.setOwnerFaction(e.getFaction().getID());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            //Not in a faction
-            internalSystem.setOwnerFaction(0);
-        }
+        internalSystem.setOwnerFaction(e.getFaction().getID());
         internalSystem.getOwnerPos().set(e.getSectorPosition());
         GameServerState server = GameServer.getServerState();
         try {

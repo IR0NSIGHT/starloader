@@ -1403,7 +1403,6 @@ public class GameClientController extends ClientController implements MineInterf
             StarRunnable.tickAll();
         }
         ///
-
         this.getState().getDebugTimer().end();
     }
 

@@ -34,19 +34,25 @@ public class Universe {
         GameServerController
     }*/
 
-    public Sector getSector(int x, int y, int z) {
+    public api.universe.Sector getSector(int x, int y, int z) {
         /**
          * Gets a sector using it's coordinates.
          */
         return getSector(new Vector3i(x,y,z));
     }
-
-    public Sector getSector(Vector3i sectorCoords) {
-        /**
-         * Gets a sector using it's vector coordinates.
-         */
+    /**
+     * Gets a sector using it's vector coordinates.
+     */
+    public api.universe.Sector getSector(Vector3i sectorCoords) {
+        return getSector(sectorCoords, true);
+    }
+    public api.universe.Sector getSector(Vector3i sectorCoords, boolean load) {
         try {
-            return GameServer.getServerState().getUniverse().getSector(sectorCoords, true);
+            Sector sector = GameServer.getServerState().getUniverse().getSector(sectorCoords, load);
+            if(sector == null){
+                return null;
+            }
+            return new api.universe.Sector(sector);
         } catch (IOException e) {
             DebugFile.log("[ERROR] Getting sector returned error");
             e.printStackTrace();

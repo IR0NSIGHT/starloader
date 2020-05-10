@@ -32,8 +32,11 @@ public class SMModLoader {
 
     public static StarMod loadModFromJar(ClassLoader loader, JarFile jf) throws IOException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
         DebugFile.log("Loading Mod: " + jf.getName());
-        Class<?> c = loader.loadClass(jf.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS));
-        Object o = c.getConstructors()[0].newInstance();
+        System.out.println("Loading mod: " + jf.getName());
+        try {
+            Class<?> c = loader.loadClass(jf.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS));
+            Object o = c.getConstructors()[0].newInstance();
+        DebugFile.log("Creating mod...");
         if (!(o instanceof StarMod)) {
             DebugFile.err("Failed to load plugin! not instanceof StarMod.");
             throw new IllegalArgumentException("Main class must be an instance of StarMod");
@@ -49,18 +52,26 @@ public class SMModLoader {
             }
             return sMod;
         }
+        }catch (Exception e){
+            DebugFile.err("Error loading mod: " + jf.getName());
+            DebugFile.logError(e, null);
+            return null;
+        }
     }
 
     public static void main(String[] args) {
-        //JOptionPane.showMessageDialog(null, "you have started starmade, press OK to claim your reward");
         DebugFile.clear();
+        DebugFile.info("STARTING SMMODLOADER WITH ARGS:");
+        for (String arg : args) {
+            DebugFile.info(arg);
+        }
+        DebugFile.info("=====================");
+        //JOptionPane.showMessageDialog(null, "you have started starmade, press OK to claim your reward");
         DebugFile.log("Starting starloader...");
         DebugFile.log("Loading default mod...");
         ModPlayground defaultMod = new ModPlayground();
         StarLoader.starMods.add(defaultMod);
         defaultMod.onGameStart();
-        //defaultMod.onEnable();
-        //defaultMod.flagEnabled(true);
 
         DebugFile.log("Enabling Mods...");
         File[] files = modFolder.listFiles();

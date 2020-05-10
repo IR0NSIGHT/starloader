@@ -121,8 +121,8 @@ public class PlayerMessageController extends DrawerObservable {
                 System.err.println("[PLAYERMESSAGE] " + this.channel.getState() + " Handle Received PlayerMessage: " + r);
 
                 //INSERTED CODE @109
-                MailReceiveEvent event = new MailReceiveEvent(r, this.channel, this.channel.isOnServer());
-                StarLoader.fireEvent(MailReceiveEvent.class, event);
+                MailReceiveEvent event = new MailReceiveEvent(r, this.channel);
+                StarLoader.fireEvent(MailReceiveEvent.class, event, this.channel.isOnServer());
                 if(!event.isCanceled()) {
                     if (this.channel.isOnServer()) {
                         this.handleReceivedOnServer(r, false);

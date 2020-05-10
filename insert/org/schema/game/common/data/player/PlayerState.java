@@ -503,7 +503,7 @@ public class PlayerState extends AbstractOwnerState implements FogOfWarReceiver,
             Damager from = (Damager)this.dieList.get(this.dieList.size() - 1);
             //INSERTED CODE @475
             PlayerDeathEvent event = new PlayerDeathEvent(this, from);
-            StarLoader.fireEvent(PlayerDeathEvent.class, event);
+            StarLoader.fireEvent(PlayerDeathEvent.class, event, this.isOnServer());
             ///
             System.err.println("[SERVER] PLAYER " + this + " died, removing ALL control units");
             Sector var2;
@@ -1005,7 +1005,7 @@ public class PlayerState extends AbstractOwnerState implements FogOfWarReceiver,
         assert this.isOnServer();
         //INSERTED CODE @1085
         PlayerDamageEvent event = new PlayerDamageEvent(damage, destroyable, from, this);
-        StarLoader.fireEvent(PlayerDamageEvent.class, event);
+        StarLoader.fireEvent(PlayerDamageEvent.class, event, this.isOnServer());
         if(event.isCanceled()){
             return;
         }

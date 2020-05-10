@@ -152,7 +152,7 @@ public abstract class BeamElementManager<E extends BeamUnit<E, CM, EM>, CM exten
             //INSERTED CODE @159
             if(m instanceof DamageBeamCollectionManager) {
                 DamageBeamShootEvent event = new DamageBeamShootEvent((DamageBeamUnit) c, b);
-                StarLoader.fireEvent(DamageBeamShootEvent.class, event);
+                StarLoader.fireEvent(DamageBeamShootEvent.class, event, this.isOnServer());
                 if(event.isCanceled()){
                     return;
                 }

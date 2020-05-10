@@ -9,7 +9,6 @@ public class ModInfo {
     public String version;
     public String downloadURL;
     public ModInfo(String name, String version){
-
         this.name = name;
         this.version = version;
     }

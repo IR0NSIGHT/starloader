@@ -6,6 +6,7 @@
 package org.schema.game.server.controller;
 
 import api.listener.events.EntitySpawnEvent;
+import api.listener.events.player.PlayerSpawnEvent;
 import api.mod.StarLoader;
 import api.server.Server;
 import api.utils.StarRunnable;
@@ -1106,14 +1107,16 @@ public class GameServerController extends ServerController implements MineInterf
                                     var8 = this.state.getPlayerFromStateId(var7.getClientId());
 
                                     try {
-                                        Ship var161 = var7.getShip(this.state, true);
+                                        Ship ship = var7.getShip(this.state, true);
                                         if (var8.getInventory((Vector3i)null).existsInInventory((short)1)) {
-                                            this.getSynchController().addNewSynchronizedObjectQueued(var161);
+                                            this.getSynchController().addNewSynchronizedObjectQueued(ship);
                                             var8.getInventory((Vector3i)null).incExistingAndSend((short)1, -1, var8.getNetworkObject());
 
-
-
-                                            LogUtil.log().fine("[SPAWN] " + var8.getName() + " spawned new ship: \"" + var161.getRealName() + "\"");
+                                            LogUtil.log().fine("[SPAWN] " + var8.getName() + " spawned new ship: \"" + ship.getRealName() + "\"");
+                                            //INSERTED CODE @1079
+                                            EntitySpawnEvent event = new EntitySpawnEvent(ship.getRemoteSector().getServerSector().pos, ship);
+                                            StarLoader.fireEvent(EntitySpawnEvent.class, event, true);
+                                            ///
                                         }
                                     } catch (EntityAlreadyExistsException var109) {
                                         var109.printStackTrace();
@@ -1126,8 +1129,12 @@ public class GameServerController extends ServerController implements MineInterf
                                     var8 = this.state.getPlayerFromStateId(var7.getClientId());
 
                                     try {
-                                        Vehicle var9 = var7.getVehicle(this.state);
-                                        this.getSynchController().addNewSynchronizedObjectQueued(var9);
+                                        Vehicle ship = var7.getVehicle(this.state);
+                                        this.getSynchController().addNewSynchronizedObjectQueued(ship);
+                                        //INSERTED CODE @1094
+                                        EntitySpawnEvent event = new EntitySpawnEvent(ship.getRemoteSector().getServerSector().pos, ship);
+                                        StarLoader.fireEvent(EntitySpawnEvent.class, event, true);
+                                        ///
                                     } catch (EntityAlreadyExistsException var108) {
                                         var108.printStackTrace();
                                         ((RegisteredClientOnServer)this.getServerState().getClients().get(var8.getClientId())).serverMessage("[ERROR] An Entity with that name already exists");
@@ -1155,10 +1162,14 @@ public class GameServerController extends ServerController implements MineInterf
                                             }
 
                                             if (var11 < var10 && !var8.isInPersonalSector() && !var8.isInTestSector() && !var8.isInTutorial()) {
-                                                SpaceStation var181 = var7.getSpaceStation(this.state, true);
+                                                SpaceStation station = var7.getSpaceStation(this.state, true);
                                                 var8.modCreditsServer((long)(-this.getState().getGameState().getStationCost()));
-                                                this.getSynchController().addNewSynchronizedObjectQueued(var181);
-                                                LogUtil.log().fine("[SPAWN] " + var8.getName() + " spawned new station: \"" + var181.getRealName() + "\"");
+                                                this.getSynchController().addNewSynchronizedObjectQueued(station);
+                                                LogUtil.log().fine("[SPAWN] " + var8.getName() + " spawned new station: \"" + station.getRealName() + "\"");
+                                                //INSERTED CODE @1122
+                                                EntitySpawnEvent event = new EntitySpawnEvent(station.getRemoteSector().getServerSector().pos, station);
+                                                StarLoader.fireEvent(EntitySpawnEvent.class, event, true);
+                                                ///
                                             } else if (var11 >= var10) {
                                                 var8.sendServerMessagePlayerError(new Object[]{460, var10});
                                             } else {
@@ -1267,9 +1278,9 @@ public class GameServerController extends ServerController implements MineInterf
                                         }
                                     }
                                 });
-                                //INSERTED CODE @1235
+                                //INSERTED CODE @1238
                                 EntitySpawnEvent event = new EntitySpawnEvent(outline.spawnSectorId, spawn);
-                                StarLoader.fireEvent(EntitySpawnEvent.class, event);
+                                StarLoader.fireEvent(EntitySpawnEvent.class, event, true);
                                 ///
                             } catch (EntityAlreadyExistsException var105) {
                                 var105.printStackTrace();
@@ -1577,7 +1588,7 @@ public class GameServerController extends ServerController implements MineInterf
 
 
         }
-        //INSERTED CODE @1437
+        //INSERTED CODE @1540
         StarRunnable.tickAll();
         ///
     }
@@ -2609,23 +2620,27 @@ public class GameServerController extends ServerController implements MineInterf
         var1.spawnData.onSpawnPreparePlayerCharacter(var1.spawnedOnce);
     }
 
-    private void spawnPlayerCharacter(PlayerState var1) throws IOException {
-        String var2 = "ENTITY_PLAYERCHARACTER_" + var1.getName();
-        System.err.println("[SERVER][SPAWN] SPAWNING NEW CHARACTER FOR " + var1);
-        var1.getControllerState().setLastTransform((Transform)null);
-        PlayerCharacter var3;
-        (var3 = new PlayerCharacter(this.state)).initialize();
-        var1.spawnData.onSpawnPlayerCharacter(var3, var1.spawnedOnce);
-        System.err.println("[SERVER][PlayerCharacter] " + this.getState() + " Set initial transform to " + var3.getInitialTransform().origin);
-        var3.setFactionId(var1.getFactionId());
-        var3.setId(this.state.getNextFreeObjectId());
-        var3.setUniqueIdentifier(var2);
-        var3.setClientOwnerId(var1.getClientId());
-        this.getSynchController().addNewSynchronizedObjectQueued(var3);
-        var1.setAssignedPlayerCharacter(var3);
-        var1.spawnedOnce = true;
-        var1.setAlive(true);
-        var1.lastSpawnedThisSession(System.currentTimeMillis());
+    private void spawnPlayerCharacter(PlayerState playerState) throws IOException {
+        String var2 = "ENTITY_PLAYERCHARACTER_" + playerState.getName();
+        System.err.println("[SERVER][SPAWN] SPAWNING NEW CHARACTER FOR " + playerState);
+        playerState.getControllerState().setLastTransform((Transform)null);
+        PlayerCharacter c;
+        (c = new PlayerCharacter(this.state)).initialize();
+        playerState.spawnData.onSpawnPlayerCharacter(c, playerState.spawnedOnce);
+        System.err.println("[SERVER][PlayerCharacter] " + this.getState() + " Set initial transform to " + c.getInitialTransform().origin);
+        c.setFactionId(playerState.getFactionId());
+        c.setId(this.state.getNextFreeObjectId());
+        c.setUniqueIdentifier(var2);
+        c.setClientOwnerId(playerState.getClientId());
+        this.getSynchController().addNewSynchronizedObjectQueued(c);
+        playerState.setAssignedPlayerCharacter(c);
+        playerState.spawnedOnce = true;
+        playerState.setAlive(true);
+        playerState.lastSpawnedThisSession(System.currentTimeMillis());
+        //INSERTED CODE @2797
+        PlayerSpawnEvent event = new PlayerSpawnEvent(playerState.getCurrentSector(), c);
+        StarLoader.fireEvent(PlayerSpawnEvent.class, event, true);
+        ///
     }
 
     public void triggerForcedSave() {
