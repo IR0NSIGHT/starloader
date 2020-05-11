@@ -1170,7 +1170,7 @@ public class ElementKeyMap {
             doorTypes.trim();
 
             assert checkConflicts();
-            //INSERTED CODE @1613
+            //INSERTED CODE @1280
             ModPlayground.initBlockData();
             ///
             return;
