@@ -88,13 +88,13 @@ public class ModPlayground extends StarMod {
             }
         }, this);
 
-        StarLoader.registerListener(ElementRegisterEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                ElementRegisterEvent e = (ElementRegisterEvent) event;
-                e.addModuleCollection(new ManagerModuleCollection(new WeaponElementManager(e.getSegmentController()), Blocks.FERTIKEEN_INGOT.getId(), Blocks.HYLAT_INGOT.getId()));
-            }
-        }, this);
+//        StarLoader.registerListener(ElementRegisterEvent.class, new Listener() {
+//            @Override
+//            public void onEvent(Event event) {
+//                ElementRegisterEvent e = (ElementRegisterEvent) event;
+//                e.addModuleCollection(new ManagerModuleCollection(new WeaponElementManager(e.getSegmentController()), Blocks.FERTIKEEN_INGOT.getId(), Blocks.HYLAT_INGOT.getId()));
+//            }
+//        }, this);
         /*StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
