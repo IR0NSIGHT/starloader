@@ -4,34 +4,28 @@ import api.element.block.Block;
 import api.element.block.Blocks;
 import api.faction.Faction;
 import api.main.GameServer;
-import api.server.Server;
 import api.systems.Reactor;
 import api.systems.Shield;
 import api.systems.addons.JumpInterdictor;
 import api.systems.addons.custom.CustomAddOn;
 import api.universe.Sector;
-import org.apache.commons.lang3.StringUtils;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.schema.common.util.StringTools;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.data.PlayerControllable;
-import org.schema.game.client.view.gui.weapon.WeaponBottomBar;
 import org.schema.game.common.controller.PlayerUsableInterface;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.SpaceStation;
 import org.schema.game.common.controller.elements.*;
-import org.schema.game.common.controller.elements.jumpprohibiter.InterdictionAddOn;
 import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
 import org.schema.game.common.controller.elements.power.reactor.tree.ReactorTree;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.ConfigEntityManager;
-import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementCollection;
 import org.schema.game.common.data.player.PlayerState;
-import org.schema.game.common.data.world.Universe;
 import org.schema.schine.graphicsengine.core.GlUtil;
 
 import javax.vecmath.Vector3f;
-import java.io.IOException;
 import java.util.*;
 
 public class Entity {
@@ -459,8 +453,46 @@ public class Entity {
 
         return blocks;
     }
-    public ArrayList<ElementCollectionManager> getECM(Class<? extends ElementCollectionManager> ecm){
-        return null;
+
+    /**
+     * Gets all of the ships manager modules, manager modules are the 'parts' of the ship, cannon system collective, rail system collective, etc.
+     * @return A list of all the the modules
+     * TODO: Make a helper class for manager modules
+     */
+    public ObjectArrayList<ManagerModule<?, ?, ?>> getManagerModules(){
+        return getManagerContainer().getModules();
+    }
+    public ArrayList<ElementCollectionManager> getCollectionManagers(Class<? extends ElementCollectionManager> classType){
+        ArrayList<ElementCollectionManager> ecms = new ArrayList<ElementCollectionManager>();
+        for (ManagerModule<?, ?, ?> module : getManagerContainer().getModules()) {
+            if(module instanceof ManagerModuleCollection){
+                for (Object cm : ((ManagerModuleCollection) module).getCollectionManagers()) {
+                    if(cm.getClass().equals(classType)) {
+                        ecms.add((ElementCollectionManager) cm);
+                    }
+                }
+            }else if(module instanceof ManagerModuleSingle){
+                ElementCollectionManager cm = ((ManagerModuleSingle) module).getCollectionManager();
+                if(cm.getClass().equals(classType)){
+                    ecms.add(cm);
+                }
+            }//else{ something broke }
+        }
+        return ecms;
+    }
+    public ArrayList<ElementCollectionManager> getAllCollectionManagers(){
+        ArrayList<ElementCollectionManager> ecms = new ArrayList<ElementCollectionManager>();
+        for (ManagerModule<?, ?, ?> module : getManagerContainer().getModules()) {
+            if(module instanceof ManagerModuleCollection){
+                for (Object cm : ((ManagerModuleCollection) module).getCollectionManagers()) {
+                        ecms.add((ElementCollectionManager) cm);
+                }
+            }else if(module instanceof ManagerModuleSingle){
+                ElementCollectionManager cm = ((ManagerModuleSingle) module).getCollectionManager();
+                    ecms.add(cm);
+            }
+        }
+        return ecms;
     }
 
 }
