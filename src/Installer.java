@@ -27,14 +27,15 @@ public class Installer {
             System.out.println("Added " + s.getName());
         }
         //resources.add(new File(classFileFolder + "/api.SMModLoader.class"));
+        System.out.println("Writing jar...");
         writeJar(inputS, newJar, resources);
 
-
+        System.out.println("Closing streams...");
         newJar.close();
         inputS.close();
         oldJarInputStream.close();
         newJarOutputStream.close();
-
+        System.out.println("Copying jar...");
         try {
             //Files.move(newJarF.toPath(), new File("StarMade.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
             //FIXME: throws an error... somehow the jar is being used
@@ -100,7 +101,7 @@ public class Installer {
             }
         }catch (ZipException e){
             System.out.println(e.getMessage());
-            System.out.println("No problem really");
+            //System.out.println("No problem really");
         }
     }
 

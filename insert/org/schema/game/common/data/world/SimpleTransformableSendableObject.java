@@ -594,21 +594,21 @@ public abstract class SimpleTransformableSendableObject<E extends NetworkListene
         }
 
         if (var6 != null) {
-            Vector3i var17 = new Vector3i(var6.pos);
+            Vector3i newSecPos = new Vector3i(var6.pos);
             System.err.println("[JUMPDRIVE] scaling: " + var3.origin + " -> " + 1.0F / var2.getSectorSize());
             var3.origin.scale(1.0F / var2.getSectorSize());
-            var17.add((int)var3.origin.x, (int)var3.origin.y, (int)var3.origin.z);
+            newSecPos.add((int)var3.origin.x, (int)var3.origin.y, (int)var3.origin.z);
 
             try {
-                if (var2.getUniverse().getSector(var17).isNoEntry()) {
+                if (var2.getUniverse().getSector(newSecPos).isNoEntry()) {
                     this.sendControllingPlayersServerMessage(new Object[]{423}, 3);
                 } else if (var6.isNoExit()) {
                     this.sendControllingPlayersServerMessage(new Object[]{424}, 3);
                 } else {
-                    //INSERTED CODE @???????
+                    //INSERTED CODE @768
                     if(this instanceof SegmentController) {
                         Vector3i oldSector = this.getSector(new Vector3i());
-                        ShipJumpEngageEvent event = new ShipJumpEngageEvent((SegmentController) this, oldSector, var17);
+                        ShipJumpEngageEvent event = new ShipJumpEngageEvent((SegmentController) this, oldSector, newSecPos);
                         StarLoader.fireEvent(ShipJumpEngageEvent.class, event, this.isOnServer());
                         if (event.isCanceled()) {
                             return false;
@@ -617,20 +617,20 @@ public abstract class SimpleTransformableSendableObject<E extends NetworkListene
                         //how did it even jump
                     }
                     ///
-                    System.err.println("[JUMPDRIVE] scaled to secSize: " + var3.origin + " -> " + var17);
+                    System.err.println("[JUMPDRIVE] scaled to secSize: " + var3.origin + " -> " + newSecPos);
                     this.getNetworkObject().graphicsEffectModifier.add((byte)1);
                     SectorSwitch var18;
-                    if ((var18 = ((GameServerState)this.getState()).getController().queueSectorSwitch(this, var17, 1, false, true, true)) != null) {
+                    if ((var18 = ((GameServerState)this.getState()).getController().queueSectorSwitch(this, newSecPos, 1, false, true, true)) != null) {
                         var18.delay = System.currentTimeMillis() + 4000L;
                         var18.jumpSpawnPos = new Vector3f(this.getWorldTransform().origin);
                         var18.executionGraphicsEffect = 2;
                         var18.keepJumpBasisWithJumpPos = true;
                         if (var7 == 0) {
-                            this.sendControllingPlayersServerMessage(new Object[]{425, var17.toStringPure()}, 1);
+                            this.sendControllingPlayersServerMessage(new Object[]{425, newSecPos.toStringPure()}, 1);
                         } else if (var7 == 1) {
-                            this.sendControllingPlayersServerMessage(new Object[]{426, var17.toStringPure()}, 1);
+                            this.sendControllingPlayersServerMessage(new Object[]{426, newSecPos.toStringPure()}, 1);
                         } else {
-                            this.sendControllingPlayersServerMessage(new Object[]{427, var17.toStringPure()}, 1);
+                            this.sendControllingPlayersServerMessage(new Object[]{427, newSecPos.toStringPure()}, 1);
                         }
 
                         return true;

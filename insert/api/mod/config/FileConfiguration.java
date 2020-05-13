@@ -43,6 +43,14 @@ public class FileConfiguration {
             //e.printStackTrace();
         }
     }
+    public String getConfigurableValue(String path, String defaultVal){
+        String string = getString(path);
+        if(string == null){
+            set(path, defaultVal);
+            return defaultVal;
+        }
+        return string;
+    }
     public int getInt(String path){
         return Integer.parseInt(values.get(path));
     }
