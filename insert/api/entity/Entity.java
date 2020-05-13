@@ -21,7 +21,6 @@ import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
 import org.schema.game.common.controller.elements.power.reactor.tree.ReactorTree;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.ConfigEntityManager;
-import org.schema.game.common.data.element.ElementCollection;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.schine.graphicsengine.core.GlUtil;
 
@@ -462,7 +461,22 @@ public class Entity {
     public ObjectArrayList<ManagerModule<?, ?, ?>> getManagerModules(){
         return getManagerContainer().getModules();
     }
-    public ArrayList<ElementCollectionManager> getCollectionManagers(Class<? extends ElementCollectionManager> classType){
+
+    /**
+     * Get a manager module of specified type
+     * @param classType the type of class
+     * @return the array
+     */
+    public <EM extends UsableElementManager> EM getElementManager(Class<EM> classType){
+        for (ManagerModule<?, ?, ?> managerModule : getManagerModules()) {
+            UsableElementManager<?, ?, ?> elementManager = managerModule.getElementManager();
+            if(elementManager.getClass().equals(classType)){
+                return (EM) elementManager;
+            }
+        }
+        return null;
+    }
+    public <CM extends ElementCollectionManager> ArrayList<ElementCollectionManager> getCollectionManagers(Class<CM> classType){
         ArrayList<ElementCollectionManager> ecms = new ArrayList<ElementCollectionManager>();
         for (ManagerModule<?, ?, ?> module : getManagerContainer().getModules()) {
             if(module instanceof ManagerModuleCollection){

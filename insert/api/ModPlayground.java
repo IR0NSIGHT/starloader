@@ -7,14 +7,18 @@ import api.entity.Player;
 import api.gui.custom.examples.BasicInfoGroup;
 import api.listener.Listener;
 import api.listener.events.Event;
+import api.listener.events.calculate.MaxPowerCalculateEvent;
 import api.listener.events.gui.HudCreateEvent;
 import api.listener.events.player.PlayerCommandEvent;
 import api.listener.events.register.ElementRegisterEvent;
 import api.listener.events.register.RegisterEffectsEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
+import api.server.Server;
+import api.systems.modules.custom.example.BatteryElementManager;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.schema.game.common.controller.elements.ManagerModuleCollection;
+import org.schema.game.common.controller.elements.ManagerModuleSingle;
 import org.schema.game.common.controller.elements.weapon.WeaponElementManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
@@ -88,37 +92,15 @@ public class ModPlayground extends StarMod {
             }
         }, this);
 
-//        StarLoader.registerListener(ElementRegisterEvent.class, new Listener() {
-//            @Override
-//            public void onEvent(Event event) {
-//                ElementRegisterEvent e = (ElementRegisterEvent) event;
-//                e.addModuleCollection(new ManagerModuleCollection(new WeaponElementManager(e.getSegmentController()), Blocks.FERTIKEEN_INGOT.getId(), Blocks.HYLAT_INGOT.getId()));
-//            }
-//        }, this);
-        /*StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
+        StarLoader.registerListener(ElementRegisterEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
-                ShieldCapacityCalculateEvent e = (ShieldCapacityCalculateEvent) event;
-
-                long bonusShields = 0;
-                ShieldCapacityUnit capacityUnit = ((ShieldCapacityCalculateEvent) event).getUnit();
-                Vector3i max = capacityUnit.getMax(new Vector3i());
-                Vector3i min = capacityUnit.getMin(new Vector3i());
-                int deltaX = Math.abs(max.x-min.x);
-                int deltaY = Math.abs(max.y-min.y);
-                int deltaZ = Math.abs(max.z-min.z);
-                int smallAxes = 0;
-                if(deltaX <= 5)
-                    smallAxes++;
-                if(deltaY <= 5)
-                    smallAxes++;
-                if(deltaZ <= 5)
-                    smallAxes++;
-                if(smallAxes >= 2) {
-                    e.setShields((long) (e.getCapacity() * 1.2));
-                }
+                ElementRegisterEvent e = (ElementRegisterEvent) event;
+                e.addModuleCollection(new ManagerModuleSingle(new BatteryElementManager(e.getSegmentController()), Blocks.SHIP_CORE.getId(), Blocks.FERTIKEEN_INGOT.getId()));
+                //e.addModuleCollection(new ManagerModuleCollection(new WeaponElementManager(e.getSegmentController()), Blocks.FERTIKEEN_INGOT.getId(), Blocks.HYLAT_INGOT.getId()));
+                Server.broadcastMessage("Test: " + getConfig().getConfigurableValue("default_value_test", "moo"));
             }
-        });*/
+        }, this);
         getConfig().saveDefault("this is a: test");
 
         StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
@@ -134,15 +116,16 @@ public class ModPlayground extends StarMod {
                     }else{
                         p.sendServerMessage("You are in: " + currentEntity.getUID());
                     }
+                }else if(e.command.equals("thr")){
+                    Entity currentEntity = p.getCurrentEntity();
+                    if(currentEntity == null){
+                        p.sendServerMessage("no");
+                        return;
+                    }
+                    BatteryElementManager elementManager = currentEntity.getElementManager(BatteryElementManager.class);
+                    float actualThrust = elementManager.getActualThrust();
+                    Server.broadcastMessage("The total thrust of this object is: " + actualThrust);
                 }
-            }
-        });
-
-        StarLoader.registerListener(ElementRegisterEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                ElementRegisterEvent ev = (ElementRegisterEvent) event;
-                //ev.addModuleCollection(new ManagerModuleCollection());
             }
         });
 
