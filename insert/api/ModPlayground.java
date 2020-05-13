@@ -37,11 +37,14 @@ public class ModPlayground extends StarMod {
         this.forceEnable = true;
     }
 
-    public static short xorId = 0;
+    public static short newCapId = 0;
 
     @Override
     public void onBlockConfigLoad(BlockConfig config) {
-        registerComputerModulePair(Blocks.FERTIKEEN_INGOT, Blocks.HYLAT_INGOT);
+//        ElementInformation powCap = BlockConfig.newElement("PowCap", new short[]{264});
+//        newCapId = powCap.getId();
+//        registerElementBlock(powCap);
+//        config.add(powCap);
     }
     public void registerComputerModulePair(Blocks computer, Blocks module){
         ElementInformation comp = computer.getInfo();
@@ -51,6 +54,11 @@ public class ModPlayground extends StarMod {
         comp.controlling.add(module.getId());
 
         module.getInfo().controlledBy.add(computer.getId());
+
+    }
+    public void registerElementBlock(ElementInformation info){
+        info.systemBlock = true;
+        info.controlledBy.add(Blocks.SHIP_CORE.getId());
 
     }
 
@@ -96,11 +104,20 @@ public class ModPlayground extends StarMod {
             @Override
             public void onEvent(Event event) {
                 ElementRegisterEvent e = (ElementRegisterEvent) event;
-                e.addModuleCollection(new ManagerModuleSingle(new BatteryElementManager(e.getSegmentController()), Blocks.SHIP_CORE.getId(), Blocks.FERTIKEEN_INGOT.getId()));
-                //e.addModuleCollection(new ManagerModuleCollection(new WeaponElementManager(e.getSegmentController()), Blocks.FERTIKEEN_INGOT.getId(), Blocks.HYLAT_INGOT.getId()));
-                Server.broadcastMessage("Test: " + getConfig().getConfigurableValue("default_value_test", "moo"));
-            }
+               // e.addModuleCollection(new ManagerModuleSingle(new BatteryElementManager(e.getSegmentController()), Blocks.SHIP_CORE.getId(), newCapId));
+          }
         }, this);
+//        StarLoader.registerListener(MaxPowerCalculateEvent.class, new Listener() {
+//            @Override
+//            public void onEvent(Event event) {
+//                MaxPowerCalculateEvent e = (MaxPowerCalculateEvent) event;
+//                DebugFile.info("Original Power: " + e.getPower());
+//                BatteryElementManager elementManager = e.getEntity().getElementManager(BatteryElementManager.class);
+//                double extraPower = (double) elementManager.totalSize*100;
+//                DebugFile.info("Extra Power: " + e.getPower());
+//                e.setPower(e.getPower()+extraPower);
+//            }
+//        });
         getConfig().saveDefault("this is a: test");
 
         StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
@@ -123,7 +140,7 @@ public class ModPlayground extends StarMod {
                         return;
                     }
                     BatteryElementManager elementManager = currentEntity.getElementManager(BatteryElementManager.class);
-                    float actualThrust = elementManager.getActualThrust();
+                    float actualThrust = elementManager.totalSize;
                     Server.broadcastMessage("The total thrust of this object is: " + actualThrust);
                 }
             }

@@ -28,7 +28,7 @@ public class BatteryUnit extends ElementCollection<BatteryUnit, BatteryCollectio
     }
 
     public ControllerManagerGUI createUnitGUI(GameClientState var1, ControlBlockElementCollectionManager<?, ?, ?> var2, ControlBlockElementCollectionManager<?, ?, ?> var3) {
-        return ((BatteryElementManager)((BatteryCollectionManager)this.elementCollectionManager).getElementManager()).getGUIUnitValues(this, (BatteryCollectionManager)this.elementCollectionManager, var2, var3);
+        return this.elementCollectionManager.getElementManager().getGUIUnitValues(this, this.elementCollectionManager, var2, var3);
     }
 
     public Long2LongOpenHashMap getLastElements() {
@@ -43,37 +43,4 @@ public class BatteryUnit extends ElementCollection<BatteryUnit, BatteryCollectio
 
     }
 
-    public void refreshThrusterCapabilities() {
-        float var1;
-        switch(BatteryElementManager.UNIT_CALC_STYLE) {
-            case BOX_DIM_ADD:
-                this.thrust = (float)this.getBBTotalSize();
-                var1 = (float)((double)((float)Math.pow((double)this.size(), BatteryElementManager.THRUSTER_BONUS_POW_PER_UNIT)) * BatteryElementManager.UNIT_CALC_MULT.get(this.isUsingPowerReactors()));
-                this.thrust += var1;
-                break;
-            case BOX_DIM_MULT:
-                this.thrust = (float)this.getAbsBBMult();
-                var1 = (float)((double)((float)Math.pow((double)this.size(), BatteryElementManager.THRUSTER_BONUS_POW_PER_UNIT)) * BatteryElementManager.UNIT_CALC_MULT.get(this.isUsingPowerReactors()));
-                this.thrust += var1;
-                break;
-            case LINEAR:
-                this.thrust = (float)(Math.pow((double)this.size(), BatteryElementManager.THRUSTER_BONUS_POW_PER_UNIT) * BatteryElementManager.UNIT_CALC_MULT.get(this.isUsingPowerReactors()));
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-
-        this.thrust = Math.max(1.0F, this.thrust);
-    }
-
-    public float getPowerConsumption() {
-        float var1;
-        if (BatteryElementManager.POWER_CONSUMPTION_PER_BLOCK <= 0.0D) {
-            var1 = this.thrust;
-        } else {
-            var1 = (float)(BatteryElementManager.POWER_CONSUMPTION_PER_BLOCK * (double)this.size());
-        }
-
-        return var1;
-    }
 }

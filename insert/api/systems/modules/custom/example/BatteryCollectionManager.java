@@ -7,6 +7,7 @@ package api.systems.modules.custom.example;
 
 import java.util.Iterator;
 
+import api.ModPlayground;
 import api.element.block.Blocks;
 import org.schema.common.util.StringTools;
 import org.schema.game.client.data.GameClientState;
@@ -34,7 +35,7 @@ public class BatteryCollectionManager extends ElementCollectionManager<BatteryUn
     private float totalThrustRaw;
 
     public BatteryCollectionManager(SegmentController var1, BatteryElementManager var2) {
-        super(Blocks.FERTIKEEN_INGOT.getId(), var1, var2);
+        super(ModPlayground.newCapId, var1, var2);
     }
 
     public int getMargin() {
@@ -57,10 +58,6 @@ public class BatteryCollectionManager extends ElementCollectionManager<BatteryUn
     }
 
     protected void onChangedCollection() {
-        this.refreshMaxThrust();
-        if (!this.getSegmentController().isOnServer()) {
-            ((GameClientState)this.getSegmentController().getState()).getWorldDrawer().getPlumAndMuzzleDrawer().scheduleUpdatePlums();
-        }
 
     }
 
@@ -72,56 +69,16 @@ public class BatteryCollectionManager extends ElementCollectionManager<BatteryUn
     }
 
     public GUIKeyValueEntry[] getGUICollectionStats() {
-        this.getElementManager();
         return new GUIKeyValueEntry[]{
-                new ModuleValueEntry(Lng.ORG_SCHEMA_GAME_COMMON_CONTROLLER_ELEMENTS_THRUST_THRUSTERCOLLECTIONMANAGER_0,
-                        StringTools.formatPointZero(this.getTotalThrust())),
-                new ModuleValueEntry(Lng.ORG_SCHEMA_GAME_COMMON_CONTROLLER_ELEMENTS_THRUST_THRUSTERCOLLECTIONMANAGER_1,
-                        StringTools.formatPointZero(((BatteryElementManager)this.getElementManager()).getSingleThrustRaw())),
-                new ModuleValueEntry(Lng.ORG_SCHEMA_GAME_COMMON_CONTROLLER_ELEMENTS_THRUST_THRUSTERCOLLECTIONMANAGER_2,
-                        StringTools.formatPointZero(((BatteryElementManager)this.getElementManager()).getSharedThrustRaw())),
-                new ModuleValueEntry(Lng.ORG_SCHEMA_GAME_COMMON_CONTROLLER_ELEMENTS_THRUST_THRUSTERCOLLECTIONMANAGER_3,
-                        StringTools.formatPointZero(((BatteryElementManager)this.getElementManager()).getActualThrust())),
-                new ModuleValueEntry(Lng.ORG_SCHEMA_GAME_COMMON_CONTROLLER_ELEMENTS_THRUST_THRUSTERCOLLECTIONMANAGER_4,
-                        StringTools.formatPointZero(((BatteryElementManager)this.getElementManager()).getPowerConsumption() / BatteryElementManager.getUpdateFrequency()))};
+                new ModuleValueEntry("Total Size", this.getTotalSize())};
     }
 
     public String getModuleName() {
         return "PowCap System";
     }
 
-    public float getTotalThrust() {
-        return this.totalThrust * ((BatteryElementManager)this.getElementManager()).ruleModifierOnThrust;
-    }
-
-    public void setTotalThrust(float var1) {
-        this.totalThrust = var1;
-    }
-
-    private void refreshMaxThrust() {
-//        this.setTotalThrust(0.0F);
-//        Iterator var1 = this.getElementCollections().iterator();
-//
-//        while(var1.hasNext()) {
-//            BatteryUnit var2;
-//            (var2 = (BatteryUnit)var1.next()).refreshThrusterCapabilities();
-//            this.setTotalThrust(this.getTotalThrust() + var2.thrust);
-//        }
-//
-//        this.setTotalThrustRaw(this.getTotalThrust());
-//        this.setTotalThrust((float)(Math.pow((double)this.getTotalThrust(), BatteryElementManager.POW_TOTAL.get(this.isUsingPowerReactors())) * BatteryElementManager.MUL_TOTAL.get(this.isUsingPowerReactors())));
-    }
-
-    public float getTotalThrustRaw() {
-        return this.totalThrustRaw;
-    }
-
-    public void setTotalThrustRaw(float var1) {
-        this.totalThrustRaw = var1;
-    }
-
     public float getSensorValue(SegmentPiece var1) {
-        return Math.min(1.0F, this.getSegmentController().getSpeedCurrent() / this.getElementManager().getMaxSpeedAbsolute());
+        return 1.0F;
     }
 
     public WeaponRowElementInterface getWeaponRow() {
@@ -137,7 +94,8 @@ public class BatteryCollectionManager extends ElementCollectionManager<BatteryUn
     }
 
     public long getUsableId() {
-        return -9223372036854775803L;
+        //If you set this to an existing usable id, it will BREAK the original
+        return Blocks.FERTIKEEN_INGOT.getPlayerUsableId();
     }
 
     public void handleControl(ControllerStateInterface var1, Timer var2) {
