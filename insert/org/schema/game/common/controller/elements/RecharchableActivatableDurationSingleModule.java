@@ -17,6 +17,7 @@ public abstract class RecharchableActivatableDurationSingleModule extends Rechar
         super(var1);
     }
     //MODIFIED METHOD
+    @Override
     public boolean executeModule() {
 
         if (this.getCharges() > 0) {

@@ -16,14 +16,17 @@ import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.server.Server;
 import api.systems.modules.custom.example.BatteryElementManager;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.schema.game.common.controller.elements.ManagerModuleCollection;
 import org.schema.game.common.controller.elements.ManagerModuleSingle;
 import org.schema.game.common.controller.elements.weapon.WeaponElementManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
+import org.schema.game.common.data.element.ElementKeyMap;
 
 import java.util.Locale;
+import java.util.Map;
 
 public class ModPlayground extends StarMod {
     public static void main(String[] args) {
@@ -41,10 +44,6 @@ public class ModPlayground extends StarMod {
 
     @Override
     public void onBlockConfigLoad(BlockConfig config) {
-//        ElementInformation powCap = BlockConfig.newElement("PowCap", new short[]{264});
-//        newCapId = powCap.getId();
-//        registerElementBlock(powCap);
-//        config.add(powCap);
     }
     public void registerComputerModulePair(Blocks computer, Blocks module){
         ElementInformation comp = computer.getInfo();
@@ -70,6 +69,15 @@ public class ModPlayground extends StarMod {
                 DebugFile.log("Initializing block for mod: " + mod.modName);
                 mod.onBlockConfigLoad(config);
             }
+        }
+
+        //Regenerate LOD shapes/Factory enhancers, rather than just obliterating the list in addElementToExisting
+        ObjectIterator<Map.Entry<Short, ElementInformation>> iterator = ElementKeyMap.informationKeyMap.entrySet().iterator();
+        while(iterator.hasNext()){
+            Map.Entry<Short, ElementInformation> next = iterator.next();
+            Short keyId = next.getKey();
+            ElementKeyMap.lodShapeArray[keyId] = next.getValue().hasLod();
+            ElementKeyMap.factoryInfoArray[keyId] = ElementKeyMap.getFactorykeyset().contains(keyId);
         }
         /*for (ElementInformation element : config.getElements()) {
             try {
