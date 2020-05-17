@@ -5,12 +5,14 @@
 
 package api.systems.addons.custom;
 
+import api.DebugFile;
 import api.entity.Entity;
 import api.server.Server;
 import org.schema.common.util.StringTools;
 import org.schema.game.common.controller.elements.ManagerContainer;
 import org.schema.game.common.controller.elements.RecharchableActivatableDurationSingleModule;
 import org.schema.game.common.controller.elements.SingleModuleActivation;
+import org.schema.game.common.controller.elements.jumpdrive.JumpAddOn;
 import org.schema.game.common.controller.elements.jumpprohibiter.InterdictionAddOn;
 import org.schema.game.common.controller.elements.scanner.ScanAddOnChargeValueUpdate;
 import org.schema.game.common.data.ManagedSegmentController;
@@ -18,6 +20,7 @@ import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.network.objects.remote.RemoteValueUpdate;
 import org.schema.game.network.objects.valueUpdate.NTValueUpdateInterface;
 import org.schema.game.network.objects.valueUpdate.ServerValueRequestUpdate.Type;
+import org.schema.game.network.objects.valueUpdate.ValueUpdate;
 import org.schema.game.network.objects.valueUpdate.ValueUpdate.ValTypes;
 import org.schema.schine.common.language.Lng;
 import org.schema.schine.graphicsengine.core.Timer;
@@ -28,6 +31,11 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
         super(var1);
         entity = new Entity(getSegmentController());
     }
+
+    public Entity getEntity() {
+        return entity;
+    }
+
     public boolean entityHasEffect(StatusEffectType type){
         return this.getConfigManager().apply(type, 1F) == 10F;
     }
@@ -56,9 +64,7 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
         this.setCharge(0);
         this.setCharges(0);
         SingleModuleActivation mod = this.activation;
-        //this.activation = null;
         this.sendChargeUpdate();
-        //this.activation = mod;
     }
 
     public float getChargeRateFull() {
@@ -68,7 +74,7 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
     }
 
     public boolean canExecute() {
-        return !this.isActive();
+        return !this.isActive() && this.getCharge() >= 1;
     }
 
     public abstract double getPowerConsumedPerSecondResting();
@@ -145,21 +151,36 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
 
     @Override
     public boolean executeModule() {
-        if(this.getCharge() >= 1) {
-            boolean success = super.executeModule();
-            if (success) {
-                onExecute();
-            }
-            return success;
+        DebugFile.log("=== EXECUTING ADDON ?SERVER=" + this.isOnServer());
+        boolean clientSuccess = !this.isOnServer() && this.getCharge() >= 1;
+        boolean success = super.executeModule();
+        DebugFile.log(success + " <> " + clientSuccess);
+        DebugFile.log(this.getCharges() + " <> " + this.getCharge());
+        if (success || clientSuccess) {
+            DebugFile.log("we executing");
+            onExecute();
         }
-        return false;
+
+
+        return success || clientSuccess;
+    }
+
+    public void onExecuteClient(){
+
     }
     public void onDeactivateFromTime(){
     }
-
+    int a = 0;
     public void update(Timer var1) {
         boolean active = this.activation != null;
         super.update(var1);
+        if(this.isOnServer()){
+            if(getEntity().getAttachedPlayers().size()>0 && !getEntity().isDocked()) {
+                if (a++ % 5 == 0) {
+                    Server.broadcastMessage("The Charge: " + this.getCharge());
+                }
+            }
+        }
         if (this.isActive()) {
             onActive();
         }else{
@@ -168,6 +189,7 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
         if(active && this.activation == null){
             this.onDeactivateFromTime();
         }
+        this.setAutoChargeOn(true);
     }
     public abstract void onActive();
     public abstract void onInactive();

@@ -31,7 +31,7 @@ public abstract class EntityReactorBar extends CustomHudBar {
         if(reactor == null){
             return 0;
         }
-        return (float) entity.getCurrentReactor().getHpPercent();
+        return (float) reactor.getHpPercent();
     }
 
     @Override
