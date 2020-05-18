@@ -228,7 +228,7 @@ public class ClientProcessor implements Runnable, NetworkProcessor {
                 //INSERTED CODE
                 if(var23 == -2){
                     //SPECIAL PACKET ID received
-                    int packetId = this.dataInputStream.readInt();
+                    String packetId = this.dataInputStream.readUTF();
                     //Construct packet
                     api.network.Packet packet = api.network.Packet.newPacket(packetId);
                     //Fill with data
