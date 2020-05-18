@@ -120,6 +120,7 @@ public class ModPlayground extends StarMod {
                 KeyPressEvent e = (KeyPressEvent) event;
                 if(e.getChar() == 'o'){
                     GameClient.showPopupMessage("yooooo", 1);
+                    GameClient.sendPacketToServer(new ServerToClientMessage("eyy"));
                 }
             }
         });
@@ -182,32 +183,7 @@ public class ModPlayground extends StarMod {
                     float actualThrust = elementManager.totalSize;
                     Server.broadcastMessage("The total thrust of this object is: " + actualThrust);
                 }else if(e.command.equals("a")){
-                    //p.sendPacket(new ServerToClientMessage(54));
-                    Packet packet = new Packet() {
-                        String msg;
-
-                        @Override
-                        public void readPacketData(DataInputStream buf) throws IOException {
-                            msg = buf.readUTF();
-                        }
-
-                        @Override
-                        public void writePacketData(DataOutputStream buf) throws IOException {
-                            buf.writeUTF(msg);
-                        }
-
-                        @Override
-                        public void processPacketOnClient() {
-                            GameClient.showPopupMessage("just received: `" + msg + "` from the server", 0);
-                        }
-
-                        @Override
-                        public void processPacketOnServer() {
-
-                        }
-                    };
-                    Packet.registerPacket(packet.getClass());
-                    p.sendPacket(packet);
+                    p.sendPacket(new ServerToClientMessage("hi"));
                 }
             }
         });

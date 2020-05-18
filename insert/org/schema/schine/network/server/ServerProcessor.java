@@ -5,6 +5,7 @@
 
 package org.schema.schine.network.server;
 
+import api.DebugFile;
 import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
@@ -336,6 +337,25 @@ public class ServerProcessor extends Pinger implements Runnable, NetworkProcesso
 
                             this.receiveBuffer = new byte[var43];
                         }
+                        //INSERTED CODE
+                        DebugFile.log("RECV PACKET OF SIZE: " + var43);
+                        if(var43 == -2){
+                            //SPECIAL PACKET ID received (in this case its size)
+                            int packetId = this.dataInputStream.readInt();
+                            //Construct packet
+                            api.network.Packet packet = api.network.Packet.newPacket(packetId);
+                            //Fill with data
+                            try {
+                                packet.readPacketData(dataInputStream);
+                            }catch (IOException e){
+                                e.printStackTrace();
+                                DebugFile.logError(e, null);
+                            }
+                            //dispatch TODO Move packet to a queue to be executed on the main loop
+                            packet.processPacketOnServer(null);
+                            continue;
+                        }
+                        ///
 
                         assert var43 > 0 : " Empty update! " + var43;
 

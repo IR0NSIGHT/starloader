@@ -1,6 +1,7 @@
 package api.main;
 
 import api.entity.Entity;
+import api.network.Packet;
 import com.bulletphysics.linearmath.Transform;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import org.schema.game.client.controller.GameClientController;
@@ -16,8 +17,12 @@ import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.common.data.world.RemoteSector;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.schine.graphicsengine.core.Controller;
+import org.schema.schine.network.NetworkProcessor;
 
 import javax.vecmath.Vector3f;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -86,6 +91,21 @@ public class GameClient {
     public static Collection<Fleet> getAvailableFleets(){
         return getClientState().getFleetManager().getAvailableFleetsClient();
     }
+
+    public static void sendPacketToServer(Packet apiPacket){
+        try {
+            NetworkProcessor processor = GameClient.getClientState().getProcessor();
+            DataOutputStream output = new DataOutputStream(processor.getOutRaw());
+            output.writeInt(-2); //Mod packet ID
+            output.writeInt(apiPacket.getId()); //The packet ID we're sending
+            apiPacket.writePacketData(output); //The info of the packet
+            processor.getOutRaw().flush(); //Send
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void setLoadString(String s){
         Controller.getResLoader().setLoadString(s);
     }

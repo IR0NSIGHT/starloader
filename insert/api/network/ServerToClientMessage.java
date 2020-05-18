@@ -1,6 +1,8 @@
 package api.network;
 
+import api.entity.Player;
 import api.main.GameClient;
+import api.server.Server;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -10,28 +12,28 @@ public class ServerToClientMessage extends Packet {
     public ServerToClientMessage(){
 
     }
-    public ServerToClientMessage(int bc){
+    public ServerToClientMessage(String bc){
         this.bc = bc;
     }
-    int bc;
+    String bc;
 
     @Override
     public void readPacketData(DataInputStream buf) throws IOException {
-        bc = buf.readInt();
+        bc = buf.readUTF();
     }
 
     @Override
     public void writePacketData(DataOutputStream buf) throws IOException {
-        buf.writeInt(bc);
+        buf.writeUTF(bc);
     }
 
     @Override
     public void processPacketOnClient() {
-        GameClient.showPopupMessage("WE JUST RECV: " + bc + "!!!!!!!!!!!!", 0);
+        GameClient.showPopupMessage("just received: " + bc + " from server", 0);
     }
 
     @Override
-    public void processPacketOnServer() {
-
+    public void processPacketOnServer(Player sender) {
+        Server.broadcastMessage("THANK YOU FOR YOUR PACKET!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 }

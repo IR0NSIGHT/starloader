@@ -1,6 +1,7 @@
 package api.network;
 
 import api.DebugFile;
+import api.entity.Player;
 import it.unimi.dsi.fastutil.Hash;
 
 import java.io.DataInputStream;
@@ -12,7 +13,7 @@ public abstract class Packet {
     public abstract void readPacketData(DataInputStream buf) throws IOException;
     public abstract void writePacketData(DataOutputStream buf) throws IOException;
     public abstract void processPacketOnClient();
-    public abstract void processPacketOnServer();
+    public abstract void processPacketOnServer(Player sender);
     private static HashMap<Integer, Class<? extends Packet>> packetLookup = new HashMap<Integer, Class<? extends Packet>>();
     private static HashMap<Class<? extends Packet>, Integer> reversePacketLookup = new HashMap<Class<? extends Packet>, Integer>();
     private static int idLog = 0;
