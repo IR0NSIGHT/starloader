@@ -2,6 +2,7 @@ package api.main;
 
 import api.entity.Entity;
 import api.network.Packet;
+import api.network.PacketWriteBuffer;
 import com.bulletphysics.linearmath.Transform;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import org.schema.game.client.controller.GameClientController;
@@ -97,8 +98,8 @@ public class GameClient {
             NetworkProcessor processor = GameClient.getClientState().getProcessor();
             DataOutputStream output = new DataOutputStream(processor.getOutRaw());
             output.writeInt(-2); //Mod packet ID
-            output.writeInt(apiPacket.getId()); //The packet ID we're sending
-            apiPacket.writePacketData(output); //The info of the packet
+            output.writeUTF(apiPacket.getId()); //The packet ID we're sending
+            apiPacket.writePacketData(new PacketWriteBuffer(output)); //The info of the packet
             processor.getOutRaw().flush(); //Send
         } catch (IOException e) {
             e.printStackTrace();

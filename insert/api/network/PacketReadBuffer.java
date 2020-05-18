@@ -34,7 +34,9 @@ public class PacketReadBuffer {
     }
     public Faction readFaction() throws IOException {
         int facId = in.readInt();
-        return new Faction(StarLoader.getGameState().getFactionManager().getFaction(facId));
+        org.schema.game.common.data.player.faction.Faction faction = StarLoader.getGameState().getFactionManager().getFaction(facId);
+        if(faction == null) return null;
+        return new Faction(faction);
     }
 
 }

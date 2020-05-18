@@ -1,6 +1,7 @@
 package api.network;
 
 import api.entity.Player;
+import api.faction.Faction;
 import api.main.GameClient;
 import api.server.Server;
 
@@ -12,28 +13,37 @@ public class ServerToClientMessage extends Packet {
     public ServerToClientMessage(){
 
     }
-    public ServerToClientMessage(String bc){
+    public ServerToClientMessage(Faction fac, String bc){
+        this.fac = fac;
         this.bc = bc;
     }
+
+    private Faction fac;
     String bc;
 
     @Override
-    public void readPacketData(DataInputStream buf) throws IOException {
-        bc = buf.readUTF();
+    public void readPacketData(PacketReadBuffer buf) throws IOException {
+        this.bc = buf.readString();
+        this.fac = buf.readFaction();
     }
 
     @Override
-    public void writePacketData(DataOutputStream buf) throws IOException {
-        buf.writeUTF(bc);
+    public void writePacketData(PacketWriteBuffer buf) throws IOException {
+        buf.writeString(bc);
+        buf.writeFaction(fac);
     }
 
     @Override
     public void processPacketOnClient() {
-        GameClient.showPopupMessage("just received: " + bc + " from server", 0);
+        GameClient.showPopupMessage(this.fac.getName() + "[fac] just received: " + bc + " from server", 0);
     }
 
     @Override
     public void processPacketOnServer(Player sender) {
-        Server.broadcastMessage("THANK YOU FOR YOUR PACKET!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if(fac == null){
+            Server.broadcastMessage("no fac!");
+            return;
+        }
+        Server.broadcastMessage("facc: " + fac.getName());
     }
 }

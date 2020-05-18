@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public abstract class Packet {
-    public abstract void readPacketData(DataInputStream buf) throws IOException;
-    public abstract void writePacketData(DataOutputStream buf) throws IOException;
+    public abstract void readPacketData(PacketReadBuffer buf) throws IOException;
+    public abstract void writePacketData(PacketWriteBuffer buf) throws IOException;
     public abstract void processPacketOnClient();
     public abstract void processPacketOnServer(Player sender);
     private static HashMap<String, Class<? extends Packet>> packetLookup = new HashMap<String, Class<? extends Packet>>();

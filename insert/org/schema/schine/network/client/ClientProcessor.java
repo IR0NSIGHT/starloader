@@ -7,6 +7,8 @@ package org.schema.schine.network.client;
 
 import api.DebugFile;
 import api.network.Packet;
+import api.network.PacketReadBuffer;
+import api.network.PacketWriteBuffer;
 import api.server.Server;
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
@@ -233,7 +235,7 @@ public class ClientProcessor implements Runnable, NetworkProcessor {
                     api.network.Packet packet = api.network.Packet.newPacket(packetId);
                     //Fill with data
                     try {
-                        packet.readPacketData(dataInputStream);
+                        packet.readPacketData(new PacketReadBuffer(dataInputStream));
                     }catch (IOException e){
                         e.printStackTrace();
                         DebugFile.logError(e, null);

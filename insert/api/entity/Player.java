@@ -5,6 +5,7 @@ import api.inventory.Inventory;
 import api.inventory.InventoryType;
 import api.main.GameServer;
 import api.network.Packet;
+import api.network.PacketWriteBuffer;
 import api.server.Server;
 import api.universe.Sector;
 import api.universe.Universe;
@@ -119,8 +120,8 @@ public class Player {
         try {
             DataOutputStream output = new DataOutputStream(getServerProcessor().getOutRaw());
             output.writeInt(-2); //Mod packet ID
-            output.writeInt(apiPacket.getId()); //The packet ID we're sending
-            apiPacket.writePacketData(output); //The info of the packet
+            output.writeUTF(apiPacket.getId()); //The packet ID we're sending
+            apiPacket.writePacketData(new PacketWriteBuffer(output)); //The info of the packet
             getServerProcessor().getOutRaw().flush();
         } catch (IOException e) {
             e.printStackTrace();

@@ -6,6 +6,7 @@
 package org.schema.schine.network.server;
 
 import api.DebugFile;
+import api.network.PacketReadBuffer;
 import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
@@ -346,7 +347,7 @@ public class ServerProcessor extends Pinger implements Runnable, NetworkProcesso
                             api.network.Packet packet = api.network.Packet.newPacket(packetId);
                             //Fill with data
                             try {
-                                packet.readPacketData(dataInputStream);
+                                packet.readPacketData(new PacketReadBuffer(dataInputStream));
                             }catch (IOException e){
                                 e.printStackTrace();
                                 DebugFile.logError(e, null);
