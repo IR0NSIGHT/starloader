@@ -52,8 +52,8 @@ public class GameClient {
         getClientState().getChat().addToVisibleChat(s, "[ALL]", true);
     }
 
-    public static void showPopupMessage(String str, int time){
-        getClientState().getController().popupInfoTextMessage(str, time);
+    public static void showPopupMessage(String str, int delay){
+        getClientState().getController().popupInfoTextMessage(str, delay);
     }
     public static void showBigText(String header, String str, int time){
         getClientState().getController().showBigTitleMessage(header, str, time);

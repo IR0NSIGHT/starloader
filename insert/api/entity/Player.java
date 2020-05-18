@@ -3,6 +3,8 @@ package api.entity;
 import api.faction.Faction;
 import api.inventory.Inventory;
 import api.inventory.InventoryType;
+import api.main.GameServer;
+import api.network.Packet;
 import api.server.Server;
 import api.universe.Sector;
 import api.universe.Universe;
@@ -11,6 +13,10 @@ import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.data.player.ControllerStateUnit;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
+import org.schema.schine.network.RegisteredClientOnServer;
+import org.schema.schine.network.server.ServerProcessor;
+
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -53,6 +59,12 @@ public class Player {
     public void sendMail(String from, String title, String contents) {
         playerState.getClientChannel().getPlayerMessageController().serverSend(from, playerState.getName(), title,
                 contents);
+    }
+    public RegisteredClientOnServer getServerClient(){
+        return GameServer.getServerState().getClients().get(getPlayerState().getClientId());
+    }
+    public int getId(){
+        return getPlayerState().getId();
     }
 
     public Inventory getInventory() {
@@ -98,6 +110,21 @@ public class Player {
          * Gets the player's current sector.
          */
         return Universe.getUniverse().getSector(playerState.getCurrentSector());
+    }
+
+    public ServerProcessor getServerProcessor(){
+        return getServerClient().getProcessor();
+    }
+    public void sendPacket(Packet apiPacket){
+        try {
+            DataOutputStream output = new DataOutputStream(getServerProcessor().getOutRaw());
+            output.writeInt(-2); //Mod packet ID
+            output.writeInt(apiPacket.getId()); //The packet ID we're sending
+            apiPacket.writePacketData(output); //The info of the packet
+            getServerProcessor().getOutRaw().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

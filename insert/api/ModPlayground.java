@@ -7,15 +7,22 @@ import api.entity.Player;
 import api.gui.custom.examples.BasicInfoGroup;
 import api.listener.Listener;
 import api.listener.events.Event;
+import api.listener.events.KeyPressEvent;
 import api.listener.events.calculate.MaxPowerCalculateEvent;
 import api.listener.events.gui.HudCreateEvent;
 import api.listener.events.player.PlayerCommandEvent;
 import api.listener.events.register.ElementRegisterEvent;
 import api.listener.events.register.RegisterEffectsEvent;
+import api.main.GameClient;
+import api.main.GameServer;
 import api.mod.StarLoader;
 import api.mod.StarMod;
+import api.network.Packet;
+import api.network.ServerToClientMessage;
 import api.server.Server;
 import api.systems.modules.custom.example.BatteryElementManager;
+import api.universe.Universe;
+import api.utils.StarRunnable;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.schema.game.common.controller.elements.ManagerModuleCollection;
@@ -24,7 +31,15 @@ import org.schema.game.common.controller.elements.weapon.WeaponElementManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
+import org.schema.game.server.data.GameServerState;
+import org.schema.schine.network.client.ClientProcessor;
+import org.schema.schine.network.objects.remote.RemoteIntBuffer;
+import org.schema.schine.network.objects.remote.RemoteStringArray;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
@@ -38,6 +53,7 @@ public class ModPlayground extends StarMod {
         setModName("DefaultMod").setModAuthor("Jake").setModDescription("test").setModVersion("1.0").setModSMVersion("0.202");
         setModDescription("Default mod that is always loaded");
         this.forceEnable = true;
+        Packet.registerPacket(ServerToClientMessage.class);
     }
 
     public static short newCapId = 0;
@@ -72,9 +88,7 @@ public class ModPlayground extends StarMod {
         }
 
         //Regenerate LOD shapes/Factory enhancers, rather than just obliterating the list in addElementToExisting
-        ObjectIterator<Map.Entry<Short, ElementInformation>> iterator = ElementKeyMap.informationKeyMap.entrySet().iterator();
-        while(iterator.hasNext()){
-            Map.Entry<Short, ElementInformation> next = iterator.next();
+        for (Map.Entry<Short, ElementInformation> next : ElementKeyMap.informationKeyMap.entrySet()) {
             Short keyId = next.getKey();
             ElementKeyMap.lodShapeArray[keyId] = next.getValue().hasLod();
             ElementKeyMap.factoryInfoArray[keyId] = ElementKeyMap.getFactorykeyset().contains(keyId);
@@ -92,6 +106,23 @@ public class ModPlayground extends StarMod {
     @Override
     public void onEnable() {
         DebugFile.log("Loading default mod...");
+        new StarRunnable(){
+            @Override
+            public void run() {
+                GameServerState server = GameServer.getServerState();
+            }
+        }.runTimer(50);
+        StarLoader.registerListener(KeyPressEvent.class, new Listener() {
+            int timesPressed = 0;
+            int total = 0;
+            @Override
+            public void onEvent(Event event) {
+                KeyPressEvent e = (KeyPressEvent) event;
+                if(e.getChar() == 'o'){
+                    GameClient.showPopupMessage("yooooo", 1);
+                }
+            }
+        });
 
         //HELP COMMAND
         StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
@@ -150,9 +181,37 @@ public class ModPlayground extends StarMod {
                     BatteryElementManager elementManager = currentEntity.getElementManager(BatteryElementManager.class);
                     float actualThrust = elementManager.totalSize;
                     Server.broadcastMessage("The total thrust of this object is: " + actualThrust);
+                }else if(e.command.equals("a")){
+                    //p.sendPacket(new ServerToClientMessage(54));
+                    Packet packet = new Packet() {
+                        String msg;
+
+                        @Override
+                        public void readPacketData(DataInputStream buf) throws IOException {
+                            msg = buf.readUTF();
+                        }
+
+                        @Override
+                        public void writePacketData(DataOutputStream buf) throws IOException {
+                            buf.writeUTF(msg);
+                        }
+
+                        @Override
+                        public void processPacketOnClient() {
+                            GameClient.showPopupMessage("just received: `" + msg + "` from the server", 0);
+                        }
+
+                        @Override
+                        public void processPacketOnServer() {
+
+                        }
+                    };
+                    Packet.registerPacket(packet.getClass());
+                    p.sendPacket(packet);
                 }
             }
         });
+
 
         StarLoader.registerListener(HudCreateEvent.class, new Listener() {
             @Override
