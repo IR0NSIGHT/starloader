@@ -1,6 +1,7 @@
 package api.main;
 
 import api.entity.Entity;
+import api.entity.Player;
 import api.network.Packet;
 import api.network.PacketWriteBuffer;
 import com.bulletphysics.linearmath.Transform;
@@ -121,5 +122,9 @@ public class GameClient {
         transform.setIdentity();
         transform.origin.set(vector3fb);
         state.getWorldDrawer().getShards().voronoiBBShatter((PhysicsExt)state.getPhysics(), transform, id, state.getCurrentSectorId(), transform.origin, null);
+    }
+
+    public static Player getPlayer() {
+        return new Player(getClientPlayerState());
     }
 }

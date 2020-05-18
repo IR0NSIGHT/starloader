@@ -120,7 +120,7 @@ public class ModPlayground extends StarMod {
                 KeyPressEvent e = (KeyPressEvent) event;
                 if(e.getChar() == 'o'){
                     GameClient.showPopupMessage("yooooo", 1);
-                    GameClient.sendPacketToServer(new ServerToClientMessage("eyy"));
+                    GameClient.sendPacketToServer(new ServerToClientMessage(GameClient.getPlayer().getFaction(), "eyy"));
                 }
             }
         });
@@ -183,7 +183,7 @@ public class ModPlayground extends StarMod {
                     float actualThrust = elementManager.totalSize;
                     Server.broadcastMessage("The total thrust of this object is: " + actualThrust);
                 }else if(e.command.equals("a")){
-                    p.sendPacket(new ServerToClientMessage("hi"));
+                    p.sendPacket(new ServerToClientMessage(p.getFaction(), "hi"));
                 }
             }
         });
