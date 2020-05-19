@@ -6,6 +6,7 @@ import api.faction.Faction;
 import api.main.GameClient;
 import api.main.GameServer;
 import api.mod.StarLoader;
+import api.systems.addons.custom.CustomAddOn;
 import api.universe.Sector;
 import api.universe.Universe;
 import org.schema.common.util.linAlg.Vector3i;
@@ -78,6 +79,11 @@ public class PacketReadBuffer {
             //Title screen
             return null;
         }
+    }
+    public CustomAddOn readCustomAddOn() throws IOException {
+        Entity entity = readEntity();
+        String s = readString();
+        return entity.getCustomAddon(s);
     }
 
 }

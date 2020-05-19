@@ -380,26 +380,37 @@ public class Entity {
         return new Ship(internalEntity);
     }
 
-    public ArrayList<CustomAddOn> getCustomAddons() {
-
-        ArrayList<CustomAddOn> addons = new ArrayList<CustomAddOn>();
-        ManagerContainer<?> manager = getManagerContainer();
-        for (PlayerUsableInterface playerUsableInterface : manager.getPlayerUsable()) {
-            if (playerUsableInterface instanceof CustomAddOn) {
-                addons.add((CustomAddOn) playerUsableInterface);
-            }
-        }
-        return addons;
+    //CUSTOM ADD ON SUPPORT
+    private static HashMap<String, CustomAddOn> nameAddonMap = null;
+    private static HashMap<Class<? extends CustomAddOn>, CustomAddOn> classAddonMap = null;
+    public Collection<CustomAddOn> getCustomAddons() {
+        generateAddonLookup();
+        return nameAddonMap.values();
     }
 
     public CustomAddOn getCustomAddon(Class<? extends CustomAddOn> clazz) {
-        for (CustomAddOn customAddon : getCustomAddons()) {
-            if (customAddon.getClass().equals(clazz)) {
-                return customAddon;
+        generateAddonLookup();
+        return classAddonMap.get(clazz);
+    }
+    public CustomAddOn getCustomAddon(String name) {
+        generateAddonLookup();
+        return nameAddonMap.get(name);
+    }
+    private void generateAddonLookup(){
+        if(nameAddonMap == null){
+            nameAddonMap = new HashMap<String, CustomAddOn>();
+            classAddonMap = new HashMap<Class<? extends CustomAddOn>, CustomAddOn>();
+            ManagerContainer<?> manager = getManagerContainer();
+            for (PlayerUsableInterface usableAddon : manager.getPlayerUsable()) {
+                if (usableAddon instanceof CustomAddOn) {
+                    CustomAddOn customAddOn = (CustomAddOn) usableAddon;
+                    nameAddonMap.put(customAddOn.getName(), customAddOn);
+                    classAddonMap.put(customAddOn.getClass(), customAddOn);
+                }
             }
         }
-        return null;
     }
+    //
 
     public Sector getSector() {
         if (GameServer.getServerState() != null) {

@@ -4,6 +4,7 @@ import api.entity.Entity;
 import api.faction.Faction;
 import api.main.GameServer;
 import api.mod.StarLoader;
+import api.systems.addons.custom.CustomAddOn;
 import api.universe.Sector;
 import api.universe.Universe;
 import org.schema.common.util.linAlg.Vector3i;
@@ -47,6 +48,11 @@ public class PacketWriteBuffer {
         writeSector(e.getSectorPosition());
         writeString(e.getRealName());
         writeInt(e.internalEntity.getId());
+
+    }
+    public void writeCustomAddOn(CustomAddOn addOn) throws IOException {
+        writeEntity(addOn.getEntity());
+        writeString(addOn.getName());
 
     }
 }
