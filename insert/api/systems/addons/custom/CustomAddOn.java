@@ -5,24 +5,15 @@
 
 package api.systems.addons.custom;
 
-import api.DebugFile;
 import api.entity.Entity;
-import api.server.Server;
+import api.entity.Player;
+import api.network.packets.UpdateCustomAddOnPacket;
 import org.schema.common.util.StringTools;
 import org.schema.game.common.controller.elements.ManagerContainer;
 import org.schema.game.common.controller.elements.RecharchableActivatableDurationSingleModule;
 import org.schema.game.common.controller.elements.SingleModuleActivation;
-import org.schema.game.common.controller.elements.jumpdrive.JumpAddOn;
-import org.schema.game.common.controller.elements.jumpprohibiter.InterdictionAddOn;
-import org.schema.game.common.controller.elements.scanner.ScanAddOnChargeValueUpdate;
-import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
-import org.schema.game.network.objects.remote.RemoteValueUpdate;
-import org.schema.game.network.objects.valueUpdate.NTValueUpdateInterface;
 import org.schema.game.network.objects.valueUpdate.ServerValueRequestUpdate.Type;
-import org.schema.game.network.objects.valueUpdate.ValueUpdate;
-import org.schema.game.network.objects.valueUpdate.ValueUpdate.ValTypes;
-import org.schema.schine.common.language.Lng;
 import org.schema.schine.graphicsengine.core.Timer;
 
 public abstract class CustomAddOn extends RecharchableActivatableDurationSingleModule {
@@ -42,10 +33,15 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
 
     public void sendChargeUpdate() {
         if (this.isOnServer()) {
-            ScanAddOnChargeValueUpdate var1;
-            (var1 = new ScanAddOnChargeValueUpdate()).setServer(((ManagedSegmentController)this.getSegmentController()).getManagerContainer(), this.getUsableId());
-            assert var1.getType() == ValTypes.SCAN_CHARGE_REACTOR;
-            ((NTValueUpdateInterface)this.getSegmentController().getNetworkObject()).getValueUpdateBuffer().add(new RemoteValueUpdate(var1, this.getSegmentController().isOnServer()));
+//            ScanAddOnChargeValueUpdate var1;
+//            (var1 = new ScanAddOnChargeValueUpdate()).setServer(((ManagedSegmentController)this.getSegmentController()).getManagerContainer(), this.getUsableId());
+//            assert var1.getType() == ValTypes.SCAN_CHARGE_REACTOR;
+//            ((NTValueUpdateInterface)this.getSegmentController().getNetworkObject()).getValueUpdateBuffer().add(new RemoteValueUpdate(var1, this.getSegmentController().isOnServer()));
+            UpdateCustomAddOnPacket packet = new UpdateCustomAddOnPacket(this.getName(), getCharge(), getCharges(), isAutoChargeOn());
+            Player pilot = getEntity().getPilot();
+            if(pilot != null) {
+                pilot.sendPacket(packet);
+            }
         }
 
     }
@@ -177,8 +173,9 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
         }
         if(active && this.activation == null){
             this.onDeactivateFromTime();
+            this.sendChargeUpdate();
         }
-        this.setAutoChargeOn(true);
+        //this.setAutoChargeOn(true);
     }
     public abstract void onActive();
     public abstract void onInactive();

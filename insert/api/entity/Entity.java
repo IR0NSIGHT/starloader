@@ -4,6 +4,7 @@ import api.element.block.Block;
 import api.element.block.Blocks;
 import api.faction.Faction;
 import api.main.GameServer;
+import api.network.packets.UpdateCurrentVelocityPacket;
 import api.systems.Reactor;
 import api.systems.Shield;
 import api.systems.addons.JumpInterdictor;
@@ -220,21 +221,21 @@ public class Entity {
         }
         return null;
     }
-
+    /**
+     * Sets the entity's velocity. Doesn't do anything if the entity is immobile.
+     */
     public void setVelocity(Vector3f direction) {
-        /**
-         * Sets the entity's velocity. Doesn't do anything if the entity is immobile.
-         */
+
         if (getEntityType() != EntityType.STATION && getEntityType() != EntityType.SHOP && getEntityType() != EntityType.PLANETCORE) {
             //Stations, Shops, and Planet Cores shouldn't have velocity
             internalEntity.getPhysicsObject().setLinearVelocity(direction);
         }
     }
-
+    /**
+     * Plays the specified graphical effect on the entity.
+     */
     public void playEffect(byte value) {
-        /**
-         * Plays the specified graphical effect on the entity.
-         */
+
         internalEntity.executeGraphicalEffectServer(value);
     }
 
@@ -374,6 +375,17 @@ public class Entity {
             return new ArrayList<Player>();
         }
         return pl;
+    }
+    /**
+     * Gets player 0 of attachedPlayers.
+     */
+    public Player getPilot() {
+
+        ArrayList<Player> attachedPlayers = getAttachedPlayers();
+        if(attachedPlayers.isEmpty()){
+            return null;
+        }
+        return attachedPlayers.get(0);
     }
 
     public Ship toShip() {

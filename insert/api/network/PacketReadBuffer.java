@@ -1,18 +1,17 @@
 package api.network;
 
 import api.entity.Entity;
-import api.entity.Player;
 import api.faction.Faction;
 import api.main.GameClient;
 import api.main.GameServer;
 import api.mod.StarLoader;
-import api.systems.addons.custom.CustomAddOn;
 import api.universe.Sector;
 import api.universe.Universe;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.data.world.RemoteSector;
 
+import javax.vecmath.Vector3f;
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -46,6 +45,9 @@ public class PacketReadBuffer {
     public short readShort() throws IOException {
         return in.readShort();
     }
+    public boolean readBoolean() throws IOException {
+        return in.readBoolean();
+    }
 
     public Sector readServerSector() throws IOException {
         return Universe.getUniverse().getSector(readInt(), readInt(), readInt());
@@ -55,8 +57,11 @@ public class PacketReadBuffer {
         return GameClient.getClientState().getLoadedSectors().get(new Vector3i(readInt(), readInt(), readInt()));
     }
 
-    public Vector3i readSectorPos() throws IOException {
+    public Vector3i readVector() throws IOException {
         return new Vector3i(readInt(), readInt(), readInt());
+    }
+    public Vector3f readVector3f() throws IOException {
+        return new Vector3f(readFloat(), readFloat(), readFloat());
     }
 
     public Faction readFaction() throws IOException {
@@ -65,10 +70,9 @@ public class PacketReadBuffer {
         if (faction == null) return null;
         return new Faction(faction);
     }
-
+    //FIXME: method broke, find a proper way to get entity by id
     public Entity readEntity() throws IOException {
-        //TODO find a proper way to get entity by id
-        Vector3i sector = readSectorPos();
+        Vector3i sector = readVector();
         String entName = readString();
         int entId = readInt();
         if (GameServer.getServerState() != null) {
@@ -79,11 +83,6 @@ public class PacketReadBuffer {
             //Title screen
             return null;
         }
-    }
-    public CustomAddOn readCustomAddOn() throws IOException {
-        Entity entity = readEntity();
-        String s = readString();
-        return entity.getCustomAddon(s);
     }
 
 }

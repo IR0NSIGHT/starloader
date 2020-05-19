@@ -8,7 +8,6 @@ import api.gui.custom.examples.BasicInfoGroup;
 import api.listener.Listener;
 import api.listener.events.Event;
 import api.listener.events.KeyPressEvent;
-import api.listener.events.calculate.MaxPowerCalculateEvent;
 import api.listener.events.gui.HudCreateEvent;
 import api.listener.events.player.PlayerCommandEvent;
 import api.listener.events.register.ElementRegisterEvent;
@@ -18,28 +17,18 @@ import api.main.GameServer;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.network.Packet;
-import api.network.ServerToClientMessage;
+import api.network.packets.ServerToClientMessage;
+import api.network.packets.UpdateCurrentVelocityPacket;
+import api.network.packets.UpdateCustomAddOnPacket;
 import api.server.Server;
 import api.systems.modules.custom.example.BatteryElementManager;
-import api.universe.Universe;
 import api.utils.StarRunnable;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.schema.game.common.controller.elements.ManagerModuleCollection;
-import org.schema.game.common.controller.elements.ManagerModuleSingle;
-import org.schema.game.common.controller.elements.weapon.WeaponElementManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.server.data.GameServerState;
-import org.schema.schine.network.client.ClientProcessor;
-import org.schema.schine.network.objects.remote.RemoteIntBuffer;
-import org.schema.schine.network.objects.remote.RemoteStringArray;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
@@ -54,6 +43,8 @@ public class ModPlayground extends StarMod {
         setModDescription("Default mod that is always loaded");
         this.forceEnable = true;
         Packet.registerPacket(ServerToClientMessage.class);
+        Packet.registerPacket(UpdateCustomAddOnPacket.class);
+        Packet.registerPacket(UpdateCurrentVelocityPacket.class);
     }
 
     public static short newCapId = 0;
