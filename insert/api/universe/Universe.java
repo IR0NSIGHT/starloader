@@ -1,10 +1,15 @@
 package api.universe;
 
 import api.DebugFile;
+import api.entity.Entity;
+import api.main.GameClient;
 import api.main.GameServer;
+import api.mod.StarLoader;
 import api.server.Server;
 import org.schema.common.util.linAlg.Vector3i;
+import org.schema.game.common.data.world.RemoteSector;
 import org.schema.game.common.data.world.Sector;
+import org.schema.schine.network.objects.Sendable;
 
 import java.io.IOException;
 
@@ -49,6 +54,7 @@ public class Universe {
     public api.universe.Sector getSector(Vector3i sectorCoords, boolean load) {
         try {
             Sector sector = GameServer.getServerState().getUniverse().getSector(sectorCoords, load);
+
             if(sector == null){
                 return null;
             }
@@ -90,7 +96,10 @@ public class Universe {
         }
         return null;
     }
-
+    public Entity getEntityFromId(int id){
+        return null;// TODO this
+        //Universe.getUniverse().getSector()
+    }
 
     private static Universe universe;
 
