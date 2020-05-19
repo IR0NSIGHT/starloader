@@ -46,6 +46,7 @@ public class PacketWriteBuffer {
     public void writeEntity(Entity e) throws IOException {
         writeSector(e.getSectorPosition());
         writeString(e.getRealName());
+        writeInt(e.internalEntity.getId());
 
     }
 }

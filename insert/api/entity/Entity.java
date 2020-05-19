@@ -31,6 +31,9 @@ public class Entity {
     public SegmentController internalEntity;
 
     public Entity(SegmentController controller) {
+        if(controller == null){
+            throw new IllegalArgumentException("controller cannot be null!");
+        }
         internalEntity = controller;
     }
 
