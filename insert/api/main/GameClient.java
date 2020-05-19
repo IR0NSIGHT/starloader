@@ -1,6 +1,9 @@
 package api.main;
 
 import api.entity.Entity;
+import api.entity.Player;
+import api.network.Packet;
+import api.network.PacketWriteBuffer;
 import com.bulletphysics.linearmath.Transform;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import org.schema.game.client.controller.GameClientController;
@@ -16,8 +19,12 @@ import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.common.data.world.RemoteSector;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import org.schema.schine.graphicsengine.core.Controller;
+import org.schema.schine.network.NetworkProcessor;
 
 import javax.vecmath.Vector3f;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -52,8 +59,8 @@ public class GameClient {
         getClientState().getChat().addToVisibleChat(s, "[ALL]", true);
     }
 
-    public static void showPopupMessage(String str, int time){
-        getClientState().getController().popupInfoTextMessage(str, time);
+    public static void showPopupMessage(String str, int delay){
+        getClientState().getController().popupInfoTextMessage(str, delay);
     }
     public static void showBigText(String header, String str, int time){
         getClientState().getController().showBigTitleMessage(header, str, time);
@@ -86,6 +93,21 @@ public class GameClient {
     public static Collection<Fleet> getAvailableFleets(){
         return getClientState().getFleetManager().getAvailableFleetsClient();
     }
+
+    public static void sendPacketToServer(Packet apiPacket){
+        try {
+            NetworkProcessor processor = GameClient.getClientState().getProcessor();
+            DataOutputStream output = new DataOutputStream(processor.getOutRaw());
+            output.writeInt(-2); //Mod packet ID
+            output.writeUTF(apiPacket.getId()); //The packet ID we're sending
+            apiPacket.writePacketData(new PacketWriteBuffer(output)); //The info of the packet
+            processor.getOutRaw().flush(); //Send
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void setLoadString(String s){
         Controller.getResLoader().setLoadString(s);
     }
@@ -100,5 +122,9 @@ public class GameClient {
         transform.setIdentity();
         transform.origin.set(vector3fb);
         state.getWorldDrawer().getShards().voronoiBBShatter((PhysicsExt)state.getPhysics(), transform, id, state.getCurrentSectorId(), transform.origin, null);
+    }
+
+    public static Player getPlayer() {
+        return new Player(getClientPlayerState());
     }
 }

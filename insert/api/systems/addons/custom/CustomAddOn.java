@@ -151,13 +151,9 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
 
     @Override
     public boolean executeModule() {
-        DebugFile.log("=== EXECUTING ADDON ?SERVER=" + this.isOnServer());
         boolean clientSuccess = !this.isOnServer() && this.getCharge() >= 1;
         boolean success = super.executeModule();
-        DebugFile.log(success + " <> " + clientSuccess);
-        DebugFile.log(this.getCharges() + " <> " + this.getCharge());
         if (success || clientSuccess) {
-            DebugFile.log("we executing");
             onExecute();
         }
 
@@ -174,13 +170,6 @@ public abstract class CustomAddOn extends RecharchableActivatableDurationSingleM
     public void update(Timer var1) {
         boolean active = this.activation != null;
         super.update(var1);
-        if(this.isOnServer()){
-            if(getEntity().getAttachedPlayers().size()>0 && !getEntity().isDocked()) {
-                if (a++ % 5 == 0) {
-                    Server.broadcastMessage("The Charge: " + this.getCharge());
-                }
-            }
-        }
         if (this.isActive()) {
             onActive();
         }else{

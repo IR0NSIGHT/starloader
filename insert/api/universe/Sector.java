@@ -13,6 +13,7 @@ import api.utils.StarRunnable;
 import api.utils.callbacks.EntitySpawnCallback;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.data.world.RemoteSector;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import java.io.IOException;
 import java.util.ArrayList;
