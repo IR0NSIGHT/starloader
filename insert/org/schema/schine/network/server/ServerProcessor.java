@@ -6,6 +6,8 @@
 package org.schema.schine.network.server;
 
 import api.DebugFile;
+import api.entity.Player;
+import api.main.GameServer;
 import api.network.PacketReadBuffer;
 import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
@@ -23,6 +25,7 @@ import java.net.SocketException;
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.schema.common.LogUtil;
+import org.schema.game.common.data.player.PlayerState;
 import org.schema.schine.graphicsengine.core.settings.EngineSettings;
 import org.schema.schine.network.Command;
 import org.schema.schine.network.DataInputStreamPositional;
@@ -320,7 +323,7 @@ public class ServerProcessor extends Pinger implements Runnable, NetworkProcesso
             byte var2 = 0;
 
             try {
-                int var43;
+                int size;
                 try {
                     this.connected = true;
                     this.setup();
@@ -330,17 +333,16 @@ public class ServerProcessor extends Pinger implements Runnable, NetworkProcesso
                     while(this.connected) {
                         this.thread.setName("SERVER-PROCESSOR: " + this.client + "; PID: " + this.id);
                         this.serverPingThread.setName("ServerPing " + this.client);
-                        if ((var43 = this.dataInputStream.readInt()) > this.receiveBuffer.length) {
-                            System.err.println("[SERVER] Exception: Unusual big update from client " + this.getClient() + ": growing receive buffer: " + var43);
-                            if (var43 > 104857600) {
+                        if ((size = this.dataInputStream.readInt()) > this.receiveBuffer.length) {
+                            System.err.println("[SERVER] Exception: Unusual big update from client " + this.getClient() + ": growing receive buffer: " + size);
+                            if (size > 104857600) {
                                 throw new IllegalArgumentException("Killing client: Tried to send more then 100MB at once");
                             }
 
-                            this.receiveBuffer = new byte[var43];
+                            this.receiveBuffer = new byte[size];
                         }
-                        //INSERTED CODE
-                        DebugFile.log("RECV PACKET OF SIZE: " + var43);
-                        if(var43 == -2){
+                        //INSERTED CODE @533
+                        if(size == -2){
                             //SPECIAL PACKET ID received (in this case its size)
                             String packetId = this.dataInputStream.readUTF();
                             //Construct packet
@@ -353,28 +355,29 @@ public class ServerProcessor extends Pinger implements Runnable, NetworkProcesso
                                 DebugFile.logError(e, null);
                             }
                             //dispatch TODO Move packet to a queue to be executed on the main loop
-                            packet.processPacketOnServer(null);
+                            PlayerState playerState = GameServer.getServerState().getPlayerFromName(getClient().getPlayerName());
+                            packet.processPacketOnServer(new Player(playerState));
                             continue;
                         }
                         ///
 
-                        assert var43 > 0 : " Empty update! " + var43;
+                        assert size > 0 : " Empty update! " + size;
 
                         try {
-                            this.dataInputStream.readFully(this.receiveBuffer, 0, var43);
+                            this.dataInputStream.readFully(this.receiveBuffer, 0, size);
                         } catch (Exception var36) {
-                            System.err.println("Exception happened with size " + var43);
+                            System.err.println("Exception happened with size " + size);
                             throw var36;
                         }
 
-                        FastByteArrayInputStream var3 = new FastByteArrayInputStream(this.receiveBuffer, 0, var43);
+                        FastByteArrayInputStream var3 = new FastByteArrayInputStream(this.receiveBuffer, 0, size);
                         this.inDoubleBuffer = new DataInputStreamPositional(var3);
                         byte var44 = this.inDoubleBuffer.readByte();
                         this.lastCheck = var44;
                         if (var44 >= 0) {
                             if (var44 != 42 && var44 != 23 && var44 != 100 && var44 != 65) {
                                 this.connected = false;
-                                throw new IOException("SERVER CHECK FAILED: " + var44 + " for client " + this.getClient() + ": Received: " + var43 + ": " + Arrays.toString(Arrays.copyOf(this.receiveBuffer, var43)) + ": available: " + var3.available());
+                                throw new IOException("SERVER CHECK FAILED: " + var44 + " for client " + this.getClient() + ": Received: " + size + ": " + Arrays.toString(Arrays.copyOf(this.receiveBuffer, size)) + ": available: " + var3.available());
                             }
 
                             if (var44 == 100) {
@@ -397,7 +400,7 @@ public class ServerProcessor extends Pinger implements Runnable, NetworkProcesso
                                         this.parseNextPacket(this.getIn());
                                     }
 
-                                    this.state.addNTReceivedStatistics(this.client, var43, this.lastCheck, this.lastHeader, this.lastCommand, this.lastParameters, this.lastReceived);
+                                    this.state.addNTReceivedStatistics(this.client, size, this.lastCheck, this.lastHeader, this.lastCommand, this.lastParameters, this.lastReceived);
                                     if (System.currentTimeMillis() - this.lastSetSnapshop > 1000L) {
                                         this.state.getDataStatsManager().snapshotDownload(this.state.getReceivedData());
                                         this.lastSetSnapshop = System.currentTimeMillis();
@@ -408,11 +411,11 @@ public class ServerProcessor extends Pinger implements Runnable, NetworkProcesso
 
                                 System.currentTimeMillis();
                                 if (var5 < 20L) {
-                                    System.err.println("[SERVER] PACKET WARNING! Client " + this + " processing receive packet took: " + var5 + "ms. Size of packet: " + var43);
+                                    System.err.println("[SERVER] PACKET WARNING! Client " + this + " processing receive packet took: " + var5 + "ms. Size of packet: " + size);
                                 }
 
                                 if (this.inDoubleBuffer.available() > 0) {
-                                    throw new IOException("MORE BYTES AVAILABLE: " + this.inDoubleBuffer.available() + "; total size" + var43);
+                                    throw new IOException("MORE BYTES AVAILABLE: " + this.inDoubleBuffer.available() + "; total size" + size);
                                 }
                             }
                         }
@@ -432,12 +435,12 @@ public class ServerProcessor extends Pinger implements Runnable, NetworkProcesso
                             }
                         }
 
-                        for(var43 = 0; var43 < this.lastReceived.size(); ++var43) {
+                        for(size = 0; size < this.lastReceived.size(); ++size) {
                             NetworkObject var4;
-                            if ((var4 = (NetworkObject)this.lastReceived.get(var43)) != null) {
-                                System.err.println("[SERVER][LASTRECEIVED] decoded class #" + var43 + ": " + var4.getClass().getSimpleName() + "; decoded: " + var4.lastDecoded);
+                            if ((var4 = (NetworkObject)this.lastReceived.get(size)) != null) {
+                                System.err.println("[SERVER][LASTRECEIVED] decoded class #" + size + ": " + var4.getClass().getSimpleName() + "; decoded: " + var4.lastDecoded);
                             } else {
-                                System.err.println("[SERVER][LASTRECEIVED] decoded class #" + var43 + ": debug NetworkObject is null");
+                                System.err.println("[SERVER][LASTRECEIVED] decoded class #" + size + ": debug NetworkObject is null");
                             }
                         }
 
