@@ -4,6 +4,7 @@ import api.element.block.Block;
 import api.element.block.Blocks;
 import api.faction.Faction;
 import api.main.GameServer;
+import api.network.packets.UpdateCurrentVelocityPacket;
 import api.systems.Reactor;
 import api.systems.Shield;
 import api.systems.addons.JumpInterdictor;
@@ -31,6 +32,9 @@ public class Entity {
     public SegmentController internalEntity;
 
     public Entity(SegmentController controller) {
+        if(controller == null){
+            throw new IllegalArgumentException("controller cannot be null!");
+        }
         internalEntity = controller;
     }
 
@@ -217,21 +221,21 @@ public class Entity {
         }
         return null;
     }
-
+    /**
+     * Sets the entity's velocity. Doesn't do anything if the entity is immobile.
+     */
     public void setVelocity(Vector3f direction) {
-        /**
-         * Sets the entity's velocity. Doesn't do anything if the entity is immobile.
-         */
+
         if (getEntityType() != EntityType.STATION && getEntityType() != EntityType.SHOP && getEntityType() != EntityType.PLANETCORE) {
             //Stations, Shops, and Planet Cores shouldn't have velocity
             internalEntity.getPhysicsObject().setLinearVelocity(direction);
         }
     }
-
+    /**
+     * Plays the specified graphical effect on the entity.
+     */
     public void playEffect(byte value) {
-        /**
-         * Plays the specified graphical effect on the entity.
-         */
+
         internalEntity.executeGraphicalEffectServer(value);
     }
 
@@ -372,31 +376,53 @@ public class Entity {
         }
         return pl;
     }
+    /**
+     * Gets player 0 of attachedPlayers.
+     */
+    public Player getPilot() {
+
+        ArrayList<Player> attachedPlayers = getAttachedPlayers();
+        if(attachedPlayers.isEmpty()){
+            return null;
+        }
+        return attachedPlayers.get(0);
+    }
 
     public Ship toShip() {
         return new Ship(internalEntity);
     }
 
-    public ArrayList<CustomAddOn> getCustomAddons() {
-
-        ArrayList<CustomAddOn> addons = new ArrayList<CustomAddOn>();
-        ManagerContainer<?> manager = getManagerContainer();
-        for (PlayerUsableInterface playerUsableInterface : manager.getPlayerUsable()) {
-            if (playerUsableInterface instanceof CustomAddOn) {
-                addons.add((CustomAddOn) playerUsableInterface);
-            }
-        }
-        return addons;
+    //CUSTOM ADD ON SUPPORT
+    private static HashMap<String, CustomAddOn> nameAddonMap = null;
+    private static HashMap<Class<? extends CustomAddOn>, CustomAddOn> classAddonMap = null;
+    public Collection<CustomAddOn> getCustomAddons() {
+        generateAddonLookup();
+        return nameAddonMap.values();
     }
 
     public CustomAddOn getCustomAddon(Class<? extends CustomAddOn> clazz) {
-        for (CustomAddOn customAddon : getCustomAddons()) {
-            if (customAddon.getClass().equals(clazz)) {
-                return customAddon;
+        generateAddonLookup();
+        return classAddonMap.get(clazz);
+    }
+    public CustomAddOn getCustomAddon(String name) {
+        generateAddonLookup();
+        return nameAddonMap.get(name);
+    }
+    private void generateAddonLookup(){
+        if(nameAddonMap == null){
+            nameAddonMap = new HashMap<String, CustomAddOn>();
+            classAddonMap = new HashMap<Class<? extends CustomAddOn>, CustomAddOn>();
+            ManagerContainer<?> manager = getManagerContainer();
+            for (PlayerUsableInterface usableAddon : manager.getPlayerUsable()) {
+                if (usableAddon instanceof CustomAddOn) {
+                    CustomAddOn customAddOn = (CustomAddOn) usableAddon;
+                    nameAddonMap.put(customAddOn.getName(), customAddOn);
+                    classAddonMap.put(customAddOn.getClass(), customAddOn);
+                }
             }
         }
-        return null;
     }
+    //
 
     public Sector getSector() {
         if (GameServer.getServerState() != null) {

@@ -1,8 +1,11 @@
-package api.network;
+package api.network.packets;
 
 import api.entity.Player;
 import api.faction.Faction;
 import api.main.GameClient;
+import api.network.Packet;
+import api.network.PacketReadBuffer;
+import api.network.PacketWriteBuffer;
 import api.server.Server;
 
 import java.io.DataInputStream;

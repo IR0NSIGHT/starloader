@@ -2,13 +2,9 @@ package api.network;
 
 import api.entity.Entity;
 import api.faction.Faction;
-import api.main.GameServer;
-import api.mod.StarLoader;
-import api.universe.Sector;
-import api.universe.Universe;
 import org.schema.common.util.linAlg.Vector3i;
 
-import java.io.DataInputStream;
+import javax.vecmath.Vector3f;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -30,6 +26,9 @@ public class PacketWriteBuffer {
     public void writeByte(byte b) throws IOException {
         out.writeByte(b);
     }
+    public void writeBoolean(boolean b) throws IOException {
+        out.writeBoolean(b);
+    }
     public void writeFaction(Faction f) throws IOException {
         out.writeInt(f.getID());
     }
@@ -37,15 +36,21 @@ public class PacketWriteBuffer {
     public void writeFloat(float charge) throws IOException {
         out.writeFloat(charge);
     }
-    public void writeSector(Vector3i sec) throws IOException {
+    public void writeVector(Vector3i sec) throws IOException {
         out.writeInt(sec.x);
         out.writeInt(sec.y);
         out.writeInt(sec.z);
     }
+    public void writeVector3f(Vector3f sec) throws IOException {
+        out.writeFloat(sec.x);
+        out.writeFloat(sec.y);
+        out.writeFloat(sec.z);
+    }
 
     public void writeEntity(Entity e) throws IOException {
-        writeSector(e.getSectorPosition());
+        writeVector(e.getSectorPosition());
         writeString(e.getRealName());
+        writeInt(e.internalEntity.getId());
 
     }
 }

@@ -121,9 +121,6 @@ public class NetworkGameState extends NetworkEntity implements NetworkInventoryI
     public RemoteArrayBuffer<RemoteStringArray> factionMemberMod = new RemoteArrayBuffer(5, RemoteStringArray.class, this);
     public RemoteArrayBuffer<RemoteStringArray> factionkickMemberRequests = new RemoteArrayBuffer(3, RemoteStringArray.class, this);
     public RemoteArrayBuffer<RemoteIntegerArray> factionRelationships = new RemoteArrayBuffer(3, RemoteIntegerArray.class, this);
-    //INSERTED CODE
-    public RemoteArrayBuffer<RemoteStringArray> clientToServerBuffer = new RemoteArrayBuffer(7, RemoteStringArray.class, this);
-    ///
     public RemoteArrayBuffer<RemoteStringArray> factionHomeBaseChangeBuffer = new RemoteArrayBuffer(7, RemoteStringArray.class, this);
     public RemoteSystemOwnershipChangeBuffer factionClientSystemOwnerChangeBuffer = new RemoteSystemOwnershipChangeBuffer(this);
     public RemoteArrayBuffer<RemoteStringArray> factionRelationshipOffer = new RemoteArrayBuffer(6, RemoteStringArray.class, this);
