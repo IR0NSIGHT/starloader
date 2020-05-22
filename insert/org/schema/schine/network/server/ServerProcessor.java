@@ -341,7 +341,7 @@ public class ServerProcessor extends Pinger implements Runnable, NetworkProcesso
 
                             this.receiveBuffer = new byte[size];
                         }
-                        //INSERTED CODE @533
+                        //INSERTED CODE @535
                         if(size == -2){
                             //SPECIAL PACKET ID received (in this case its size)
                             String packetId = this.dataInputStream.readUTF();
