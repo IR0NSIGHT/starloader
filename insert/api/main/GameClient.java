@@ -33,20 +33,20 @@ import java.util.Collection;
 import java.util.Set;
 
 public class GameClient {
-    public Entity getSelectedEntity(){
+    public static Entity getSelectedEntity(){
         int selectedEntityId = getClientPlayerState().getSelectedEntityId();
         return Universe.getUniverse().getEntityFromId(selectedEntityId);
     }
-    public void selectEntity(Entity e){
+    public static void selectEntity(Entity e){
         getControlManager().setSelectedEntity(e.internalEntity);
     }
-    public PlayerInteractionControlManager getControlManager(){
+    public static PlayerInteractionControlManager getControlManager(){
         return GameClient.getClientState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getPlayerIntercationManager();
     }
-    public Vector3i getWaypoint(){
+    public static Vector3i getWaypoint(){
         return getClientController().getClientGameData().getWaypoint();
     }
-    public void setWaypoint(Vector3i v){
+    public static void setWaypoint(Vector3i v){
         getClientController().getClientGameData().setWaypoint(v);
     }
     public static ArrayList<Entity> getNearbyEntities(){
