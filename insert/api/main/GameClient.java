@@ -7,7 +7,9 @@ import api.network.PacketWriteBuffer;
 import api.universe.Universe;
 import com.bulletphysics.linearmath.Transform;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
+import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.controller.GameClientController;
+import org.schema.game.client.controller.manager.ingame.PlayerInteractionControlManager;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.controller.SegmentController;
@@ -36,7 +38,16 @@ public class GameClient {
         return Universe.getUniverse().getEntityFromId(selectedEntityId);
     }
     public void selectEntity(Entity e){
-        GameClient.getClientState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getPlayerIntercationManager().setSelectedEntity(e.internalEntity);
+        getControlManager().setSelectedEntity(e.internalEntity);
+    }
+    public PlayerInteractionControlManager getControlManager(){
+        return GameClient.getClientState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getPlayerIntercationManager();
+    }
+    public Vector3i getWaypoint(){
+        return getClientController().getClientGameData().getWaypoint();
+    }
+    public void setWaypoint(Vector3i v){
+        getClientController().getClientGameData().setWaypoint(v);
     }
     public static ArrayList<Entity> getNearbyEntities(){
         ArrayList<Entity> entities = new ArrayList<Entity>();
