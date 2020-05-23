@@ -4,6 +4,7 @@ import api.entity.Entity;
 import api.entity.Player;
 import api.network.Packet;
 import api.network.PacketWriteBuffer;
+import api.universe.Universe;
 import com.bulletphysics.linearmath.Transform;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import org.schema.game.client.controller.GameClientController;
@@ -30,6 +31,13 @@ import java.util.Collection;
 import java.util.Set;
 
 public class GameClient {
+    public Entity getSelectedEntity(){
+        int selectedEntityId = getClientPlayerState().getSelectedEntityId();
+        return Universe.getUniverse().getEntityFromId(selectedEntityId);
+    }
+    public void selectEntity(Entity e){
+        GameClient.getClientState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getPlayerIntercationManager().setSelectedEntity(e.internalEntity);
+    }
     public static ArrayList<Entity> getNearbyEntities(){
         ArrayList<Entity> entities = new ArrayList<Entity>();
         for (SimpleTransformableSendableObject<?> value : getClientState().getCurrentSectorEntities().values()) {
