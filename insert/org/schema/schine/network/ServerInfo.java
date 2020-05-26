@@ -5,11 +5,8 @@
 
 package org.schema.schine.network;
 
-import api.DebugFile;
 import api.mod.ModInfo;
-import api.mod.ModStarter;
 import api.mod.ServerModInfo;
-import api.server.Server;
 
 public class ServerInfo extends AbstractServerInfo {
     public static long curtime;

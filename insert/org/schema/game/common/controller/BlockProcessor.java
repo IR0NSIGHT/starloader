@@ -5,8 +5,7 @@
 
 package org.schema.game.common.controller;
 
-import api.element.block.Block;
-import api.listener.events.block.BlockModifyEvent;
+import api.listener.events.block.SegmentPieceModifyEvent;
 import api.mod.StarLoader;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.dynamics.RigidBody;
@@ -415,8 +414,8 @@ public class BlockProcessor {
                     this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i);
                     VoidSegmentPiece segmentPiece = (VoidSegmentPiece)e.get(i);
                     //INSERTED CODE @550
-                    BlockModifyEvent event = new BlockModifyEvent(e, segmentPiece);
-                    StarLoader.fireEvent(BlockModifyEvent.class, event, this.isOnServer());
+                    SegmentPieceModifyEvent event = new SegmentPieceModifyEvent(e, segmentPiece);
+                    StarLoader.fireEvent(SegmentPieceModifyEvent.class, event, this.isOnServer());
                     if(event.isCanceled()){
                         return;
                     }

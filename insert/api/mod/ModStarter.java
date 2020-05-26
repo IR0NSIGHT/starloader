@@ -3,13 +3,9 @@ package api.mod;
 import api.DebugFile;
 import api.ModPlayground;
 import api.SMModLoader;
-import api.main.GameClient;
-import api.main.GameServer;
 import api.utils.StarRunnable;
 import org.apache.commons.io.FileUtils;
-import org.schema.game.common.data.player.PlayerState;
-import org.schema.schine.graphicsengine.core.GlUtil;
-import org.schema.schine.network.ServerListRetriever;
+import org.schema.schine.graphicsengine.core.Controller;
 import org.schema.schine.network.StarMadeNetUtil;
 
 import javax.net.ssl.SSLContext;
@@ -68,7 +64,7 @@ public class ModStarter {
         ArrayList<ModInfo> serverMods = ServerModInfo.getServerInfo(ServerModInfo.getServerUID(serverHost, serverPort));
         if (serverMods == null) {
             DebugFile.log("Mod info not found for: " + serverHost + ":" + serverPort + " This is likely because they direct connected");
-            GameClient.setLoadString("Getting server mod info...");
+            Controller.getResLoader().setLoadString("Getting server mod info...");
             StarMadeNetUtil starMadeNetUtil = new StarMadeNetUtil();
             try {
                 System.err.println(starMadeNetUtil.getServerInfo(serverHost, serverPort, 9000).toString());
@@ -113,14 +109,14 @@ public class ModStarter {
                     DebugFile.log("WE NEED TO DOWNLOAD: " + sMod.toString());
                     try {
                         String fileName = "mods/" + sMod.name + ".jar";
-                        GameClient.setLoadString("Downloading mod: " + sMod.name);
+                        Controller.getResLoader().setLoadString("Downloading mod: " + sMod.name);
                         downloadFile(new URL(sMod.downloadURL), fileName);
                         DebugFile.log("Successfully downloaded mod: " + sMod.name + ", version: " + sMod.version + ", from: " + sMod.downloadURL + ", into: " + sMod.name + ".jar");
                         //Get file, convert to URL
                         URL[] url = new URL[]{new File(fileName).toURI().toURL()};
-                        GameClient.setLoadString("Done downloading, Loading mod: " + sMod.name);
+                        Controller.getResLoader().setLoadString("Done downloading, Loading mod: " + sMod.name);
                         StarMod starMod = SMModLoader.loadModFromJar(new URLClassLoader(url), new JarFile(fileName));
-                        GameClient.setLoadString("Mod loaded, enabling mod...");
+                        Controller.getResLoader().setLoadString("Mod loaded, enabling mod...");
                         starMod.onEnable();
                         starMod.flagEnabled(true);
 

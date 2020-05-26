@@ -1,6 +1,5 @@
 package api.listener.events.player;
 
-import api.entity.Player;
 import api.listener.events.Event;
 import org.schema.game.common.controller.damage.Damager;
 import org.schema.game.common.data.player.Destroyable;
@@ -10,10 +9,10 @@ public class PlayerDamageEvent extends Event {
     private final float damage;
     private final Destroyable destroyable;
     private final Damager damager;
-    private final Player player;
+    private final PlayerState player;
 
     public PlayerDamageEvent(float damage, Destroyable destroyable, Damager damager, PlayerState state){
-        this.player = new Player(state);
+        this.player = state;
         this.damage = damage;
         this.destroyable = destroyable;
         this.damager = damager;
@@ -31,7 +30,7 @@ public class PlayerDamageEvent extends Event {
         return damager;
     }
 
-    public Player getPlayer() {
+    public PlayerState getPlayer() {
         return player;
     }
 }

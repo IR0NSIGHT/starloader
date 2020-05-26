@@ -1,15 +1,13 @@
 package api.listener.events;
 
-import api.entity.Entity;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.SegmentController;
-import org.schema.game.common.controller.Ship;
 
-public class EntitySpawnEvent extends Event {
+public class SegmentControllerSpawnEvent extends Event {
     private final Vector3i sector;
     SegmentController controller;
 
-    public EntitySpawnEvent(Vector3i sector, SegmentController entity) {
+    public SegmentControllerSpawnEvent(Vector3i sector, SegmentController entity) {
         this.sector = sector;
         controller = entity;
     }
@@ -22,7 +20,4 @@ public class EntitySpawnEvent extends Event {
         return controller;
     }
 
-    public Entity getEntity(){
-        return new Entity(controller);
-    }
 }

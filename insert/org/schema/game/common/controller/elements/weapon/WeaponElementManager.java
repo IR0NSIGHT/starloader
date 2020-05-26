@@ -7,8 +7,6 @@ package org.schema.game.common.controller.elements.weapon;
 
 import api.listener.events.CannonShootEvent;
 import api.mod.StarLoader;
-import api.server.Server;
-import api.systems.weapons.Cannon;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.linearmath.Transform;
 import it.unimi.dsi.fastutil.shorts.ShortOpenHashSet;
@@ -285,7 +283,7 @@ public class WeaponElementManager extends UsableCombinableControllableElementMan
                 c.setStandardShotReloading();
                 this.getParticleController().addProjectile(this.getSegmentController(),
                         var3.weapontOutputWorldPos, var3.shootingDirTemp, c.getDamage(), c.getDistance(), var2.getAcidFormula().ordinal(),
-                        c.getProjectileWidth(), c.getPenetrationDepth(c.getDamage()), c.getImpactForce(), var8, event.getColor());
+                        c.getProjectileWidth(), c.getPenetrationDepth(c.getDamage()), c.getImpactForce(), var8, var2.getColor());
                 this.handleRecoil(var2, c, var3.weapontOutputWorldPos, var3.shootingDirTemp, c.getRecoil(), c.getDamage());
                 var2.damageProduced += c.getDamage();
                 this.handleResponse(ShootingRespose.FIRED, c, var3.weapontOutputWorldPos);

@@ -6,7 +6,6 @@
 package org.schema.game.client.view.gui.advancedstats;
 
 import api.listener.events.StructureStatsCreateEvent;
-import api.listener.helpers.StructureTab;
 import api.mod.StarLoader;
 import org.schema.common.util.StringTools;
 import org.schema.game.client.controller.PlayerGameTextInput;
@@ -329,7 +328,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
             }
         });
         //INSERTED CODE @361
-        StarLoader.fireEvent(StructureStatsCreateEvent.class, new StructureStatsCreateEvent(StructureTab.GENERAL, this, pane), false);
+        StarLoader.fireEvent(StructureStatsCreateEvent.class, new StructureStatsCreateEvent(this, pane), false);
         ///
     }
 

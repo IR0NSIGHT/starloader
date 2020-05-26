@@ -5,7 +5,7 @@
 
 package org.schema.game.common.controller.damage.projectile;
 
-import api.listener.events.EntityDamageEvent;
+import api.listener.events.SegmentControllerDamageEvent;
 import api.mod.StarLoader;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.util.IntArrayList;
@@ -380,8 +380,8 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
 
 
                     //INSERTED CODE @721
-                    EntityDamageEvent event = new EntityDamageEvent(this.shotHandler.hitSegController, this.shotHandler, this, this.shotHandler.hitType, damager);
-                    StarLoader.fireEvent(EntityDamageEvent.class, event, this.isOnServer());
+                    SegmentControllerDamageEvent event = new SegmentControllerDamageEvent(this.shotHandler.hitSegController, this.shotHandler, this, this.shotHandler.hitType, damager);
+                    StarLoader.fireEvent(SegmentControllerDamageEvent.class, event, this.isOnServer());
                     ///
 
                     if (this.shotHandler.typesHit.size() > 0) {

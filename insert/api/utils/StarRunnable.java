@@ -1,7 +1,6 @@
 package api.utils;
 
 import api.DebugFile;
-import api.server.Server;
 
 import java.util.ArrayList;
 
@@ -58,10 +57,7 @@ public abstract class StarRunnable {
             try {
                 runnable.tick();
             }catch (Exception e){
-                if(Server.isInitialized()) {
-                    Server.broadcastMessage("A StarRunnable threw an error");
-                }
-                DebugFile.log("A StarRunnable threw an error: ");
+                    DebugFile.err("A StarRunnable threw an error");
                 DebugFile.logError(e, null);
             }
             if(runnable.queuedForDelete){

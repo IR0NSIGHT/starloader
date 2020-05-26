@@ -6,8 +6,6 @@
 package org.schema.schine.network.server;
 
 import api.DebugFile;
-import api.entity.Player;
-import api.main.GameServer;
 import api.network.PacketReadBuffer;
 import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
@@ -26,6 +24,7 @@ import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.schema.common.LogUtil;
 import org.schema.game.common.data.player.PlayerState;
+import org.schema.game.server.data.GameServerState;
 import org.schema.schine.graphicsengine.core.settings.EngineSettings;
 import org.schema.schine.network.Command;
 import org.schema.schine.network.DataInputStreamPositional;
@@ -355,8 +354,8 @@ public class ServerProcessor extends Pinger implements Runnable, NetworkProcesso
                                 DebugFile.logError(e, null);
                             }
                             //dispatch TODO Move packet to a queue to be executed on the main loop
-                            PlayerState playerState = GameServer.getServerState().getPlayerFromName(getClient().getPlayerName());
-                            packet.processPacketOnServer(new Player(playerState));
+                            PlayerState playerState = GameServerState.instance.getPlayerFromName(getClient().getPlayerName());
+                            packet.processPacketOnServer(playerState);
                             continue;
                         }
                         ///

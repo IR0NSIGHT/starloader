@@ -1,11 +1,8 @@
 package api.network;
 
 import api.DebugFile;
-import api.entity.Player;
-import it.unimi.dsi.fastutil.Hash;
+import org.schema.game.common.data.player.PlayerState;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -13,7 +10,7 @@ public abstract class Packet {
     public abstract void readPacketData(PacketReadBuffer buf) throws IOException;
     public abstract void writePacketData(PacketWriteBuffer buf) throws IOException;
     public abstract void processPacketOnClient();
-    public abstract void processPacketOnServer(Player sender);
+    public abstract void processPacketOnServer(PlayerState sender);
     private static HashMap<String, Class<? extends Packet>> packetLookup = new HashMap<String, Class<? extends Packet>>();
     private static HashMap<Class<? extends Packet>, String> reversePacketLookup = new HashMap<Class<? extends Packet>, String>();
     public static void registerPacket(Class<? extends Packet> clazz){

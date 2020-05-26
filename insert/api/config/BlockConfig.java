@@ -1,16 +1,10 @@
 package api.config;
 
 import api.DebugFile;
-import api.element.block.Blocks;
-import api.element.block.FactoryType;
-import org.schema.game.client.view.gui.weapon.WeaponRowElement;
-import org.schema.game.common.controller.elements.beam.damageBeam.DamageBeamUnit;
-import org.schema.game.common.controller.elements.weapon.WeaponCollectionManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.element.FactoryResource;
-import org.schema.game.common.data.element.annotation.ElemType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -26,14 +20,14 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class BlockConfig {
-    public static void addRecipe(ElementInformation info, FactoryType type, int bakeTime, FactoryResource... resources){
+    public static void addRecipe(ElementInformation info, int type, int bakeTime, FactoryResource... resources){
         for (FactoryResource resource : resources){
             info.consistence.add(resource);
             info.cubatomConsistence.add(resource);
         }
         info.factoryBakeTime = bakeTime;
         info.blockResourceType = 2;
-        info.producedInFactory = type.getId();
+        info.producedInFactory = type;
     }
     public static void clearRecipes(ElementInformation element){
         element.cubatomConsistence.clear();

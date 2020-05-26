@@ -3,11 +3,10 @@ package api.mod;
 import api.DebugFile;
 import api.listener.Listener;
 import api.listener.events.Event;
-import api.main.GameClient;
-import api.main.GameServer;
-import api.server.Server;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.schema.game.client.data.GameClientState;
 import org.schema.game.common.data.SendableGameState;
+import org.schema.game.server.data.GameServerState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,10 +21,10 @@ public class StarLoader {
     }
 
     public static SendableGameState getGameState() {
-        if (GameServer.getServerState() != null) {
-            return GameServer.getServerState().getGameState();
-        } else if (GameClient.getClientState() != null) {
-            return GameClient.getClientState().getGameState();
+        if (GameServerState.instance != null) {
+            return GameServerState.instance.getGameState();
+        } else if (GameClientState.instance != null) {
+            return GameClientState.instance.getGameState();
         }
         //Probably in the main menu or something
         return null;
@@ -78,9 +77,6 @@ public class StarLoader {
             } catch (Exception e) {
                 DebugFile.log("Exception during event: " + clazz.getName());
                 DebugFile.logError(e, null);
-                if (Server.isInitialized()) {
-                    Server.broadcastMessage("An error occurred during event: " + clazz);
-                }
 
             }
         }

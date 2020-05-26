@@ -1,36 +1,35 @@
 package api.listener.events;
 
-import api.entity.Entity;
-import api.systems.addons.Scanner;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.scanner.ScanAddOn;
 import org.schema.game.common.data.player.AbstractOwnerState;
 
 public class EntityScanEvent extends Event {
-    private Entity entity;
-    private AbstractOwnerState owner;
-    private boolean success;
-    private Scanner scanner;
+    private final ScanAddOn scanner;
+    private final boolean success;
+    private final AbstractOwnerState owner;
+    private final SegmentController entity;
+
     public EntityScanEvent(ScanAddOn scanner, boolean success, AbstractOwnerState owner, SegmentController entity) {
-        this.scanner = new Scanner(scanner);
+        this.scanner = scanner;
         this.success = success;
         this.owner = owner;
-        this.entity = new Entity(entity);
+        this.entity = entity;
     }
 
-    public Entity getEntity() {
-        return entity;
-    }
-
-    public AbstractOwnerState getOwner() {
-        return owner;
+    public ScanAddOn getScanner() {
+        return scanner;
     }
 
     public boolean isSuccess() {
         return success;
     }
 
-    public Scanner getScanner() {
-        return scanner;
+    public AbstractOwnerState getOwner() {
+        return owner;
+    }
+
+    public SegmentController getEntity() {
+        return entity;
     }
 }

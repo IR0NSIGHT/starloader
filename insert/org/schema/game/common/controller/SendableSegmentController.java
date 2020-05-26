@@ -5,7 +5,7 @@
 
 package org.schema.game.common.controller;
 
-import api.listener.events.block.BlockKillEvent;
+import api.listener.events.block.SegmentPieceKillEvent;
 import api.mod.StarLoader;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
 import com.bulletphysics.linearmath.Transform;
@@ -38,7 +38,6 @@ import org.schema.game.client.view.effects.RaisingIndication;
 import org.schema.game.client.view.effects.ShieldDrawer;
 import org.schema.game.client.view.gui.shiphud.HudIndicatorOverlay;
 import org.schema.game.common.Starter;
-import org.schema.game.common.controller.SegmentController.PullPermission;
 import org.schema.game.common.controller.ai.SegmentControllerAIInterface;
 import org.schema.game.common.controller.damage.Damager;
 import org.schema.game.common.controller.elements.ActivationManagerInterface;
@@ -1163,8 +1162,8 @@ public abstract class SendableSegmentController extends SegmentController implem
             this.railController.getRoot().onDamageServerRootObject((float)piece.getInfo().getMaxHitPointsFull(), from);
         }
         //INSERTED CODE @1298
-        BlockKillEvent event = new BlockKillEvent(piece, this, from);
-        StarLoader.fireEvent(BlockKillEvent.class, event, this.isOnServer());
+        SegmentPieceKillEvent event = new SegmentPieceKillEvent(piece, this, from);
+        StarLoader.fireEvent(SegmentPieceKillEvent.class, event, this.isOnServer());
         if(event.isCanceled()){
             return;
         }

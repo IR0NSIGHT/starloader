@@ -7,7 +7,6 @@ package org.schema.game.client.view.mainmenu;
 
 import javax.swing.*;
 
-import api.main.GameClient;
 import api.mod.EnabledModFile;
 import api.mod.ModInfo;
 import api.mod.StarLoader;
