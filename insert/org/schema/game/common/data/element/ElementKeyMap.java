@@ -1107,7 +1107,7 @@ public class ElementKeyMap {
             }
 
             Starter.modManager.onInitializeBlockData();
-            //INSERTED CODE @fffff
+            //INSERTED CODE @1229
             ModPlayground.initBlockData();
             ///
             keyArray = new short[keySet.size()];

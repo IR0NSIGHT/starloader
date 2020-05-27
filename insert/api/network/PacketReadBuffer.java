@@ -70,19 +70,9 @@ public class PacketReadBuffer {
         if (faction == null) return null;
         return new Faction(faction);
     }
-    //FIXME: method broke, find a proper way to get entity by id
+
     public Entity readEntity() throws IOException {
-        Vector3i sector = readVector();
-        String entName = readString();
-        int entId = readInt();
-        if (GameServer.getServerState() != null) {
-            return new Entity(GameServer.getServerState().getSegmentControllersByName().get(entName));
-        } else if (GameClient.getClientState() != null) {
-            return new Entity((SegmentController) GameClient.getClientState().getCurrentSectorEntities().get(entId));
-        } else {
-            //Title screen
-            return null;
-        }
+        return Universe.getUniverse().getEntityFromId(readInt());
     }
 
 }

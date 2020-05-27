@@ -4,9 +4,12 @@ import api.entity.Entity;
 import api.entity.Player;
 import api.network.Packet;
 import api.network.PacketWriteBuffer;
+import api.universe.Universe;
 import com.bulletphysics.linearmath.Transform;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
+import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.controller.GameClientController;
+import org.schema.game.client.controller.manager.ingame.PlayerInteractionControlManager;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.controller.SegmentController;
@@ -30,6 +33,22 @@ import java.util.Collection;
 import java.util.Set;
 
 public class GameClient {
+    public static Entity getSelectedEntity(){
+        int selectedEntityId = getClientPlayerState().getSelectedEntityId();
+        return Universe.getUniverse().getEntityFromId(selectedEntityId);
+    }
+    public static void selectEntity(Entity e){
+        getControlManager().setSelectedEntity(e.internalEntity);
+    }
+    public static PlayerInteractionControlManager getControlManager(){
+        return GameClient.getClientState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getPlayerIntercationManager();
+    }
+    public static Vector3i getWaypoint(){
+        return getClientController().getClientGameData().getWaypoint();
+    }
+    public static void setWaypoint(Vector3i v){
+        getClientController().getClientGameData().setWaypoint(v);
+    }
     public static ArrayList<Entity> getNearbyEntities(){
         ArrayList<Entity> entities = new ArrayList<Entity>();
         for (SimpleTransformableSendableObject<?> value : getClientState().getCurrentSectorEntities().values()) {

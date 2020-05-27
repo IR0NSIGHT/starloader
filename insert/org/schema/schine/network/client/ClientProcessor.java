@@ -225,10 +225,10 @@ public class ClientProcessor implements Runnable, NetworkProcessor {
 
             while(this.listening && !this.receive.isClosed()) {
                 this.getThread().setName("client Processor: " + this.state.getId());
-                int var23 = this.dataInputStream.readInt();
+                int size = this.dataInputStream.readInt();
 
-                //INSERTED CODE
-                if(var23 == -2){
+                //INSERTED CODE @337
+                if(size == -2){
                     //SPECIAL PACKET ID received
                     String packetId = this.dataInputStream.readUTF();
                     //Construct packet
@@ -247,25 +247,25 @@ public class ClientProcessor implements Runnable, NetworkProcessor {
                 ///
 
                 this.serverPacketSentTimestamp = this.dataInputStream.readLong();
-                ((ClientState)this.state).setDebugBigChunk(var23 > 4000);
+                ((ClientState)this.state).setDebugBigChunk(size > 4000);
                 if (this.state.isReadingBigChunk()) {
-                    System.err.println("[CLIENT] WARNING: Received big chunk: " + var23 + " bytes");
+                    System.err.println("[CLIENT] WARNING: Received big chunk: " + size + " bytes");
                 }
 
-                assert var23 > 0 : " Empty update!";
+                assert size > 0 : " Empty update!";
 
-                byte[] var2 = this.handlerThread.get(var23);
-                if (var23 > 131072) {
-                    System.err.println("[CLIENT] WARNING: received large (>128kb) NT package: " + var23 + " / " + var2.length);
+                byte[] var2 = this.handlerThread.get(size);
+                if (size > 131072) {
+                    System.err.println("[CLIENT] WARNING: received large (>128kb) NT package: " + size + " / " + var2.length);
                 }
 
-                this.dataInputStream.readFully(var2, 0, var23);
-                if (var23 == 1 && var2[0] == 65) {
+                this.dataInputStream.readFully(var2, 0, size);
+                if (size == 1 && var2[0] == 65) {
                     break;
                 }
                 //DebugFile.info("Received packet: " + var23 + ", data=" + Arrays.toString(var2));
 
-                this.handlerThread.enqueueReadPacket(new ClientProcessor.ClientPacket(var2, var23));
+                this.handlerThread.enqueueReadPacket(new ClientProcessor.ClientPacket(var2, size));
             }
         } catch (EOFException var19) {
             System.err.println("[CLIENT] EOFConnection (last file size: " + var1 + "; last packet timestamp: " + this.serverPacketSentTimestamp + ")");

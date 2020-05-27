@@ -7,6 +7,8 @@ import api.main.GameServer;
 import api.mod.StarLoader;
 import api.server.Server;
 import org.schema.common.util.linAlg.Vector3i;
+import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.world.RemoteSector;
 import org.schema.game.common.data.world.Sector;
 import org.schema.schine.network.objects.Sendable;
@@ -97,6 +99,10 @@ public class Universe {
         return null;
     }
     public Entity getEntityFromId(int id){
+        Sendable sendable = StarLoader.getGameState().getState().getLocalAndRemoteObjectContainer().getLocalObjects().get(id);
+        if(sendable instanceof ManagedSegmentController){
+            return new Entity((SegmentController) sendable);
+        }
         return null;// TODO this
         //Universe.getUniverse().getSector()
     }
