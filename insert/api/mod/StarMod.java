@@ -3,6 +3,8 @@ package api.mod;
 import api.config.BlockConfig;
 import api.mod.config.FileConfiguration;
 
+import java.util.ArrayList;
+
 public class StarMod {
     public String modName;
     public String modAuthor;
@@ -12,6 +14,7 @@ public class StarMod {
     public boolean forceEnable;
     public boolean serverSide = false;
     private boolean isEnabled = false;
+    private ArrayList<String> dependencies = new ArrayList<String>();
 
     public boolean isEnabled(){
         return isEnabled;
