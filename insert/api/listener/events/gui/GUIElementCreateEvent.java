@@ -14,7 +14,7 @@ public class GUIElementCreateEvent extends Event {
         this.inputState = inputState;
     }
 
-    public GUIElement getGuiWindow() {
+    public GUIElement getGUIElement() {
         return guiElement;
     }
 
