@@ -1,7 +1,5 @@
 package api.network;
 
-import api.entity.Entity;
-import api.faction.Faction;
 import org.schema.common.util.linAlg.Vector3i;
 
 import javax.vecmath.Vector3f;
@@ -29,10 +27,6 @@ public class PacketWriteBuffer {
     public void writeBoolean(boolean b) throws IOException {
         out.writeBoolean(b);
     }
-    public void writeFaction(Faction f) throws IOException {
-        out.writeInt(f.getID());
-    }
-
     public void writeFloat(float charge) throws IOException {
         out.writeFloat(charge);
     }
@@ -45,9 +39,5 @@ public class PacketWriteBuffer {
         out.writeFloat(sec.x);
         out.writeFloat(sec.y);
         out.writeFloat(sec.z);
-    }
-
-    public void writeEntity(Entity e) throws IOException {
-        writeInt(e.internalEntity.getId());
     }
 }
