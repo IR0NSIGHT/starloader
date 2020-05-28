@@ -2,6 +2,7 @@ package api.mod;
 
 import api.config.BlockConfig;
 import api.mod.config.FileConfiguration;
+import org.schema.game.common.data.physics.Pair;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ public class StarMod {
     public boolean forceEnable;
     public boolean serverSide = false;
     private boolean isEnabled = false;
-    private ArrayList<String> dependencies = new ArrayList<String>();
+    private ArrayList<Pair<String>> dependencies = new ArrayList<Pair<String>>();
 
     public boolean isEnabled(){
         return isEnabled;
@@ -45,6 +46,10 @@ public class StarMod {
     }
 
     //Builder style setters
+    public StarMod addDependency(String name, String version){
+        dependencies.add(new Pair<String>(name, version));
+        return this;
+    }
     public StarMod setModName(String modName) {
         this.modName = modName;
         return this;
@@ -111,4 +116,8 @@ public class StarMod {
     }
 
     //
+
+    public ArrayList<Pair<String>> getDependencies() {
+        return dependencies;
+    }
 }

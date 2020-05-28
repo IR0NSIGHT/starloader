@@ -1,8 +1,5 @@
 package api.mod;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class ModInfo {
 
     public String name;
@@ -32,5 +29,14 @@ public class ModInfo {
                 ", version='" + version + '\'' +
                 ", downloadURL='" + downloadURL + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ModInfo modInfo = (ModInfo) o;
+        return name.equals(modInfo.name) &&
+                version.equals(modInfo.version);
     }
 }
