@@ -4,6 +4,7 @@ import api.config.BlockConfig;
 import api.listener.Listener;
 import api.listener.events.Event;
 import api.listener.events.KeyPressEvent;
+import api.listener.events.gui.ControlManagerActivateEvent;
 import api.listener.events.gui.HudCreateEvent;
 import api.listener.events.player.PlayerCommandEvent;
 import api.listener.events.register.ElementRegisterEvent;
@@ -14,11 +15,18 @@ import api.network.Packet;
 import api.network.packets.ServerToClientMessage;
 import api.utils.StarRunnable;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.schema.game.client.data.GameClientState;
+import org.schema.game.client.view.gui.PlayerPanel;
+import org.schema.game.client.view.gui.faction.newfaction.FactionPanelNew;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.server.data.GameServerState;
+import org.schema.schine.graphicsengine.forms.gui.newgui.GUIMainWindow;
+import org.schema.schine.network.RegisteredClientOnServer;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Locale;
 import java.util.Map;
 
@@ -82,6 +90,15 @@ public class ModPlayground extends StarMod {
             }
         }*/
     }
+    public static void broadcastMessage(String message) {
+        for (RegisteredClientOnServer client : GameServerState.instance.getClients().values()) {
+            try {
+                client.serverMessage(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public void onEnable() {
@@ -107,7 +124,27 @@ public class ModPlayground extends StarMod {
 //            }
 //        });
         getConfig().saveDefault("this is a: test");
-
+        StarLoader.registerListener(ControlManagerActivateEvent.class, new Listener() {
+            @Override
+            public void onEvent(Event e) {
+                ControlManagerActivateEvent event = ((ControlManagerActivateEvent) e);
+                broadcastMessage("Activated: " + event.getControlManager().getClass().getName() + " >>> " + event.isActive());
+                PlayerPanel playerPanel = GameClientState.instance.getWorldDrawer().getGuiDrawer().getPlayerPanel();
+                try {
+                    Field panel = PlayerPanel.class.getDeclaredField("factionPanelNew");
+                    panel.setAccessible(true);
+                    FactionPanelNew p = (FactionPanelNew) panel.get(playerPanel);
+                    if(!(p instanceof MyFactionPanelNew)) {
+                        GameClientState state = playerPanel.getState();
+                        panel.set(playerPanel, new MyFactionPanelNew(state));
+                    }
+                } catch (NoSuchFieldException ex) {
+                    ex.printStackTrace();
+                } catch (IllegalAccessException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 //        StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
 //            @Override
 //            public void onEvent(Event event) {
