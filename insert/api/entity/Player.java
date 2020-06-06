@@ -97,7 +97,7 @@ public class Player {
         /**
          * Gets the player's current sector.
          */
-        return new Sector(Universe.getUniverse().getSector(playerState.getCurrentSector()));
+        return Universe.getUniverse().getSector(playerState.getCurrentSector());
     }
 
 }

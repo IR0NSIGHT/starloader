@@ -156,8 +156,8 @@ public class Sector {
         for (int x = -radius; x < radius; x++) {
             for (int y = -radius; y < radius; y++) {
                 for (int z = -radius; z < radius; z++) {
-                    org.schema.game.common.data.world.Sector sector = Universe.getUniverse().getSector(coordinates.x + x, coordinates.y + y, coordinates.z + z);
-                    sectors.add(new Sector(sector));
+                    Sector sector = Universe.getUniverse().getSector(coordinates.x + x, coordinates.y + y, coordinates.z + z);
+                    sectors.add(sector);
 
                 }
             }
