@@ -11,6 +11,7 @@ import api.mod.ModStarter;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.ShortArrayList;
 import it.unimi.dsi.fastutil.shorts.ShortOpenHashSet;
@@ -369,7 +370,7 @@ public class ElementKeyMap {
     public static final ShortArrayList chamberGeneralTypes = new ShortArrayList();
     public static final ShortArrayList lightTypes = new ShortArrayList();
     public static final ShortArrayList sourcedTypes = new ShortArrayList();
-    private static final Short2ObjectOpenHashMap<ElementInformation> informationKeyMap = new Short2ObjectOpenHashMap();
+    public static final Short2ObjectOpenHashMap<ElementInformation> informationKeyMap = new Short2ObjectOpenHashMap();
     private static final ShortOpenHashSet factoryKeySet = new ShortOpenHashSet(256);
     private static final ShortOpenHashSet leveldKeySet = new ShortOpenHashSet(256);
     private static final Short2ObjectOpenHashMap<ElementInformation> projected = new Short2ObjectOpenHashMap();
@@ -448,12 +449,11 @@ public class ElementKeyMap {
             infoArray[(Short)var2.getKey()] = (ElementInformation)var2.getValue();
         }
 
-
-
         if (factoryKeySet.contains(var0.getId())) {
             factoryInfoArray[var0.getId()] = true;
             var0.getFactory().enhancer = 212;
         }
+
 
         if (var0.hasLod()) {
             lodShapeArray[var0.getId()] = true;
@@ -1107,6 +1107,9 @@ public class ElementKeyMap {
             }
 
             Starter.modManager.onInitializeBlockData();
+            //INSERTED CODE @1229
+            ModPlayground.initBlockData();
+            ///
             keyArray = new short[keySet.size()];
             int var7 = 0;
 
@@ -1170,9 +1173,7 @@ public class ElementKeyMap {
             doorTypes.trim();
 
             assert checkConflicts();
-            //INSERTED CODE @1613
-            ModPlayground.initBlockData();
-            ///
+
             return;
         }
 

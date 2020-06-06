@@ -4,43 +4,41 @@ import api.element.block.Block;
 import api.element.block.Blocks;
 import api.faction.Faction;
 import api.main.GameServer;
-import api.server.Server;
+import api.network.packets.UpdateCurrentVelocityPacket;
 import api.systems.Reactor;
 import api.systems.Shield;
 import api.systems.addons.JumpInterdictor;
 import api.systems.addons.custom.CustomAddOn;
 import api.universe.Sector;
-import org.apache.commons.lang3.StringUtils;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.schema.common.util.StringTools;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.data.PlayerControllable;
-import org.schema.game.client.view.gui.weapon.WeaponBottomBar;
 import org.schema.game.common.controller.PlayerUsableInterface;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.SpaceStation;
 import org.schema.game.common.controller.elements.*;
-import org.schema.game.common.controller.elements.jumpprohibiter.InterdictionAddOn;
 import org.schema.game.common.controller.elements.power.reactor.MainReactorUnit;
 import org.schema.game.common.controller.elements.power.reactor.tree.ReactorTree;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.blockeffects.config.ConfigEntityManager;
-import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.player.PlayerState;
-import org.schema.game.common.data.world.Universe;
 import org.schema.schine.graphicsengine.core.GlUtil;
 
 import javax.vecmath.Vector3f;
-import java.io.IOException;
 import java.util.*;
 
 public class Entity {
     public SegmentController internalEntity;
 
     public Entity(SegmentController controller) {
+        if(controller == null){
+            throw new IllegalArgumentException("controller cannot be null!");
+        }
         internalEntity = controller;
     }
 
-    public Faction getFaction() throws IOException {
+    public Faction getFaction() {
         /**
          * Gets the faction the entity is currently part of. Returns null if the entity has no faction.
          */
@@ -223,21 +221,21 @@ public class Entity {
         }
         return null;
     }
-
+    /**
+     * Sets the entity's velocity. Doesn't do anything if the entity is immobile.
+     */
     public void setVelocity(Vector3f direction) {
-        /**
-         * Sets the entity's velocity. Doesn't do anything if the entity is immobile.
-         */
+
         if (getEntityType() != EntityType.STATION && getEntityType() != EntityType.SHOP && getEntityType() != EntityType.PLANETCORE) {
             //Stations, Shops, and Planet Cores shouldn't have velocity
             internalEntity.getPhysicsObject().setLinearVelocity(direction);
         }
     }
-
+    /**
+     * Plays the specified graphical effect on the entity.
+     */
     public void playEffect(byte value) {
-        /**
-         * Plays the specified graphical effect on the entity.
-         */
+
         internalEntity.executeGraphicalEffectServer(value);
     }
 
@@ -378,31 +376,53 @@ public class Entity {
         }
         return pl;
     }
+    /**
+     * Gets player 0 of attachedPlayers.
+     */
+    public Player getPilot() {
+
+        ArrayList<Player> attachedPlayers = getAttachedPlayers();
+        if(attachedPlayers.isEmpty()){
+            return null;
+        }
+        return attachedPlayers.get(0);
+    }
 
     public Ship toShip() {
         return new Ship(internalEntity);
     }
 
-    public ArrayList<CustomAddOn> getCustomAddons() {
-
-        ArrayList<CustomAddOn> addons = new ArrayList<CustomAddOn>();
-        ManagerContainer<?> manager = getManagerContainer();
-        for (PlayerUsableInterface playerUsableInterface : manager.getPlayerUsable()) {
-            if (playerUsableInterface instanceof CustomAddOn) {
-                addons.add((CustomAddOn) playerUsableInterface);
-            }
-        }
-        return addons;
+    //CUSTOM ADD ON SUPPORT
+    private static HashMap<String, CustomAddOn> nameAddonMap = null;
+    private static HashMap<Class<? extends CustomAddOn>, CustomAddOn> classAddonMap = null;
+    public Collection<CustomAddOn> getCustomAddons() {
+        generateAddonLookup();
+        return nameAddonMap.values();
     }
 
     public CustomAddOn getCustomAddon(Class<? extends CustomAddOn> clazz) {
-        for (CustomAddOn customAddon : getCustomAddons()) {
-            if (customAddon.getClass().equals(clazz)) {
-                return customAddon;
+        generateAddonLookup();
+        return classAddonMap.get(clazz);
+    }
+    public CustomAddOn getCustomAddon(String name) {
+        generateAddonLookup();
+        return nameAddonMap.get(name);
+    }
+    private void generateAddonLookup(){
+        if(nameAddonMap == null){
+            nameAddonMap = new HashMap<String, CustomAddOn>();
+            classAddonMap = new HashMap<Class<? extends CustomAddOn>, CustomAddOn>();
+            ManagerContainer<?> manager = getManagerContainer();
+            for (PlayerUsableInterface usableAddon : manager.getPlayerUsable()) {
+                if (usableAddon instanceof CustomAddOn) {
+                    CustomAddOn customAddOn = (CustomAddOn) usableAddon;
+                    nameAddonMap.put(customAddOn.getName(), customAddOn);
+                    classAddonMap.put(customAddOn.getClass(), customAddOn);
+                }
             }
         }
-        return null;
     }
+    //
 
     public Sector getSector() {
         if (GameServer.getServerState() != null) {
@@ -457,6 +477,62 @@ public class Entity {
         }
 
         return blocks;
+    }
+
+    /**
+     * Gets all of the ships manager modules, manager modules are the 'parts' of the ship, cannon system collective, rail system collective, etc.
+     * @return A list of all the the modules
+     * TODO: Make a helper class for manager modules
+     */
+    public ObjectArrayList<ManagerModule<?, ?, ?>> getManagerModules(){
+        return getManagerContainer().getModules();
+    }
+
+    /**
+     * Get a manager module of specified type
+     * @param classType the type of class
+     * @return the array
+     */
+    public <EM extends UsableElementManager> EM getElementManager(Class<EM> classType){
+        for (ManagerModule<?, ?, ?> managerModule : getManagerModules()) {
+            UsableElementManager<?, ?, ?> elementManager = managerModule.getElementManager();
+            if(elementManager.getClass().equals(classType)){
+                return (EM) elementManager;
+            }
+        }
+        return null;
+    }
+    public <CM extends ElementCollectionManager> ArrayList<ElementCollectionManager> getCollectionManagers(Class<CM> classType){
+        ArrayList<ElementCollectionManager> ecms = new ArrayList<ElementCollectionManager>();
+        for (ManagerModule<?, ?, ?> module : getManagerContainer().getModules()) {
+            if(module instanceof ManagerModuleCollection){
+                for (Object cm : ((ManagerModuleCollection) module).getCollectionManagers()) {
+                    if(cm.getClass().equals(classType)) {
+                        ecms.add((ElementCollectionManager) cm);
+                    }
+                }
+            }else if(module instanceof ManagerModuleSingle){
+                ElementCollectionManager cm = ((ManagerModuleSingle) module).getCollectionManager();
+                if(cm.getClass().equals(classType)){
+                    ecms.add(cm);
+                }
+            }//else{ something broke }
+        }
+        return ecms;
+    }
+    public ArrayList<ElementCollectionManager> getAllCollectionManagers(){
+        ArrayList<ElementCollectionManager> ecms = new ArrayList<ElementCollectionManager>();
+        for (ManagerModule<?, ?, ?> module : getManagerContainer().getModules()) {
+            if(module instanceof ManagerModuleCollection){
+                for (Object cm : ((ManagerModuleCollection) module).getCollectionManagers()) {
+                        ecms.add((ElementCollectionManager) cm);
+                }
+            }else if(module instanceof ManagerModuleSingle){
+                ElementCollectionManager cm = ((ManagerModuleSingle) module).getCollectionManager();
+                    ecms.add(cm);
+            }
+        }
+        return ecms;
     }
 
 }

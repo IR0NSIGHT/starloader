@@ -33,6 +33,9 @@ public abstract class EntityShieldBar extends CustomHudBar {
 
     @Override
     public String getText() {
+        if(entity == null){
+            return "N/A";
+        }
         Shield lastHitShield = entity.getLastHitShield();
         if(lastHitShield == null){
             return "Shields: N/A";

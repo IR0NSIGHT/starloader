@@ -7,20 +7,30 @@ import api.entity.Player;
 import api.gui.custom.examples.BasicInfoGroup;
 import api.listener.Listener;
 import api.listener.events.Event;
+import api.listener.events.KeyPressEvent;
 import api.listener.events.gui.HudCreateEvent;
 import api.listener.events.player.PlayerCommandEvent;
 import api.listener.events.register.ElementRegisterEvent;
 import api.listener.events.register.RegisterEffectsEvent;
+import api.main.GameClient;
+import api.main.GameServer;
 import api.mod.StarLoader;
 import api.mod.StarMod;
+import api.network.Packet;
+import api.network.packets.ServerToClientMessage;
+import api.network.packets.UpdateCurrentVelocityPacket;
+import api.network.packets.UpdateCustomAddOnPacket;
+import api.server.Server;
+import api.systems.modules.custom.example.BatteryElementManager;
+import api.utils.StarRunnable;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.schema.game.client.view.GameResourceLoader;
-import org.schema.game.common.controller.elements.ManagerModuleCollection;
-import org.schema.game.common.controller.elements.weapon.WeaponElementManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
+import org.schema.game.common.data.element.ElementKeyMap;
+import org.schema.game.server.data.GameServerState;
 
 import java.util.Locale;
+import java.util.Map;
 
 public class ModPlayground extends StarMod {
     public static void main(String[] args) {
@@ -32,13 +42,15 @@ public class ModPlayground extends StarMod {
         setModName("DefaultMod").setModAuthor("Jake").setModDescription("test").setModVersion("1.0").setModSMVersion("0.202");
         setModDescription("Default mod that is always loaded");
         this.forceEnable = true;
+        Packet.registerPacket(ServerToClientMessage.class);
+        Packet.registerPacket(UpdateCustomAddOnPacket.class);
+        Packet.registerPacket(UpdateCurrentVelocityPacket.class);
     }
 
-    public static short xorId = 0;
+    public static short newCapId = 0;
 
     @Override
     public void onBlockConfigLoad(BlockConfig config) {
-        registerComputerModulePair(Blocks.FERTIKEEN_INGOT, Blocks.HYLAT_INGOT);
     }
     public void registerComputerModulePair(Blocks computer, Blocks module){
         ElementInformation comp = computer.getInfo();
@@ -50,6 +62,11 @@ public class ModPlayground extends StarMod {
         module.getInfo().controlledBy.add(computer.getId());
 
     }
+    public void registerElementBlock(ElementInformation info){
+        info.systemBlock = true;
+        info.controlledBy.add(Blocks.SHIP_CORE.getId());
+
+    }
 
     public static void initBlockData() {
         DebugFile.log("Initializing block data for enabled mods: ");
@@ -59,6 +76,13 @@ public class ModPlayground extends StarMod {
                 DebugFile.log("Initializing block for mod: " + mod.modName);
                 mod.onBlockConfigLoad(config);
             }
+        }
+
+        //Regenerate LOD shapes/Factory enhancers, rather than just obliterating the list in addElementToExisting
+        for (Map.Entry<Short, ElementInformation> next : ElementKeyMap.informationKeyMap.entrySet()) {
+            Short keyId = next.getKey();
+            ElementKeyMap.lodShapeArray[keyId] = next.getValue().hasLod();
+            ElementKeyMap.factoryInfoArray[keyId] = ElementKeyMap.getFactorykeyset().contains(keyId);
         }
         /*for (ElementInformation element : config.getElements()) {
             try {
@@ -73,6 +97,24 @@ public class ModPlayground extends StarMod {
     @Override
     public void onEnable() {
         DebugFile.log("Loading default mod...");
+        new StarRunnable(){
+            @Override
+            public void run() {
+                GameServerState server = GameServer.getServerState();
+            }
+        }.runTimer(50);
+        StarLoader.registerListener(KeyPressEvent.class, new Listener() {
+            int timesPressed = 0;
+            int total = 0;
+            @Override
+            public void onEvent(Event event) {
+                KeyPressEvent e = (KeyPressEvent) event;
+                if(e.getChar() == 'o'){
+                    GameClient.showPopupMessage("yooooo", 1);
+                    GameClient.sendPacketToServer(new ServerToClientMessage(GameClient.getPlayer().getFaction(), "eyy"));
+                }
+            }
+        });
 
         //HELP COMMAND
         StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
@@ -93,33 +135,20 @@ public class ModPlayground extends StarMod {
             @Override
             public void onEvent(Event event) {
                 ElementRegisterEvent e = (ElementRegisterEvent) event;
-                e.addInternal(new ManagerModuleCollection(new WeaponElementManager(e.getSegmentController()), Blocks.FERTIKEEN_INGOT.getId(), Blocks.HYLAT_INGOT.getId()));
-            }
+               // e.addModuleCollection(new ManagerModuleSingle(new BatteryElementManager(e.getSegmentController()), Blocks.SHIP_CORE.getId(), newCapId));
+          }
         }, this);
-        /*StarLoader.registerListener(ShieldCapacityCalculateEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                ShieldCapacityCalculateEvent e = (ShieldCapacityCalculateEvent) event;
-
-                long bonusShields = 0;
-                ShieldCapacityUnit capacityUnit = ((ShieldCapacityCalculateEvent) event).getUnit();
-                Vector3i max = capacityUnit.getMax(new Vector3i());
-                Vector3i min = capacityUnit.getMin(new Vector3i());
-                int deltaX = Math.abs(max.x-min.x);
-                int deltaY = Math.abs(max.y-min.y);
-                int deltaZ = Math.abs(max.z-min.z);
-                int smallAxes = 0;
-                if(deltaX <= 5)
-                    smallAxes++;
-                if(deltaY <= 5)
-                    smallAxes++;
-                if(deltaZ <= 5)
-                    smallAxes++;
-                if(smallAxes >= 2) {
-                    e.setShields((long) (e.getCapacity() * 1.2));
-                }
-            }
-        });*/
+//        StarLoader.registerListener(MaxPowerCalculateEvent.class, new Listener() {
+//            @Override
+//            public void onEvent(Event event) {
+//                MaxPowerCalculateEvent e = (MaxPowerCalculateEvent) event;
+//                DebugFile.info("Original Power: " + e.getPower());
+//                BatteryElementManager elementManager = e.getEntity().getElementManager(BatteryElementManager.class);
+//                double extraPower = (double) elementManager.totalSize*100;
+//                DebugFile.info("Extra Power: " + e.getPower());
+//                e.setPower(e.getPower()+extraPower);
+//            }
+//        });
         getConfig().saveDefault("this is a: test");
 
         StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
@@ -135,16 +164,27 @@ public class ModPlayground extends StarMod {
                     }else{
                         p.sendServerMessage("You are in: " + currentEntity.getUID());
                     }
+                }else if(e.command.equals("thr")){
+                    Entity currentEntity = p.getCurrentEntity();
+                    if(currentEntity == null){
+                        p.sendServerMessage("no");
+                        return;
+                    }
+                    BatteryElementManager elementManager = currentEntity.getElementManager(BatteryElementManager.class);
+                    float actualThrust = elementManager.totalSize;
+                    Server.broadcastMessage("The total thrust of this object is: " + actualThrust);
+                }else if(e.command.equals("a")){
+                    p.sendPacket(new ServerToClientMessage(p.getFaction(), "hi"));
                 }
             }
         });
+
 
         StarLoader.registerListener(HudCreateEvent.class, new Listener() {
             @Override
             public void onEvent(Event event) {
                 HudCreateEvent ev = (HudCreateEvent) event;
                 BasicInfoGroup bar = new BasicInfoGroup(ev);
-                DebugFile.log("DUMPING DATA OF CUBETEXTURE3D");
             }
         });
 

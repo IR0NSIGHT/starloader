@@ -13,6 +13,7 @@ import api.utils.StarRunnable;
 import api.utils.callbacks.EntitySpawnCallback;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.data.world.RemoteSector;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -156,8 +157,7 @@ public class Sector {
         for (int x = -radius; x < radius; x++) {
             for (int y = -radius; y < radius; y++) {
                 for (int z = -radius; z < radius; z++) {
-                    Sector sector = Universe.getUniverse().getSector(coordinates.x + x, coordinates.y + y, coordinates.z + z);
-                    sectors.add(sector);
+                    sectors.add(Universe.getUniverse().getSector(coordinates.x + x, coordinates.y + y, coordinates.z + z));
 
                 }
             }
