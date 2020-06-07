@@ -40,7 +40,6 @@ public class ModPlayground extends StarMod {
         setModName("DefaultMod").setModAuthor("Jake").setModDescription("test").setModVersion("1.0").setModSMVersion("0.202");
         setModDescription("Default mod that is always loaded");
         this.forceEnable = true;
-        Packet.registerPacket(ServerToClientMessage.class);
     }
 
     public static short newCapId = 0;
@@ -104,6 +103,7 @@ public class ModPlayground extends StarMod {
     public void onEnable() {
         DebugFile.log("Loading default mod...");
 
+        Packet.registerPacket(ServerToClientMessage.class);
 
         StarLoader.registerListener(ElementRegisterEvent.class, new Listener() {
             @Override

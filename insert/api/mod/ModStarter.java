@@ -3,6 +3,7 @@ package api.mod;
 import api.DebugFile;
 import api.ModPlayground;
 import api.SMModLoader;
+import api.network.Packet;
 import api.utils.StarRunnable;
 import org.apache.commons.io.FileUtils;
 import org.schema.game.common.data.physics.Pair;
@@ -180,11 +181,13 @@ public class ModStarter {
                 }
             }
         });
+        //2. Recursively enable mods in order
+        Packet.clearPackets();
         for (StarMod mod : mods) {
             enableModRec(mod);
         }
-        //2. Recursively enable mods in order
         //Reason: Mods need to be enabled the same on the server and on the client in the same order for packet reasons
+
 
     }
 

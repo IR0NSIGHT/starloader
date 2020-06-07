@@ -92,46 +92,4 @@ public class BlockConfig {
             e.printStackTrace();
         }
     }
-    public void loadXML(){
-        //ElementKeyMap.reinitializeData(new FileExt("loader"+File.separator+"CustomBlockConfig.xml"), false, null, null);
-    }
-    @Deprecated
-    public File writeXML() {
-        try {
-            DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
-            Document document = documentBuilder.newDocument();
-            Element root = document.createElement("Config");
-            Element elem = document.createElement("Element");
-            Element gen = document.createElement("General");
-            document.appendChild(root);
-            root.appendChild(elem);
-            elem.appendChild(gen);
-
-
-            for (ElementInformation element : elements) {
-                element.appendXML(document, gen);
-            }
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-
-            transformer.setOutputProperty("omit-xml-declaration", "yes");
-            transformer.setOutputProperty("indent", "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-
-            DOMSource domSource = new DOMSource(document);
-            new File("loader").mkdir();
-            File f = new File("loader/CustomBlockConfig.xml");
-            StreamResult streamResult = new StreamResult(f);
-
-            transformer.transform(domSource, streamResult);
-
-            System.out.println("Done creating XML File");
-
-            return f;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }
