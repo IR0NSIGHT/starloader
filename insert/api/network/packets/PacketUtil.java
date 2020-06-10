@@ -29,7 +29,7 @@ public class PacketUtil {
     public static ServerProcessor getServerProcessor(RegisteredClientOnServer clientOnServer){
         return clientOnServer.getProcessor();
     }
-    public void sendPacket(PlayerState player, Packet apiPacket){
+    public static void sendPacket(PlayerState player, Packet apiPacket){
         try {
             ServerProcessor processor = getServerProcessor(GameServer.getServerClient(player));
             DataOutputStream output = new DataOutputStream(processor.getOutRaw());
