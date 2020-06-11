@@ -105,13 +105,6 @@ public class ModPlayground extends StarMod {
 
         Packet.registerPacket(ServerToClientMessage.class);
 
-        StarLoader.registerListener(ElementRegisterEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                ElementRegisterEvent e = (ElementRegisterEvent) event;
-               // e.addModuleCollection(new ManagerModuleSingle(new BatteryElementManager(e.getSegmentController()), Blocks.SHIP_CORE.getId(), newCapId));
-          }
-        }, this);
 //        StarLoader.registerListener(MaxPowerCalculateEvent.class, new Listener() {
 //            @Override
 //            public void onEvent(Event event) {
@@ -124,10 +117,9 @@ public class ModPlayground extends StarMod {
 //            }
 //        });
         getConfig().saveDefault("this is a: test");
-        StarLoader.registerListener(ControlManagerActivateEvent.class, new Listener() {
+        StarLoader.registerListener(ControlManagerActivateEvent.class, new Listener<ControlManagerActivateEvent>() {
             @Override
-            public void onEvent(Event e) {
-                ControlManagerActivateEvent event = ((ControlManagerActivateEvent) e);
+            public void onEvent(ControlManagerActivateEvent event) {
                 broadcastMessage("Activated: " + event.getControlManager().getClass().getName() + " >>> " + event.isActive());
                 PlayerPanel playerPanel = GameClientState.instance.getWorldDrawer().getGuiDrawer().getPlayerPanel();
                 try {
@@ -144,7 +136,7 @@ public class ModPlayground extends StarMod {
                     ex.printStackTrace();
                 }
             }
-        });
+        }, null);
 //        StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
 //            @Override
 //            public void onEvent(Event event) {

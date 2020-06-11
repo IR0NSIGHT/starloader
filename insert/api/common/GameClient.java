@@ -9,6 +9,7 @@ import org.schema.game.common.data.player.ControllerStateUnit;
 import org.schema.game.common.data.player.PlayerState;
 import org.schema.schine.graphicsengine.core.Controller;
 
+import java.util.Collection;
 import java.util.Set;
 
 public class GameClient {
@@ -50,6 +51,10 @@ public class GameClient {
 
     public static void setLoadString(String s){
         Controller.getResLoader().setLoadString(s);
+    }
+
+    public static Collection<PlayerState> getConnectedPlayers(){
+        return GameClientState.instance.getOnlinePlayersLowerCaseMap().values();
     }
 
 }
