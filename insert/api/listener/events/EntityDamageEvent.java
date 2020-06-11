@@ -7,8 +7,12 @@ import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.damage.Damager;
 import org.schema.game.common.controller.damage.HitType;
 import org.schema.game.common.controller.damage.projectile.ProjectileHandlerSegmentController;
+import org.schema.game.common.controller.damage.projectile.ProjectileParticleContainer;
 import org.schema.game.common.data.player.PlayerCharacter;
+import org.schema.game.common.data.world.Segment;
 import org.schema.game.common.data.world.SimpleTransformableSendableObject;
+
+import java.util.ArrayList;
 
 public class EntityDamageEvent extends Event {
     Entity entity;
@@ -18,13 +22,17 @@ public class EntityDamageEvent extends Event {
     private final Damager damager;
     private Entity damagerEntity;
     private Player damagerPlayer;
+    private ProjectileParticleContainer projectile;
+    private ArrayList<Segment> segmentsHit;
 
-    public EntityDamageEvent(SegmentController entity, ProjectileHandlerSegmentController.ShotHandler shotHandler, ProjectileHandlerSegmentController handler, HitType hitType, Damager damager) {
+    public EntityDamageEvent(SegmentController entity, ProjectileHandlerSegmentController.ShotHandler shotHandler, ProjectileHandlerSegmentController handler, HitType hitType, Damager damager, ProjectileParticleContainer projectile, ArrayList<Segment> segmentsHit) {
         this.entity = new Entity(entity);
         this.shotHandler = shotHandler;
         this.handler = handler;
         this.hitType = hitType;
         this.damager = damager;
+        this.projectile = projectile;
+        this.segmentsHit = segmentsHit;
         SimpleTransformableSendableObject<?> shooter = damager.getShootingEntity();
         if(shooter instanceof SegmentController){
             this.damagerEntity = new Entity((SegmentController) shooter);
@@ -65,5 +73,13 @@ public class EntityDamageEvent extends Event {
 
     public Player getDamagerPlayer() {
         return damagerPlayer;
+    }
+
+    public ProjectileParticleContainer getProjectile() {
+        return projectile;
+    }
+
+    public ArrayList<Segment> getSegmentsHit() {
+        return segmentsHit;
     }
 }

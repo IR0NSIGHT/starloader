@@ -5,10 +5,7 @@
 
 package org.schema.game.common.controller.damage.beam;
 
-import api.DebugFile;
-import api.listener.Listener;
 import api.listener.events.DamageBeamHitEvent;
-import api.listener.events.Event;
 import api.mod.StarLoader;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import java.util.Collection;
@@ -29,7 +26,6 @@ import org.schema.game.common.controller.elements.BeamState;
 import org.schema.game.common.controller.elements.ShieldAddOn;
 import org.schema.game.common.controller.elements.ShieldContainerInterface;
 import org.schema.game.common.controller.elements.VoidElementManager;
-import org.schema.game.common.controller.elements.beam.BeamElementManager;
 import org.schema.game.common.data.ManagedSegmentController;
 import org.schema.game.common.data.SegmentPiece;
 import org.schema.game.common.data.element.ElementInformation;
@@ -67,6 +63,10 @@ public class DamageBeamHitHandlerSegmentController implements DamageBeamHitHandl
         this.hitController = null;
         this.weaponId = -9223372036854775808L;
         this.dam = 0.0F;
+    }
+
+    public float getDam() {
+        return this.dam;
     }
 
     public int onBeamDamage(BeamState hittingBeam, int hits, BeamHandlerContainer<?> container, SegmentPiece segmentPiece, Vector3f from, Vector3f to, Timer var7, Collection<Segment> updatedSegments) {
@@ -176,7 +176,7 @@ public class DamageBeamHitHandlerSegmentController implements DamageBeamHitHandl
         }
     }
 
-    private boolean doDamageOnBlock(SegmentPiece var1, BeamState var2) {
+    public boolean doDamageOnBlock(SegmentPiece var1, BeamState var2) {
         var1.getOrientation();
         short var3 = var1.getType();
         ElementInformation var4;
