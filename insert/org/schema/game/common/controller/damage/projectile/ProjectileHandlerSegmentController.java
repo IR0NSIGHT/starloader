@@ -12,6 +12,8 @@ import com.bulletphysics.util.IntArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+
+import java.util.ArrayList;
 import java.util.Iterator;
 import javax.vecmath.Vector3f;
 import org.schema.common.FastMath;
@@ -65,8 +67,22 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
     };
     private Vector3f tmpDir = new Vector3f();
     private Vector3f tmpWorldPos = new Vector3f();
+    private ProjectileParticleContainer projectile;
+    private ArrayList<Segment> hitSegments = new ArrayList<Segment>();
 
     public ProjectileHandlerSegmentController() {
+    }
+
+    public SegmentPiece getPiece() {
+        return pTmp;
+    }
+
+    public ProjectileParticleContainer getProjectile() {
+        return projectile;
+    }
+
+    public ArrayList<Segment> getHitSegments() {
+        return hitSegments;
     }
 
     private boolean processRawHitUnshielded(Segment var1, int var2, short var3, Vector3b var4, Vector3f var5, Transform var6) {
@@ -80,6 +96,8 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
         if (!this.isAccumulateShot(var8)) {
             var7 = this.processHitsUnshielded(this.shotHandler);
         }
+
+        this.hitSegments.add(var1);
 
         return var7;
     }
@@ -189,7 +207,7 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
         }
     }
 
-    private float doDamageOnBlock(short var1, ElementInformation var2, Segment var3, int var4) {
+    public float doDamageOnBlock(short var1, ElementInformation var2, Segment var3, int var4) {
         float var14;
         label129: {
             var3.getSegmentData().getOrientation(var4);
@@ -380,7 +398,7 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
 
 
                     //INSERTED CODE @721
-                    EntityDamageEvent event = new EntityDamageEvent(this.shotHandler.hitSegController, this.shotHandler, this, this.shotHandler.hitType, damager);
+                    EntityDamageEvent event = new EntityDamageEvent(this.shotHandler.hitSegController, this.shotHandler, this, this.shotHandler.hitType, damager, this.projectile, this.hitSegments);
                     StarLoader.fireEvent(EntityDamageEvent.class, event, this.isOnServer());
                     ///
 
@@ -417,6 +435,7 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
         } else {
             SegmentController var9 = var7.getSegment().getSegmentController();
             this.shotHandler.reset();
+            this.projectile = var5;
             this.shotHandler.dmg = var5.getDamage(var6);
             this.shotHandler.penetrationDepth = var5.getPenetrationDepth(var6);
             this.shotHandler.initialDamage = var5.getDamageInitial(var6);
@@ -629,12 +648,12 @@ public class ProjectileHandlerSegmentController extends ProjectileHandler {
         public Vector3f shootingDirRelative = new Vector3f();
         public HitType hitType;
         public DamageDealerType damageDealerType;
-        private float dmg;
-        private float totalArmorValue;
+        public float dmg;
+        public float totalArmorValue;
         private float totalDmg;
-        private LongArrayList positionsHit;
+        public LongArrayList positionsHit;
         private ObjectArrayList<ElementInformation> typesHit;
-        private ObjectArrayList<Segment> segmentsHit;
+        public ObjectArrayList<Segment> segmentsHit;
         private ObjectOpenHashSet<Segment> segmentsHitSet;
         private IntArrayList infoIndexHit;
         public InterEffectSet defenseArmor;
