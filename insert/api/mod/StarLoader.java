@@ -38,6 +38,7 @@ public class StarLoader {
         DebugFile.log("== Enabling Mod " + mod.getInfo().toString());
         mod.onEnable();
         mod.flagEnabled(true);
+        DebugFile.log("== Mod " + mod.getInfo().toString() + " Enabled");
     }
 
     public static void dumpModInfos() {
@@ -62,6 +63,7 @@ public class StarLoader {
         } else {
             listeners.add(l);
         }
+        DebugFile.log(" = Registered Listener. ");
     }
 
     //fire event methods:
@@ -76,6 +78,22 @@ public class StarLoader {
                 listener.onEvent(ev);
             } catch (Exception e) {
                 DebugFile.log("Exception during event: " + clazz.getName());
+                DebugFile.logError(e, null);
+
+            }
+        }
+    }
+    public static <T> void fireEvent(Event ev, boolean isServer) {
+        //DebugFile.log("Firing Event: " +clazz.getName());
+        ev.server = isServer;
+        List<Listener> lstners = getListeners(ev.getClass());
+        if (lstners == null) // Avoid iterating on null Event listeners
+            return ;
+        for (Listener listener : lstners) {
+            try {
+                listener.onEvent(ev);
+            } catch (Exception e) {
+                DebugFile.log("Exception during event: " + ev.getClass().getSimpleName());
                 DebugFile.logError(e, null);
 
             }

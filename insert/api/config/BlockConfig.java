@@ -33,6 +33,16 @@ public class BlockConfig {
         element.cubatomConsistence.clear();
         element.consistence.clear();
     }
+    public static void setBasicInfo(ElementInformation info, String description, int price, float mass, boolean placeable, boolean activatable, int buildIcoNum){
+        info.description = description;
+        info.price = price;
+        info.mass = mass;
+        info.placable = placeable;
+        info.setMaxHitPointsE(1);
+        info.setCanActivate(activatable);
+        info.setBuildIconNum(buildIcoNum);
+
+    }
     public static ElementInformation newElement(String name, short... ids){
         short id = (short) ElementKeyMap.insertIntoProperties(name);
         ElementInformation elementInformation = new ElementInformation(id, name, ElementKeyMap.getCategoryHirarchy(), ids);

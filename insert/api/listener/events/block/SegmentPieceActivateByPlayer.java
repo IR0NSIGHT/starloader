@@ -9,31 +9,14 @@ import org.schema.game.common.data.player.PlayerState;
 public class SegmentPieceActivateByPlayer extends Event {
 
 
-    private final ActivationElementManager manager;
     private final SegmentPiece segmentPiece;
-    private final PlayerState playerState;
-    private final ActivationCollectionManager activationCollectionManager;
 
-    public ActivationElementManager getManager() {
-        return manager;
-    }
 
     public SegmentPiece getSegmentPiece() {
         return segmentPiece;
     }
 
-    public PlayerState getPlayerState() {
-        return playerState;
-    }
-
-    public ActivationCollectionManager getActivationCollectionManager() {
-        return activationCollectionManager;
-    }
-
-    public SegmentPieceActivateByPlayer(ActivationElementManager manager, SegmentPiece segmentPiece, PlayerState playerState, ActivationCollectionManager activationCollectionManager) {
-        this.manager = manager;
+    public SegmentPieceActivateByPlayer(SegmentPiece segmentPiece) {
         this.segmentPiece = segmentPiece;
-        this.playerState = playerState;
-        this.activationCollectionManager = activationCollectionManager;
     }
 }

@@ -1,6 +1,7 @@
 package api;
 
 import api.mod.StarMod;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.schema.game.common.Starter;
 import org.schema.game.common.data.player.PlayerState;
 
@@ -22,10 +23,11 @@ public class DebugFile {
             if(mod == null){
                 writer.append("[StarLoader] [Stacktrace]");
             }else{
-                writer.append("[" + mod.modName + "] [Stacktrace]");
+                writer.append("[").append(mod.modName).append("] [Stacktrace]");
             }
-            writer.append(e.getLocalizedMessage()).append("\n");
-            writer.append(e.getCause().getMessage()).append("\n");
+            writer.append("t");
+            writer.append(ExceptionUtils.getMessage(e)).append("\n");
+
             for ( StackTraceElement ste : e.getStackTrace()){
                 writer.append(ste.toString()).append("\n");
             }

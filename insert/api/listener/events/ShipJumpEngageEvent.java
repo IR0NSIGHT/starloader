@@ -24,4 +24,8 @@ public class ShipJumpEngageEvent extends Event {
     public Vector3i getOriginalSectorPos() {
         return originalSector;
     }
+
+    public Vector3i getNewSector() {
+        return newSector;
+    }
 }
