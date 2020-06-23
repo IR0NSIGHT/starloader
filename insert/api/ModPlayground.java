@@ -119,7 +119,7 @@ public class ModPlayground extends StarMod {
 //                e.setPower(e.getPower()+extraPower);
 //            }
 //        });
-        getConfig().saveDefault("this is a: test");
+        getConfig("config").saveDefault("this is a: test");
 
         StarLoader.registerListener(DisplayModuleDrawEvent.class, new Listener<DisplayModuleDrawEvent>() {
             @Override

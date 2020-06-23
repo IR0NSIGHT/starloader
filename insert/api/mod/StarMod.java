@@ -5,6 +5,7 @@ import api.mod.config.FileConfiguration;
 import org.schema.game.common.data.physics.Pair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class StarMod {
     public String modName;
@@ -103,12 +104,13 @@ public class StarMod {
 
     }
     //
-    private FileConfiguration config = null;
-    public FileConfiguration getConfig(){
-        if(config == null){
-            config = new FileConfiguration(this);
+    private HashMap<String, FileConfiguration> config = new HashMap<String, FileConfiguration>();
+    public FileConfiguration getConfig(String name){
+        FileConfiguration namedConfig = config.get(name);
+        if(namedConfig == null){
+            config.put(name, new FileConfiguration(this, name));
         }
-        return config;
+        return namedConfig;
     }
 
     public boolean isServerSide() {

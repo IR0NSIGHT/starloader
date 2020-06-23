@@ -14,9 +14,9 @@ public class FileConfiguration {
     private HashMap<String, String> values = new HashMap<String, String>();
 
     private String configPath;
-    public FileConfiguration(StarMod mod){
+    public FileConfiguration(StarMod mod, String name){
         this.mod = mod;
-        this.configPath = "modconfigs" + File.separator + mod.modName + File.separator + "config.yml";
+        this.configPath = "modconfigs" + File.separator + mod.modName + File.separator + name +".yml";
         reloadConfig();
     }
     public void reloadConfig(){
