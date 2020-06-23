@@ -25,7 +25,6 @@ public class DebugFile {
             }else{
                 writer.append("[").append(mod.modName).append("] [Stacktrace]");
             }
-            writer.append("t");
             writer.append(ExceptionUtils.getMessage(e)).append("\n");
 
             for ( StackTraceElement ste : e.getStackTrace()){
