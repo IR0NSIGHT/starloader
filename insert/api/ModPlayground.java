@@ -1,36 +1,31 @@
 package api;
 
+import api.common.GameClient;
 import api.config.BlockConfig;
 import api.listener.Listener;
-import api.listener.events.Event;
 import api.listener.events.KeyPressEvent;
-import api.listener.events.draw.DisplayModuleDrawEvent;
-import api.listener.events.gui.ControlManagerActivateEvent;
-import api.listener.events.gui.HudCreateEvent;
-import api.listener.events.player.PlayerCommandEvent;
-import api.listener.events.register.ElementRegisterEvent;
-import api.listener.events.register.RegisterEffectsEvent;
+import api.listener.events.gui.PlayerGUICreateEvent;
+import api.listener.events.gui.PlayerGUIDrawEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.network.Packet;
 import api.network.packets.ServerToClientMessage;
-import api.utils.StarRunnable;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.schema.game.client.data.GameClientState;
-import org.schema.game.client.view.gui.PlayerPanel;
-import org.schema.game.client.view.gui.faction.newfaction.FactionPanelNew;
-import org.schema.game.common.data.blockeffects.config.StatusEffectType;
+import api.utils.gui.RowStringCreator;
+import api.utils.gui.SimpleGUIBuilder;
+import api.utils.gui.SimpleGUIList;
+import org.newdawn.slick.Color;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
+import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.server.data.GameServerState;
+import org.schema.schine.graphicsengine.core.MouseEvent;
 import org.schema.schine.graphicsengine.forms.font.FontLibrary;
-import org.schema.schine.graphicsengine.forms.gui.GUITextOverlay;
-import org.schema.schine.graphicsengine.forms.gui.newgui.GUIMainWindow;
+import org.schema.schine.graphicsengine.forms.gui.GUICallback;
+import org.schema.schine.graphicsengine.forms.gui.GUIElement;
 import org.schema.schine.network.RegisteredClientOnServer;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Locale;
+import java.util.Collection;
 import java.util.Map;
 
 public class ModPlayground extends StarMod {
@@ -101,12 +96,133 @@ public class ModPlayground extends StarMod {
             }
         }
     }
+    private static SimpleGUIBuilder builder;
 
     @Override
     public void onEnable() {
         DebugFile.log("Loading default mod...");
 
         Packet.registerPacket(ServerToClientMessage.class);
+
+        StarLoader.registerListener(KeyPressEvent.class, new Listener<KeyPressEvent>() {
+            @Override
+            public void onEvent(KeyPressEvent event) {
+                if(event.getChar() == 'b'){
+                    builder.setVisible(! builder.isVisible());
+                }
+            }
+        });
+
+        StarLoader.registerListener(PlayerGUICreateEvent.class, new Listener<PlayerGUICreateEvent>() {
+            @Override
+            public void onEvent(PlayerGUICreateEvent event) {
+
+                builder = SimpleGUIBuilder.newBuilder("Tab1")
+                        .bigTitle("BIG TITLEEEEEEEEEEEEEEE", Color.blue, FontLibrary.getBoldArial24())
+                        .newLine()
+                        .button("yo", new GUICallback() {
+                            @Override
+                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+
+                            }
+
+                            @Override
+                            public boolean isOccluded() {
+                                return false;
+                            }
+                        }).button("yo", new GUICallback() {
+                            @Override
+                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+
+                            }
+
+                            @Override
+                            public boolean isOccluded() {
+                                return false;
+                            }
+                        }).button("yo", new GUICallback() {
+                            @Override
+                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+
+                            }
+
+                            @Override
+                            public boolean isOccluded() {
+                                return false;
+                            }
+                        }).fixedText("yes", Color.blue, FontLibrary.getBoldArial24()).setCurrentLineHeight(200).newLine().button("yo", new GUICallback() {
+                            @Override
+                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+
+                            }
+
+                            @Override
+                            public boolean isOccluded() {
+                                return false;
+                            }
+                        }).button("yo", new GUICallback() {
+                            @Override
+                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+
+                            }
+
+                            @Override
+                            public boolean isOccluded() {
+                                return false;
+                            }
+                        }).newLine().button("yo", new GUICallback() {
+                            @Override
+                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+
+                            }
+
+                            @Override
+                            public boolean isOccluded() {
+                                return false;
+                            }
+                        }).newTab("yeah");
+                SimpleGUIList<PlayerState> guiBuilder = new SimpleGUIList<PlayerState>(GameClient.getClientState(), 300, 300, builder.getLastTab()) {
+                    @Override
+                    public void initColumns() {
+                        createColumn("PLAYER NAME", 8F, new RowStringCreator<PlayerState>() {
+                            @Override
+                            public String update(PlayerState entry) {
+                                return entry.getName();
+                            }
+                        });
+                        createColumn("SECTOR", 2F, new RowStringCreator<PlayerState>() {
+                            @Override
+                            public String update(PlayerState entry) {
+                                return entry.getCurrentSector().toString();
+                            }
+                        });
+                        createColumn("KILLS", 16F, new RowStringCreator<PlayerState>() {
+                            @Override
+                            public String update(PlayerState entry) {
+                                return String.valueOf(entry.getKills());
+                            }
+                        });
+                    }
+
+                    @Override
+                    protected Collection<PlayerState> getElementList() {
+                        return GameClient.getConnectedPlayers();
+                    }
+                };
+                builder.addSimpleGUIList(guiBuilder);
+            }
+        });
+        StarLoader.registerListener(PlayerGUIDrawEvent.class, new Listener<PlayerGUIDrawEvent>() {
+            @Override
+            public void onEvent(PlayerGUIDrawEvent event) {
+                if(builder == null){
+                    DebugFile.warn("builder null oh boy");
+                    System.err.println("BUILDER NULL");
+                }else{
+                    builder.draw();
+                }
+            }
+        });
 
 //        StarLoader.registerListener(MaxPowerCalculateEvent.class, new Listener() {
 //            @Override
@@ -121,31 +237,31 @@ public class ModPlayground extends StarMod {
 //        });
         getConfig("config").saveDefault("this is a: test");
 
-        StarLoader.registerListener(DisplayModuleDrawEvent.class, new Listener<DisplayModuleDrawEvent>() {
-            @Override
-            public void onEvent(DisplayModuleDrawEvent event) {
-                event.getBoxElement().text.getText().set(0, "███████•\n" +
-                        "◘\n" +
-                        "○\n" +
-                        "◙\n" +
-                        "►\n" +
-                        "◄\n" +
-                        "↕\n" +
-                        "↑\n" +
-                        "↓\n" +
-                        "▬\n" +
-                        "↔\n" +
-                        "→\n" +
-                        "←\n" +
-                        "■\n" +
-                        "Ω\n" +
-                        "╪    \n" +
-                        "╤\n" +
-                        "╫\n" +
-                        "┬\n" +
-                        "«███\n███████████████████████████████\n███████████████████████████████████████████████████████████████████");
-            }
-        });
+//        StarLoader.registerListener(DisplayModuleDrawEvent.class, new Listener<DisplayModuleDrawEvent>() {
+//            @Override
+//            public void onEvent(DisplayModuleDrawEvent event) {
+//                event.getBoxElement().text.getText().set(0, "███████•\n" +
+//                        "◘\n" +
+//                        "○\n" +
+//                        "◙\n" +
+//                        "►\n" +
+//                        "◄\n" +
+//                        "↕\n" +
+//                        "↑\n" +
+//                        "↓\n" +
+//                        "▬\n" +
+//                        "↔\n" +
+//                        "→\n" +
+//                        "←\n" +
+//                        "■\n" +
+//                        "Ω\n" +
+//                        "╪    \n" +
+//                        "╤\n" +
+//                        "╫\n" +
+//                        "┬\n" +
+//                        "«███\n███████████████████████████████\n███████████████████████████████████████████████████████████████████");
+//            }
+//        });
 
 //        StarLoader.registerListener(ControlManagerActivateEvent.class, new Listener<ControlManagerActivateEvent>() {
 //            @Override

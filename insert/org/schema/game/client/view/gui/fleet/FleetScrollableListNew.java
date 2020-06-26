@@ -14,9 +14,6 @@ import java.util.Set;
 
 import api.listener.events.systems.GetAvailableFleetsEvent;
 import api.mod.StarLoader;
-import it.unimi.dsi.fastutil.longs.LongIterator;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import org.hsqldb.lib.StringComparator;
 import org.schema.game.client.data.GameClientState;
 import org.schema.game.common.data.fleet.Fleet;
@@ -25,11 +22,10 @@ import org.schema.game.common.data.fleet.FleetStateInterface;
 import org.schema.schine.common.language.Lng;
 import org.schema.schine.graphicsengine.forms.gui.GUIElement;
 import org.schema.schine.graphicsengine.forms.gui.GUIElementList;
+import org.schema.schine.graphicsengine.forms.gui.newgui.ControllerElement;
 import org.schema.schine.graphicsengine.forms.gui.newgui.GUIListFilterText;
 import org.schema.schine.graphicsengine.forms.gui.newgui.GUITextOverlayTable;
 import org.schema.schine.graphicsengine.forms.gui.newgui.ScrollableTableList;
-import org.schema.schine.graphicsengine.forms.gui.newgui.ControllerElement.FilterRowStyle;
-import org.schema.schine.graphicsengine.forms.gui.newgui.ScrollableTableList.GUIClippedRow;
 import org.schema.schine.input.InputState;
 
 public class FleetScrollableListNew extends ScrollableTableList<Fleet> implements Observer {
@@ -74,7 +70,7 @@ public class FleetScrollableListNew extends ScrollableTableList<Fleet> implement
             public boolean isOk(String var1, Fleet var2) {
                 return var2.getName().toLowerCase(Locale.ENGLISH).contains(var1.toLowerCase(Locale.ENGLISH));
             }
-        }, FilterRowStyle.FULL);
+        }, ControllerElement.FilterRowStyle.FULL);
 
     }
 

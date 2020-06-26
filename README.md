@@ -2,6 +2,7 @@
 ## What is StarLoader?
 StarLoader is a mod API, as well as a program to replace starmades .java files with your own.
 
+
 ## I want to make a mod
 See [Getting Started](https://gitlab.com/generic-username/starloader/-/wikis/home)\
 Also see: [Api Documentation](https://starloader-api.readthedocs.io/en/latest/?)
@@ -10,7 +11,7 @@ Also see: [Api Documentation](https://starloader-api.readthedocs.io/en/latest/?)
  - Clone into a new project
  - Add StarMade.jar & everything in the StarMade/libs/ folder into your dependencies
  - Mark insert/ and src/ as source directories
- - Set java compiler to target java 7, as that is what is bundled with the starmade starter
+ - Set java compiler to target java 6, as that is what is bundled with the starmade starter
  - Usual procedure to build a jar file, set InstallerFrame as the main class.
  - Build artifacts and run the jar file, do not try to run it from intellij.
  - Done!
@@ -31,6 +32,11 @@ It is located in insert/api
 
 ## I have a bug / cant get it to install!
 Ask in the starmade discords modding channel, or me directly: JakeV#5670.
+
+## StarLoader vs Star-API
+Wrapper classes where moved to the Star-API project.
+ModLoader classes, and some other helpers go here
+Helper Classes/methods are allowed here if they are not a re-define or refactor of an existing method
 
 ## Thanks
 Mega's SMModLoader for some code for the installer,

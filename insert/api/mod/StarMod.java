@@ -108,7 +108,9 @@ public class StarMod {
     public FileConfiguration getConfig(String name){
         FileConfiguration namedConfig = config.get(name);
         if(namedConfig == null){
-            config.put(name, new FileConfiguration(this, name));
+            FileConfiguration newConfig = new FileConfiguration(this, name);
+            config.put(name, newConfig);
+            return newConfig;
         }
         return namedConfig;
     }

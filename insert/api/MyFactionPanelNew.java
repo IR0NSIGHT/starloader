@@ -1,11 +1,6 @@
 package api;
 
-import org.schema.game.client.view.gui.GUIButton;
-import org.schema.game.client.view.gui.faction.newfaction.FactionNewsScrollableListNew;
 import org.schema.game.client.view.gui.faction.newfaction.FactionPanelNew;
-import org.schema.game.client.view.gui.faction.newfaction.FactionScrollableListNew;
-import org.schema.game.common.data.player.faction.Faction;
-import org.schema.schine.common.language.Lng;
 import org.schema.schine.graphicsengine.forms.font.FontLibrary;
 import org.schema.schine.graphicsengine.forms.gui.GUITextOverlay;
 import org.schema.schine.graphicsengine.forms.gui.newgui.GUIContentPane;
