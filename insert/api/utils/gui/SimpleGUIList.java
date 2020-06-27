@@ -2,11 +2,9 @@ package api.utils.gui;
 
 import api.ModPlayground;
 import org.schema.schine.graphicsengine.core.MouseEvent;
+import org.schema.schine.graphicsengine.core.Timer;
 import org.schema.schine.graphicsengine.forms.gui.*;
-import org.schema.schine.graphicsengine.forms.gui.newgui.ControllerElement;
-import org.schema.schine.graphicsengine.forms.gui.newgui.GUIListFilterText;
-import org.schema.schine.graphicsengine.forms.gui.newgui.GUITextOverlayTable;
-import org.schema.schine.graphicsengine.forms.gui.newgui.ScrollableTableList;
+import org.schema.schine.graphicsengine.forms.gui.newgui.*;
 import org.schema.schine.input.InputState;
 
 import java.util.*;
@@ -14,7 +12,6 @@ import java.util.*;
 public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
     @Override
     public void draw() {
-        ModPlayground.broadcastMessage("Draw list");
         super.draw();
     }
 
@@ -40,11 +37,11 @@ public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
 
     }
 
-    private void addDefaultFilter() {
+    public void addDefaultFilter() {
         this.addTextFilter(new GUIListFilterText<T>() {
             public boolean isOk(String filter, T listItem) {
                 //Should work atleast 50% of the time
-                return listItem.toString().toLowerCase(Locale.ENGLISH).contains(filter);
+                return listItem.toString().toLowerCase(Locale.ENGLISH).contains(filter.toLowerCase(Locale.ENGLISH));
             }
         }, ControllerElement.FilterRowStyle.FULL);
     }
@@ -78,6 +75,7 @@ public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
                 columnData.add(table);
             }
             SimpleGUIRow row = new SimpleGUIRow(this.getState(), entry, columnData.toArray(new GUIElement[0]));
+            row.expanded = new GUIElementList(this.getState());
 
             //Main row item (anchor)
             GUIAncor anchor = new GUIAncor(this.getState(), 100.0F, 30.0F);
@@ -89,7 +87,7 @@ public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
                 GUITextButton button = new GUITextButton(this.getState(), buttonWidth, 24, buttonCreator.palette, buttonCreator.text, new GUICallback() {
                     @Override
                     public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
-                        buttonCreator.callback.on(guiElement, entry, mouseEvent);
+                        buttonCreator.callback.on((SimpleGUIList<T>) guiElement, entry, mouseEvent);
                     }
 
                     @Override
@@ -112,6 +110,7 @@ public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
         guiListElements.updateDim();
     }
 
+
     private class SimpleGUIRow extends ScrollableTableList<T>.Row {
         public SimpleGUIRow(InputState inputState, T t, GUIElement... guiElements) {
             super(inputState, t, guiElements);
@@ -131,6 +130,8 @@ public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
             this.callback = callback;
         }
     }
+
+
 
 }
 

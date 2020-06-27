@@ -4,24 +4,29 @@ import api.common.GameClient;
 import api.config.BlockConfig;
 import api.listener.Listener;
 import api.listener.events.KeyPressEvent;
+import api.listener.events.gui.ControlManagerActivateEvent;
 import api.listener.events.gui.PlayerGUICreateEvent;
 import api.listener.events.gui.PlayerGUIDrawEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.network.Packet;
 import api.network.packets.ServerToClientMessage;
+import api.utils.gui.EntryCallback;
 import api.utils.gui.RowStringCreator;
 import api.utils.gui.SimpleGUIBuilder;
 import api.utils.gui.SimpleGUIList;
 import org.newdawn.slick.Color;
+import org.schema.game.client.controller.manager.AbstractControlManager;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.player.PlayerState;
+import org.schema.game.common.data.player.faction.Faction;
 import org.schema.game.server.data.GameServerState;
 import org.schema.schine.graphicsengine.core.MouseEvent;
 import org.schema.schine.graphicsengine.forms.font.FontLibrary;
 import org.schema.schine.graphicsengine.forms.gui.GUICallback;
 import org.schema.schine.graphicsengine.forms.gui.GUIElement;
+import org.schema.schine.graphicsengine.forms.gui.GUITextButton;
 import org.schema.schine.network.RegisteredClientOnServer;
 
 import java.io.IOException;
@@ -97,18 +102,28 @@ public class ModPlayground extends StarMod {
         }
     }
     private static SimpleGUIBuilder builder;
-
     @Override
     public void onEnable() {
         DebugFile.log("Loading default mod...");
 
         Packet.registerPacket(ServerToClientMessage.class);
 
+        StarLoader.registerListener(ControlManagerActivateEvent.class, new Listener<ControlManagerActivateEvent>() {
+            @Override
+            public void onEvent(ControlManagerActivateEvent event) {
+                if(!event.isActive()){
+                    builder.setVisible(false);
+                }
+            }
+        });
+
         StarLoader.registerListener(KeyPressEvent.class, new Listener<KeyPressEvent>() {
             @Override
             public void onEvent(KeyPressEvent event) {
                 if(event.getChar() == 'b'){
-                    builder.setVisible(! builder.isVisible());
+                    boolean visibility = !builder.isVisible();
+                    builder.setVisible(visibility);
+                    GameClient.getClientState().getGlobalGameControlManager().getIngameControlManager().getChatControlManager().setActive(visibility);
                 }
             }
         });
@@ -180,35 +195,43 @@ public class ModPlayground extends StarMod {
                             public boolean isOccluded() {
                                 return false;
                             }
-                        }).newTab("yeah");
-                SimpleGUIList<PlayerState> guiBuilder = new SimpleGUIList<PlayerState>(GameClient.getClientState(), 300, 300, builder.getLastTab()) {
+                        });
+                SimpleGUIList<Faction> guiBuilder = new SimpleGUIList<Faction>(GameClient.getClientState(), 300, 300, builder.getLastTab()) {
                     @Override
                     public void initColumns() {
-                        createColumn("PLAYER NAME", 8F, new RowStringCreator<PlayerState>() {
+                        createColumn("NAME", 8F, new RowStringCreator<Faction>() {
                             @Override
-                            public String update(PlayerState entry) {
+                            public String update(Faction entry) {
                                 return entry.getName();
                             }
                         });
-                        createColumn("SECTOR", 2F, new RowStringCreator<PlayerState>() {
+                        createColumn("yyyyy", 2F, new RowStringCreator<Faction>() {
                             @Override
-                            public String update(PlayerState entry) {
-                                return entry.getCurrentSector().toString();
+                            public String update(Faction entry) {
+                                return String.valueOf(entry.getIdFaction());
                             }
                         });
-                        createColumn("KILLS", 16F, new RowStringCreator<PlayerState>() {
+                        createColumn("online", 16F, new RowStringCreator<Faction>() {
                             @Override
-                            public String update(PlayerState entry) {
-                                return String.valueOf(entry.getKills());
+                            public String update(Faction entry) {
+                                return String.valueOf(entry.getOnlinePlayers().size());
                             }
                         });
                     }
 
                     @Override
-                    protected Collection<PlayerState> getElementList() {
-                        return GameClient.getConnectedPlayers();
+                    protected Collection<Faction> getElementList() {
+                        return StarLoader.getGameState().getFactionManager().getFactionMap().values();
                     }
                 };
+                guiBuilder.createEntryButton(GUITextButton.ColorPalette.NEUTRAL, "bruhhh", new EntryCallback<Faction>() {
+                    @Override
+                    public void on(GUIElement self, Faction entry, MouseEvent event) {
+
+                    }
+                });
+                guiBuilder.addDefaultFilter();
+
                 builder.addSimpleGUIList(guiBuilder);
             }
         });

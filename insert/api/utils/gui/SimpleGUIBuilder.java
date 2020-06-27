@@ -68,13 +68,22 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
         getCurrentLine().setLineHeight(height);
         return this;
     }
+    public SimpleGUIBuilder setCurrentLineScalable(){
+        getCurrentLine().setLineHeight(-1);
+        return this;
+    }
 
     private SimpleGUIBuilder(InputState var1) {
         super(var1);
     }
     public void addSimpleGUIList(SimpleGUIList<?> list){
         newLine();
+        newLine();
+//        GUIAncor anchor = anchor(300);
+        list.onInit();
+        getLastTab().getContent(0).attach(list);
         getCurrentLine().getElements().add(list);
+        setCurrentLineHeight(400);
     }
     public SimpleGUIBuilder bigTitle(final String name, Color slickColor, UnicodeFont font){
         GUITextOverlay t = new GUITextOverlay(100, 100, this.getState());
@@ -108,6 +117,12 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
         getCurrentLine().getElements().add(t);
         return this;
     }
+    private GUIAncor anchor(int height){
+        GUIAncor anchor = new GUIAncor(this.getState(), 100,100);
+        anchor.getPos().set(0,0,0);
+        getCurrentLine().getElements().add(anchor);
+        return anchor;
+    }
     public SimpleGUIBuilder button(final String name, GUICallback fct){
         //Get list of lines from the current tab
         LineContents currentLine = getCurrentLine();
@@ -131,7 +146,6 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
             }
         });
         currentLine.elements.add(e);
-//        getCurrentTab().setContent(0, );
         return this;
     }
     public SimpleGUIBuilder padding(){
@@ -161,10 +175,12 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
         if (this.init && visible) {
             this.mainPanel.draw();
             update(null);
-            ArrayList<LineContents> lines = lineElements.get(getCurrentTab());
+            ArrayList<LineContents> lines = lineElements.get(getSelectedTabElement());
             for (LineContents line : lines) {
                 for (GUIElement guiElement : line.elements) {
-                    guiElement.draw();
+                    if(!(guiElement instanceof SimpleGUIList)){
+                        guiElement.draw();
+                    }
                 }
             }
         }
@@ -204,14 +220,14 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
         currentLine = 0;
         return this;
     }
-    private GUIContentPane getCurrentTab(){
+    private GUIContentPane getSelectedTabElement(){
         return this.mainPanel.getTabs().get(this.mainPanel.getSelectedTab());
     }
 
 
     public void update(Timer var1) {
         if (this.init && visible) {
-            GUIContentPane tab = this.getCurrentTab();
+            GUIContentPane tab = this.getSelectedTabElement();
             float frameWidth = mainPanel.getInnerWidth();
             float frameHeight = tab.getHeight();
             ArrayList<LineContents> lines = lineElements.get(tab);
@@ -221,22 +237,39 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
                 int xIndex = 0;
                 int elementsOnLine = line.getElements().size();
                 float elementLength = ((frameWidth-26) / elementsOnLine);
-                lineHeightProgress += line.getLineHeight();
+
                 Vector3f originPos = new Vector3f(mainPanel.getPos().x+41, mainPanel.getPos().y+70,0);
                 for (GUIElement guiElement : line.getElements()) {
                     //Update position (and size if needed)
-
-                    guiElement.getPos().set(
-                            originPos.x + (elementLength *xIndex),
-                            originPos.y + lineHeightProgress,
-                            0);
-                    if(guiElement instanceof GUIResizableElement){
-                        ((GUIResizableElement) guiElement).setWidth(elementLength);
-                        ((GUIResizableElement) guiElement).setHeight(line.getLineHeight());
+                    //Handle lists differently because they are wack
+                    int elementHeight = line.getLineHeight();
+                    if(elementHeight == -1){
+                        //Scale to bottom
+                        elementHeight =
                     }
-
+                    if(guiElement instanceof SimpleGUIList){
+                        guiElement.getPos().set(
+                                (elementLength * xIndex),
+                                 lineHeightProgress,
+                                0);
+                        SimpleGUIList<?> list = ((SimpleGUIList<?>) guiElement);
+                        list.getScrollPanel().dependent = null;//Breaks custom line elements
+                        list.getScrollPanel().setWidth(elementLength);
+                        list.getScrollPanel().setHeight(elementHeight);
+                    }else {
+                        guiElement.getPos().set(
+                                originPos.x + (elementLength * xIndex),
+                                originPos.y + lineHeightProgress,
+                                0);
+                        if (guiElement instanceof GUIResizableElement) {
+                            ((GUIResizableElement) guiElement).setWidth(elementLength);
+                            ((GUIResizableElement) guiElement).setHeight(elementHeight);
+                        }
+                    }
                     xIndex++;
                 }
+                //Update y position for the next line
+                lineHeightProgress += line.getLineHeight();
                 lineIndex++;
             }
         }
@@ -259,7 +292,8 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
     }
 
     public boolean isActive() {
-        return this.getState().getController().getPlayerInputs().isEmpty();
+//        return this.getState().getController().getPlayerInputs().isEmpty();
+        return isVisible();
     }
 
 
