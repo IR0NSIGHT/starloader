@@ -16,10 +16,8 @@ import api.utils.gui.RowStringCreator;
 import api.utils.gui.SimpleGUIBuilder;
 import api.utils.gui.SimpleGUIList;
 import org.newdawn.slick.Color;
-import org.schema.game.client.controller.manager.AbstractControlManager;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
-import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.common.data.player.faction.Faction;
 import org.schema.game.server.data.GameServerState;
 import org.schema.schine.graphicsengine.core.MouseEvent;
@@ -133,7 +131,7 @@ public class ModPlayground extends StarMod {
             public void onEvent(PlayerGUICreateEvent event) {
 
                 builder = SimpleGUIBuilder.newBuilder("Tab1")
-                        .bigTitle("BIG TITLEEEEEEEEEEEEEEE", Color.blue, FontLibrary.getBoldArial24())
+                        .fixedText("BR uh", Color.white, FontLibrary.getBlenderProMedium20())
                         .newLine()
                         .button("yo", new GUICallback() {
                             @Override
@@ -165,7 +163,8 @@ public class ModPlayground extends StarMod {
                             public boolean isOccluded() {
                                 return false;
                             }
-                        }).fixedText("yes", Color.blue, FontLibrary.getBoldArial24()).setCurrentLineHeight(200).newLine().button("yo", new GUICallback() {
+                        }).fixedText("yes", Color.blue, FontLibrary.getBoldArial24())
+                        .newLine().button("yo", new GUICallback() {
                             @Override
                             public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
 
@@ -205,7 +204,7 @@ public class ModPlayground extends StarMod {
                                 return entry.getName();
                             }
                         });
-                        createColumn("yyyyy", 2F, new RowStringCreator<Faction>() {
+                        createColumn("yyyyy", 6F, new RowStringCreator<Faction>() {
                             @Override
                             public String update(Faction entry) {
                                 return String.valueOf(entry.getIdFaction());
@@ -233,6 +232,7 @@ public class ModPlayground extends StarMod {
                 guiBuilder.addDefaultFilter();
 
                 builder.addSimpleGUIList(guiBuilder);
+                builder.scaleCurrentLine();
             }
         });
         StarLoader.registerListener(PlayerGUIDrawEvent.class, new Listener<PlayerGUIDrawEvent>() {

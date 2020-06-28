@@ -68,7 +68,7 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
         getCurrentLine().setLineHeight(height);
         return this;
     }
-    public SimpleGUIBuilder setCurrentLineScalable(){
+    public SimpleGUIBuilder scaleCurrentLine(){
         getCurrentLine().setLineHeight(-1);
         return this;
     }
@@ -83,20 +83,7 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
         list.onInit();
         getLastTab().getContent(0).attach(list);
         getCurrentLine().getElements().add(list);
-        setCurrentLineHeight(400);
-    }
-    public SimpleGUIBuilder bigTitle(final String name, Color slickColor, UnicodeFont font){
-        GUITextOverlay t = new GUITextOverlay(100, 100, this.getState());
-        t.setTextSimple(new Object(){
-            @Override
-            public String toString() {
-                return name;
-            }
-        });
-        t.setColor(slickColor);
-        t.setFont(font);
-        getCurrentLine().getElements().add(t);
-        return this;
+        setCurrentLineHeight(250);
     }
     public SimpleGUIBuilder dynamicText(Object stringFunction){
         GUITextOverlay t = new GUITextOverlay(100, 100, this.getState());
@@ -124,9 +111,12 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
         return anchor;
     }
     public SimpleGUIBuilder button(final String name, GUICallback fct){
+        return button(name, GUIHorizontalArea.HButtonType.BUTTON_BLUE_MEDIUM, fct);
+    }
+    public SimpleGUIBuilder button(final String name, GUIHorizontalArea.HButtonType type, GUICallback fct){
         //Get list of lines from the current tab
         LineContents currentLine = getCurrentLine();
-        GUIHorizontalButton e = new GUIHorizontalButton(this.getState(), GUIHorizontalArea.HButtonType.BUTTON_BLUE_MEDIUM, new Object() {
+        GUIHorizontalButton e = new GUIHorizontalButton(this.getState(), type, new Object() {
             final String nameCopy = name;
 
             @Override
@@ -228,15 +218,15 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
     public void update(Timer var1) {
         if (this.init && visible) {
             GUIContentPane tab = this.getSelectedTabElement();
-            float frameWidth = mainPanel.getInnerWidth();
-            float frameHeight = tab.getHeight();
+            float frameWidth = mainPanel.getInnerWidth() - 26;
+            float frameHeight = mainPanel.getInnerHeigth() - 70;
             ArrayList<LineContents> lines = lineElements.get(tab);
             int lineIndex = 0;
             int lineHeightProgress = 0;
             for (LineContents line : lines) {
                 int xIndex = 0;
                 int elementsOnLine = line.getElements().size();
-                float elementLength = ((frameWidth-26) / elementsOnLine);
+                float elementLength = ((frameWidth) / elementsOnLine);
 
                 Vector3f originPos = new Vector3f(mainPanel.getPos().x+41, mainPanel.getPos().y+70,0);
                 for (GUIElement guiElement : line.getElements()) {
@@ -245,7 +235,7 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
                     int elementHeight = line.getLineHeight();
                     if(elementHeight == -1){
                         //Scale to bottom
-                        elementHeight =
+                        elementHeight = (int) (frameHeight-lineHeightProgress);
                     }
                     if(guiElement instanceof SimpleGUIList){
                         guiElement.getPos().set(

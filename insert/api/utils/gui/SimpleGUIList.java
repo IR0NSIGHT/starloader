@@ -57,6 +57,9 @@ public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
     // GUITextOverlayTable -> these are put into the Row, they must be in order and of the same length as the columns
     //      Row.expanded (type GUIElementList) this is when the player clicks on it, and it expands
     // Expanded Row Items -> Attached to a GUIAnchor, then the GUIAnchor is put into an GUIElementList and that GUIElementList is added to the Row.expanded
+    protected void onEntryButtonCreate(GUIAncor anchor){
+
+    }
     @Override
     public void updateListEntries(GUIElementList guiListElements, Set<T> entries) {
         int columnSize = columns.size();
@@ -87,7 +90,7 @@ public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
                 GUITextButton button = new GUITextButton(this.getState(), buttonWidth, 24, buttonCreator.palette, buttonCreator.text, new GUICallback() {
                     @Override
                     public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
-                        buttonCreator.callback.on((SimpleGUIList<T>) guiElement, entry, mouseEvent);
+                        buttonCreator.callback.on(guiElement, entry, mouseEvent);
                     }
 
                     @Override
@@ -99,6 +102,8 @@ public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
                 button.setPos((buttonWidth+20) * buttonsAdded, 0, 0);
                 buttonsAdded++;
             }
+            //Expanded row special items
+            onEntryButtonCreate(anchor);
 
 
             //Create expanded row
