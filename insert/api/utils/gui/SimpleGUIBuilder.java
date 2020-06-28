@@ -85,7 +85,7 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
         getCurrentLine().getElements().add(list);
         setCurrentLineHeight(250);
     }
-    public SimpleGUIBuilder dynamicText(Object stringFunction){
+    public SimpleGUIBuilder dynamicText(Color slickColor, UnicodeFont font, Object stringFunction){
         GUITextOverlay t = new GUITextOverlay(100, 100, this.getState());
         t.setTextSimple(stringFunction);
         getCurrentLine().getElements().add(t);
@@ -142,7 +142,7 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
         new GUITile(this.getState(), 10, 10, new Object(){
             @Override
             public String toString() {
-                return "bruh";
+                return "";
             }
         });
         return this;

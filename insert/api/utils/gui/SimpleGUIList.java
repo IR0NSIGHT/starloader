@@ -1,8 +1,6 @@
 package api.utils.gui;
 
-import api.ModPlayground;
 import org.schema.schine.graphicsengine.core.MouseEvent;
-import org.schema.schine.graphicsengine.core.Timer;
 import org.schema.schine.graphicsengine.forms.gui.*;
 import org.schema.schine.graphicsengine.forms.gui.newgui.*;
 import org.schema.schine.input.InputState;
@@ -15,19 +13,19 @@ public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
         super.draw();
     }
 
-    public SimpleGUIList(InputState inputState, float v, float v1, GUIElement guiElement) {
-        super(inputState, v, v1, guiElement);
+    public SimpleGUIList(InputState inputState, SimpleGUIBuilder builder) {
+        super(inputState, 300, 300, builder.getLastTab());
     }
 
     private final ArrayList<RowStringCreator<T>> orderedEntryCreators = new ArrayList<RowStringCreator<T>>();
 
-    public void createColumn(String name, float weight, Comparator<T> comparator, RowStringCreator<T> creator) {
+    public void addSimpleColumn(String name, float weight, Comparator<T> comparator, RowStringCreator<T> creator) {
         this.addColumn(name, weight, comparator);
         orderedEntryCreators.add(creator);
     }
 
-    public void createColumn(String name, float weight, RowStringCreator<T> creator) {
-        createColumn(name, weight, new Comparator<T>() {
+    public void addSimpleColumn(String name, float weight, RowStringCreator<T> creator) {
+        addSimpleColumn(name, weight, new Comparator<T>() {
             //Assume they are strings and sort them in alphabetical order, this should work for 99% of all cases
             @Override
             public int compare(T t, T t1) {
@@ -57,9 +55,18 @@ public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
     // GUITextOverlayTable -> these are put into the Row, they must be in order and of the same length as the columns
     //      Row.expanded (type GUIElementList) this is when the player clicks on it, and it expands
     // Expanded Row Items -> Attached to a GUIAnchor, then the GUIAnchor is put into an GUIElementList and that GUIElementList is added to the Row.expanded
-    protected void onEntryButtonCreate(GUIAncor anchor){
+
+
+    //Called when expanded lists are created, add GUIElements to the GUIAnchor to have them appear on all of them.
+    protected void onExpandedListCreate(GUIAncor anchor){
 
     }
+
+    //Called when a row is clicked
+    protected void onRowClick(boolean expanded, T elem){
+
+    }
+
     @Override
     public void updateListEntries(GUIElementList guiListElements, Set<T> entries) {
         int columnSize = columns.size();
@@ -103,11 +110,13 @@ public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
                 buttonsAdded++;
             }
             //Expanded row special items
-            onEntryButtonCreate(anchor);
+            onExpandedListCreate(anchor);
 
 
             //Create expanded row
+
             row.expanded.add(new GUIListElement(anchor, anchor, this.getState()));
+            row.setAllwaysOneSelected(true);
             row.onInit();
             guiListElements.addWithoutUpdate(row);
 
@@ -116,10 +125,25 @@ public abstract class SimpleGUIList<T> extends ScrollableTableList<T> {
     }
 
 
+
     private class SimpleGUIRow extends ScrollableTableList<T>.Row {
         public SimpleGUIRow(InputState inputState, T t, GUIElement... guiElements) {
             super(inputState, t, guiElements);
             this.highlightSelect = true;
+        }
+
+        @Override
+        public void extended() {
+            super.extended();
+            //this.f = element of type t
+            onRowClick(true, this.f);
+        }
+
+        @Override
+        public void unexpend() {
+            super.unexpend();
+            //this.f = element of type t
+            onRowClick(false, this.f);
         }
     }
 

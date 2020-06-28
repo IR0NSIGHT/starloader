@@ -195,22 +195,22 @@ public class ModPlayground extends StarMod {
                                 return false;
                             }
                         });
-                SimpleGUIList<Faction> guiBuilder = new SimpleGUIList<Faction>(GameClient.getClientState(), 300, 300, builder.getLastTab()) {
+                SimpleGUIList<Faction> guiBuilder = new SimpleGUIList<Faction>(GameClient.getClientState(), builder) {
                     @Override
                     public void initColumns() {
-                        createColumn("NAME", 8F, new RowStringCreator<Faction>() {
+                        addSimpleColumn("NAME", 8F, new RowStringCreator<Faction>() {
                             @Override
                             public String update(Faction entry) {
                                 return entry.getName();
                             }
                         });
-                        createColumn("yyyyy", 6F, new RowStringCreator<Faction>() {
+                        addSimpleColumn("yyyyy", 6F, new RowStringCreator<Faction>() {
                             @Override
                             public String update(Faction entry) {
                                 return String.valueOf(entry.getIdFaction());
                             }
                         });
-                        createColumn("online", 16F, new RowStringCreator<Faction>() {
+                        addSimpleColumn("online", 16F, new RowStringCreator<Faction>() {
                             @Override
                             public String update(Faction entry) {
                                 return String.valueOf(entry.getOnlinePlayers().size());

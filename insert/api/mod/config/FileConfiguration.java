@@ -4,11 +4,9 @@ import api.DebugFile;
 import api.mod.StarMod;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
-
+//TODO: Switch of to TOML4J
 public class FileConfiguration {
     private StarMod mod;
     private HashMap<String, String> values = new HashMap<String, String>();
@@ -67,6 +65,23 @@ public class FileConfiguration {
         }
         values.put(path, value.toString());
     }
+    //-- todo remove and migrate to TOML
+    public void setList(String path, ArrayList<String> list){
+        StringBuilder sb = new StringBuilder();
+        for (String s : list) {
+            sb.append(s).append(",");
+        }
+        sb.deleteCharAt(sb.length()-1);
+        set(path, sb);
+    }
+    public ArrayList<String> getList(String path){
+        ArrayList<String> r = new ArrayList<>();
+        String string = getString(path);
+        if(string == null) return r;
+        r.addAll(Arrays.asList(string.split(",")));
+        return r;
+    }
+    //--
     public void saveDefault(String... def){
         if(values.isEmpty()) {
             for (String s : def) {
