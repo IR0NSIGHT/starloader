@@ -7,6 +7,7 @@ import org.schema.game.common.data.world.RemoteSector;
 import javax.vecmath.Vector3f;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class PacketReadBuffer {
     private DataInputStream in;
@@ -30,6 +31,9 @@ public class PacketReadBuffer {
     public float readFloat() throws IOException {
         return in.readFloat();
     }
+    public long readLong() throws IOException {
+        return in.readLong();
+    }
 
     public byte readByte() throws IOException {
         return in.readByte();
@@ -47,6 +51,22 @@ public class PacketReadBuffer {
     }
     public Vector3f readVector3f() throws IOException {
         return new Vector3f(readFloat(), readFloat(), readFloat());
+    }
+    public ArrayList<String> readStringList() throws IOException {
+        int size = readInt();
+        ArrayList<String> r = new ArrayList<String>(size);
+        for (int i = 0; i < size; i++) {
+            r.add(readString());
+        }
+        return r;
+    }
+    public ArrayList<Long> readLongList() throws IOException {
+        int size = readInt();
+        ArrayList<Long> r = new ArrayList<Long>(size);
+        for (int i = 0; i < size; i++) {
+            r.add(readLong());
+        }
+        return r;
     }
 
 }
