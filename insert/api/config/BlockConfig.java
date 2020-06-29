@@ -1,16 +1,10 @@
 package api.config;
 
 import api.DebugFile;
-import api.element.block.Blocks;
-import api.element.block.FactoryType;
-import org.schema.game.client.view.gui.weapon.WeaponRowElement;
-import org.schema.game.common.controller.elements.beam.damageBeam.DamageBeamUnit;
-import org.schema.game.common.controller.elements.weapon.WeaponCollectionManager;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.element.FactoryResource;
-import org.schema.game.common.data.element.annotation.ElemType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -26,18 +20,28 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class BlockConfig {
-    public static void addRecipe(ElementInformation info, FactoryType type, int bakeTime, FactoryResource... resources){
+    public static void addRecipe(ElementInformation info, int type, int bakeTime, FactoryResource... resources){
         for (FactoryResource resource : resources){
             info.consistence.add(resource);
             info.cubatomConsistence.add(resource);
         }
         info.factoryBakeTime = bakeTime;
         info.blockResourceType = 2;
-        info.producedInFactory = type.getId();
+        info.producedInFactory = type;
     }
     public static void clearRecipes(ElementInformation element){
         element.cubatomConsistence.clear();
         element.consistence.clear();
+    }
+    public static void setBasicInfo(ElementInformation info, String description, int price, float mass, boolean placeable, boolean activatable, int buildIcoNum){
+        info.description = description;
+        info.price = price;
+        info.mass = mass;
+        info.placable = placeable;
+        info.setMaxHitPointsE(1);
+        info.setCanActivate(activatable);
+        info.setBuildIconNum(buildIcoNum);
+
     }
     public static ElementInformation newElement(String name, short... ids){
         short id = (short) ElementKeyMap.insertIntoProperties(name);
@@ -96,48 +100,6 @@ public class BlockConfig {
             ElementKeyMap.addInformationToExisting(entry);
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
-        }
-    }
-    public void loadXML(){
-        //ElementKeyMap.reinitializeData(new FileExt("loader"+File.separator+"CustomBlockConfig.xml"), false, null, null);
-    }
-    @Deprecated
-    public File writeXML() {
-        try {
-            DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
-            Document document = documentBuilder.newDocument();
-            Element root = document.createElement("Config");
-            Element elem = document.createElement("Element");
-            Element gen = document.createElement("General");
-            document.appendChild(root);
-            root.appendChild(elem);
-            elem.appendChild(gen);
-
-
-            for (ElementInformation element : elements) {
-                element.appendXML(document, gen);
-            }
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-
-            transformer.setOutputProperty("omit-xml-declaration", "yes");
-            transformer.setOutputProperty("indent", "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-
-            DOMSource domSource = new DOMSource(document);
-            new File("loader").mkdir();
-            File f = new File("loader/CustomBlockConfig.xml");
-            StreamResult streamResult = new StreamResult(f);
-
-            transformer.transform(domSource, streamResult);
-
-            System.out.println("Done creating XML File");
-
-            return f;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
     }
 }

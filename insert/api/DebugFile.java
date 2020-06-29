@@ -1,6 +1,7 @@
 package api;
 
 import api.mod.StarMod;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.schema.game.common.Starter;
 import org.schema.game.common.data.player.PlayerState;
 
@@ -17,16 +18,20 @@ public class DebugFile {
     }
     public static void logError(Exception e, StarMod mod){
         try {
-
             FileWriter writer = getWriter();
             if(mod == null){
                 writer.append("[StarLoader] [Stacktrace]");
             }else{
-                writer.append("[" + mod.modName + "] [Stacktrace]");
+                writer.append("[").append(mod.modName).append("] [Stacktrace]");
             }
-            writer.append(e.getLocalizedMessage()).append("\n");
+            System.err.println("[StarLoader Mod Error]");
+            String excMessage = ExceptionUtils.getMessage(e);
+            writer.append(excMessage).append("\n");
+            System.err.println(excMessage);
+
             for ( StackTraceElement ste : e.getStackTrace()){
                 writer.append(ste.toString()).append("\n");
+                System.err.println(ste.toString());
             }
             writer.flush();
         } catch (IOException e2) {
@@ -43,6 +48,8 @@ public class DebugFile {
                 writer.append("[").append(mod.modName).append("] ");
             }
             writer.append(s).append("\n");
+            //Also write to logs/starmade0.log
+            System.err.println("[DebugFile] [StarLoader]" + s);
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();

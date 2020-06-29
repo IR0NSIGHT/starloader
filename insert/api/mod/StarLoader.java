@@ -3,11 +3,10 @@ package api.mod;
 import api.DebugFile;
 import api.listener.Listener;
 import api.listener.events.Event;
-import api.main.GameClient;
-import api.main.GameServer;
-import api.server.Server;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.schema.game.client.data.GameClientState;
 import org.schema.game.common.data.SendableGameState;
+import org.schema.game.server.data.GameServerState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,10 +21,10 @@ public class StarLoader {
     }
 
     public static SendableGameState getGameState() {
-        if (GameServer.getServerState() != null) {
-            return GameServer.getServerState().getGameState();
-        } else if (GameClient.getClientState() != null) {
-            return GameClient.getClientState().getGameState();
+        if (GameServerState.instance != null) {
+            return GameServerState.instance.getGameState();
+        } else if (GameClientState.instance != null) {
+            return GameClientState.instance.getGameState();
         }
         //Probably in the main menu or something
         return null;
@@ -39,6 +38,7 @@ public class StarLoader {
         DebugFile.log("== Enabling Mod " + mod.getInfo().toString());
         mod.onEnable();
         mod.flagEnabled(true);
+        DebugFile.log("== Mod " + mod.getInfo().toString() + " Enabled");
     }
 
     public static void dumpModInfos() {
@@ -47,11 +47,11 @@ public class StarLoader {
         }
     }
 
-    public static void registerListener(Class<? extends Event> clazz, Listener l) {
+    public static <T extends Event> void registerListener(Class<T> clazz, Listener<T> l) {
         registerListener(clazz, l, null);
     }
 
-    public static void registerListener(Class<? extends Event> clazz, Listener l, StarMod mod) {
+    public static <T extends Event> void registerListener(Class<T> clazz, Listener<T> l, StarMod mod) {
 
         DebugFile.log("Registering listener " + clazz.getName());
         List<Listener> listeners = StarLoader.getListeners(clazz);
@@ -63,10 +63,11 @@ public class StarLoader {
         } else {
             listeners.add(l);
         }
+        DebugFile.log(" = Registered Listener. ");
     }
 
     //fire event methods:
-    public static void fireEvent(Class<? extends Event> clazz, Event ev, boolean isServer) {
+    public static <T> void fireEvent(Class<? extends Event> clazz, Event ev, boolean isServer) {
         //DebugFile.log("Firing Event: " +clazz.getName());
         ev.server = isServer;
         List<Listener> lstners = getListeners(clazz);
@@ -78,9 +79,22 @@ public class StarLoader {
             } catch (Exception e) {
                 DebugFile.log("Exception during event: " + clazz.getName());
                 DebugFile.logError(e, null);
-                if (Server.isInitialized()) {
-                    Server.broadcastMessage("An error occurred during event: " + clazz);
-                }
+
+            }
+        }
+    }
+    public static <T> void fireEvent(Event ev, boolean isServer) {
+        //DebugFile.log("Firing Event: " +clazz.getName());
+        ev.server = isServer;
+        List<Listener> lstners = getListeners(ev.getClass());
+        if (lstners == null) // Avoid iterating on null Event listeners
+            return ;
+        for (Listener listener : lstners) {
+            try {
+                listener.onEvent(ev);
+            } catch (Exception e) {
+                DebugFile.log("Exception during event: " + ev.getClass().getSimpleName());
+                DebugFile.logError(e, null);
 
             }
         }

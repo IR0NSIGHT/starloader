@@ -1,3 +1,8 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package org.schema.game.client.view.gui;
 
 import java.io.File;
@@ -5,7 +10,8 @@ import java.io.IOException;
 import javax.vecmath.Vector3f;
 import javax.xml.parsers.ParserConfigurationException;
 
-import api.listener.events.gui.ControlManagerActivateEvent;
+import api.listener.events.gui.PlayerGUICreateEvent;
+import api.listener.events.gui.PlayerGUIDrawEvent;
 import api.mod.StarLoader;
 import org.schema.common.FastMath;
 import org.schema.common.util.StringTools;
@@ -112,8 +118,6 @@ public class PlayerPanel extends GUIElement {
 
     private void activateAIManager() {
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().aiConfigurationAction((SegmentPiece)null);
-
-        StarLoader.fireEvent(ControlManagerActivateEvent.class, new ControlManagerActivateEvent(this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getAiConfigurationManager(), aiPanelNew), false);
     }
 
     private void activateCatalogManager() {
@@ -125,8 +129,6 @@ public class PlayerPanel extends GUIElement {
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getWeaponControlManager().setActive(false);
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getFactionControlManager().setActive(false);
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getCatalogControlManager().setActive(true);
-
-        StarLoader.fireEvent(ControlManagerActivateEvent.class, new ControlManagerActivateEvent(this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getCatalogControlManager(), catalogPanelNew), false);
     }
 
     private void activateStructureControllerManager() {
@@ -138,8 +140,6 @@ public class PlayerPanel extends GUIElement {
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getFactionControlManager().setActive(false);
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getCatalogControlManager().setActive(false);
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getStructureControlManager().setActive(true);
-
-        StarLoader.fireEvent(ControlManagerActivateEvent.class, new ControlManagerActivateEvent(this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getStructureControlManager(), structurePanelNew), false);
     }
 
     private void activateFactionManager() {
@@ -151,14 +151,10 @@ public class PlayerPanel extends GUIElement {
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getWeaponControlManager().setActive(false);
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getCatalogControlManager().setActive(false);
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getFactionControlManager().setActive(true);
-
-        StarLoader.fireEvent(ControlManagerActivateEvent.class, new ControlManagerActivateEvent(this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getFactionControlManager(), factionPanelNew), false);
     }
 
     private void activateInventory() {
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().inventoryAction((Inventory)null);
-
-        StarLoader.fireEvent(ControlManagerActivateEvent.class, new ControlManagerActivateEvent(this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getInventoryControlManager(), inventoryPanelNew), false);
     }
 
     private void activateNavigation() {
@@ -170,8 +166,6 @@ public class PlayerPanel extends GUIElement {
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getFactionControlManager().setActive(false);
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getCatalogControlManager().setActive(false);
         this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getNavigationControlManager().setActive(true);
-
-        StarLoader.fireEvent(ControlManagerActivateEvent.class, new ControlManagerActivateEvent(this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getNavigationControlManager(), navigationPanelNew), false);
     }
 
     private void activateShop() {
@@ -184,8 +178,6 @@ public class PlayerPanel extends GUIElement {
             this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getFactionControlManager().setActive(false);
             this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getCatalogControlManager().setActive(false);
             this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getShopControlManager().setActive(true);
-
-            StarLoader.fireEvent(ControlManagerActivateEvent.class, new ControlManagerActivateEvent(this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getShopControlManager(), shopPanelNew), false);
         } else {
             this.getState().getController().popupAlertTextMessage(Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_PLAYERPANEL_0, 0.0F);
         }
@@ -201,8 +193,6 @@ public class PlayerPanel extends GUIElement {
             this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getFactionControlManager().setActive(false);
             this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getCatalogControlManager().setActive(false);
             this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getWeaponControlManager().setActive(true);
-
-            StarLoader.fireEvent(ControlManagerActivateEvent.class, new ControlManagerActivateEvent(this.getState().getGlobalGameControlManager().getIngameControlManager().getPlayerGameControlManager().getWeaponControlManager(), weaponManagerPanelNew), false);
         } else {
             this.getState().getController().popupAlertTextMessage(Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_PLAYERPANEL_1, 0.0F);
         }
@@ -389,6 +379,10 @@ public class PlayerPanel extends GUIElement {
         } else {
             GUIResizableGrabbableWindow.topHeightSubtract = 0;
         }
+        //INSERTED CODE
+        PlayerGUIDrawEvent event = new PlayerGUIDrawEvent(this);
+        StarLoader.fireEvent(event, false);
+        ///
 
         this.drawChat();
         GUIElement.disableOrthogonal();
@@ -518,6 +512,12 @@ public class PlayerPanel extends GUIElement {
         this.mapPanel.onInit();
         this.advancedBuildMode.onInit();
         this.advancedBuildModeContainer.onInit();
+
+        //INSERTED CODE
+        PlayerGUICreateEvent event = new PlayerGUICreateEvent(this);
+        StarLoader.fireEvent(event, false);
+        ///
+
         this.doOrientation();
     }
 

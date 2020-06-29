@@ -5,8 +5,7 @@
 
 package org.schema.game.common.controller.elements.activation;
 
-import api.element.block.Blocks;
-import api.listener.events.block.BlockActivateEvent;
+import api.listener.events.block.SegmentPieceActivateEvent;
 import api.mod.StarLoader;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import java.util.Iterator;
@@ -24,7 +23,6 @@ import org.schema.game.common.controller.elements.BlockMetaDataDummy;
 import org.schema.game.common.controller.elements.ControlBlockElementCollectionManager;
 import org.schema.game.common.data.SegmentPiece;
 import org.schema.game.common.data.element.ElementCollection;
-import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.element.meta.weapon.MarkerBeam;
 import org.schema.game.common.data.player.ControllerStateInterface;
@@ -111,8 +109,8 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
 
                 if (ElementKeyMap.isValidType(piece.getType())) {
                     //INSERTED CODE @129
-                    BlockActivateEvent ev = new BlockActivateEvent(man, piece, this);
-                    StarLoader.fireEvent(BlockActivateEvent.class, ev, this.isOnServer());
+                    SegmentPieceActivateEvent ev = new SegmentPieceActivateEvent(man, piece, this);
+                    StarLoader.fireEvent(SegmentPieceActivateEvent.class, ev, this.isOnServer());
                     if(ev.isCanceled()){
                         return 0;
                     }
@@ -122,7 +120,7 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
                     int var9;
                     int var10;
 
-                    if (piece.getType() == Blocks.AND_SIGNAL.getId()) {
+                    if (piece.getType() == 408) {
                         var6 = piece.getAbsoluteIndex();
 
                         for(var10 = 0; var10 < man.getCollectionManagers().size(); ++var10) {
@@ -135,10 +133,10 @@ public class ActivationCollectionManager extends ControlBlockElementCollectionMa
                                 }
                             }
                         }
-                    } else if (piece.getType() != Blocks.OR_SIGNAL.getId()) {
-                        if (piece.getType() == Blocks.NOT_SIGNAL.getId()) {
+                    } else if (piece.getType() != 409) {
+                        if (piece.getType() == 410) {
                             var4 = !var4;
-                        } else if (piece.getType() == Blocks.RANDOMIZER.getId()) {
+                        } else if (piece.getType() == 979) {
                             var4 = Math.random() > 0.5D;
                         } else if (!ElementKeyMap.isButton(piece.getType())) {
                             if (piece.getType() == 667) {

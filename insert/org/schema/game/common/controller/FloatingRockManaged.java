@@ -5,7 +5,7 @@
 
 package org.schema.game.common.controller;
 
-import api.listener.events.block.BlockSalvageEvent;
+import api.listener.events.block.SegmentPieceSalvageEvent;
 import api.mod.StarLoader;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.longs.LongIterator;
@@ -173,9 +173,9 @@ public class FloatingRockManaged extends FloatingRock implements PlayerControlla
             //INSERTED CODE @208
             //Note: this is when an ASTEROID mines something,
             //ship mining asteroid is in ManagedUsableSegmentController
-            BlockSalvageEvent event = new BlockSalvageEvent(beam,
+            SegmentPieceSalvageEvent event = new SegmentPieceSalvageEvent(beam,
                     beamHits, to, hitPiece, updatedSegments);
-            StarLoader.fireEvent(BlockSalvageEvent.class, event, this.isOnServer());
+            StarLoader.fireEvent(SegmentPieceSalvageEvent.class, event, this.isOnServer());
             if(event.isCanceled()){
                 return beamHits;
             }

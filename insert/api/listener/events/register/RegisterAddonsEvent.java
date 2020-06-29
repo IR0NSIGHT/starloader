@@ -1,8 +1,8 @@
 package api.listener.events.register;
 
 import api.listener.events.Event;
-import api.systems.addons.custom.CustomAddOn;
 import org.schema.game.common.controller.elements.ManagerContainer;
+import org.schema.game.common.controller.elements.RecharchableSingleModule;
 
 import java.util.ArrayList;
 
@@ -15,8 +15,8 @@ public class RegisterAddonsEvent extends Event {
         return container;
     }
 
-    public ArrayList<CustomAddOn> addons = new ArrayList<CustomAddOn>();
-    public void addAddOn(CustomAddOn addOn){
+    public ArrayList<RecharchableSingleModule> addons = new ArrayList<RecharchableSingleModule>();
+    public void addModule(RecharchableSingleModule addOn){
         addons.add(addOn);
     }
 }

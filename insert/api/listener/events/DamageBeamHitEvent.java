@@ -1,6 +1,5 @@
 package api.listener.events;
 
-import api.systems.weapons.BeamEntity;
 import org.schema.game.common.controller.BeamHandlerContainer;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.damage.HitReceiverType;
@@ -15,7 +14,7 @@ import java.util.Collection;
 public class DamageBeamHitEvent extends Event{
     private final DamageBeamHitHandlerSegmentController inst;
     private final SegmentController hitSegment;
-    BeamEntity beamEntity;
+    private BeamState beam;
     private final int damage;
     private final BeamHandlerContainer<?> unknownVar1;
     private final SegmentPiece unknownVar2;
@@ -27,7 +26,7 @@ public class DamageBeamHitEvent extends Event{
 
         this.inst = inst;
         this.hitSegment = hitSegment;
-        this.beamEntity = new BeamEntity(beam);
+        this.beam = beam;
         this.damage = damage;
         this.unknownVar1 = unknownVar1;
         this.unknownVar2 = unknownVar2;
@@ -35,5 +34,41 @@ public class DamageBeamHitEvent extends Event{
         this.hitPos = hitPos;
         this.updatedSegments = updatedSegments;
         hitSegment.getEffectContainer().get(HitReceiverType.BLOCK);
+    }
+
+    public DamageBeamHitHandlerSegmentController getInst() {
+        return inst;
+    }
+
+    public SegmentController getHitSegment() {
+        return hitSegment;
+    }
+
+    public BeamState getBeam() {
+        return beam;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public BeamHandlerContainer<?> getUnknownVar1() {
+        return unknownVar1;
+    }
+
+    public SegmentPiece getUnknownVar2() {
+        return unknownVar2;
+    }
+
+    public Vector3f getOrigin() {
+        return origin;
+    }
+
+    public Vector3f getHitPos() {
+        return hitPos;
+    }
+
+    public Collection<Segment> getUpdatedSegments() {
+        return updatedSegments;
     }
 }

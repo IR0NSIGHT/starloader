@@ -1,19 +1,13 @@
 package api.network;
 
-import api.entity.Entity;
-import api.faction.Faction;
-import api.main.GameClient;
-import api.main.GameServer;
 import api.mod.StarLoader;
-import api.universe.Sector;
-import api.universe.Universe;
 import org.schema.common.util.linAlg.Vector3i;
-import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.data.world.RemoteSector;
 
 import javax.vecmath.Vector3f;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class PacketReadBuffer {
     private DataInputStream in;
@@ -37,6 +31,9 @@ public class PacketReadBuffer {
     public float readFloat() throws IOException {
         return in.readFloat();
     }
+    public long readLong() throws IOException {
+        return in.readLong();
+    }
 
     public byte readByte() throws IOException {
         return in.readByte();
@@ -49,30 +46,27 @@ public class PacketReadBuffer {
         return in.readBoolean();
     }
 
-    public Sector readServerSector() throws IOException {
-        return Universe.getUniverse().getSector(readInt(), readInt(), readInt());
-    }
-
-    public RemoteSector readClientSector() throws IOException {
-        return GameClient.getClientState().getLoadedSectors().get(new Vector3i(readInt(), readInt(), readInt()));
-    }
-
     public Vector3i readVector() throws IOException {
         return new Vector3i(readInt(), readInt(), readInt());
     }
     public Vector3f readVector3f() throws IOException {
         return new Vector3f(readFloat(), readFloat(), readFloat());
     }
-
-    public Faction readFaction() throws IOException {
-        int facId = in.readInt();
-        org.schema.game.common.data.player.faction.Faction faction = StarLoader.getGameState().getFactionManager().getFaction(facId);
-        if (faction == null) return null;
-        return new Faction(faction);
+    public ArrayList<String> readStringList() throws IOException {
+        int size = readInt();
+        ArrayList<String> r = new ArrayList<String>(size);
+        for (int i = 0; i < size; i++) {
+            r.add(readString());
+        }
+        return r;
     }
-
-    public Entity readEntity() throws IOException {
-        return Universe.getUniverse().getEntityFromId(readInt());
+    public ArrayList<Long> readLongList() throws IOException {
+        int size = readInt();
+        ArrayList<Long> r = new ArrayList<Long>(size);
+        for (int i = 0; i < size; i++) {
+            r.add(readLong());
+        }
+        return r;
     }
 
 }

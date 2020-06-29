@@ -5,7 +5,6 @@
 
 package org.schema.game.common.controller.elements;
 
-import api.server.Server;
 import org.schema.game.client.data.GameClientState;
 import org.schema.schine.graphicsengine.core.Timer;
 

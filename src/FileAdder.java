@@ -28,7 +28,7 @@ public class FileAdder {
             while(true) {
                 ZipEntry e = zip.getNextEntry();
                 if (e == null) {
-                    System.out.println("broke");
+                    System.out.println("JAR file not found, the installer copies classes from");
                     break;
                 }
                 String name = e.getName();

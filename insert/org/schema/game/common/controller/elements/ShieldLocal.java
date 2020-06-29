@@ -8,7 +8,6 @@ package org.schema.game.common.controller.elements;
 import api.listener.events.calculate.ShieldCapacityCalculateEvent;
 import api.listener.events.systems.ShieldHitEvent;
 import api.mod.StarLoader;
-import api.server.Server;
 import com.bulletphysics.linearmath.Transform;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import java.io.DataInput;

@@ -2,23 +2,22 @@ package api.listener.events.gui;
 
 import api.listener.events.Event;
 import org.schema.game.client.controller.manager.AbstractControlManager;
-import org.schema.schine.graphicsengine.forms.gui.GUIElement;
 
 public class ControlManagerActivateEvent extends Event {
+    private final AbstractControlManager controlManager;
+    private final boolean active;
 
-    private AbstractControlManager controlManager;
-    private GUIElement guiPanel;
+    public ControlManagerActivateEvent(AbstractControlManager controlManager, boolean active){
 
-    public ControlManagerActivateEvent(AbstractControlManager controlManager, GUIElement guiPanel) {
         this.controlManager = controlManager;
-        this.guiPanel = guiPanel;
+        this.active = active;
     }
 
     public AbstractControlManager getControlManager() {
         return controlManager;
     }
 
-    public GUIElement getGUIPanel() {
-        return guiPanel;
+    public boolean isActive() {
+        return active;
     }
 }

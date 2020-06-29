@@ -6,7 +6,6 @@ package org.schema.game.common.controller.elements.combination;
 
 import api.listener.events.CannonShootEvent;
 import api.mod.StarLoader;
-import api.server.Server;
 import org.schema.game.common.controller.elements.combination.modifier.Modifier;
 import org.schema.game.common.data.element.ElementCollection;
 import org.schema.game.common.controller.elements.missile.dumb.DumbMissileCollectionManager;
@@ -68,7 +67,7 @@ public class WeaponCombinationAddOn extends CombinationAddOn<WeaponUnit, WeaponC
                         mod.outputDamage, mod.outputDistance,
                         mod.outputAcidType, mod.outputProjectileWidth,
                         firingUnit.getPenetrationDepth(mod.outputDamage),
-                        mod.outputImpactForce, weaponId, event.getColor());
+                        mod.outputImpactForce, weaponId, fireingCollection.getColor());
         ///
         fireingCollection.damageProduced += mod.outputDamage;
         fireingCollection.getElementManager().handleRecoil(fireingCollection, firingUnit, shootContainer.weapontOutputWorldPos, shootContainer.shootingDirTemp, mod.outputRecoil, mod.outputDamage);

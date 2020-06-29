@@ -5,10 +5,8 @@
 
 package org.schema.game.common.controller.elements.jumpdrive;
 
-import api.listener.events.ShipJumpEngageEvent;
 import api.listener.events.systems.InterdictionCheckEvent;
 import api.mod.StarLoader;
-import api.systems.addons.custom.CustomAddOn;
 import org.schema.common.util.StringTools;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.client.data.GameStateInterface;

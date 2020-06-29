@@ -1,35 +1,41 @@
 package api;
 
+import api.common.GameClient;
 import api.config.BlockConfig;
-import api.element.block.Blocks;
-import api.entity.Entity;
-import api.entity.Player;
-import api.gui.custom.examples.BasicInfoGroup;
 import api.listener.Listener;
-import api.listener.events.Event;
 import api.listener.events.KeyPressEvent;
-import api.listener.events.gui.HudCreateEvent;
-import api.listener.events.player.PlayerCommandEvent;
-import api.listener.events.register.ElementRegisterEvent;
-import api.listener.events.register.RegisterEffectsEvent;
-import api.main.GameClient;
-import api.main.GameServer;
+import api.listener.events.controller.asteroid.AsteroidGenerateEvent;
+import api.listener.events.gui.ControlManagerActivateEvent;
+import api.listener.events.gui.PlayerGUICreateEvent;
+import api.listener.events.gui.PlayerGUIDrawEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.network.Packet;
 import api.network.packets.ServerToClientMessage;
-import api.network.packets.UpdateCurrentVelocityPacket;
-import api.network.packets.UpdateCustomAddOnPacket;
-import api.server.Server;
-import api.systems.modules.custom.example.BatteryElementManager;
-import api.utils.StarRunnable;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.schema.game.common.data.blockeffects.config.StatusEffectType;
+import api.utils.gui.EntryCallback;
+import api.utils.gui.RowStringCreator;
+import api.utils.gui.SimpleGUIBuilder;
+import api.utils.gui.SimpleGUIList;
+import obfuscated.d;
+import obfuscated.k;
+import org.newdawn.slick.Color;
+import org.schema.game.common.controller.FloatingRock;
+import org.schema.game.common.controller.SendableSegmentController;
+import org.schema.game.common.controller.generator.AsteroidCreatorThread;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
+import org.schema.game.common.data.player.faction.Faction;
 import org.schema.game.server.data.GameServerState;
+import org.schema.schine.graphicsengine.core.MouseEvent;
+import org.schema.schine.graphicsengine.forms.font.FontLibrary;
+import org.schema.schine.graphicsengine.forms.gui.GUICallback;
+import org.schema.schine.graphicsengine.forms.gui.GUIElement;
+import org.schema.schine.graphicsengine.forms.gui.GUITextButton;
+import org.schema.schine.network.RegisteredClientOnServer;
 
-import java.util.Locale;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.Map;
 
 public class ModPlayground extends StarMod {
@@ -42,9 +48,6 @@ public class ModPlayground extends StarMod {
         setModName("DefaultMod").setModAuthor("Jake").setModDescription("test").setModVersion("1.0").setModSMVersion("0.202");
         setModDescription("Default mod that is always loaded");
         this.forceEnable = true;
-        Packet.registerPacket(ServerToClientMessage.class);
-        Packet.registerPacket(UpdateCustomAddOnPacket.class);
-        Packet.registerPacket(UpdateCurrentVelocityPacket.class);
     }
 
     public static short newCapId = 0;
@@ -52,19 +55,20 @@ public class ModPlayground extends StarMod {
     @Override
     public void onBlockConfigLoad(BlockConfig config) {
     }
-    public void registerComputerModulePair(Blocks computer, Blocks module){
-        ElementInformation comp = computer.getInfo();
+    public void registerComputerModulePair(short computer, short module){
+
+        ElementInformation comp = ElementKeyMap.infoArray[computer];
         comp.mainCombinationController = true;
         comp.systemBlock = true;
-        comp.controlledBy.add(Blocks.SHIP_CORE.getId());
-        comp.controlling.add(module.getId());
+        comp.controlledBy.add((short) 1);
+        comp.controlling.add(module);
 
-        module.getInfo().controlledBy.add(computer.getId());
+        ElementKeyMap.infoArray[module].controlledBy.add(computer);
 
     }
     public void registerElementBlock(ElementInformation info){
         info.systemBlock = true;
-        info.controlledBy.add(Blocks.SHIP_CORE.getId());
+        info.controlledBy.add((short) 1);
 
     }
 
@@ -93,51 +97,163 @@ public class ModPlayground extends StarMod {
             }
         }*/
     }
-
+    public static void broadcastMessage(String message) {
+        for (RegisteredClientOnServer client : GameServerState.instance.getClients().values()) {
+            try {
+                client.serverMessage(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private static SimpleGUIBuilder builder;
     @Override
     public void onEnable() {
         DebugFile.log("Loading default mod...");
-        new StarRunnable(){
-            @Override
-            public void run() {
-                GameServerState server = GameServer.getServerState();
-            }
-        }.runTimer(50);
-        StarLoader.registerListener(KeyPressEvent.class, new Listener() {
-            int timesPressed = 0;
-            int total = 0;
-            @Override
-            public void onEvent(Event event) {
-                KeyPressEvent e = (KeyPressEvent) event;
-                if(e.getChar() == 'o'){
-                    GameClient.showPopupMessage("yooooo", 1);
-                    GameClient.sendPacketToServer(new ServerToClientMessage(GameClient.getPlayer().getFaction(), "eyy"));
-                }
-            }
-        });
+        Packet.registerPacket(ServerToClientMessage.class);
 
-        //HELP COMMAND
-        StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                PlayerCommandEvent e = (PlayerCommandEvent) event;
-                if(e.command.toLowerCase(Locale.ENGLISH).equals("help")){
-                    Player player = e.player;
-                    player.sendServerMessage("### COMMANDS: ###");
-                    for (ImmutablePair<String, String> command : StarLoader.getCommands()) {
-                        player.sendServerMessage(command.left + ": " + command.right);
-                    }
-                }
-            }
-        }, this);
 
-        StarLoader.registerListener(ElementRegisterEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                ElementRegisterEvent e = (ElementRegisterEvent) event;
-               // e.addModuleCollection(new ManagerModuleSingle(new BatteryElementManager(e.getSegmentController()), Blocks.SHIP_CORE.getId(), newCapId));
-          }
-        }, this);
+//        StarLoader.registerListener(ControlManagerActivateEvent.class, new Listener<ControlManagerActivateEvent>() {
+//            @Override
+//            public void onEvent(ControlManagerActivateEvent event) {
+//                if(!event.isActive()){
+//                    builder.setVisible(false);
+//                }
+//            }
+//        });
+//
+//        StarLoader.registerListener(KeyPressEvent.class, new Listener<KeyPressEvent>() {
+//            @Override
+//            public void onEvent(KeyPressEvent event) {
+//                if(event.getChar() == 'b'){
+//                    boolean visibility = !builder.isVisible();
+//                    builder.setVisible(visibility);
+//                    GameClient.getClientState().getGlobalGameControlManager().getIngameControlManager().getChatControlManager().setActive(visibility);
+//                }
+//            }
+//        });
+//
+//        StarLoader.registerListener(PlayerGUICreateEvent.class, new Listener<PlayerGUICreateEvent>() {
+//            @Override
+//            public void onEvent(PlayerGUICreateEvent event) {
+//
+//                builder = SimpleGUIBuilder.newBuilder("Tab1")
+//                        .fixedText("BR uh", Color.white, FontLibrary.getBlenderProMedium20())
+//                        .newLine()
+//                        .button("yo", new GUICallback() {
+//                            @Override
+//                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public boolean isOccluded() {
+//                                return false;
+//                            }
+//                        }).button("yo", new GUICallback() {
+//                            @Override
+//                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public boolean isOccluded() {
+//                                return false;
+//                            }
+//                        }).button("yo", new GUICallback() {
+//                            @Override
+//                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public boolean isOccluded() {
+//                                return false;
+//                            }
+//                        }).fixedText("yes", Color.blue, FontLibrary.getBoldArial24())
+//                        .newLine().button("yo", new GUICallback() {
+//                            @Override
+//                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public boolean isOccluded() {
+//                                return false;
+//                            }
+//                        }).button("yo", new GUICallback() {
+//                            @Override
+//                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public boolean isOccluded() {
+//                                return false;
+//                            }
+//                        }).newLine().button("yo", new GUICallback() {
+//                            @Override
+//                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public boolean isOccluded() {
+//                                return false;
+//                            }
+//                        });
+//                SimpleGUIList<Faction> guiBuilder = new SimpleGUIList<Faction>(GameClient.getClientState(), builder) {
+//                    @Override
+//                    public void initColumns() {
+//                        addSimpleColumn("NAME", 8F, new RowStringCreator<Faction>() {
+//                            @Override
+//                            public String update(Faction entry) {
+//                                return entry.getName();
+//                            }
+//                        });
+//                        addSimpleColumn("yyyyy", 6F, new RowStringCreator<Faction>() {
+//                            @Override
+//                            public String update(Faction entry) {
+//                                return String.valueOf(entry.getIdFaction());
+//                            }
+//                        });
+//                        addSimpleColumn("online", 16F, new RowStringCreator<Faction>() {
+//                            @Override
+//                            public String update(Faction entry) {
+//                                return String.valueOf(entry.getOnlinePlayers().size());
+//                            }
+//                        });
+//                    }
+//
+//                    @Override
+//                    protected Collection<Faction> getElementList() {
+//                        return StarLoader.getGameState().getFactionManager().getFactionMap().values();
+//                    }
+//                };
+//                guiBuilder.createEntryButton(GUITextButton.ColorPalette.NEUTRAL, "bruhhh", new EntryCallback<Faction>() {
+//                    @Override
+//                    public void on(GUIElement self, Faction entry, MouseEvent event) {
+//
+//                    }
+//                });
+//                guiBuilder.addDefaultFilter();
+//
+//                builder.addSimpleGUIList(guiBuilder);
+//                builder.scaleCurrentLine();
+//            }
+//        });
+//        StarLoader.registerListener(PlayerGUIDrawEvent.class, new Listener<PlayerGUIDrawEvent>() {
+//            @Override
+//            public void onEvent(PlayerGUIDrawEvent event) {
+//                if(builder == null){
+//                    DebugFile.warn("builder null oh boy");
+//                    System.err.println("BUILDER NULL");
+//                }else{
+//                    builder.draw();
+//                }
+//            }
+//        });
+
 //        StarLoader.registerListener(MaxPowerCalculateEvent.class, new Listener() {
 //            @Override
 //            public void onEvent(Event event) {
@@ -149,73 +265,121 @@ public class ModPlayground extends StarMod {
 //                e.setPower(e.getPower()+extraPower);
 //            }
 //        });
-        getConfig().saveDefault("this is a: test");
+        getConfig("config").saveDefault("this is a: test");
 
-        StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                PlayerCommandEvent e = (PlayerCommandEvent) event;
-                Player p = e.player;
-                if(e.command.toLowerCase(Locale.ENGLISH).equals("test")){
-                    DebugFile.log("Test called", getMod());
-                    Entity currentEntity = p.getCurrentEntity();
-                    if(currentEntity == null){
-                        p.sendServerMessage("You are in: nothing, thanks for playing");
-                    }else{
-                        p.sendServerMessage("You are in: " + currentEntity.getUID());
-                    }
-                }else if(e.command.equals("thr")){
-                    Entity currentEntity = p.getCurrentEntity();
-                    if(currentEntity == null){
-                        p.sendServerMessage("no");
-                        return;
-                    }
-                    BatteryElementManager elementManager = currentEntity.getElementManager(BatteryElementManager.class);
-                    float actualThrust = elementManager.totalSize;
-                    Server.broadcastMessage("The total thrust of this object is: " + actualThrust);
-                }else if(e.command.equals("a")){
-                    p.sendPacket(new ServerToClientMessage(p.getFaction(), "hi"));
-                }
-            }
-        });
-
-
-        StarLoader.registerListener(HudCreateEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                HudCreateEvent ev = (HudCreateEvent) event;
-                BasicInfoGroup bar = new BasicInfoGroup(ev);
-            }
-        });
-
-
-//        final int[] t = {0};
-//        new StarRunnable() {
+//        StarLoader.registerListener(DisplayModuleDrawEvent.class, new Listener<DisplayModuleDrawEvent>() {
 //            @Override
-//            public void run() {
-//                t[0] += 4;
-//            }
-//        }.runTimer(1);
-//        StarLoader.registerListener(CannonShootEvent.class, new Listener() {
-//            @Override
-//            public void onEvent(Event event) {
-//                CannonShootEvent e = (CannonShootEvent) event;
-//                Color hsb = Color.getHSBColor(((float) t[0] % 360) / 360F, 1F, 1F);
-//                Vector4f tuple4f = new Vector4f(hsb.getRed() / 255F, hsb.getGreen() / 255F, hsb.getBlue() / 255F, 1F);
-//                e.setColor(tuple4f);
+//            public void onEvent(DisplayModuleDrawEvent event) {
+//                event.getBoxElement().text.getText().set(0, "███████•\n" +
+//                        "◘\n" +
+//                        "○\n" +
+//                        "◙\n" +
+//                        "►\n" +
+//                        "◄\n" +
+//                        "↕\n" +
+//                        "↑\n" +
+//                        "↓\n" +
+//                        "▬\n" +
+//                        "↔\n" +
+//                        "→\n" +
+//                        "←\n" +
+//                        "■\n" +
+//                        "Ω\n" +
+//                        "╪    \n" +
+//                        "╤\n" +
+//                        "╫\n" +
+//                        "┬\n" +
+//                        "«███\n███████████████████████████████\n███████████████████████████████████████████████████████████████████");
 //            }
 //        });
 
-        StarLoader.registerListener(RegisterEffectsEvent.class, new Listener() {
-            @Override
-            public void onEvent(Event event) {
-                RegisterEffectsEvent ev = (RegisterEffectsEvent) event;
-                for (StatusEffectType types : StatusEffectType.values()) {
-                    if (types.name().contains("CUSTOM")) {
-                        ev.addEffectModifier(types, 10F);
-                    }
-                }
-            }
-        });
+//        StarLoader.registerListener(ControlManagerActivateEvent.class, new Listener<ControlManagerActivateEvent>() {
+//            @Override
+//            public void onEvent(ControlManagerActivateEvent event) {
+//                broadcastMessage("Activated: " + event.getControlManager().getClass().getName() + " >>> " + event.isActive());
+//                PlayerPanel playerPanel = GameClientState.instance.getWorldDrawer().getGuiDrawer().getPlayerPanel();
+//                try {
+//                    Field panel = PlayerPanel.class.getDeclaredField("factionPanelNew");
+//                    panel.setAccessible(true);
+//                    FactionPanelNew p = (FactionPanelNew) panel.get(playerPanel);
+//                    if(!(p instanceof MyFactionPanelNew)) {
+//                        GameClientState state = playerPanel.getState();
+//                        panel.set(playerPanel, new MyFactionPanelNew(state));
+//                    }
+//                } catch (NoSuchFieldException ex) {
+//                    ex.printStackTrace();
+//                } catch (IllegalAccessException ex) {
+//                    ex.printStackTrace();
+//                }
+//            }
+//        }, null);
+
+
+//        StarLoader.registerListener(PlayerCommandEvent.class, new Listener() {
+//            @Override
+//            public void onEvent(Event event) {
+//                PlayerCommandEvent e = (PlayerCommandEvent) event;
+//                Player p = e.player;
+//                if(e.command.toLowerCase(Locale.ENGLISH).equals("test")){
+//                    DebugFile.log("Test called", getMod());
+//                    Entity currentEntity = p.getCurrentEntity();
+//                    if(currentEntity == null){
+//                        p.sendServerMessage("You are in: nothing, thanks for playing");
+//                    }else{
+//                        p.sendServerMessage("You are in: " + currentEntity.getUID());
+//                    }
+//                }else if(e.command.equals("thr")){
+//                    Entity currentEntity = p.getCurrentEntity();
+//                    if(currentEntity == null){
+//                        p.sendServerMessage("no");
+//                        return;
+//                    }
+//                    BatteryElementManager elementManager = currentEntity.getElementManager(BatteryElementManager.class);
+//                    float actualThrust = elementManager.totalSize;
+//                    Server.broadcastMessage("The total thrust of this object is: " + actualThrust);
+//                }else if(e.command.equals("a")){
+//                    p.sendPacket(new ServerToClientMessage(p.getFaction(), "hi"));
+//                }
+//            }
+//        });
+//
+//
+//        StarLoader.registerListener(HudCreateEvent.class, new Listener() {
+//            @Override
+//            public void onEvent(Event event) {
+//                HudCreateEvent ev = (HudCreateEvent) event;
+//                BasicInfoGroup bar = new BasicInfoGroup(ev);
+//            }
+//        });
+//
+//
+////        final int[] t = {0};
+////        new StarRunnable() {
+////            @Override
+////            public void run() {
+////                t[0] += 4;
+////            }
+////        }.runTimer(1);
+////        StarLoader.registerListener(CannonShootEvent.class, new Listener() {
+////            @Override
+////            public void onEvent(Event event) {
+////                CannonShootEvent e = (CannonShootEvent) event;
+////                Color hsb = Color.getHSBColor(((float) t[0] % 360) / 360F, 1F, 1F);
+////                Vector4f tuple4f = new Vector4f(hsb.getRed() / 255F, hsb.getGreen() / 255F, hsb.getBlue() / 255F, 1F);
+////                e.setColor(tuple4f);
+////            }
+////        });
+//
+//        StarLoader.registerListener(RegisterEffectsEvent.class, new Listener() {
+//            @Override
+//            public void onEvent(Event event) {
+//                RegisterEffectsEvent ev = (RegisterEffectsEvent) event;
+//                for (StatusEffectType types : StatusEffectType.values()) {
+//                    if (types.name().contains("CUSTOM")) {
+//                        ev.addEffectModifier(types, 10F);
+//                    }
+//                }
+//            }
+//        });
     }
 }

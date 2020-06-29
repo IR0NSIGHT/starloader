@@ -8,7 +8,6 @@ package org.schema.game.common.controller.elements.power.reactor;
 import api.listener.events.calculate.CurrentPowerCalculateEvent;
 import api.listener.events.calculate.MaxPowerCalculateEvent;
 import api.mod.StarLoader;
-import api.server.Server;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;

@@ -5,7 +5,7 @@
 
 package org.schema.game.common.controller;
 
-import api.listener.events.EntityOverheatEvent;
+import api.listener.events.SegmentControllerOverheatEvent;
 import api.mod.StarLoader;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.Arrays;
@@ -135,8 +135,8 @@ public class SegmentControllerHpController implements SegmentControllerHpControl
 
         if (!this.segmentController.isCoreOverheating() && !this.isRebooting()) {
             //INSERTED CODE @206
-            EntityOverheatEvent event = new EntityOverheatEvent(this.segmentController, lastDamager);
-            StarLoader.fireEvent(EntityOverheatEvent.class, event, this.isOnServer());
+            SegmentControllerOverheatEvent event = new SegmentControllerOverheatEvent(this.segmentController, lastDamager);
+            StarLoader.fireEvent(SegmentControllerOverheatEvent.class, event, this.isOnServer());
             ///
 
             System.err.println("[SERVER] Overheating triggered for " + this.segmentController);

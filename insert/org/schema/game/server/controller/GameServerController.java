@@ -5,10 +5,9 @@
 
 package org.schema.game.server.controller;
 
-import api.listener.events.EntitySpawnEvent;
+import api.listener.events.SegmentControllerSpawnEvent;
 import api.listener.events.player.PlayerSpawnEvent;
 import api.mod.StarLoader;
-import api.server.Server;
 import api.utils.StarRunnable;
 import com.bulletphysics.linearmath.Transform;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
@@ -1114,8 +1113,8 @@ public class GameServerController extends ServerController implements MineInterf
 
                                             LogUtil.log().fine("[SPAWN] " + var8.getName() + " spawned new ship: \"" + ship.getRealName() + "\"");
                                             //INSERTED CODE @1079
-                                            EntitySpawnEvent event = new EntitySpawnEvent(ship.getRemoteSector().getServerSector().pos, ship);
-                                            StarLoader.fireEvent(EntitySpawnEvent.class, event, true);
+                                            SegmentControllerSpawnEvent event = new SegmentControllerSpawnEvent(ship.getRemoteSector().getServerSector().pos, ship);
+                                            StarLoader.fireEvent(SegmentControllerSpawnEvent.class, event, true);
                                             ///
                                         }
                                     } catch (EntityAlreadyExistsException var109) {
@@ -1132,8 +1131,8 @@ public class GameServerController extends ServerController implements MineInterf
                                         Vehicle ship = var7.getVehicle(this.state);
                                         this.getSynchController().addNewSynchronizedObjectQueued(ship);
                                         //INSERTED CODE @1094
-                                        EntitySpawnEvent event = new EntitySpawnEvent(ship.getRemoteSector().getServerSector().pos, ship);
-                                        StarLoader.fireEvent(EntitySpawnEvent.class, event, true);
+                                        SegmentControllerSpawnEvent event = new SegmentControllerSpawnEvent(ship.getRemoteSector().getServerSector().pos, ship);
+                                        StarLoader.fireEvent(SegmentControllerSpawnEvent.class, event, true);
                                         ///
                                     } catch (EntityAlreadyExistsException var108) {
                                         var108.printStackTrace();
@@ -1167,8 +1166,8 @@ public class GameServerController extends ServerController implements MineInterf
                                                 this.getSynchController().addNewSynchronizedObjectQueued(station);
                                                 LogUtil.log().fine("[SPAWN] " + var8.getName() + " spawned new station: \"" + station.getRealName() + "\"");
                                                 //INSERTED CODE @1122
-                                                EntitySpawnEvent event = new EntitySpawnEvent(station.getRemoteSector().getServerSector().pos, station);
-                                                StarLoader.fireEvent(EntitySpawnEvent.class, event, true);
+                                                SegmentControllerSpawnEvent event = new SegmentControllerSpawnEvent(station.getRemoteSector().getServerSector().pos, station);
+                                                StarLoader.fireEvent(SegmentControllerSpawnEvent.class, event, true);
                                                 ///
                                             } else if (var11 >= var10) {
                                                 var8.sendServerMessagePlayerError(new Object[]{460, var10});
@@ -1279,8 +1278,8 @@ public class GameServerController extends ServerController implements MineInterf
                                     }
                                 });
                                 //INSERTED CODE @1238
-                                EntitySpawnEvent event = new EntitySpawnEvent(outline.spawnSectorId, spawn);
-                                StarLoader.fireEvent(EntitySpawnEvent.class, event, true);
+                                SegmentControllerSpawnEvent event = new SegmentControllerSpawnEvent(outline.spawnSectorId, spawn);
+                                StarLoader.fireEvent(SegmentControllerSpawnEvent.class, event, true);
                                 ///
                             } catch (EntityAlreadyExistsException var105) {
                                 var105.printStackTrace();

@@ -5,7 +5,7 @@
 
 package org.schema.game.client.controller.manager.ingame;
 
-import api.listener.events.block.ClientActivateSegmentPieceEvent;
+import api.listener.events.block.SegmentPieceActivateByPlayer;
 import api.mod.StarLoader;
 import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
 import com.bulletphysics.dynamics.RigidBody;
@@ -970,10 +970,12 @@ public class PlayerInteractionControlManager extends AbstractControlManager {
     private void checkMakeCustomOutput(SegmentPiece var1) {
         if (!this.getPlayerCharacterManager().canEnter(var1.getType())) {
             System.err.println("[CLIENT] ACTIVATE BLOCK (std) " + var1);
-            //INSERTED CODE @????
-            ClientActivateSegmentPieceEvent event = new ClientActivateSegmentPieceEvent(this, var1);
-            StarLoader.fireEvent(ClientActivateSegmentPieceEvent.class, event, false);
+
+            //INSERTED CODE
+            SegmentPieceActivateByPlayer event = new SegmentPieceActivateByPlayer(var1);
+            StarLoader.fireEvent(event, false);
             ///
+
             PositionControl var2;
             if ((var2 = var1.getSegment().getSegmentController().getControlElementMap().getControlledElements((short)56, var1.getAbsolutePos(new Vector3i()))).getControlMap().size() > 0) {
                 long var3 = var2.getControlPosMap().iterator().nextLong();

@@ -1,16 +1,16 @@
 package api.listener.events.calculate;
 
-import api.entity.Entity;
 import api.listener.events.Event;
+import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.power.reactor.PowerImplementation;
 
 public class MaxPowerCalculateEvent extends Event {
     private final PowerImplementation impl;
     private double power;
-    private Entity entity;
+    private SegmentController segmentController;
 
     public MaxPowerCalculateEvent(PowerImplementation impl, double power){
-        this.entity = new Entity(impl.getSegmentController());
+        this.segmentController = impl.getSegmentController();
         this.impl = impl;
         this.power = power;
     }
@@ -31,7 +31,7 @@ public class MaxPowerCalculateEvent extends Event {
         return power;
     }
 
-    public Entity getEntity() {
-        return entity;
+    public SegmentController getSegmentController() {
+        return segmentController;
     }
 }

@@ -1,12 +1,12 @@
 package api.network;
 
-import api.entity.Entity;
-import api.faction.Faction;
 import org.schema.common.util.linAlg.Vector3i;
 
 import javax.vecmath.Vector3f;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class PacketWriteBuffer {
     private DataOutputStream out;
@@ -29,12 +29,11 @@ public class PacketWriteBuffer {
     public void writeBoolean(boolean b) throws IOException {
         out.writeBoolean(b);
     }
-    public void writeFaction(Faction f) throws IOException {
-        out.writeInt(f.getID());
-    }
-
     public void writeFloat(float charge) throws IOException {
         out.writeFloat(charge);
+    }
+    public void writeLong(long l) throws IOException {
+        out.writeLong(l);
     }
     public void writeVector(Vector3i sec) throws IOException {
         out.writeInt(sec.x);
@@ -46,8 +45,20 @@ public class PacketWriteBuffer {
         out.writeFloat(sec.y);
         out.writeFloat(sec.z);
     }
-
-    public void writeEntity(Entity e) throws IOException {
-        writeInt(e.internalEntity.getId());
+    public void writeStringList(Collection<String> list) throws IOException {
+        //Write list size
+        writeInt(list.size());
+        //Write entries
+        for (String entry : list) {
+            writeString(entry);
+        }
+    }
+    public void writeLongList(Collection<Long> list) throws IOException {
+        //Write list size
+        writeInt(list.size());
+        //Write entries
+        for (Long entry : list) {
+            writeLong(entry);
+        }
     }
 }

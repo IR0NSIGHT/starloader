@@ -9,7 +9,6 @@ import api.DebugFile;
 import api.network.Packet;
 import api.network.PacketReadBuffer;
 import api.network.PacketWriteBuffer;
-import api.server.Server;
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
 import it.unimi.dsi.fastutil.objects.ObjectArrayFIFOQueue;
@@ -230,7 +229,7 @@ public class ClientProcessor implements Runnable, NetworkProcessor {
                 //INSERTED CODE @337
                 if(size == -2){
                     //SPECIAL PACKET ID received
-                    String packetId = this.dataInputStream.readUTF();
+                    short packetId = this.dataInputStream.readShort();
                     //Construct packet
                     api.network.Packet packet = api.network.Packet.newPacket(packetId);
                     //Fill with data

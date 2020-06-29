@@ -5,12 +5,9 @@
 
 package org.schema.game.common.data.chat;
 
-import api.entity.Player;
 import api.listener.events.player.PlayerChatEvent;
 import api.listener.events.player.PlayerCommandEvent;
-import api.main.GameServer;
 import api.mod.StarLoader;
-import api.server.Server;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayFIFOQueue;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -149,10 +146,10 @@ public class ChannelRouter implements DiskWritable {
     public void receive(ChatMessage message) {
         System.err.println("[CHANNELROUTER] RECEIVED MESSAGE ON " + this.state + ": " + message.toDetailString());
         //INSERTED CODE @149
-        if(message.text.startsWith("!") && GameServer.getServerState() != null && this.isOnServer()){
+        if(message.text.startsWith("!") && GameServerState.instance != null && this.isOnServer()){
             try {
-                PlayerState playerFromName = GameServer.getServerState().getPlayerFromName(message.sender);
-                PlayerCommandEvent event = new PlayerCommandEvent(message.text.split(" ")[0].replaceAll("!", ""), new Player(playerFromName), message.text.split(" "));
+                PlayerState playerFromName = GameServerState.instance.getPlayerFromName(message.sender);
+                PlayerCommandEvent event = new PlayerCommandEvent(message.text.split(" ")[0].replaceAll("!", ""), playerFromName, message.text.split(" "));
                 StarLoader.fireEvent(PlayerCommandEvent.class, event, this.isOnServer());
             } catch (PlayerNotFountException e) {
                 e.printStackTrace();

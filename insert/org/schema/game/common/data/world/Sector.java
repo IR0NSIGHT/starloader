@@ -5,7 +5,6 @@
 
 package org.schema.game.common.data.world;
 
-import api.server.Server;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.GhostObject;
 import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;

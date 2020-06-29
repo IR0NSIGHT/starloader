@@ -1,8 +1,11 @@
 package api.mod;
 
 import api.config.BlockConfig;
-import api.entity.Station;
 import api.mod.config.FileConfiguration;
+import org.schema.game.common.data.physics.Pair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class StarMod {
     public String modName;
@@ -13,6 +16,7 @@ public class StarMod {
     public boolean forceEnable;
     public boolean serverSide = false;
     private boolean isEnabled = false;
+    private ArrayList<Pair<String>> dependencies = new ArrayList<Pair<String>>();
 
     public boolean isEnabled(){
         return isEnabled;
@@ -43,6 +47,10 @@ public class StarMod {
     }
 
     //Builder style setters
+    public StarMod addDependency(String name, String version){
+        dependencies.add(new Pair<String>(name, version));
+        return this;
+    }
     public StarMod setModName(String modName) {
         this.modName = modName;
         return this;
@@ -96,12 +104,15 @@ public class StarMod {
 
     }
     //
-    private FileConfiguration config = null;
-    public FileConfiguration getConfig(){
-        if(config == null){
-            config = new FileConfiguration(this);
+    private HashMap<String, FileConfiguration> config = new HashMap<String, FileConfiguration>();
+    public FileConfiguration getConfig(String name){
+        FileConfiguration namedConfig = config.get(name);
+        if(namedConfig == null){
+            FileConfiguration newConfig = new FileConfiguration(this, name);
+            config.put(name, newConfig);
+            return newConfig;
         }
-        return config;
+        return namedConfig;
     }
 
     public boolean isServerSide() {
@@ -109,4 +120,8 @@ public class StarMod {
     }
 
     //
+
+    public ArrayList<Pair<String>> getDependencies() {
+        return dependencies;
+    }
 }

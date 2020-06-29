@@ -6,7 +6,6 @@
 package org.schema.game.client.view.gui.advancedstats;
 
 import api.listener.events.StructureStatsCreateEvent;
-import api.listener.helpers.StructureTab;
 import api.mod.StarLoader;
 import org.schema.common.util.StringTools;
 import org.schema.game.client.controller.PlayerGameTextInput;
@@ -25,7 +24,7 @@ import org.schema.schine.graphicsengine.core.settings.PrefixNotFoundException;
 import org.schema.schine.graphicsengine.forms.font.FontLibrary.FontSize;
 import org.schema.schine.graphicsengine.forms.gui.newgui.GUIContentPane;
 import org.schema.schine.graphicsengine.forms.gui.newgui.GUIDockableDirtyInterface;
-import org.schema.schine.graphicsengine.forms.gui.newgui.GUIHorizontalArea.HButtonColor;
+import org.schema.schine.graphicsengine.forms.gui.newgui.GUIHorizontalArea;
 
 public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGroup {
     public AdvancedStructureStatsGeneral(AdvancedGUIElement var1) {
@@ -324,12 +323,12 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return this.isActive() ? null : Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_ADVANCEDSTATS_ADVANCEDSTRUCTURESTATSGENERAL_18;
             }
 
-            public HButtonColor getColor() {
-                return HButtonColor.BLUE;
+            public GUIHorizontalArea.HButtonColor getColor() {
+                return GUIHorizontalArea.HButtonColor.BLUE;
             }
         });
         //INSERTED CODE @361
-        StarLoader.fireEvent(StructureStatsCreateEvent.class, new StructureStatsCreateEvent(StructureTab.GENERAL, this, pane), false);
+        StarLoader.fireEvent(StructureStatsCreateEvent.class, new StructureStatsCreateEvent(this, pane), false);
         ///
     }
 
