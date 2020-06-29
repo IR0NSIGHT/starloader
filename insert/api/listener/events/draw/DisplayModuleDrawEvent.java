@@ -3,6 +3,7 @@ package api.listener.events.draw;
 import api.listener.events.Event;
 import org.schema.game.client.view.SegmentDrawer;
 import org.schema.game.client.view.textbox.AbstractTextBox;
+import org.schema.game.common.controller.SegmentController;
 
 public class DisplayModuleDrawEvent extends Event {
 
@@ -21,5 +22,9 @@ public class DisplayModuleDrawEvent extends Event {
 
     public AbstractTextBox getAbstractTextBox() {
         return abstractTextBox;
+    }
+
+    public SegmentController getSegmentController(){
+        return boxElement.c;
     }
 }

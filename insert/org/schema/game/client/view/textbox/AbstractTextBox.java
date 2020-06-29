@@ -83,6 +83,7 @@ public class AbstractTextBox implements Drawable, Shaderable {
                 GlUtil.scaleModelview(-0.00395F, -0.00395F, -0.00395F);
                 var1.text.setPos(8.0F, 8.0F, 0.1F);
                 //INSERTED CODE @ ???
+
                 DisplayModuleDrawEvent event = new DisplayModuleDrawEvent(var1, this);
                 StarLoader.fireEvent(event, false);
                 ///

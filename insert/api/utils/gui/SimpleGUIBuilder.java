@@ -87,6 +87,8 @@ public class SimpleGUIBuilder extends GUIElement implements GUIActiveInterface {
     }
     public SimpleGUIBuilder dynamicText(Color slickColor, UnicodeFont font, Object stringFunction){
         GUITextOverlay t = new GUITextOverlay(100, 100, this.getState());
+        t.setFont(font);
+        t.setColor(slickColor);
         t.setTextSimple(stringFunction);
         getCurrentLine().getElements().add(t);
         return this;

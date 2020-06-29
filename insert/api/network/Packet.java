@@ -33,7 +33,7 @@ public abstract class Packet {
         try {
             return clazz.newInstance();
         } catch (InstantiationException e) {
-            //how?????
+            DebugFile.err("!!! INSTANTIATION ERROR !!! Likely your packet class does not have a default constructor");
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -41,7 +41,12 @@ public abstract class Packet {
         return null;
     }
     private static short getId(Class<? extends Packet> clazz){
-        return reversePacketLookup.get(clazz);
+        Short s = reversePacketLookup.get(clazz);
+        if(s == null){
+            DebugFile.err(" !!! PACKET ID NOT FOUND !!! Likely you did not register it with Packet.registerPacket(PacketClass.class) in onEnable: " + clazz.getSimpleName());
+            throw new NullPointerException("Packet not found in the reverse packet lookup");
+        }
+        return s;
     }
     public short getId(){
         return getId(getClass());

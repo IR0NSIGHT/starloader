@@ -4,6 +4,7 @@ import api.common.GameClient;
 import api.config.BlockConfig;
 import api.listener.Listener;
 import api.listener.events.KeyPressEvent;
+import api.listener.events.controller.asteroid.AsteroidGenerateEvent;
 import api.listener.events.gui.ControlManagerActivateEvent;
 import api.listener.events.gui.PlayerGUICreateEvent;
 import api.listener.events.gui.PlayerGUIDrawEvent;
@@ -15,7 +16,12 @@ import api.utils.gui.EntryCallback;
 import api.utils.gui.RowStringCreator;
 import api.utils.gui.SimpleGUIBuilder;
 import api.utils.gui.SimpleGUIList;
+import obfuscated.d;
+import obfuscated.k;
 import org.newdawn.slick.Color;
+import org.schema.game.common.controller.FloatingRock;
+import org.schema.game.common.controller.SendableSegmentController;
+import org.schema.game.common.controller.generator.AsteroidCreatorThread;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.common.data.player.faction.Faction;
@@ -28,6 +34,7 @@ import org.schema.schine.graphicsengine.forms.gui.GUITextButton;
 import org.schema.schine.network.RegisteredClientOnServer;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
 
@@ -103,149 +110,149 @@ public class ModPlayground extends StarMod {
     @Override
     public void onEnable() {
         DebugFile.log("Loading default mod...");
-
         Packet.registerPacket(ServerToClientMessage.class);
 
-        StarLoader.registerListener(ControlManagerActivateEvent.class, new Listener<ControlManagerActivateEvent>() {
-            @Override
-            public void onEvent(ControlManagerActivateEvent event) {
-                if(!event.isActive()){
-                    builder.setVisible(false);
-                }
-            }
-        });
 
-        StarLoader.registerListener(KeyPressEvent.class, new Listener<KeyPressEvent>() {
-            @Override
-            public void onEvent(KeyPressEvent event) {
-                if(event.getChar() == 'b'){
-                    boolean visibility = !builder.isVisible();
-                    builder.setVisible(visibility);
-                    GameClient.getClientState().getGlobalGameControlManager().getIngameControlManager().getChatControlManager().setActive(visibility);
-                }
-            }
-        });
-
-        StarLoader.registerListener(PlayerGUICreateEvent.class, new Listener<PlayerGUICreateEvent>() {
-            @Override
-            public void onEvent(PlayerGUICreateEvent event) {
-
-                builder = SimpleGUIBuilder.newBuilder("Tab1")
-                        .fixedText("BR uh", Color.white, FontLibrary.getBlenderProMedium20())
-                        .newLine()
-                        .button("yo", new GUICallback() {
-                            @Override
-                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
-
-                            }
-
-                            @Override
-                            public boolean isOccluded() {
-                                return false;
-                            }
-                        }).button("yo", new GUICallback() {
-                            @Override
-                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
-
-                            }
-
-                            @Override
-                            public boolean isOccluded() {
-                                return false;
-                            }
-                        }).button("yo", new GUICallback() {
-                            @Override
-                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
-
-                            }
-
-                            @Override
-                            public boolean isOccluded() {
-                                return false;
-                            }
-                        }).fixedText("yes", Color.blue, FontLibrary.getBoldArial24())
-                        .newLine().button("yo", new GUICallback() {
-                            @Override
-                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
-
-                            }
-
-                            @Override
-                            public boolean isOccluded() {
-                                return false;
-                            }
-                        }).button("yo", new GUICallback() {
-                            @Override
-                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
-
-                            }
-
-                            @Override
-                            public boolean isOccluded() {
-                                return false;
-                            }
-                        }).newLine().button("yo", new GUICallback() {
-                            @Override
-                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
-
-                            }
-
-                            @Override
-                            public boolean isOccluded() {
-                                return false;
-                            }
-                        });
-                SimpleGUIList<Faction> guiBuilder = new SimpleGUIList<Faction>(GameClient.getClientState(), builder) {
-                    @Override
-                    public void initColumns() {
-                        addSimpleColumn("NAME", 8F, new RowStringCreator<Faction>() {
-                            @Override
-                            public String update(Faction entry) {
-                                return entry.getName();
-                            }
-                        });
-                        addSimpleColumn("yyyyy", 6F, new RowStringCreator<Faction>() {
-                            @Override
-                            public String update(Faction entry) {
-                                return String.valueOf(entry.getIdFaction());
-                            }
-                        });
-                        addSimpleColumn("online", 16F, new RowStringCreator<Faction>() {
-                            @Override
-                            public String update(Faction entry) {
-                                return String.valueOf(entry.getOnlinePlayers().size());
-                            }
-                        });
-                    }
-
-                    @Override
-                    protected Collection<Faction> getElementList() {
-                        return StarLoader.getGameState().getFactionManager().getFactionMap().values();
-                    }
-                };
-                guiBuilder.createEntryButton(GUITextButton.ColorPalette.NEUTRAL, "bruhhh", new EntryCallback<Faction>() {
-                    @Override
-                    public void on(GUIElement self, Faction entry, MouseEvent event) {
-
-                    }
-                });
-                guiBuilder.addDefaultFilter();
-
-                builder.addSimpleGUIList(guiBuilder);
-                builder.scaleCurrentLine();
-            }
-        });
-        StarLoader.registerListener(PlayerGUIDrawEvent.class, new Listener<PlayerGUIDrawEvent>() {
-            @Override
-            public void onEvent(PlayerGUIDrawEvent event) {
-                if(builder == null){
-                    DebugFile.warn("builder null oh boy");
-                    System.err.println("BUILDER NULL");
-                }else{
-                    builder.draw();
-                }
-            }
-        });
+//        StarLoader.registerListener(ControlManagerActivateEvent.class, new Listener<ControlManagerActivateEvent>() {
+//            @Override
+//            public void onEvent(ControlManagerActivateEvent event) {
+//                if(!event.isActive()){
+//                    builder.setVisible(false);
+//                }
+//            }
+//        });
+//
+//        StarLoader.registerListener(KeyPressEvent.class, new Listener<KeyPressEvent>() {
+//            @Override
+//            public void onEvent(KeyPressEvent event) {
+//                if(event.getChar() == 'b'){
+//                    boolean visibility = !builder.isVisible();
+//                    builder.setVisible(visibility);
+//                    GameClient.getClientState().getGlobalGameControlManager().getIngameControlManager().getChatControlManager().setActive(visibility);
+//                }
+//            }
+//        });
+//
+//        StarLoader.registerListener(PlayerGUICreateEvent.class, new Listener<PlayerGUICreateEvent>() {
+//            @Override
+//            public void onEvent(PlayerGUICreateEvent event) {
+//
+//                builder = SimpleGUIBuilder.newBuilder("Tab1")
+//                        .fixedText("BR uh", Color.white, FontLibrary.getBlenderProMedium20())
+//                        .newLine()
+//                        .button("yo", new GUICallback() {
+//                            @Override
+//                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public boolean isOccluded() {
+//                                return false;
+//                            }
+//                        }).button("yo", new GUICallback() {
+//                            @Override
+//                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public boolean isOccluded() {
+//                                return false;
+//                            }
+//                        }).button("yo", new GUICallback() {
+//                            @Override
+//                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public boolean isOccluded() {
+//                                return false;
+//                            }
+//                        }).fixedText("yes", Color.blue, FontLibrary.getBoldArial24())
+//                        .newLine().button("yo", new GUICallback() {
+//                            @Override
+//                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public boolean isOccluded() {
+//                                return false;
+//                            }
+//                        }).button("yo", new GUICallback() {
+//                            @Override
+//                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public boolean isOccluded() {
+//                                return false;
+//                            }
+//                        }).newLine().button("yo", new GUICallback() {
+//                            @Override
+//                            public void callback(GUIElement guiElement, MouseEvent mouseEvent) {
+//
+//                            }
+//
+//                            @Override
+//                            public boolean isOccluded() {
+//                                return false;
+//                            }
+//                        });
+//                SimpleGUIList<Faction> guiBuilder = new SimpleGUIList<Faction>(GameClient.getClientState(), builder) {
+//                    @Override
+//                    public void initColumns() {
+//                        addSimpleColumn("NAME", 8F, new RowStringCreator<Faction>() {
+//                            @Override
+//                            public String update(Faction entry) {
+//                                return entry.getName();
+//                            }
+//                        });
+//                        addSimpleColumn("yyyyy", 6F, new RowStringCreator<Faction>() {
+//                            @Override
+//                            public String update(Faction entry) {
+//                                return String.valueOf(entry.getIdFaction());
+//                            }
+//                        });
+//                        addSimpleColumn("online", 16F, new RowStringCreator<Faction>() {
+//                            @Override
+//                            public String update(Faction entry) {
+//                                return String.valueOf(entry.getOnlinePlayers().size());
+//                            }
+//                        });
+//                    }
+//
+//                    @Override
+//                    protected Collection<Faction> getElementList() {
+//                        return StarLoader.getGameState().getFactionManager().getFactionMap().values();
+//                    }
+//                };
+//                guiBuilder.createEntryButton(GUITextButton.ColorPalette.NEUTRAL, "bruhhh", new EntryCallback<Faction>() {
+//                    @Override
+//                    public void on(GUIElement self, Faction entry, MouseEvent event) {
+//
+//                    }
+//                });
+//                guiBuilder.addDefaultFilter();
+//
+//                builder.addSimpleGUIList(guiBuilder);
+//                builder.scaleCurrentLine();
+//            }
+//        });
+//        StarLoader.registerListener(PlayerGUIDrawEvent.class, new Listener<PlayerGUIDrawEvent>() {
+//            @Override
+//            public void onEvent(PlayerGUIDrawEvent event) {
+//                if(builder == null){
+//                    DebugFile.warn("builder null oh boy");
+//                    System.err.println("BUILDER NULL");
+//                }else{
+//                    builder.draw();
+//                }
+//            }
+//        });
 
 //        StarLoader.registerListener(MaxPowerCalculateEvent.class, new Listener() {
 //            @Override
