@@ -327,7 +327,7 @@ public class AdvancedStructureStatsGeneral extends AdvancedStructureStatsGUISGro
                 return GUIHorizontalArea.HButtonColor.BLUE;
             }
         });
-        //INSERTED CODE @361
+        //INSERTED CODE @360
         StarLoader.fireEvent(StructureStatsCreateEvent.class, new StructureStatsCreateEvent(this, pane), false);
         ///
     }

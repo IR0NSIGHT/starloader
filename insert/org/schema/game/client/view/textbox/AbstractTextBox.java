@@ -72,27 +72,26 @@ public class AbstractTextBox implements Drawable, Shaderable {
         this.t += var1.getDelta() * 2.0F;
     }
 
-    private void draw(TextBoxElement var1) {
-        if (Controller.getCamera().isBoundingSphereInFrustrum(var1.worldpos.origin, 2.0F)) {
-            float var10000 = Vector3fTools.diffLength(Controller.getCamera().getPos(), var1.worldpos.origin);
+    private void draw(TextBoxElement cont) {
+        if (Controller.getCamera().isBoundingSphereInFrustrum(cont.worldpos.origin, 2.0F)) {
+            float var10000 = Vector3fTools.diffLength(Controller.getCamera().getPos(), cont.worldpos.origin);
             float var2 = 0.0F;
             if (var10000 <= (float)this.maxTextDistance) {
 
                 GlUtil.glPushMatrix();
-                GlUtil.glMultMatrix(var1.worldpos);
+                GlUtil.glMultMatrix(cont.worldpos);
                 GlUtil.scaleModelview(-0.00395F, -0.00395F, -0.00395F);
-                var1.text.setPos(8.0F, 8.0F, 0.1F);
-                //INSERTED CODE @ ???
-
-                DisplayModuleDrawEvent event = new DisplayModuleDrawEvent(var1, this);
+                cont.text.setPos(8.0F, 8.0F, 0.1F);
+                //INSERTED CODE @97
+                DisplayModuleDrawEvent event = new DisplayModuleDrawEvent(cont, this);
                 StarLoader.fireEvent(event, false);
                 ///
                 try {
-                    var1.text.draw();
+                    cont.text.draw();
                 } catch (NullPointerException var4) {
                     Object var6 = null;
                     var4.printStackTrace();
-                    Iterator var5 = var1.text.getText().iterator();
+                    Iterator var5 = cont.text.getText().iterator();
 
                     while(var5.hasNext()) {
                         var6 = var5.next();

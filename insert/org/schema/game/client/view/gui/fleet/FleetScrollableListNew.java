@@ -31,11 +31,11 @@ import org.schema.schine.input.InputState;
 public class FleetScrollableListNew extends ScrollableTableList<Fleet> implements Observer {
     public FleetScrollableListNew(InputState var1, GUIElement var2) {
         super(var1, 100.0F, 100.0F, var2);
-        ((GameClientState)this.getState()).getFleetManager().addObserver(this);
+        ((GameClientState) this.getState()).getFleetManager().addObserver(this);
     }
 
     public void cleanUp() {
-        ((GameClientState)this.getState()).getFleetManager().deleteObserver(this);
+        ((GameClientState) this.getState()).getFleetManager().deleteObserver(this);
         super.cleanUp();
     }
 
@@ -74,27 +74,26 @@ public class FleetScrollableListNew extends ScrollableTableList<Fleet> implement
 
     }
 
+    @Override
     protected Collection<Fleet> getElementList() {
         FleetManager fleetMan = ((GameClientState) this.getState()).getFleetManager();
         Collection<Fleet> availableFleetsClient = fleetMan.getAvailableFleetsClient();
-
-        //INSERTED CODE
+        //INSERTED CODE @97
         GetAvailableFleetsEvent ev = new GetAvailableFleetsEvent(this, fleetMan, availableFleetsClient);
         StarLoader.fireEvent(ev, false);
         ///
-
         return availableFleetsClient;
     }
 
     public void updateListEntries(GUIElementList var1, Set<Fleet> var2) {
         var1.deleteObservers();
         var1.addObserver(this);
-        ((GameClientState)this.getState()).getFleetManager();
-        ((GameClientState)this.getState()).getPlayer();
+        ((GameClientState) this.getState()).getFleetManager();
+        ((GameClientState) this.getState()).getPlayer();
         Iterator var10 = var2.iterator();
 
-        while(var10.hasNext()) {
-            final Fleet var3 = (Fleet)var10.next();
+        while (var10.hasNext()) {
+            final Fleet var3 = (Fleet) var10.next();
             GUITextOverlayTable var4 = new GUITextOverlayTable(10, 10, this.getState());
             GUITextOverlayTable var5 = new GUITextOverlayTable(10, 10, this.getState());
             GUITextOverlayTable var6 = new GUITextOverlayTable(10, 10, this.getState()) {
@@ -156,14 +155,14 @@ public class FleetScrollableListNew extends ScrollableTableList<Fleet> implement
         }
 
         protected boolean isSimpleSelected() {
-            return ((FleetStateInterface)this.getState()).getFleetManager().getSelected() == this.f;
+            return ((FleetStateInterface) this.getState()).getFleetManager().getSelected() == this.f;
         }
 
         public void clickedOnRow() {
-            if (((FleetStateInterface)this.getState()).getFleetManager().getSelected() != this.f) {
-                ((FleetStateInterface)this.getState()).getFleetManager().setSelected((Fleet)this.f);
+            if (((FleetStateInterface) this.getState()).getFleetManager().getSelected() != this.f) {
+                ((FleetStateInterface) this.getState()).getFleetManager().setSelected((Fleet) this.f);
             } else {
-                ((FleetStateInterface)this.getState()).getFleetManager().setSelected((Fleet)null);
+                ((FleetStateInterface) this.getState()).getFleetManager().setSelected((Fleet) null);
             }
 
             super.clickedOnRow();

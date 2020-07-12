@@ -29,17 +29,17 @@ public class SourceInstaller {
             e.printStackTrace();
         }
     }
-    private static String sourceDir = "C:\\Users\\Jake\\IdeaProjects\\StarMadeGit";
+    private static String sourceDir = "/mnt/hdd/StarMadeGit";
     public static void deleteApi(){
         try {
-            FileUtils.deleteDirectory(new File(sourceDir + "\\src\\api\\"));
+            FileUtils.deleteDirectory(new File(sourceDir + "/src/api/"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     public static void addApi(){
         try {
-            FileUtils.copyDirectory(new File("insert\\api\\"), new File(sourceDir + "\\src\\api\\"));
+            FileUtils.copyDirectory(new File("insert/api/"), new File(sourceDir + "/src/api/"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,8 +58,8 @@ public class SourceInstaller {
         return list;
     }
     public static void stripInsertLines() throws IOException {
-        Collection<File> files = FileUtils.listFiles(new File(sourceDir + "\\src\\org"), null, true);
-        files.addAll(FileUtils.listFiles(new File(sourceDir + "\\schine\\src"), null, true));
+        Collection<File> files = FileUtils.listFiles(new File(sourceDir + "/src/org"), null, true);
+        files.addAll(FileUtils.listFiles(new File(sourceDir + "/schine/src"), null, true));
         Iterator<File> iterator = files.iterator();
         while (iterator.hasNext()){
             File next = iterator.next();
@@ -100,10 +100,10 @@ public class SourceInstaller {
         }
     }
     public static void addInsertLines(){
-        Collection<File> srcFiles = FileUtils.listFiles(new File(sourceDir + "\\src\\org"), null, true);
-        srcFiles.addAll(FileUtils.listFiles(new File(sourceDir + "\\schine\\src"), null, true));
+        Collection<File> srcFiles = FileUtils.listFiles(new File(sourceDir + "/src/org"), null, true);
+        srcFiles.addAll(FileUtils.listFiles(new File(sourceDir + "/schine/src"), null, true));
 
-        Collection<File> files = FileUtils.listFiles(new File("insert\\org\\"), null, true);
+        Collection<File> files = FileUtils.listFiles(new File("insert/org/"), null, true);
         for (File f : files){
             ArrayList<String> lines = readFileToBuffer(f);
             ArrayList<CodeBlock> list = new ArrayList<CodeBlock>();

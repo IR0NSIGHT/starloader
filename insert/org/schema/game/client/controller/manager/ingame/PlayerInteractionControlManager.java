@@ -967,37 +967,35 @@ public class PlayerInteractionControlManager extends AbstractControlManager {
         (new FactionBlockDialog(this.getState(), var1, this)).activate();
     }
 
-    private void checkMakeCustomOutput(SegmentPiece var1) {
-        if (!this.getPlayerCharacterManager().canEnter(var1.getType())) {
-            System.err.println("[CLIENT] ACTIVATE BLOCK (std) " + var1);
-
-            //INSERTED CODE
-            SegmentPieceActivateByPlayer event = new SegmentPieceActivateByPlayer(var1);
-            StarLoader.fireEvent(event, false);
-            ///
-
+    private void checkMakeCustomOutput(SegmentPiece p) {
+        //INSERTED CODE @1277
+        SegmentPieceActivateByPlayer event = new SegmentPieceActivateByPlayer(p);
+        StarLoader.fireEvent(event, false);
+        ///
+        if (!this.getPlayerCharacterManager().canEnter(p.getType())) {
+            System.err.println("[CLIENT] ACTIVATE BLOCK (std) " + p);
             PositionControl var2;
-            if ((var2 = var1.getSegment().getSegmentController().getControlElementMap().getControlledElements((short)56, var1.getAbsolutePos(new Vector3i()))).getControlMap().size() > 0) {
+            if ((var2 = p.getSegment().getSegmentController().getControlElementMap().getControlledElements((short)56, p.getAbsolutePos(new Vector3i()))).getControlMap().size() > 0) {
                 long var3 = var2.getControlPosMap().iterator().nextLong();
                 SegmentPiece var5;
-                if ((var5 = var1.getSegment().getSegmentController().getSegmentBuffer().getPointUnsave(var3)) != null) {
+                if ((var5 = p.getSegment().getSegmentController().getSegmentBuffer().getPointUnsave(var3)) != null) {
                     this.getState().getCharacter().activateGravity(var5);
                 }
             }
 
-            if (ElementKeyMap.getInfo(var1.getType()).canActivate()) {
-                boolean var6 = !var1.isActive();
-                if (var1.getType() == 667 && var1.isActive()) {
+            if (ElementKeyMap.getInfo(p.getType()).canActivate()) {
+                boolean var6 = !p.isActive();
+                if (p.getType() == 667 && p.isActive()) {
                     var6 = true;
                 }
 
-                long var4 = ElementCollection.getEncodeActivation(var1, true, var6, false);
-                var1.getSegment().getSegmentController().sendBlockActivation(var4);
+                long var4 = ElementCollection.getEncodeActivation(p, true, var6, false);
+                p.getSegment().getSegmentController().sendBlockActivation(var4);
             }
 
         } else {
             if (this.getPlayerCharacterManager().isActive()) {
-                if (!this.getPlayerCharacterManager().checkEnterAndEnterIfPossible(var1)) {
+                if (!this.getPlayerCharacterManager().checkEnterAndEnterIfPossible(p)) {
                     this.getState().getController().popupAlertTextMessage(Lng.ORG_SCHEMA_GAME_CLIENT_CONTROLLER_MANAGER_INGAME_PLAYERINTERACTIONCONTROLMANAGER_32, 0.0F);
                     return;
                 }

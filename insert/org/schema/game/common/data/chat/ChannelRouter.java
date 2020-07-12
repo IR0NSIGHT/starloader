@@ -145,7 +145,7 @@ public class ChannelRouter implements DiskWritable {
 
     public void receive(ChatMessage message) {
         System.err.println("[CHANNELROUTER] RECEIVED MESSAGE ON " + this.state + ": " + message.toDetailString());
-        //INSERTED CODE @149
+        //INSERTED CODE @134
         if(message.text.startsWith("!") && GameServerState.instance != null && this.isOnServer()){
             try {
                 PlayerState playerFromName = GameServerState.instance.getPlayerFromName(message.sender);

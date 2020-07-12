@@ -1282,11 +1282,13 @@ public abstract class SegmentController extends SimpleTransformableSendableObjec
         return isPublicException(var2, var1.getFactionId()) || !((FactionState)this.getState()).getFactionManager().existsFaction(this.getFactionId()) || var1.getFactionId() == this.getFactionId() || var1 instanceof PlayerControllable && !((PlayerControllable)var1).getAttachedPlayers().isEmpty() && ((PlayerState)((PlayerControllable)var1).getAttachedPlayers().get(0)).getFactionId() == this.getFactionId();
     }
 
-    public void onAddedElementSynched(short var1, byte var2, byte var3, byte var4, byte var5, Segment var6, boolean var7, long var8, long var10, boolean var12) {
-        this.hpController.onAddedElementSynched(var1);
-        this.bPos.set((float)(var6.pos.x + var3 - 16), (float)(var6.pos.y + var4 - 16), (float)(var6.pos.z + var5 - 16));
+    public void onAddedElementSynched(short newType, byte orientation,
+                                      byte x, byte y, byte z,
+                                      Segment segment, boolean updateSegmentBuffer, long absIndex, long time, boolean revalidate) {
+        this.hpController.onAddedElementSynched(newType);
+        this.bPos.set((float)(segment.pos.x + x - 16), (float)(segment.pos.y + y - 16), (float)(segment.pos.z + z - 16));
         ElementInformation var15;
-        float var16 = (var15 = ElementKeyMap.getInfoFast(var1)).getMass();
+        float var16 = (var15 = ElementKeyMap.getInfoFast(newType)).getMass();
         Vector3f var10000 = this.centerOfMassUnweighted;
         var10000.x += this.bPos.x * var16;
         var10000 = this.centerOfMassUnweighted;
@@ -1341,17 +1343,17 @@ public abstract class SegmentController extends SimpleTransformableSendableObjec
         var19 = this.tensor;
         var19.m22 += var16 * this.j.m22;
         this.blockAdded = true;
-        //INSERTED CODE
-        StarLoader.fireEvent(new SegmentPieceAddEvent(this, var1,var2,var3,var4,var5,var6,var7, var8), this.isOnServer());
+        //INSERTED CODE @1688
+        StarLoader.fireEvent(new SegmentPieceAddEvent(this, newType,orientation,x,y,z,segment,updateSegmentBuffer, absIndex), this.isOnServer());
         ///
-        if (var1 == 479) {
-            long var13 = ElementCollection.getIndex4(var8, (short)var2);
+        if (newType == 479) {
+            long var13 = ElementCollection.getIndex4(absIndex, (short)orientation);
             this.getTextBlocks().add(var13);
         }
 
-        this.getElementClassCountMap().inc(var1);
-        if (var15.resourceInjection == ResourceInjectionType.ORE && var2 > 0 && var2 <= 16) {
-            int var18 = var2 - 1;
+        this.getElementClassCountMap().inc(newType);
+        if (var15.resourceInjection == ResourceInjectionType.ORE && orientation > 0 && orientation <= 16) {
+            int var18 = orientation - 1;
             this.elementClassCountMap.addOre(var18);
         }
 
@@ -1390,14 +1392,16 @@ public abstract class SegmentController extends SimpleTransformableSendableObjec
         }
     }
 
-    public void onRemovedElementSynched(short var1, int var2, byte var3, byte var4, byte var5, byte var6, Segment var7, boolean var8, long var9) {
+    public void onRemovedElementSynched(
+            short oldType, int oldSize, byte x, byte y, byte z, byte oldOrientation,
+            Segment segment, boolean preserveControl, long time) {
         if (!this.isOnServer()) {
-            this.segmentBuffer.onRemovedElementClient(var1, var2, var3, var4, var5, var7, var9);
+            this.segmentBuffer.onRemovedElementClient(oldType, oldSize, x, y, z, segment, time);
         }
 
         ElementInformation var13;
-        float var14 = (var13 = ElementKeyMap.getInfoFast(var1)).getMass();
-        this.bPos.set((float)(var7.pos.x + var3 - 16), (float)(var7.pos.y + var4 - 16), (float)(var7.pos.z + var5 - 16));
+        float var14 = (var13 = ElementKeyMap.getInfoFast(oldType)).getMass();
+        this.bPos.set((float)(segment.pos.x + x - 16), (float)(segment.pos.y + y - 16), (float)(segment.pos.z + z - 16));
         Vector3f var10000 = this.centerOfMassUnweighted;
         var10000.x -= this.bPos.x * var14;
         var10000 = this.centerOfMassUnweighted;
@@ -1445,32 +1449,33 @@ public abstract class SegmentController extends SimpleTransformableSendableObjec
         var15.m21 -= var14 * this.j.m21;
         var15 = this.tensor;
         var15.m22 -= var14 * this.j.m22;
-        this.hpController.onRemovedElementSynched(var1);
+        this.hpController.onRemovedElementSynched(oldType);
         this.blockRemoved = true;
-        this.getElementClassCountMap().dec(var1);
-        if (var13.resourceInjection == ResourceInjectionType.ORE && var6 > 0 && var6 <= 16) {
-            var2 = var6 - 1;
-            this.elementClassCountMap.decOre(var2);
+        this.getElementClassCountMap().dec(oldType);
+        if (var13.resourceInjection == ResourceInjectionType.ORE && oldOrientation > 0 && oldOrientation <= 16) {
+            oldSize = oldOrientation - 1;
+            this.elementClassCountMap.decOre(oldSize);
         }
 
         this.decTotalElements();
-        if (var7.isEmpty()) {
-            this.getSegmentBuffer().onSegmentBecameEmpty(var7);
+        if (segment.isEmpty()) {
+            this.getSegmentBuffer().onSegmentBecameEmpty(segment);
         }
-        //INSERTED CODE @???
-        StarLoader.fireEvent(new SegmentPieceRemoveEvent(var1, var2, var3, var4, var5, var6, var7, var8), this.isOnServer());
+        //INSERTED CODE @1796
+        StarLoader.fireEvent(
+                new SegmentPieceRemoveEvent(oldType, oldSize, x, y, z, oldOrientation, segment, preserveControl), this.isOnServer());
         ///
 
-        if (!var8) {
-            this.getControlElementMap().onRemoveElement(var7.getAbsoluteIndex(var3, var4, var5), var1);
-            if (this.isOnServer() && var1 == 291) {
+        if (!preserveControl) {
+            this.getControlElementMap().onRemoveElement(segment.getAbsoluteIndex(x, y, z), oldType);
+            if (this.isOnServer() && oldType == 291) {
                 System.err.println("[SERVER] FACTION BLOCK REMOVED FROM " + this + "; resetting faction !!!!!!!!!!!!!!");
                 this.railController.resetFactionForEntitiesWithoutFactionBlock(this.getFactionId());
             }
 
-            if (var1 == 479 || var1 == 670) {
-                var7.getAbsoluteIndex(var3, var4, var5);
-                long var11 = ElementCollection.getIndex4(var7.getAbsoluteIndex(var3, var4, var5), var1 == 670 ? 670 : (short)var6);
+            if (oldType == 479 || oldType == 670) {
+                segment.getAbsoluteIndex(x, y, z);
+                long var11 = ElementCollection.getIndex4(segment.getAbsoluteIndex(x, y, z), oldType == 670 ? 670 : (short)oldOrientation);
                 this.getTextBlocks().remove(var11);
                 this.getTextMap().remove(var11);
             }

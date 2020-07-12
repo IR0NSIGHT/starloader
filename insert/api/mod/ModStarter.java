@@ -29,8 +29,14 @@ public class ModStarter {
     public static void preServerStart() {
         //Enable all mods in the mods folder
         DebugFile.log("[Server] Enabling mods...");
-        //todo enable only enabled mods on server start EnabledModFile.getInstance().isClientEnabled(starMod.getInfo())
-        enableMods(StarLoader.starMods);
+        ArrayList<StarMod> mods = StarLoader.starMods;
+        ArrayList<StarMod> toEnable = new ArrayList<StarMod>();
+        for (StarMod mod : mods) {
+            if(EnabledModFile.getInstance().isClientEnabled(mod.getInfo())){
+                toEnable.add(mod);
+            }
+        }
+        enableMods(toEnable);
     }
 
     public static void postServerStart() {

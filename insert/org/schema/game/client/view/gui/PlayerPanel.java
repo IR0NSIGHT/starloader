@@ -379,7 +379,7 @@ public class PlayerPanel extends GUIElement {
         } else {
             GUIResizableGrabbableWindow.topHeightSubtract = 0;
         }
-        //INSERTED CODE
+        //INSERTED CODE @413
         PlayerGUIDrawEvent event = new PlayerGUIDrawEvent(this);
         StarLoader.fireEvent(event, false);
         ///
@@ -513,7 +513,7 @@ public class PlayerPanel extends GUIElement {
         this.advancedBuildMode.onInit();
         this.advancedBuildModeContainer.onInit();
 
-        //INSERTED CODE
+        //INSERTED CODE  @580
         PlayerGUICreateEvent event = new PlayerGUICreateEvent(this);
         StarLoader.fireEvent(event, false);
         ///

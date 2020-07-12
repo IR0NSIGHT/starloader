@@ -97,10 +97,10 @@ public class AsteroidCreatorThread extends CreatorThread {
         return -1;
     }
 
-    public void onNoExistingSegmentFound(Segment var1, RequestData var2) {
-        RequestDataAsteroid var5 = (RequestDataAsteroid)var2;
-        //INSERTED CODE
-        AsteroidGenerateEvent event = new AsteroidGenerateEvent(this, var2);
+    public void onNoExistingSegmentFound(Segment var1, RequestData requestData) {
+        RequestDataAsteroid var5 = (RequestDataAsteroid)requestData;
+        //INSERTED CODE @112
+        AsteroidGenerateEvent event = new AsteroidGenerateEvent(this, requestData);
         StarLoader.fireEvent(event, true);
         ///
         this.creator.a(this.getSegmentController(), var1, var5);

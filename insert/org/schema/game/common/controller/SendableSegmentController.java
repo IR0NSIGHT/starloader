@@ -1161,7 +1161,7 @@ public abstract class SendableSegmentController extends SegmentController implem
         } else if (this.isOnServer()) {
             this.railController.getRoot().onDamageServerRootObject((float)piece.getInfo().getMaxHitPointsFull(), from);
         }
-        //INSERTED CODE @1298
+        //INSERTED CODE @1251
         SegmentPieceKillEvent event = new SegmentPieceKillEvent(piece, this, from);
         StarLoader.fireEvent(SegmentPieceKillEvent.class, event, this.isOnServer());
         if(event.isCanceled()){

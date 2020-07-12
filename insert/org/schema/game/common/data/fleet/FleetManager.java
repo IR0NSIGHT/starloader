@@ -270,22 +270,21 @@ public class FleetManager extends Observable implements FleetSelectionInterface 
 
     }
 
-    private void cacheFleet(Fleet fleet) {
-        this.initializeFleet(fleet);
-        this.cacheFleetWithoutMembers(fleet);
-        Iterator var2 = fleet.getMembers().iterator();
+    private void cacheFleet(Fleet f) {
+        this.initializeFleet(f);
+        this.cacheFleetWithoutMembers(f);
+        Iterator var2 = f.getMembers().iterator();
 
         while(var2.hasNext()) {
             FleetMember var3 = (FleetMember)var2.next();
-            this.cacheMember(fleet, var3.UID, var3.entityDbId);
+            this.cacheMember(f, var3.UID, var3.entityDbId);
         }
 
         this.setChanged();
-        this.notifyObservers(fleet);
-        //INSERTED CODE
-        FleetCacheEvent event = new FleetCacheEvent(this, fleet);
+        this.notifyObservers(f);
+        //INSERTED CODE @318
+        FleetCacheEvent event = new FleetCacheEvent(this, f);
         StarLoader.fireEvent(event, isOnServer());
-        if(event.isCanceled()) return;
         ///
     }
 
@@ -307,25 +306,25 @@ public class FleetManager extends Observable implements FleetSelectionInterface 
         this.fleetsByEntityDbId.put(var3, var1.dbid);
     }
 
-    private void uncacheFleet(Fleet fleet) {
-        //INSERTED CODE
-        FleetUnCacheEvent event = new FleetUnCacheEvent(this, fleet);
+    private void uncacheFleet(Fleet f) {
+        //INSERTED CODE @339
+        FleetUnCacheEvent event = new FleetUnCacheEvent(this, f);
         StarLoader.fireEvent(event, isOnServer());
         if(event.isCanceled()) return;
         ///
-        this.uncacheFleetWithoutMembers(fleet);
+        this.uncacheFleetWithoutMembers(f);
 
-        for (FleetMember var3 : fleet.getMembers()) {
+        for (FleetMember var3 : f.getMembers()) {
             this.uncacheMember(var3.UID, var3.entityDbId);
         }
 
-        if (fleet.dbid == this.selectedFleet) {
+        if (f.dbid == this.selectedFleet) {
             this.selectedFleet = -1L;
         }
 
         Faction var4;
-        if (fleet.isNPCFleet() && fleet.isNPCFleet() && (var4 = ((FactionState)this.state).getFactionManager().getFaction(fleet.getNpcFaction())) != null && var4 instanceof NPCFaction) {
-            ((NPCFaction)var4).onUncachedFleet(fleet);
+        if (f.isNPCFleet() && f.isNPCFleet() && (var4 = ((FactionState)this.state).getFactionManager().getFaction(f.getNpcFaction())) != null && var4 instanceof NPCFaction) {
+            ((NPCFaction)var4).onUncachedFleet(f);
         }
 
         this.setChanged();

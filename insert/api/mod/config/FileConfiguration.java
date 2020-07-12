@@ -75,7 +75,7 @@ public class FileConfiguration {
         set(path, sb);
     }
     public ArrayList<String> getList(String path){
-        ArrayList<String> r = new ArrayList<>();
+        ArrayList<String> r = new ArrayList<String>();
         String string = getString(path);
         if(string == null) return r;
         r.addAll(Arrays.asList(string.split(",")));

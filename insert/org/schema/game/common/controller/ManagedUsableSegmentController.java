@@ -313,7 +313,7 @@ public abstract class ManagedUsableSegmentController<E extends ManagedUsableSegm
             byte var18 = this.segmentPiece.getOrientation();
             if (this.segmentPiece.getSegment().removeElement(this.segmentPiece.getPos(this.tmpLocalPos), false)) {
 
-                //INSERTED CODE @379
+                //INSERTED CODE @368
                 //Note that this currently only calls for the server.
                 SegmentPieceSalvageEvent event = new SegmentPieceSalvageEvent(beam, (int) salvageDamage, to, segmentPiece, updatedSegments);
                 StarLoader.fireEvent(SegmentPieceSalvageEvent.class, event, this.isOnServer());

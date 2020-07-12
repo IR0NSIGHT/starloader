@@ -413,7 +413,7 @@ public class BlockProcessor {
                 for(i = 0; i < size; ++i) {
                     this.getState().getDebugTimer().start(this.con, "SendableSegmentController", "DelayedMods", "Handle", var2, "BLOCK" + i);
                     VoidSegmentPiece segmentPiece = (VoidSegmentPiece)e.get(i);
-                    //INSERTED CODE @550
+                    //INSERTED CODE @528
                     SegmentPieceModifyEvent event = new SegmentPieceModifyEvent(e, segmentPiece);
                     StarLoader.fireEvent(SegmentPieceModifyEvent.class, event, this.isOnServer());
                     if(event.isCanceled()){

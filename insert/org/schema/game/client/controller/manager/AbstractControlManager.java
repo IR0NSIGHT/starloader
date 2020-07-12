@@ -297,19 +297,19 @@ public abstract class AbstractControlManager extends Observable implements Input
 
     }
 
-    public void setActive(boolean var1) {
+    public void setActive(boolean active) {
         boolean var10000 = this.active;
-        boolean var2 = var1 != this.active;
-        this.active = var1;
-        //INSERTED CODE @????
-        ControlManagerActivateEvent controlManagerActivateEvent = new ControlManagerActivateEvent(this, var1);
+        boolean var2 = active != this.active;
+        this.active = active;
+        //INSERTED CODE @378
+        ControlManagerActivateEvent controlManagerActivateEvent = new ControlManagerActivateEvent(this, active);
         StarLoader.fireEvent(ControlManagerActivateEvent.class, controlManagerActivateEvent, false);
         if(controlManagerActivateEvent.isCanceled()){
-            this.active = !active;
+            this.active = !this.active;
         }
         ///
         if (var2) {
-            this.onSwitch(var1);
+            this.onSwitch(active);
             if (!this.state.isPassive()) {
                 this.getState().getWorldDrawer().getGuiDrawer().notifySwitch(this);
             }

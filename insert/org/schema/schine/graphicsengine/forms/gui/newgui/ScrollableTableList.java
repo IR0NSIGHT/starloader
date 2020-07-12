@@ -324,10 +324,11 @@ public abstract class ScrollableTableList<E> extends GUIElement implements Obser
     public float getContentHeight() {
         return this.scrollPanel.getHeight();
     }
-
+    //INSERTED CODE @223
     public GUIScrollablePanel getScrollPanel() {
         return scrollPanel;
     }
+    ///
 
     public FilterController<E> getFilterController() {
         return filterController;

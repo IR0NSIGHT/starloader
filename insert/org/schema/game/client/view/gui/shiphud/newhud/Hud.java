@@ -81,7 +81,6 @@ public class Hud extends GUIElement {
     private PowerBatteryBar powerBatteryBar;
     private PowerStabilizationBar powerStabilizationBar;
     private PowerConsumptionBar powerConsumptionBar;
-
     //INSERTED CODE @86
     public static ArrayList<GUIElement> customElements = new ArrayList<GUIElement>();
     ///

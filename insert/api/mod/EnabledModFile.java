@@ -15,7 +15,7 @@ public class EnabledModFile {
         if(instance == null){
             instance = new EnabledModFile();
         }
-        return instance;
+        return instance;//
     }
     public boolean isClientEnabled(ModInfo info){
         return enabledMods.contains(info.serialize());
