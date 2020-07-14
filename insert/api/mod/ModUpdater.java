@@ -36,10 +36,13 @@ public class ModUpdater {
                         downloadAndLoadMod(mod.getName());
                     } catch (IOException | InvocationTargetException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
                         e.printStackTrace();
-                        DebugFile.err("An error occured while downloading mod");
+                        DebugFile.err("An error occured while downloading mod, whatever.");
                     }
-                }else{
+                }else if (resDate < installedResDate){
+                    DebugFile.log("If you are seeing this, something REALLY went wrong");
                     DebugFile.log(installedResDate + " [Installed] ==> [Remote] " + resDate);
+                }else{
+                    DebugFile.log("Mod up to date");
                 }
             }else{
                 DebugFile.warn("Could not find mod: " + mod.getName() + " on StarMadeDock, not trying to update it.");
