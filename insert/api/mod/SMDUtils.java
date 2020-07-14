@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 //XF refers to "XenForo" the forum software SMD uses
 //SMD refers to "StarMade Dock"
 public class SMDUtils {
+    @Nullable
     public static JsonArray getSMDMods() {
         //6 = XF id for category "mods"
         try {
@@ -27,6 +29,7 @@ public class SMDUtils {
             return getJsonArray(IOUtils.toString(get.getInputStream(), StandardCharsets.UTF_8), "resources");
         } catch (IOException e) {
             e.printStackTrace();
+            DebugFile.log("Could not get resource-categories/6/resources from server");
         }
         return null;
     }
@@ -39,7 +42,8 @@ public class SMDUtils {
     }
 
     public static void main(String[] args) throws IOException {
-        downloadMod("Turret Hotkey");
+        HttpURLConnection get = GET("resource-categories/6/resources");
+        System.out.println(IOUtils.toString(get.getInputStream()));
     }
 //    public static JsonObject getSMDMod(String name) throws IOException {
 //        int resId = SMDModData.getInstance().getSMDId(name);
@@ -51,14 +55,14 @@ public class SMDUtils {
         //Get download URL
         DebugFile.log("Attempting to download mod: " + name);
         SMDModData instance = SMDModData.getInstance();
-        Pair<Integer, Integer> data = instance.getModData(name);
+        SMDModInfo data = instance.getModData(name);
         String downloadURL = SMDModData.getInstance().getDownloadURL(name);
         downloadURL = downloadURL.substring("https://starmadedock.net/api/".length());
         //Download to file
         InputStream stream = GET(downloadURL).getInputStream();
         FileUtils.copyInputStreamToFile(stream, new File(name + ".jar"));
         //Put in SMDModData
-        ModDataFile.getInstance().onDownloadedMod(name, data.getRight());
+        ModDataFile.getInstance().onDownloadedMod(name, data.getResourceDate());
     }
 
     //resource-categories/{id}/

@@ -9,7 +9,7 @@ public class ServerModInfo {
     public static String getServerUID(String name, int port){
         return name + ":" + port;
     }
-    private static HashMap<String, ArrayList<String>> serverModInfo = new HashMap<>();
+    private static HashMap<String, ArrayList<String>> serverModInfo = new HashMap<String, ArrayList<String>>();
     public static void registerModInfo(String serverUid, String modName){
         DebugFile.log("[Client] Registering server mod: " + modName + ", for: " + serverUid);
         ArrayList<String> infos = serverModInfo.get(serverUid);

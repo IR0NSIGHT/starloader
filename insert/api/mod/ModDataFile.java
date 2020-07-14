@@ -17,7 +17,7 @@ public class ModDataFile {
     //name,last download date,client enabled
     //Turret Hotkey,112312,enabled
     //If a user downloads a mod manualy, it will not be in the file, so whenever we try to access it, create it
-    private HashMap<String, Pair<Integer, Boolean>> data = new HashMap<>();
+    private HashMap<String, Pair<Integer, Boolean>> data = new HashMap<String, Pair<Integer, Boolean>>();
 
     @NotNull
     private Pair<Integer, Boolean> getClientData(String name){

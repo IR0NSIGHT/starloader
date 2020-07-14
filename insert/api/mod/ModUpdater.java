@@ -25,9 +25,9 @@ public class ModUpdater {
     }
     public static void checkUpdateAll(){
         for (StarMod mod : StarLoader.starMods) {
-            Pair<Integer, Integer> data = SMDModData.getInstance().getModData(mod.getName());
+            SMDModInfo data = SMDModData.getInstance().getModData(mod.getName());
             if(data != null) {
-                Integer resDate = data.getRight();
+                int resDate = data.getResourceDate();
                 int installedResDate = ModDataFile.getInstance().getDownloadDate(mod.getName());
                 DebugFile.log(installedResDate + " [Installed] ==> [Remote] " + resDate);
                 if(installedResDate < resDate){
