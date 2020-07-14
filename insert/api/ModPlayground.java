@@ -53,7 +53,7 @@ public class ModPlayground extends StarMod {
         final BlockConfig config = new BlockConfig();
         for (StarMod mod : StarLoader.starMods) {
             if(mod.isEnabled()) {
-                DebugFile.log("Initializing block for mod: " + mod.modName);
+                DebugFile.log("Initializing block for mod: " + mod.getName());
                 mod.onBlockConfigLoad(config);
             }
         }

@@ -10,11 +10,8 @@ import java.util.ArrayList;
 
 import api.DebugFile;
 import api.listener.events.ServerPingEvent;
-import api.mod.ModInfo;
-import api.mod.ServerModInfo;
 import api.mod.StarLoader;
 import api.mod.StarMod;
-import org.schema.game.common.data.chat.ChannelRouter;
 import org.schema.schine.network.Command;
 import org.schema.schine.network.NetworkProcessor;
 import org.schema.schine.network.client.ClientStateInterface;
@@ -66,12 +63,12 @@ public class GetInfo extends Command {
         serverProcessor.setInfoPinger(true);
         //I am attaching the info to GetInfo, so that later there can be info about if a server is modded or not, and what mods it has.
         //Put all server mods into the return. To be moved later
-        ArrayList<ModInfo> serverMods = new ArrayList<ModInfo>();
+        ArrayList<String> serverMods = new ArrayList<String>();
         for (StarMod mod : StarLoader.starMods) {
             //Dont send server-side mods to clients
             //Maybe we should in the future, but for now its fine.
             if(!mod.isServerSide()) {
-                serverMods.add(mod.getInfo());
+                serverMods.add(mod.getName());
             }
         }
 
@@ -83,9 +80,9 @@ public class GetInfo extends Command {
         clientReturn.add(var8);
         clientReturn.add(event.getPlayers());
         clientReturn.add(event.getMaxPlayers());
-        for (ModInfo mod : serverMods){
-            clientReturn.add(mod.serialize());
-        }
+
+        clientReturn.addAll(serverMods);
+
         this.createReturnToClient(state, serverProcessor, packetId, clientReturn.toArray());
         //this.createReturnToClient(var3, var1, var4, new Object[]{INFO_VERSION, event.getVersion(), event.getName(), event.getDescription(), var8, event.getPlayers(), event.getMaxPlayers()});
         serverProcessor.disconnectAfterSent();

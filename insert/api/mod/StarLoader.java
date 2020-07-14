@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StarLoader {
+    //TODO Make a hashmap and index via mod name
     public static ArrayList<StarMod> starMods = new ArrayList<StarMod>();
     public static HashMap<Class<? extends Event>, ArrayList<Listener>> listeners = new HashMap<Class<? extends Event>, ArrayList<Listener>>();
 
@@ -35,10 +36,10 @@ public class StarLoader {
     }
 
     public static void enableMod(StarMod mod) {
-        DebugFile.log("== Enabling Mod " + mod.getInfo().toString());
+        DebugFile.log("== Enabling Mod " + mod.getName());
         mod.onEnable();
         mod.flagEnabled(true);
-        DebugFile.log("== Mod " + mod.getInfo().toString() + " Enabled");
+        DebugFile.log("== Mod " + mod.getName() + " Enabled");
     }
 
     public static void dumpModInfos() {

@@ -7,8 +7,7 @@ package org.schema.game.client.view.mainmenu;
 
 import javax.swing.*;
 
-import api.mod.EnabledModFile;
-import api.mod.ModInfo;
+import api.mod.ModDataFile;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import org.schema.game.client.controller.GameMainMenuController;
@@ -233,18 +232,17 @@ public class ToolsAndModsDialog extends PlayerButtonTilesInput implements MainMe
             }
         });
         //INSERTED CODE @265
-        final EnabledModFile modFile = EnabledModFile.getInstance();
-        for (StarMod mod : StarLoader.starMods){
-            final ModInfo modInfo = mod.getInfo();
-            GUIHorizontalArea.HButtonColor color = modFile.isClientEnabled(modInfo) ? GUIHorizontalArea.HButtonColor.GREEN : GUIHorizontalArea.HButtonColor.RED;
-            this.addTile("Mod: " + mod.modName, "Version: " + mod.modVersion + "\n" + mod.modDescription, color, new GUICallback() {
+        final ModDataFile modFile = ModDataFile.getInstance();
+        for (final StarMod mod : StarLoader.starMods){
+            GUIHorizontalArea.HButtonColor color = modFile.isClientEnabled(mod.getName()) ? GUIHorizontalArea.HButtonColor.GREEN : GUIHorizontalArea.HButtonColor.RED;
+            this.addTile("Mod: " + mod.getName(), "Version: " + mod.modVersion + "\n" + mod.modDescription, color, new GUICallback() {
                 public boolean isOccluded() {
                     return !ToolsAndModsDialog.this.isActive();
                 }
 
                 public void callback(GUIElement var1, MouseEvent var2) {
                     if (var2.pressedLeftMouse()) {
-                        modFile.setClientEnabled(modInfo, !modFile.isClientEnabled(modInfo));
+                        modFile.setClientEnabled(mod.getName(), !modFile.isClientEnabled(mod.getName()));
                         ToolsAndModsDialog.this.deactivate();
                         ToolsAndModsDialog.this.addToolsAndModsButtons();
                         try {

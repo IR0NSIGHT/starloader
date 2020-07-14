@@ -2,6 +2,7 @@ package api;
 
 import api.DebugFile;
 import api.ModPlayground;
+import api.mod.ModUpdater;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import org.schema.game.client.view.gui.inventory.InventorySlotOverlayElement;
@@ -103,6 +104,9 @@ public class SMModLoader {
                 DebugFile.logError(e, null);
             }
         }
+        DebugFile.log("Checking for updates...");
+        ModUpdater.checkUpdateAll();
+        DebugFile.log("Done.");
         try {
             DebugFile.log("Starting StarMade...");
             Starter.main(args);

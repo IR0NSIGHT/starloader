@@ -5,7 +5,6 @@
 
 package org.schema.schine.network;
 
-import api.mod.ModInfo;
 import api.mod.ServerModInfo;
 
 public class ServerInfo extends AbstractServerInfo {
@@ -29,8 +28,8 @@ public class ServerInfo extends AbstractServerInfo {
         //Skip all of the info about players and version by starting at 7
         System.err.println("[Starloader][ServerInfo] Registering info for: " + host);
         for (int i = 7; i < returnValues.length; i++) {
-            String serializedInfo = (String) returnValues[i];
-            ServerModInfo.registerModInfo(ServerModInfo.getServerUID(host, port), ModInfo.fromString(serializedInfo));
+            String modName = (String) returnValues[i];
+            ServerModInfo.registerModInfo(ServerModInfo.getServerUID(host, port), modName);
         }
         //ServerModInfo.dumpModInfos();
         ///

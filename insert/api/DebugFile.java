@@ -22,7 +22,7 @@ public class DebugFile {
             if(mod == null){
                 writer.append("[StarLoader] [Stacktrace]");
             }else{
-                writer.append("[").append(mod.modName).append("] [Stacktrace]");
+                writer.append("[").append(mod.getName()).append("] [Stacktrace]");
             }
             System.err.println("[StarLoader Mod Error]");
             String excMessage = ExceptionUtils.getMessage(e);
@@ -45,7 +45,7 @@ public class DebugFile {
             if(mod == null){
                 writer.append("[StarLoader] ");
             }else{
-                writer.append("[").append(mod.modName).append("] ");
+                writer.append("[").append(mod.getName()).append("] ");
             }
             writer.append(s).append("\n");
             //Also write to logs/starmade0.log

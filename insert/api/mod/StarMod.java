@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class StarMod {
-    public String modName;
+    private String modName;
     public String modAuthor;
     public String modDescription;
     public String modVersion;
@@ -16,7 +16,7 @@ public class StarMod {
     public boolean forceEnable;
     public boolean serverSide = false;
     private boolean isEnabled = false;
-    private ArrayList<Pair<String>> dependencies = new ArrayList<Pair<String>>();
+    private ArrayList<String> dependencies = new ArrayList<>();
 
     public boolean isEnabled(){
         return isEnabled;
@@ -47,8 +47,8 @@ public class StarMod {
     }
 
     //Builder style setters
-    public StarMod addDependency(String name, String version){
-        dependencies.add(new Pair<String>(name, version));
+    public StarMod addDependency(String name){
+        dependencies.add(name);
         return this;
     }
     public StarMod setModName(String modName) {
@@ -96,13 +96,15 @@ public class StarMod {
     }
 
     //Gets the info that will be sent to the client
-    public ModInfo getInfo(){
-        return new ModInfo(modName, modVersion);
-    }
 
     public void onBlockConfigLoad(BlockConfig config){
 
     }
+
+    public String getName() {
+        return modName;
+    }
+
     //
     private HashMap<String, FileConfiguration> config = new HashMap<String, FileConfiguration>();
     public FileConfiguration getConfig(String name){
@@ -121,7 +123,7 @@ public class StarMod {
 
     //
 
-    public ArrayList<Pair<String>> getDependencies() {
+    public ArrayList<String> getDependencies() {
         return dependencies;
     }
 }

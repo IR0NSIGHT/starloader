@@ -1,7 +1,6 @@
 package api.mod;
 
 import api.DebugFile;
-import api.ModPlayground;
 import api.SMModLoader;
 import api.network.Packet;
 import api.utils.StarRunnable;
@@ -13,7 +12,6 @@ import org.schema.schine.network.StarMadeNetUtil;
 import javax.net.ssl.SSLContext;
 import javax.swing.*;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
@@ -32,7 +30,7 @@ public class ModStarter {
         ArrayList<StarMod> mods = StarLoader.starMods;
         ArrayList<StarMod> toEnable = new ArrayList<StarMod>();
         for (StarMod mod : mods) {
-            if(EnabledModFile.getInstance().isClientEnabled(mod.getInfo())){
+            if(ModDataFile.getInstance().isClientEnabled(mod.getName())){
                 toEnable.add(mod);
             }
         }
@@ -70,7 +68,7 @@ public class ModStarter {
     public static boolean preClientConnect(String serverHost, int serverPort) {
 
         DebugFile.log("Enabling mods...");
-        ArrayList<ModInfo> serverMods = ServerModInfo.getServerInfo(ServerModInfo.getServerUID(serverHost, serverPort));
+        ArrayList<String> serverMods = ServerModInfo.getServerInfo(ServerModInfo.getServerUID(serverHost, serverPort));
         if (serverMods == null) {
             DebugFile.log("Mod info not found for: " + serverHost + ":" + serverPort + " This is likely because they direct connected");
             Controller.getResLoader().setLoadString("Getting server mod info...");
@@ -86,7 +84,7 @@ public class ModStarter {
         }
         if (serverMods == null) {
             DebugFile.log("Mods not found even after refresh... rip");
-            serverMods = new ArrayList<ModInfo>();
+            serverMods = new ArrayList<String>();
         }
         if (serverHost.equals("localhost")) {
             DebugFile.log("Connecting to own server, mods are already enabled by the server");
@@ -94,18 +92,16 @@ public class ModStarter {
             disableAllMods();
             ArrayList<StarMod> enableQueue = new ArrayList<StarMod>();
             for (StarMod mod : StarLoader.starMods) {
-                System.err.println("[Client] >>> Found mod: " + mod.modName);
+                System.err.println("[Client] >>> Found mod: " + mod.getName());
                 //DebugFile.log("Mod info WAS found");
-                for (ModInfo serverMod : serverMods) {
-                    DebugFile.log("le test: " + serverMod.name);
-                    if (serverMod.name.equals(mod.modName)) { //|| EnabledModFile.getInstance().isClientEnabled(mod.getInfo())) {
-                        DebugFile.log("[Client] >>> Correct mod name: " + serverMod.name);
-                        if (serverMod.version.equals(mod.modVersion)) {
-                            serverMods.remove(serverMod);
-                            enableQueue.add(mod);
-                            DebugFile.log("[Client] <<< Enabled: " + mod.modName);
-                            break;
-                        }
+                for (String serverMod : serverMods) {
+                    DebugFile.log("le test: " + serverMod);
+                    if (serverMod.equals(mod.getName())) { //|| EnabledModFile.getInstance().isClientEnabled(mod.getInfo())) {
+                        DebugFile.log("[Client] >>> Correct mod name: " + serverMod);
+                        serverMods.remove(serverMod);
+                        enableQueue.add(mod);
+                        DebugFile.log("[Client] <<< Enabled: " + mod.getName());
+                        break;
                     }
                 }
             }
@@ -113,19 +109,22 @@ public class ModStarter {
             if (!serverMods.isEmpty()) {
                 //Now we need to download them from the client
                 DebugFile.log("=== DEPENDENCIES NOT MET, DOWNLOADING MODS ===");
-                for (ModInfo sMod : serverMods) {
-                    sMod.fetchDownloadURL();
-                    DebugFile.log("WE NEED TO DOWNLOAD: " + sMod.toString());
+                for (String serverModName : serverMods) {
+                    DebugFile.log("WE NEED TO DOWNLOAD: " + serverModName);
                     try {
-                        String fileName = "mods/" + sMod.name + ".jar";
-                        Controller.getResLoader().setLoadString("Downloading mod: " + sMod.name);
-                        downloadFile(new URL(sMod.downloadURL), fileName);
-                        DebugFile.log("Successfully downloaded mod: " + sMod.name + ", version: " + sMod.version + ", from: " + sMod.downloadURL + ", into: " + sMod.name + ".jar");
+//
+                        String fileName = "mods/" + serverModName + ".jar";
+//                        Controller.getResLoader().setLoadString("Downloading mod: " + serverModName);
+//                        downloadFile(new URL(serverModName.downloadURL), fileName);
+//                        DebugFile.log("Successfully downloaded mod: " + serverModName + ", from: " + serverModName.downloadURL + ", into: " + serverModName.name + ".jar");
+
+                        SMDUtils.downloadMod(serverModName);
                         //Get file, convert to URL
                         URL[] url = new URL[]{new File(fileName).toURI().toURL()};
-                        Controller.getResLoader().setLoadString("Done downloading, Loading mod: " + sMod.name);
+                        Controller.getResLoader().setLoadString("Done downloading, Loading mod: " + serverModName);
                         StarMod starMod = SMModLoader.loadModFromJar(new URLClassLoader(url), new JarFile(fileName));
                         Controller.getResLoader().setLoadString("Mod loaded.");
+
                         enableQueue.add(starMod);
 
                     } catch (Exception e) {
@@ -176,15 +175,9 @@ public class ModStarter {
         Collections.sort(mods, new Comparator<StarMod>() {
             @Override
             public int compare(StarMod mod1, StarMod mod2) {
-                int m1Hash = mod1.modName.hashCode();
-                int m2Hash = mod2.modName.hashCode();
-                if (m1Hash == m2Hash) {
-                    return 0;
-                } else if (m1Hash < m2Hash) {
-                    return -1;
-                } else {
-                    return 1;
-                }
+                int m1Hash = mod1.getName().hashCode();
+                int m2Hash = mod2.getName().hashCode();
+                return Integer.compare(m1Hash, m2Hash);
             }
         });
         //2. Recursively enable mods in order
@@ -198,8 +191,8 @@ public class ModStarter {
     }
 
     private static void enableModRec(StarMod mod) {
-        for (Pair<String> dependency : mod.getDependencies()) {
-            StarMod dep = fromInfo(new ModInfo(dependency.a, dependency.b));
+        for (String dependency : mod.getDependencies()) {
+            StarMod dep = fromName(dependency);
             enableModRec(dep);
         }
         if(!mod.isEnabled()) {
@@ -207,12 +200,12 @@ public class ModStarter {
         }
     }
 
-    private static StarMod fromInfo(ModInfo info) {
+    public static StarMod fromName(String name) {
         for (StarMod mod : StarLoader.starMods) {
-            if (mod.getInfo().equals(info)) {
+            if(mod.getName().equals(name)){
                 return mod;
             }
         }
-        throw new RuntimeException("Could not get ModInfo: " + info.toString());
+        throw new RuntimeException("Could not get Mod name: " + name);
     }
 }

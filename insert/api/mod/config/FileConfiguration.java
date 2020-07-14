@@ -6,7 +6,7 @@ import api.mod.StarMod;
 import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
-//TODO: Switch of to TOML4J
+//TODO: Switch off to TOML4J
 public class FileConfiguration {
     private StarMod mod;
     private HashMap<String, String> values = new HashMap<String, String>();
@@ -14,7 +14,7 @@ public class FileConfiguration {
     private String configPath;
     public FileConfiguration(StarMod mod, String name){
         this.mod = mod;
-        this.configPath = "modconfigs" + File.separator + mod.modName + File.separator + name +".yml";
+        this.configPath = "modconfigs" + File.separator + mod.getName() + File.separator + name +".yml";
         reloadConfig();
     }
     public void reloadConfig(){
