@@ -50,6 +50,7 @@ public class DebugFile {
             writer.append(s).append("\n");
             //Also write to logs/starmade0.log
             System.err.println("[DebugFile] [StarLoader]" + s);
+            System.out.println("[DebugFile] [StarLoader]" + s);
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();

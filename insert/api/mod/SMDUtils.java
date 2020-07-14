@@ -1,5 +1,6 @@
 package api.mod;
 
+import api.DebugFile;
 import api.SMModLoader;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -48,6 +49,7 @@ public class SMDUtils {
 //    }
     public static void downloadMod(String name) throws IOException {
         //Get download URL
+        DebugFile.log("Attempting to download mod: " + name);
         SMDModData instance = SMDModData.getInstance();
         Pair<Integer, Integer> data = instance.getModData(name);
         String downloadURL = SMDModData.getInstance().getDownloadURL(name);

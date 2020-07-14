@@ -38,7 +38,7 @@ public class SMDModData {
             int modResourceDate = jsonModObject.get("last_update").getAsInt();
 //            int modResourceDate = jsonModObject.get("resource_date").getAsInt();
             allModData.put(modTitle, new ImmutablePair<Integer, Integer>(modResourceId, modResourceDate));
-            System.err.println("[StarLoader SMDModData] Fetched mod from SMD: " + modTitle + ", " + modResourceId + "");
+            System.out.println("[StarLoader SMDModData] Fetched mod from SMD: " + modTitle + ", " + modResourceId + "");
         }
     }
     public int getLastUpdateDate(String modName){
