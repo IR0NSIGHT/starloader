@@ -215,7 +215,7 @@ public class MainMenuGUI extends GUIAncor {
 
             }
         }, (Object)null);
-        //INSERTED CODE
+        //INSERTED CODE @268
         this.addButton("MOD BROWSER", new GUICallback() {
             public boolean isOccluded() {
                 return !MainMenuGUI.this.areButtonsUsable();
@@ -266,7 +266,7 @@ public class MainMenuGUI extends GUIAncor {
 
         this.init = true;
     }
-    //INSERTED CODE
+    //INSERTED CODE @294
     private void popupModBrowserDialog() {
         ModBrowserDialog d = new ModBrowserDialog(getState());
         d.getInputPanel().onInit();

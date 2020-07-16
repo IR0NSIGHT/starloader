@@ -9,6 +9,7 @@ import org.schema.game.common.data.physics.Pair;
 import org.schema.schine.graphicsengine.core.Controller;
 import org.schema.schine.network.StarMadeNetUtil;
 
+import javax.annotation.Nullable;
 import javax.net.ssl.SSLContext;
 import javax.swing.*;
 import java.io.*;
@@ -193,19 +194,21 @@ public class ModStarter {
     private static void enableModRec(StarMod mod) {
         for (String dependency : mod.getDependencies()) {
             StarMod dep = fromName(dependency);
+            assert dep != null : "Mod name was NULL! major error tbh";
             enableModRec(dep);
         }
         if(!mod.isEnabled()) {
             StarLoader.enableMod(mod);
         }
     }
-
+    @Nullable
     public static StarMod fromName(String name) {
         for (StarMod mod : StarLoader.starMods) {
             if(mod.getName().equals(name)){
                 return mod;
             }
         }
-        throw new RuntimeException("Could not get Mod name: " + name);
+        return null;
+//        throw new RuntimeException("Could not get Mod name: " + name);
     }
 }

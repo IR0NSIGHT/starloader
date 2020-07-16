@@ -67,11 +67,11 @@ public class Constructing extends ShipyardState {
             this.currentDocked.railController.fillElementCountMapRecursive(this.getEntityState().currentMapFrom);
         }
 
-        //
+        //INSERTED (not) CODE
         ElementCountMap resources = StaticPlayground.getRawResources(this.getEntityState().currentMapFrom);
         this.getEntityState().currentMapFrom.resetAll();
         this.getEntityState().currentMapFrom = resources;
-        //
+        ///
 
         this.currentFill = this.getEntityState().currentMapTo.getTotalAmount();
         this.checkedName = false;

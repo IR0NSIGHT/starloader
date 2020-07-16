@@ -87,6 +87,7 @@ public class GetInfo extends Command {
         //this.createReturnToClient(var3, var1, var4, new Object[]{INFO_VERSION, event.getVersion(), event.getName(), event.getDescription(), var8, event.getPlayers(), event.getMaxPlayers()});
         serverProcessor.disconnectAfterSent();
     }
+    ///
 
     public void writeAndCommitParametriziedCommand(Object[] var1, int var2, int var3, short var4, NetworkProcessor var5) throws IOException {
         this.started = System.currentTimeMillis();
