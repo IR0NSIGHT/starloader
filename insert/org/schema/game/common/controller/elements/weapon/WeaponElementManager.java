@@ -5,7 +5,7 @@
 
 package org.schema.game.common.controller.elements.weapon;
 
-import api.listener.events.CannonShootEvent;
+import api.listener.events.CannonProjectileAddEvent;
 import api.mod.StarLoader;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.linearmath.Transform;
@@ -38,7 +38,6 @@ import org.schema.game.common.controller.elements.UsableCombinableControllableEl
 import org.schema.game.common.controller.elements.UsableControllableElementManager;
 import org.schema.game.common.controller.elements.WeaponElementManagerInterface;
 import org.schema.game.common.controller.elements.WeaponStatisticsData;
-import org.schema.game.common.controller.elements.UsableControllableFireingElementManager.ReloadListener;
 import org.schema.game.common.controller.elements.combination.CombinationAddOn;
 import org.schema.game.common.controller.elements.combination.WeaponCombiSettings;
 import org.schema.game.common.controller.elements.combination.WeaponCombinationAddOn;
@@ -271,14 +270,6 @@ public class WeaponElementManager extends UsableCombinableControllableElementMan
             if (!this.isUsingPowerReactors() && !this.consumePower(c.getPowerConsumption())) {
                 this.handleResponse(ShootingRespose.NO_POWER, c, var3.weapontOutputWorldPos);
             } else {
-
-                //INSERTED CODE @251
-                CannonShootEvent event = new CannonShootEvent(c);
-                StarLoader.fireEvent(CannonShootEvent.class, event, this.isOnServer());
-                if(event.isCanceled()){
-                    return;
-                }
-                ///
 
                 c.setStandardShotReloading();
                 this.getParticleController().addProjectile(this.getSegmentController(),

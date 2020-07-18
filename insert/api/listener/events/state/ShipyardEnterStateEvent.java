@@ -7,7 +7,6 @@ public class ShipyardEnterStateEvent extends Event {
     private ShipyardState enteredStatef;
 
     public ShipyardEnterStateEvent(ShipyardState enteredState){
-
         enteredStatef = enteredState;
     }
 

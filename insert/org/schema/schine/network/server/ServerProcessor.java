@@ -6,6 +6,7 @@
 package org.schema.schine.network.server;
 
 import api.DebugFile;
+import api.ModPlayground;
 import api.network.PacketReadBuffer;
 import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
@@ -342,6 +343,7 @@ public class ServerProcessor extends Pinger implements Runnable, NetworkProcesso
                         }
                         //INSERTED CODE @521
                         if(size == -2){
+                            ModPlayground.broadcastMessage("RECIEVED PACKET!!!");
                             //SPECIAL PACKET ID received (in this case its size)
                             short packetId = this.dataInputStream.readShort();
                             //Construct packet

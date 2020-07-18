@@ -4,16 +4,13 @@
 
 package org.schema.game.common.controller.elements.combination;
 
-import api.listener.events.CannonShootEvent;
+import api.listener.events.CannonProjectileAddEvent;
 import api.mod.StarLoader;
-import org.schema.game.common.controller.elements.combination.modifier.Modifier;
-import org.schema.game.common.data.element.ElementCollection;
 import org.schema.game.common.controller.elements.missile.dumb.DumbMissileCollectionManager;
 import org.schema.game.common.controller.elements.beam.damageBeam.DamageBeamCollectionManager;
-import org.schema.game.common.controller.elements.ElementCollectionManager;
 import org.schema.schine.graphicsengine.core.Timer;
 import org.schema.game.common.data.player.PlayerState;
-import org.schema.schine.network.Identifiable;
+
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 import org.schema.game.common.controller.elements.ShootingRespose;
@@ -55,12 +52,6 @@ public class WeaponCombinationAddOn extends CombinationAddOn<WeaponUnit, WeaponC
         dir.normalize();
         dir.scale(mod.outputSpeed);
 
-        //INSERTED CODE @89
-        CannonShootEvent event = new CannonShootEvent(firingUnit);
-        StarLoader.fireEvent(CannonShootEvent.class, event, fireingCollection.isOnServer());
-        if(event.isCanceled()){
-            return ShootingRespose.NO_POWER;
-        }
         ((WeaponElementManager)this.elementManager).getParticleController()
                 .addProjectile(((WeaponElementManager)this.elementManager).getSegmentController(),
                         shootContainer.weapontOutputWorldPos, dir,
@@ -68,7 +59,6 @@ public class WeaponCombinationAddOn extends CombinationAddOn<WeaponUnit, WeaponC
                         mod.outputAcidType, mod.outputProjectileWidth,
                         firingUnit.getPenetrationDepth(mod.outputDamage),
                         mod.outputImpactForce, weaponId, fireingCollection.getColor());
-        ///
         fireingCollection.damageProduced += mod.outputDamage;
         fireingCollection.getElementManager().handleRecoil(fireingCollection, firingUnit, shootContainer.weapontOutputWorldPos, shootContainer.shootingDirTemp, mod.outputRecoil, mod.outputDamage);
         return ShootingRespose.FIRED;
