@@ -54,7 +54,7 @@ public class GameClient {
     }
 
     public static Collection<PlayerState> getConnectedPlayers(){
-        return GameClientState.instance.getOnlinePlayersLowerCaseMap().values();
+        return GameClientState.instance.getOnlinePlayersLowerCaseMap().values();//
     }
 
 }

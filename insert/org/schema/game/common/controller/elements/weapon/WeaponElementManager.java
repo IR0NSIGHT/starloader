@@ -272,7 +272,7 @@ public class WeaponElementManager extends UsableCombinableControllableElementMan
                 this.handleResponse(ShootingRespose.NO_POWER, c, var3.weapontOutputWorldPos);
             } else {
 
-                //INSERTED CODE @249
+                //INSERTED CODE @251
                 CannonShootEvent event = new CannonShootEvent(c);
                 StarLoader.fireEvent(CannonShootEvent.class, event, this.isOnServer());
                 if(event.isCanceled()){

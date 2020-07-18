@@ -5,7 +5,9 @@
 
 package org.schema.game.common.controller.elements.shipyard.orders.states;
 
-import api.utils.StaticPlayground;
+import api.ModPlayground;
+import api.listener.events.calculate.ShipyardConstructCalculateItemsEvent;
+import api.mod.StarLoader;
 import com.bulletphysics.linearmath.Transform;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -67,10 +69,12 @@ public class Constructing extends ShipyardState {
             this.currentDocked.railController.fillElementCountMapRecursive(this.getEntityState().currentMapFrom);
         }
 
-        //INSERTED (not) CODE
-        ElementCountMap resources = StaticPlayground.getRawResources(this.getEntityState().currentMapFrom);
-        this.getEntityState().currentMapFrom.resetAll();
-        this.getEntityState().currentMapFrom = resources;
+        //INSERTED CODE
+        ShipyardConstructCalculateItemsEvent event = new ShipyardConstructCalculateItemsEvent(this);
+        StarLoader.fireEvent(event, true);
+//        ElementCountMap resources = StaticPlayground.getRawResources(this.getEntityState().currentMapFrom);
+//        this.getEntityState().currentMapFrom.resetAll();
+//        this.getEntityState().currentMapFrom = resources;
         ///
 
         this.currentFill = this.getEntityState().currentMapTo.getTotalAmount();

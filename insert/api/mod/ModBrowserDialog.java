@@ -46,8 +46,15 @@ public class ModBrowserDialog extends PlayerButtonTilesInput implements MainMenu
                         if (var2.pressedLeftMouse()) {
                             try {
                                 ModUpdater.downloadAndLoadMod(mod);
-
-                            } catch (IOException | InvocationTargetException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (InvocationTargetException e) {
+                                e.printStackTrace();
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (InstantiationException e) {
+                                e.printStackTrace();
+                            } catch (IllegalAccessException e) {
                                 e.printStackTrace();
                             }
                         }

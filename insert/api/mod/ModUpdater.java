@@ -34,7 +34,7 @@ public class ModUpdater {
                     DebugFile.log("Mod: " + mod.getName() + " out of date. Updating...");
                     try {
                         downloadAndLoadMod(mod.getName());
-                    } catch (IOException | InvocationTargetException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         DebugFile.err("An error occured while downloading mod, whatever.");
                     }

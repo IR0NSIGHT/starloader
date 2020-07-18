@@ -16,7 +16,7 @@ public class StarMod {
     public boolean forceEnable;
     public boolean serverSide = false;
     private boolean isEnabled = false;
-    private ArrayList<String> dependencies = new ArrayList<>();
+    private ArrayList<String> dependencies = new ArrayList<String>();
 
     public boolean isEnabled(){
         return isEnabled;

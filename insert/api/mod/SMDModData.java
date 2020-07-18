@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class SMDModData {
     //Index all mods from SMD with Name -> [resource id, resource date]
     private static SMDModData instance;
-    private final HashMap<String, SMDModInfo> allModData = new HashMap<>();
+    private final HashMap<String, SMDModInfo> allModData = new HashMap<String, SMDModInfo>();
     public static SMDModData getInstance() {
         if(instance == null){
             instance = new SMDModData();
@@ -93,7 +93,7 @@ class SMDModInfo{
         inst.ratingAverage = jsonModObject.get("rating_avg").getAsFloat();
         inst.tagLine = jsonModObject.get("tag_line").getAsString();
         JsonArray tags = jsonModObject.get("tags").getAsJsonArray();
-        ArrayList<String> tagArray = new ArrayList<>(tags.size());
+        ArrayList<String> tagArray = new ArrayList<String>(tags.size());
         for (int i = 0; i < tags.size(); i++) {
             tagArray.add(tags.get(i).getAsString());
         }
