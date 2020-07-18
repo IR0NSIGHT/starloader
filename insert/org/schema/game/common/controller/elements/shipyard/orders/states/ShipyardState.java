@@ -70,7 +70,7 @@ public abstract class ShipyardState extends State {
         this.getEntityState().setCompletionOrderPercentAndSendIfChanged(0.0D);
         boolean var1 = this.onEnterS();
         this.loadedFromTag = false;
-        //INSERTED CODE
+        //INSERTED CODE @77
         StarLoader.fireEvent(new ShipyardEnterStateEvent(this), true);
         ///
         return var1;

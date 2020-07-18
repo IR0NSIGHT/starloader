@@ -77,16 +77,16 @@ public abstract class State {
         this.stateTransition(var1, 0);
     }
 
-    public void stateTransition(Transition var1, int var2) throws FSMException {
+    public void stateTransition(Transition t, int subId) throws FSMException {
         assert this.getEntityState() != null;
 
         assert this.getMachine() != null;
 
         assert this.getMachine().getFsm() != null;
 
-        this.getMachine().getFsm().stateTransition(var1, var2);
-        //INSERTED CODE
-        StarLoader.fireEvent(new StateTransitionEvent(this, var1, var2), true);
+        this.getMachine().getFsm().stateTransition(t, subId);
+        //INSERTED CODE @199
+        StarLoader.fireEvent(new StateTransitionEvent(this, t, subId), true);
         ///
     }
 

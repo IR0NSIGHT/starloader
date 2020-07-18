@@ -184,22 +184,22 @@ public class ProjectileController extends ParticleController<ProjectileParticleC
     }
 
     public void addProjectile(Identifiable owner, Vector3f from, Vector3f toForce, float damage, float distance, int acidFormula, float projectileWidth, int penetrationDepth, float impactForce, long usableId, Vector4f color) {
-        int index = addParticle(from, toForce);
+        int pointer = addParticle(from, toForce);
 
-        getParticles().setColor(index, color);
-        getParticles().setOwnerId(index, owner.getId());
-        getParticles().setWeaponId(index, usableId);
-        getParticles().setDamage(index, damage);
-        getParticles().setDamageInitial(index, damage);
-        getParticles().setMaxDistance(index, distance);
-        getParticles().setAcidFormulaIndex(index, acidFormula);
-        getParticles().setWidth(index, projectileWidth);
-        getParticles().setPenetrationDepth(index, penetrationDepth);
-        getParticles().setImpactForce(index, impactForce);
-        getParticles().setId(index, projectileIdGen++);
+        getParticles().setColor(pointer, color);
+        getParticles().setOwnerId(pointer, owner.getId());
+        getParticles().setWeaponId(pointer, usableId);
+        getParticles().setDamage(pointer, damage);
+        getParticles().setDamageInitial(pointer, damage);
+        getParticles().setMaxDistance(pointer, distance);
+        getParticles().setAcidFormulaIndex(pointer, acidFormula);
+        getParticles().setWidth(pointer, projectileWidth);
+        getParticles().setPenetrationDepth(pointer, penetrationDepth);
+        getParticles().setImpactForce(pointer, impactForce);
+        getParticles().setId(pointer, projectileIdGen++);
 
-        //INSERTED CODE @225
-        CannonProjectileAddEvent event = new CannonProjectileAddEvent(this, getParticles(), index);
+        //INSERTED CODE @227
+        CannonProjectileAddEvent event = new CannonProjectileAddEvent(this, getParticles(), pointer);
         StarLoader.fireEvent(event, isOnServer());
         ///
 

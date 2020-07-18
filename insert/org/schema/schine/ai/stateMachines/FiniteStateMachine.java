@@ -79,16 +79,16 @@ public abstract class FiniteStateMachine<E> {
         if (this.currentState == null) {
             throw new FSMException("[CRITICAL] no state set! please set the FiniteStateMachine.setStartState(State state) Method in createFSM()");
         } else {
-            State state = this.currentState;
-            if (state.isNewState()) {
-                state.onEnter();
-                state.setNewState(false);
-                //INSERTED CODE
-                FSMStateEnterEvent event = new FSMStateEnterEvent(this, state);
+            State s = this.currentState;
+            if (s.isNewState()) {
+                s.onEnter();
+                s.setNewState(false);
+                //INSERTED CODE @172
+                FSMStateEnterEvent event = new FSMStateEnterEvent(this, s);
                 StarLoader.fireEvent(event, true);
                 ///
             } else {
-                state.onUpdate();
+                s.onUpdate();
             }
         }
     }
