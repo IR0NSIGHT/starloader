@@ -1,32 +1,27 @@
 package api.mod;
 
 import api.DebugFile;
-import api.SMModLoader;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 //XF refers to "XenForo" the forum software SMD uses
 //SMD refers to "StarMade Dock"
 public class SMDUtils {
-    @Nullable
     public static JsonArray getSMDMods() {
         //6 = XF id for category "mods"
         try {
             HttpURLConnection get = GET("resource-categories/6/resources");
-            return getJsonArray(IOUtils.toString(get.getInputStream(), StandardCharsets.UTF_8), "resources");
+            return getJsonArray(IOUtils.toString(get.getInputStream(), "UTF-8"), "resources");
         } catch (IOException e) {
             e.printStackTrace();
             DebugFile.log("Could not get resource-categories/6/resources from server");

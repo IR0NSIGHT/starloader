@@ -3,7 +3,7 @@ package api.listener.events;
 import api.listener.type.ClientEvent;
 import org.schema.game.client.view.gui.shiphud.newhud.TargetPanel;
 
-@ClientEvent
+@Deprecated
 public class TargetPanelDrawEvent extends Event {
     private TargetPanel panel;
 
