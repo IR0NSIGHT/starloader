@@ -1,6 +1,8 @@
 package api;
 
 import api.config.BlockConfig;
+import api.listener.Listener;
+import api.listener.events.player.PlayerChatEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.network.Packet;
@@ -8,6 +10,7 @@ import api.network.packets.ServerToClientMessage;
 import api.utils.gui.SimpleGUIBuilder;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
+import org.schema.game.network.objects.ChatMessage;
 import org.schema.game.server.data.GameServerState;
 import org.schema.schine.network.RegisteredClientOnServer;
 
@@ -87,7 +90,13 @@ public class ModPlayground extends StarMod {
     public void onEnable() {
         DebugFile.log("Loading default mod...");
         Packet.registerPacket(ServerToClientMessage.class);
-
+        StarLoader.registerListener(PlayerChatEvent.class, new Listener<PlayerChatEvent>() {
+            @Override
+            public void onEvent(PlayerChatEvent event) {
+                ChatMessage message = event.getMessage();
+                ModPlayground.broadcastMessage("the message: " + message.text);
+            }
+        });
 
 //        StarLoader.registerListener(ControlManagerActivateEvent.class, new Listener<ControlManagerActivateEvent>() {
 //            @Override

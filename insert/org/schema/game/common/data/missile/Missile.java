@@ -5,6 +5,7 @@
 
 package org.schema.game.common.data.missile;
 
+import api.listener.events.register.RegisterAddonsEvent;
 import api.listener.events.weapon.MissileHitByProjectileEvent;
 import api.mod.StarLoader;
 import com.bulletphysics.collision.dispatch.CollisionObject;
@@ -857,6 +858,7 @@ public abstract class Missile implements Damager, SimpleGameObject, Physical {
         if (this.hp <= 0) {
             this.setKilledByProjectile(true);
         }
+
         //INSERTED CODE
         MissileHitByProjectileEvent event = new MissileHitByProjectileEvent(this, projectileId, projectileDamage);
         StarLoader.fireEvent(event, isOnServer());
