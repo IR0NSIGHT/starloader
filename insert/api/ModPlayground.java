@@ -1,13 +1,22 @@
 package api;
 
+import api.common.GameClient;
 import api.config.BlockConfig;
 import api.listener.Listener;
 import api.listener.events.player.PlayerChatEvent;
+import api.listener.events.player.PlayerCommandEvent;
+import api.listener.events.register.ElementRegisterEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.network.Packet;
 import api.network.packets.ServerToClientMessage;
+import api.utils.game.SegmentControllerUtils;
 import api.utils.gui.SimpleGUIBuilder;
+import org.schema.game.client.data.PlayerControllable;
+import org.schema.game.common.controller.ManagedUsableSegmentController;
+import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.elements.ManagerModuleControllable;
+import org.schema.game.common.controller.elements.power.reactor.tree.ReactorElement;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.network.objects.ChatMessage;
@@ -35,7 +44,6 @@ public class ModPlayground extends StarMod {
     public void onBlockConfigLoad(BlockConfig config) {
     }
     public void registerComputerModulePair(short computer, short module){
-
         ElementInformation comp = ElementKeyMap.infoArray[computer];
         comp.mainCombinationController = true;
         comp.systemBlock = true;
@@ -43,7 +51,6 @@ public class ModPlayground extends StarMod {
         comp.controlling.add(module);
 
         ElementKeyMap.infoArray[module].controlledBy.add(computer);
-
     }
     public void registerElementBlock(ElementInformation info){
         info.systemBlock = true;
@@ -95,6 +102,21 @@ public class ModPlayground extends StarMod {
             public void onEvent(PlayerChatEvent event) {
                 ChatMessage message = event.getMessage();
                 ModPlayground.broadcastMessage("the message: " + message.text);
+            }
+        });
+        StarLoader.registerListener(PlayerCommandEvent.class, new Listener<PlayerCommandEvent>() {
+            @Override
+            public void onEvent(PlayerCommandEvent event) {
+                PlayerControllable control = GameClient.getCurrentControl();
+                if(control instanceof SegmentController){
+                    ManagedUsableSegmentController<?> seg = (ManagedUsableSegmentController<?>) control;
+                    ReactorElement jumpChamber = SegmentControllerUtils.getChamberFromElement(seg, ElementKeyMap.getInfo(ElementKeyMap.REACTOR_CHAMBER_JUMP_DISTANCE_3));
+                    if(jumpChamber != null && jumpChamber.isAllValid()){
+                        ModPlayground.broadcastMessage("yes!!!");
+                    }else{
+                        ModPlayground.broadcastMessage("no");
+                    }
+                }
             }
         });
 

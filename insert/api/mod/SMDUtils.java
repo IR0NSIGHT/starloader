@@ -73,4 +73,15 @@ public class SMDUtils {
         return openConnection;
 //        System.out.println(text);
     }
+    public static HttpURLConnection getSMFile(String request) throws IOException {
+        URL url = new URL("https://files.star-made.org/" + request);
+        HttpURLConnection openConnection = (HttpURLConnection) url.openConnection();
+        openConnection.setRequestMethod("GET");
+        openConnection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+        openConnection.setRequestProperty("User-Agent", "StarMade-Client");
+//        System.out.println("RCode: " + openConnection.getResponseCode());
+//        System.out.println(openConnection.getResponseMessage());
+        return openConnection;
+//        System.out.println(text);
+    }
 }

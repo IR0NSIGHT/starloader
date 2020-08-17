@@ -104,7 +104,7 @@ public class JumpAddOn extends RecharchableSingleModule {
                 }
             }
         }
-        InterdictionCheckEvent event = new InterdictionCheckEvent(this, this.segmentController, false);
+        InterdictionCheckEvent event = new InterdictionCheckEvent(this, this.segmentController, retVal);
         StarLoader.fireEvent(InterdictionCheckEvent.class, event, this.isOnServer());
 
         if(!event.useDefault){

@@ -8,6 +8,7 @@ import org.schema.game.client.data.GameClientState;
 import org.schema.game.common.data.SendableGameState;
 import org.schema.game.server.data.GameServerState;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,4 +111,5 @@ public class StarLoader {
     public static ArrayList<ImmutablePair<String, String>> getCommands() {
         return commands;
     }
+
 }

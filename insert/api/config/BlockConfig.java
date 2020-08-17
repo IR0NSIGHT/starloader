@@ -16,6 +16,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -43,6 +45,7 @@ public class BlockConfig {
         info.setBuildIconNum(buildIcoNum);
 
     }
+
     public static ElementInformation newElement(String name, short... ids){
         short id = (short) ElementKeyMap.insertIntoProperties(name);
         ElementInformation elementInformation = new ElementInformation(id, name, ElementKeyMap.getCategoryHirarchy(), ids);
@@ -53,8 +56,25 @@ public class BlockConfig {
                 short t = ids[0];
                 ids = new short[]{t,t,t,t,t,t};
                 elementInformation.setTextureId(ids);
+            }else if(idLength == 3){
+                ids = new short[]{ids[0],ids[1],ids[0],ids[1],ids[0],ids[1]};
+                elementInformation.setTextureId(ids);
+            }else{
+                elementInformation.setTextureId(ids);
             }
-            elementInformation.normalizeTextureIds();
+
+            try {
+                Method m = ElementInformation.class.getDeclaredMethod("recreateTextureMapping");
+                m.setAccessible(true);
+                m.invoke(elementInformation);
+                //imagine using java 6
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
         } else {
             DebugFile.warn("You just passed a " + idLength + " array to newElement... Use sizes of 1, 3, or 6");
             DebugFile.warn("If its a grey basic armor texture, that is why");
