@@ -423,15 +423,6 @@ public class ShipManagerContainer extends ManagerContainer<Ship> implements Acti
         this.modules.add(this.repair = new ManagerModuleCollection(new RepairElementManager(this.getSegmentController()), (short)39, (short)30));
         this.modules.add(this.tractorBeam = new ManagerModuleCollection(new TractorElementManager(this.getSegmentController()), (short)360, (short)361));
 
-        //INSERTED CODE @599
-        ElementRegisterEvent event = new ElementRegisterEvent(this);
-        StarLoader.fireEvent(ElementRegisterEvent.class, event, this.isOnServer());
-
-        for (ManagerModule moduleCollection : event.getModules()) {
-            this.modules.add(moduleCollection);
-        }
-        ///
-
         this.modules.add(this.weapon = new ManagerModuleCollection(new WeaponElementManager(this.getSegmentController()), (short)6, (short)16));
         this.modules.add(this.jumpDrive = new ManagerModuleCollection(new JumpDriveElementManager(this.getSegmentController()), (short)544, (short)545));
         this.modules.add(this.jumpProhibiter = new ManagerModuleCollection(new JumpInhibitorElementManager(this.getSegmentController()), (short)681, (short)682));
@@ -462,6 +453,15 @@ public class ShipManagerContainer extends ManagerContainer<Ship> implements Acti
             this.factory = new FactoryAddOn();
             this.factory.initialize(this.getModules(), this.getSegmentController());
         }
+
+        //INSERTED CODE @599
+        ElementRegisterEvent event = new ElementRegisterEvent(this);
+        StarLoader.fireEvent(ElementRegisterEvent.class, event, this.isOnServer());
+
+        for (ManagerModule moduleCollection : event.getRegisteredModules()) {
+            this.modules.add(moduleCollection);
+        }
+        ///
 
     }
 
