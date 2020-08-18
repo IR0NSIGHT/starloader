@@ -134,10 +134,6 @@ public class SegmentControllerHpController implements SegmentControllerHpControl
         assert this.isOnServer();
 
         if (!this.segmentController.isCoreOverheating() && !this.isRebooting()) {
-            //INSERTED CODE @206
-            SegmentControllerOverheatEvent event = new SegmentControllerOverheatEvent(this.segmentController, lastDamager);
-            StarLoader.fireEvent(SegmentControllerOverheatEvent.class, event, this.isOnServer());
-            ///
 
             System.err.println("[SERVER] Overheating triggered for " + this.segmentController);
             Sendable var1 = (Sendable)this.segmentController.getState().getLocalAndRemoteObjectContainer().getLocalObjects().get(this.lastDamager);
@@ -147,6 +143,11 @@ public class SegmentControllerHpController implements SegmentControllerHpControl
             }
 
             this.segmentController.startCoreOverheating(var2);
+
+            //INSERTED CODE @148
+            SegmentControllerOverheatEvent event = new SegmentControllerOverheatEvent(this.segmentController, var2);
+            StarLoader.fireEvent(SegmentControllerOverheatEvent.class, event, this.isOnServer());
+            ///
         }
 
     }

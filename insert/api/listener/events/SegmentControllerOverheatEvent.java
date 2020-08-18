@@ -1,11 +1,14 @@
 package api.listener.events;
 
 import org.schema.game.common.controller.SegmentController;
+import org.schema.game.common.controller.damage.Damager;
 
 public class SegmentControllerOverheatEvent extends Event {
-    SegmentController entity;
-    int lastDamager;
-    public SegmentControllerOverheatEvent(SegmentController entity, int lastDamager) {
+
+    private SegmentController entity;
+    private Damager lastDamager;
+
+    public SegmentControllerOverheatEvent(SegmentController entity, Damager lastDamager) {
         this.entity = entity;
         this.lastDamager = lastDamager;
     }
@@ -14,7 +17,7 @@ public class SegmentControllerOverheatEvent extends Event {
         return entity;
     }
 
-    public int getLastDamager() {
+    public Damager getLastDamager() {
         return lastDamager;
     }
 }
