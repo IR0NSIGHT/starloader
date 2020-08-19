@@ -16,7 +16,7 @@ public class DebugFile {
         }
         return writer;
     }
-    public static void logError(Exception e, StarMod mod){
+    public static void logError(Throwable e, StarMod mod){
         try {
             FileWriter writer = getWriter();
             if(mod == null){

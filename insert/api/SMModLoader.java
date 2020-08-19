@@ -12,6 +12,7 @@ import org.schema.game.common.data.player.PlayerState;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,8 +37,12 @@ public class SMModLoader {
         System.out.println("Loading mod: " + jf.getName());
         try {
             Class<?> c = loader.loadClass(jf.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS));
-            Object o = c.getConstructor().newInstance();
-        DebugFile.log("Creating mod...");
+            for (Constructor<?> constructor : c.getConstructors()) {
+                DebugFile.info("!!! CLASS CONSTRUCTOR: " + constructor.toString());
+            }
+            Constructor<?> constructor = c.getConstructors()[0];
+            Object o = constructor.newInstance();
+            DebugFile.log("Creating mod...");
         if (!(o instanceof StarMod)) {
             DebugFile.err("Failed to load plugin! not instanceof StarMod.");
             throw new IllegalArgumentException("Main class must be an instance of StarMod");
@@ -53,11 +58,18 @@ public class SMModLoader {
             }
             return sMod;
         }
-        }catch (Exception e){
+        } catch (InvocationTargetException e){
+            DebugFile.logError(e, null);
+            DebugFile.err(" !! InvocationTargetException occured while loading mod!!");
+            DebugFile.err("This error is thrown when the constructor itself throws an error");
+            DebugFile.err("===== The root cause of this error is as follows: =====");
+            DebugFile.logError(e.getCause(), null);
+            DebugFile.err("===== ================================ =====");
+        } catch(Exception e){
             DebugFile.err("Error loading mod: " + jf.getName());
             DebugFile.logError(e, null);
-            return null;
         }
+        return null;
     }
 
     public static void main(String[] args) {
