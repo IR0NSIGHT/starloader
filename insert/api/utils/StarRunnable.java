@@ -35,17 +35,18 @@ public abstract class StarRunnable {
         ticksRan++;
         if(this.delay) {
             if (time > ticks){
-                run();
                 cancel();
+                run();
             }
         }
         if(this.timer){
             if(time > frequency){
-                run();
                 time = 0;
+                run();
             }
         }
     }
+    private int errorCount = 0;
     private void register(){
         registerQueue.add(this);
     }
@@ -57,8 +58,12 @@ public abstract class StarRunnable {
             try {
                 runnable.tick();
             }catch (Exception e){
-                    DebugFile.err("A StarRunnable threw an error");
+                DebugFile.err("A StarRunnable ("+ runnable.getClass().getSimpleName() +") threw an error");
                 DebugFile.logError(e, null);
+                if(runnable.errorCount++ >= 10) {
+                    DebugFile.err("=== !!! THIS RUNNABLE WILL BE TERMINATED (threw 10 errors) !!! ===");
+                    runnable.queuedForDelete = true;
+                }
             }
             if(runnable.queuedForDelete){
                 list.add(runnable);
