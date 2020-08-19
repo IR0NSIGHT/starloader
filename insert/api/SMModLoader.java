@@ -36,7 +36,7 @@ public class SMModLoader {
         System.out.println("Loading mod: " + jf.getName());
         try {
             Class<?> c = loader.loadClass(jf.getManifest().getMainAttributes().getValue(Name.MAIN_CLASS));
-            Object o = c.getConstructors()[0].newInstance();
+            Object o = c.getConstructor().newInstance();
         DebugFile.log("Creating mod...");
         if (!(o instanceof StarMod)) {
             DebugFile.err("Failed to load plugin! not instanceof StarMod.");

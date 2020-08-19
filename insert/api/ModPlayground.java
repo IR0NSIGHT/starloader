@@ -43,7 +43,7 @@ public class ModPlayground extends StarMod {
     @Override
     public void onBlockConfigLoad(BlockConfig config) {
     }
-    public void registerComputerModulePair(short computer, short module){
+    public static void registerComputerModulePair(short computer, short module){
         ElementInformation comp = ElementKeyMap.infoArray[computer];
         comp.mainCombinationController = true;
         comp.systemBlock = true;
@@ -52,10 +52,14 @@ public class ModPlayground extends StarMod {
 
         ElementKeyMap.infoArray[module].controlledBy.add(computer);
     }
-    public void registerElementBlock(ElementInformation info){
+    public static void registerElementBlock(ElementInformation info){
         info.systemBlock = true;
         info.controlledBy.add((short) 1);
-
+    }
+    public static void setBlocksConnectable(ElementInformation cBlock, ElementInformation vBlock){
+        cBlock.setCanActivate(true);
+        cBlock.controlling.add(vBlock.id);
+        vBlock.controlledBy.add(cBlock.id);
     }
 
     public static void initBlockData() {
