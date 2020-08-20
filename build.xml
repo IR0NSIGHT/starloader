@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="starloader" default="all">
+  
+  
+  <property file="build.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.zip"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+    <include name="*.klib"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.8" value="${jdk.home.1.8}/bin"/>
+  <path id="jdk.classpath.1.8">
+    <fileset dir="${jdk.home.1.8}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/ext/cldrdata.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/nashorn.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.8}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.8}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.8"/>
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <fileset dir="${javac2.home}">
+      <include name="javac2.jar"/>
+      <include name="jdom.jar"/>
+      <include name="asm-all*.jar"/>
+      <include name="forms-*.jar"/>
+    </fileset>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+  </target>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module starloader -->
+  
+  <dirname property="module.starloader.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.starloader" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.starloader" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.starloader" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.starloader" value="-encoding UTF-8 -source 7 -target 7 ${compiler.args}"/>
+  
+  <property name="starloader.output.dir" value="${module.starloader.basedir}/out/production/starloader"/>
+  <property name="starloader.testoutput.dir" value="${module.starloader.basedir}/out/test/starloader"/>
+  
+  <path id="starloader.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="starloader.module.production.classpath">
+    <path refid="${module.jdk.classpath.starloader}"/>
+    <pathelement location="${basedir}/../../StarMade/StarMade - Vanilla.jar"/>
+    <fileset dir="${basedir}/../../StarMade/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="starloader.runtime.production.module.classpath">
+    <pathelement location="${starloader.output.dir}"/>
+    <pathelement location="${basedir}/../../StarMade/StarMade - Vanilla.jar"/>
+    <fileset dir="${basedir}/../../StarMade/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="starloader.module.classpath">
+    <path refid="${module.jdk.classpath.starloader}"/>
+    <pathelement location="${starloader.output.dir}"/>
+    <pathelement location="${basedir}/../../StarMade/StarMade - Vanilla.jar"/>
+    <fileset dir="${basedir}/../../StarMade/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="starloader.runtime.module.classpath">
+    <pathelement location="${starloader.testoutput.dir}"/>
+    <pathelement location="${starloader.output.dir}"/>
+    <pathelement location="${basedir}/../../StarMade/StarMade - Vanilla.jar"/>
+    <fileset dir="${basedir}/../../StarMade/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.starloader">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.starloader">
+    <patternset refid="excluded.from.module.starloader"/>
+  </patternset>
+  
+  <path id="starloader.module.sourcepath">
+    <dirset dir="${module.starloader.basedir}">
+      <include name="src"/>
+      <include name="insert"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.starloader" depends="compile.module.starloader.production,compile.module.starloader.tests" description="Compile module starloader"/>
+  
+  <target name="compile.module.starloader.production" depends="register.custom.compilers" description="Compile module starloader; production classes">
+    <mkdir dir="${starloader.output.dir}"/>
+    <javac2 destdir="${starloader.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.starloader}/javac">
+      <compilerarg line="${compiler.args.starloader}"/>
+      <bootclasspath refid="starloader.module.bootclasspath"/>
+      <classpath refid="starloader.module.production.classpath"/>
+      <src refid="starloader.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.starloader"/>
+    </javac2>
+    
+    <copy todir="${starloader.output.dir}">
+      <fileset dir="${module.starloader.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.starloader.basedir}/insert">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.starloader.tests" depends="register.custom.compilers,compile.module.starloader.production" description="compile module starloader; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.starloader" description="cleanup module">
+    <delete dir="${starloader.output.dir}"/>
+    <delete dir="${starloader.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.starloader" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.starloader" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.starloader" value="${basedir}/../../StarMade"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.starloader.jar" value="${artifacts.temp.dir}/starloader.jar"/>
+  </target>
+  
+  <target name="artifact.starloader" depends="init.artifacts, compile.module.starloader" description="Build &#39;starloader&#39; artifact">
+    <property name="artifact.temp.output.starloader" value="${artifacts.temp.dir}/starloader"/>
+    <mkdir dir="${artifact.temp.output.starloader}"/>
+    <jar destfile="${temp.jar.path.starloader.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset file="${basedir}/META-INF/MANIFEST.MF" prefix="META-INF"/>
+      <zipfileset dir="${starloader.output.dir}"/>
+    </jar>
+    <copy file="${temp.jar.path.starloader.jar}" tofile="${artifact.temp.output.starloader}/starloader.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.starloader" description="Build all artifacts">
+    <mkdir dir="${artifact.output.starloader}"/>
+    <copy todir="${artifact.output.starloader}">
+      <fileset dir="${artifact.temp.output.starloader}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>

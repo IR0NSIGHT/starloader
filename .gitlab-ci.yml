@@ -6,4 +6,8 @@ before_script:
 
 build:
   script:
-    - echo "biuld"
+    - echo "== Building StarLoader =="
+    - ant artifact.starloader
+  artifacts:
+    paths:
+      - __/artifacts_temp/starloader/starloader.jar
