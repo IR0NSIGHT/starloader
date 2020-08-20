@@ -8,4 +8,4 @@ build:
     - ant artifact.starloader
   artifacts:
     paths:
-      - __/artifacts_temp/starloader/starloader.jar
+      - __artifacts_temp/starloader/starloader.jar
