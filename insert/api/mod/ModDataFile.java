@@ -70,6 +70,7 @@ public class ModDataFile {
             }
             Scanner scanner = new Scanner(source);
             while (scanner.hasNext()){
+                System.out.println();
                 String[] split = scanner.nextLine().split(",");
                 data.put(split[0], new ImmutablePair<Integer, Boolean>(Integer.parseInt(split[1]), Boolean.parseBoolean(split[2])));
                 //enabledMods.add(scanner.next());
