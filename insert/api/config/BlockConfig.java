@@ -31,6 +31,24 @@ public class BlockConfig {
         info.blockResourceType = 2;
         info.producedInFactory = type;
     }
+    public static void registerComputerModulePair(short computer, short module){
+        ElementInformation comp = ElementKeyMap.infoArray[computer];
+        comp.mainCombinationController = true;
+        comp.systemBlock = true;
+        comp.controlledBy.add((short) 1);
+        comp.controlling.add(module);
+
+        ElementKeyMap.infoArray[module].controlledBy.add(computer);
+    }
+    public static void registerElementBlock(ElementInformation info){
+        info.systemBlock = true;
+        info.controlledBy.add((short) 1);
+    }
+    public static void setBlocksConnectable(ElementInformation cBlock, ElementInformation vBlock){
+        cBlock.setCanActivate(true);
+        cBlock.controlling.add(vBlock.id);
+        vBlock.controlledBy.add(cBlock.id);
+    }
     public static void clearRecipes(ElementInformation element){
         element.cubatomConsistence.clear();
         element.consistence.clear();

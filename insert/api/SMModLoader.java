@@ -61,7 +61,7 @@ public class SMModLoader {
         } catch (InvocationTargetException e){
             DebugFile.logError(e, null);
             DebugFile.err(" !! InvocationTargetException occured while loading mod!!");
-            DebugFile.err("This error is thrown when the constructor itself throws an error");
+            DebugFile.err("This error is thrown when the main class itself throws an error while being constructed");
             DebugFile.err("===== The root cause of this error is as follows: =====");
             DebugFile.logError(e.getCause(), null);
             DebugFile.err("===== ================================ =====");

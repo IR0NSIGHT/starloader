@@ -4,6 +4,7 @@ import api.config.BlockConfig;
 import api.mod.config.FileConfiguration;
 import org.schema.game.common.data.physics.Pair;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -107,6 +108,7 @@ public class StarMod {
 
     //
     private HashMap<String, FileConfiguration> config = new HashMap<String, FileConfiguration>();
+
     public FileConfiguration getConfig(String name){
         FileConfiguration namedConfig = config.get(name);
         if(namedConfig == null){
