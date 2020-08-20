@@ -46,6 +46,7 @@ public class BlockConfig {
     }
     public static void setBlocksConnectable(ElementInformation cBlock, ElementInformation vBlock){
         cBlock.setCanActivate(true);
+        vBlock.setCanActivate(true);
         cBlock.controlling.add(vBlock.id);
         vBlock.controlledBy.add(cBlock.id);
     }

@@ -1,0 +1,9 @@
+image: "java:1.7"
+
+before_script:
+  - echo "hi"
+  - ls
+
+build:
+  script:
+    - echo "biuld"
