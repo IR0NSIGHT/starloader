@@ -3,15 +3,20 @@ package api;
 import api.common.GameClient;
 import api.config.BlockConfig;
 import api.listener.Listener;
+import api.listener.events.gui.MainWindowTabAddEvent;
 import api.listener.events.player.PlayerChatEvent;
 import api.listener.events.player.PlayerCommandEvent;
 import api.listener.events.register.ElementRegisterEvent;
+import api.listener.events.register.RegisterAddonsEvent;
 import api.mod.StarLoader;
 import api.mod.StarMod;
 import api.network.Packet;
 import api.network.packets.ServerToClientMessage;
+import api.utils.PlayerUsableHelper;
+import api.utils.addon.SimpleAddOn;
 import api.utils.game.SegmentControllerUtils;
 import api.utils.gui.SimpleGUIBuilder;
+import org.newdawn.slick.Color;
 import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.controller.ManagedUsableSegmentController;
 import org.schema.game.common.controller.SegmentController;
@@ -21,6 +26,10 @@ import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
 import org.schema.game.network.objects.ChatMessage;
 import org.schema.game.server.data.GameServerState;
+import org.schema.schine.common.language.Lng;
+import org.schema.schine.graphicsengine.forms.font.FontLibrary;
+import org.schema.schine.graphicsengine.forms.gui.GUITextOverlay;
+import org.schema.schine.graphicsengine.forms.gui.newgui.GUIContentPane;
 import org.schema.schine.network.RegisteredClientOnServer;
 
 import java.io.IOException;
@@ -83,11 +92,79 @@ public class ModPlayground extends StarMod {
     public void onEnable() {
         DebugFile.log("Loading default mod...");
         Packet.registerPacket(ServerToClientMessage.class);
-        StarLoader.registerListener(PlayerChatEvent.class, new Listener<PlayerChatEvent>() {
+        StarLoader.registerListener(MainWindowTabAddEvent.class, new Listener<MainWindowTabAddEvent>() {
             @Override
-            public void onEvent(PlayerChatEvent event) {
-                ChatMessage message = event.getMessage();
-                ModPlayground.broadcastMessage("the message: " + message.text);
+            public void onEvent(MainWindowTabAddEvent event) {
+                if(event.getTitle().equals(Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_FACTION_NEWFACTION_FACTIONPANELNEW_9)){
+                    GUIContentPane funny = event.createTab("this is a tab");
+                    GUITextOverlay t = new GUITextOverlay(100, 100, event.getPane().getState());
+                    t.setFont(FontLibrary.getBlenderProMedium20());
+                    t.setColor(Color.cyan);
+                    t.setTextSimple("jkdlsjfa sj kjdas skljklj dfasdfklj kl dfkljdfskljkljf kljdas klklj dfsklj dfskl ");
+                    funny.getContent(0).attach(t);
+                }
+            }
+        });
+        StarLoader.registerListener(RegisterAddonsEvent.class, new Listener<RegisterAddonsEvent>() {
+            @Override
+            public void onEvent(RegisterAddonsEvent event) {
+                event.addModule(new SimpleAddOn(event.getContainer()) {
+                    @Override
+                    public float getChargeRateFull() {
+                        return 10;
+                    }
+
+                    @Override
+                    public double getPowerConsumedPerSecondResting() {
+                        return 0;
+                    }
+
+                    @Override
+                    public double getPowerConsumedPerSecondCharging() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getUsableId() {
+                        return PlayerUsableHelper.getPlayerUsableId(ElementKeyMap.SHIELD_CAP_ID);
+                    }
+
+                    @Override
+                    public String getWeaponRowName() {
+                        return "Bruhhhhhh";
+                    }
+
+                    @Override
+                    public short getWeaponRowIcon() {
+                        return ElementKeyMap.SHIELD_CAP_ID;
+                    }
+
+                    @Override
+                    public float getDuration() {
+                        return 3;
+                    }
+
+                    @Override
+                    public boolean onExecute() {
+                        ModPlayground.broadcastMessage("cringe!!!!");
+                        return true;
+                    }
+
+                    @Override
+                    public void onActive() {
+                        ModPlayground.broadcastMessage("epic!!!!");
+                    }
+
+                    @Override
+                    public void onInactive() {
+
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "The NAME";
+                    }
+                });
             }
         });
         StarLoader.registerListener(PlayerCommandEvent.class, new Listener<PlayerCommandEvent>() {

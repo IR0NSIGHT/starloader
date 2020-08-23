@@ -5,6 +5,8 @@
 
 package org.schema.schine.graphicsengine.forms.gui;
 
+import api.listener.events.gui.GUIElementCreateEvent;
+import api.mod.StarLoader;
 import com.bulletphysics.linearmath.Transform;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
@@ -71,6 +73,10 @@ public abstract class GUIElement extends AbstractSceneNode implements Drawable, 
 
     public GUIElement(InputState var1) {
         this.state = var1;
+        //INSERTED CODE
+        GUIElementCreateEvent event = new GUIElementCreateEvent(this, var1);
+        StarLoader.fireEvent(event, false);
+        ///
     }
 
     public static void disableOrthogonal() {

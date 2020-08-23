@@ -123,6 +123,7 @@ public abstract class SimpleAddOn extends RecharchableActivatableDurationSingleM
         boolean success = super.executeModule();
         if (success || clientSuccess) {
             onExecute();
+            dischargeToZero();
         }
 
 

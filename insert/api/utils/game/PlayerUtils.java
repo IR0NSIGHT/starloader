@@ -1,12 +1,25 @@
 package api.utils.game;
 
+import api.common.GameServer;
 import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.data.player.ControllerStateUnit;
 import org.schema.game.common.data.player.PlayerState;
+import org.schema.schine.network.RegisteredClientOnServer;
 
+import java.io.IOException;
 import java.util.Set;
 
 public class PlayerUtils {
+
+    public static void sendMessage(PlayerState player, String message) {
+        RegisteredClientOnServer registeredClientOnServer = GameServer.getServerState().getClients().get(player.getClientId());
+        try {
+            registeredClientOnServer.serverMessage(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static PlayerControllable getCurrentControl(PlayerState state){
         Set<ControllerStateUnit> units = state.getControllerState().getUnits();
         if(units.isEmpty()) return null;
