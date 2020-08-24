@@ -2,19 +2,24 @@ package api.utils.game;
 
 import api.ModPlayground;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import it.unimi.dsi.fastutil.shorts.ShortArrayList;
+import org.schema.game.client.data.PlayerControllable;
 import org.schema.game.common.controller.ManagedUsableSegmentController;
+import org.schema.game.common.controller.PlayerUsableInterface;
 import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.*;
 import org.schema.game.common.controller.elements.power.reactor.tree.ReactorElement;
 import org.schema.game.common.controller.elements.power.reactor.tree.ReactorTree;
 import org.schema.game.common.data.element.ElementInformation;
 import org.schema.game.common.data.element.ElementKeyMap;
+import org.schema.game.common.data.player.PlayerState;
 import org.schema.schine.graphicsengine.core.GlUtil;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import javax.vecmath.Vector3f;
+import java.nio.file.attribute.AclFileAttributeView;
 import java.util.ArrayList;
 
 public class SegmentControllerUtils {
@@ -69,6 +74,18 @@ public class SegmentControllerUtils {
         }
         return null;
     }
+
+    /**
+     * Gets an arraylist of players currently attached to the entity.
+     */
+    public static ArrayList<PlayerState> getAttachedPlayers(SegmentController controller) {
+        if (controller instanceof PlayerControllable) {
+            return new ArrayList<PlayerState>(((PlayerControllable) controller).getAttachedPlayers());
+        } else {
+            return new ArrayList<PlayerState>();
+        }
+    }
+
     public <CM extends ElementCollectionManager> ArrayList<ElementCollectionManager> getCollectionManagers(ManagedUsableSegmentController<?> ent, Class<CM> classType){
         ArrayList<ElementCollectionManager> ecms = new ArrayList<ElementCollectionManager>();
         for (ManagerModule<?, ?, ?> module : ent.getManagerContainer().getModules()) {
@@ -100,5 +117,27 @@ public class SegmentControllerUtils {
             }
         }
         return ecms;
+    }
+
+    /**
+     * Gets an addon based on its PlayerUsableId, which is faster than the iterative method
+     */
+    @Nullable
+    public static PlayerUsableInterface getAddon(ManagedUsableSegmentController<?> ent, long playerUsableId){
+        return ent.getManagerContainer().getPlayerUsable(playerUsableId);
+    }
+
+    /**
+     * Get a player usable (addon) based on its class type. will be slow.
+     */
+    @Nullable
+    public static <P extends PlayerUsableInterface> P getAddon(ManagedUsableSegmentController<?> ent, Class<P> classType){
+        ObjectCollection<PlayerUsableInterface> usable = ent.getManagerContainer().getPlayerUsable();
+        for (PlayerUsableInterface i : usable) {
+            if(i.getClass().equals(classType)){
+                return (P) i;
+            }
+        }
+        return null;
     }
 }

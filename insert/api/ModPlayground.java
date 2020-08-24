@@ -79,11 +79,15 @@ public class ModPlayground extends StarMod {
         }*/
     }
     public static void broadcastMessage(String message) {
-        for (RegisteredClientOnServer client : GameServerState.instance.getClients().values()) {
-            try {
-                client.serverMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if(GameServerState.instance == null){
+            GameClient.sendMessage("[Client] " + message);
+        }else {
+            for (RegisteredClientOnServer client : GameServerState.instance.getClients().values()) {
+                try {
+                    client.serverMessage(message);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -92,19 +96,19 @@ public class ModPlayground extends StarMod {
     public void onEnable() {
         DebugFile.log("Loading default mod...");
         Packet.registerPacket(ServerToClientMessage.class);
-        StarLoader.registerListener(MainWindowTabAddEvent.class, new Listener<MainWindowTabAddEvent>() {
-            @Override
-            public void onEvent(MainWindowTabAddEvent event) {
-                if(event.getTitle().equals(Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_FACTION_NEWFACTION_FACTIONPANELNEW_9)){
-                    GUIContentPane funny = event.createTab("this is a tab");
-                    GUITextOverlay t = new GUITextOverlay(100, 100, event.getPane().getState());
-                    t.setFont(FontLibrary.getBlenderProMedium20());
-                    t.setColor(Color.cyan);
-                    t.setTextSimple("jkdlsjfa sj kjdas skljklj dfasdfklj kl dfkljdfskljkljf kljdas klklj dfsklj dfskl ");
-                    funny.getContent(0).attach(t);
-                }
-            }
-        });
+//        StarLoader.registerListener(MainWindowTabAddEvent.class, new Listener<MainWindowTabAddEvent>() {
+//            @Override
+//            public void onEvent(MainWindowTabAddEvent event) {
+//                if(event.getTitle().equals(Lng.ORG_SCHEMA_GAME_CLIENT_VIEW_GUI_FACTION_NEWFACTION_FACTIONPANELNEW_9)){
+//                    GUIContentPane funny = event.createTab("this is a tab");
+//                    GUITextOverlay t = new GUITextOverlay(100, 100, event.getPane().getState());
+//                    t.setFont(FontLibrary.getBlenderProMedium20());
+//                    t.setColor(Color.cyan);
+//                    t.setTextSimple("jkdlsjfa sj kjdas skljklj dfasdfklj kl dfkljdfskljkljf kljdas klklj dfsklj dfskl ");
+//                    funny.getContent(0).attach(t);
+//                }
+//            }
+//        });
         StarLoader.registerListener(RegisterAddonsEvent.class, new Listener<RegisterAddonsEvent>() {
             @Override
             public void onEvent(RegisterAddonsEvent event) {

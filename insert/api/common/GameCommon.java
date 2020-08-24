@@ -8,7 +8,7 @@ import org.schema.game.common.data.world.Universe;
 import org.schema.schine.network.objects.Sendable;
 
 public class GameCommon {
-    public Sendable getGameObject(int id){
+    public static Sendable getGameObject(int id){
         return StarLoader.getGameState().getState().getLocalAndRemoteObjectContainer().getLocalObjects().get(id);
     }
 

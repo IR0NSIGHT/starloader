@@ -225,9 +225,7 @@ public class ShieldLocal implements Comparable<ShieldLocal>, PowerConsumer, Seri
             }
 
             hit.hasHit = true;
-            //INSERTED TO UPDATE
-            hit.setDamage(damage);
-            ///
+
         }
 
     }

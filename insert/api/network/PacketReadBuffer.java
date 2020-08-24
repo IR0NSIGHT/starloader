@@ -1,8 +1,10 @@
 package api.network;
 
+import api.common.GameCommon;
 import api.mod.StarLoader;
 import org.schema.common.util.linAlg.Vector3i;
 import org.schema.game.common.data.world.RemoteSector;
+import org.schema.schine.network.objects.Sendable;
 
 import javax.vecmath.Vector3f;
 import java.io.DataInputStream;
@@ -68,5 +70,12 @@ public class PacketReadBuffer {
         }
         return r;
     }
+
+    public Sendable readSendable() throws IOException {
+        int id = readInt();
+        return GameCommon.getGameObject(id);
+    }
+
+
 
 }

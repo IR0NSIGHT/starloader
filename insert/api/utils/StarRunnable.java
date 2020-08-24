@@ -47,7 +47,7 @@ public abstract class StarRunnable {
         }
     }
     private int errorCount = 0;
-    private void register(){
+    private synchronized void register(){
         registerQueue.add(this);
     }
     private static ArrayList<StarRunnable> runnables = new ArrayList<StarRunnable>();

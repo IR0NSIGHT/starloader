@@ -9,6 +9,7 @@ import api.DebugFile;
 import api.network.Packet;
 import api.network.PacketReadBuffer;
 import api.network.PacketWriteBuffer;
+import api.utils.StarRunnable;
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
 import it.unimi.dsi.fastutil.objects.ObjectArrayFIFOQueue;
@@ -231,7 +232,7 @@ public class ClientProcessor implements Runnable, NetworkProcessor {
                     //SPECIAL PACKET ID received
                     short packetId = this.dataInputStream.readShort();
                     //Construct packet
-                    api.network.Packet packet = api.network.Packet.newPacket(packetId);
+                    final api.network.Packet packet = api.network.Packet.newPacket(packetId);
                     //Fill with data
                     try {
                         packet.readPacketData(new PacketReadBuffer(dataInputStream));
@@ -239,8 +240,13 @@ public class ClientProcessor implements Runnable, NetworkProcessor {
                         e.printStackTrace();
                         DebugFile.logError(e, null);
                     }
-                    //dispatch TODO Move packet to a queue to be executed on the main loop
-                    packet.processPacketOnClient();
+                    //Move packet to a queue to be executed on the main loop
+                    new StarRunnable(){
+                        @Override
+                        public void run() {
+                            packet.processPacketOnClient();
+                        }
+                    }.runLater(0);
                     continue;
                 }
                 ///

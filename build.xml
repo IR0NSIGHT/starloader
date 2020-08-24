@@ -218,6 +218,9 @@
     <jar destfile="${temp.jar.path.starloader.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
       <zipfileset file="${basedir}/META-INF/MANIFEST.MF" prefix="META-INF"/>
       <zipfileset dir="${starloader.output.dir}"/>
+      <manifest>
+        <attribute name="Main-Class" value="InstallerFrame" />
+      </manifest>
     </jar>
     <copy file="${temp.jar.path.starloader.jar}" tofile="${artifact.temp.output.starloader}/starloader.jar"/>
   </target>

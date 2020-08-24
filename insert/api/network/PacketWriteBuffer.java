@@ -1,6 +1,7 @@
 package api.network;
 
 import org.schema.common.util.linAlg.Vector3i;
+import org.schema.schine.network.objects.Sendable;
 
 import javax.vecmath.Vector3f;
 import java.io.DataOutputStream;
@@ -60,5 +61,9 @@ public class PacketWriteBuffer {
         for (Long entry : list) {
             writeLong(entry);
         }
+    }
+
+    public void writeSendable(Sendable sendable) throws IOException {
+        writeInt(sendable.getId());
     }
 }

@@ -1,11 +1,14 @@
 package api.utils.addon;
 
 import api.network.packets.PacketUtil;
+import api.utils.game.SegmentControllerUtils;
 import org.schema.common.util.StringTools;
+import org.schema.game.common.controller.SegmentController;
 import org.schema.game.common.controller.elements.ManagerContainer;
 import org.schema.game.common.controller.elements.RecharchableActivatableDurationSingleModule;
 import org.schema.game.common.controller.elements.SingleModuleActivation;
 import org.schema.game.common.data.blockeffects.config.StatusEffectType;
+import org.schema.game.common.data.player.PlayerState;
 import org.schema.game.network.objects.valueUpdate.ServerValueRequestUpdate;
 import org.schema.schine.graphicsengine.core.Timer;
 
@@ -17,9 +20,11 @@ public abstract class SimpleAddOn extends RecharchableActivatableDurationSingleM
 
     public void sendChargeUpdate() {
         if (this.isOnServer()) {
-//            UpdateCustomAddOnPacket packet = new UpdateCustomAddOnPacket(this.getName(), getCharge(), getCharges(), isAutoChargeOn());
+            PacketSCSyncSimpleAddOn packet = new PacketSCSyncSimpleAddOn(this.getSegmentController(), this, getCharge(), getCharges(), isAutoChargeOn());
+            for (PlayerState player : SegmentControllerUtils.getAttachedPlayers(this.getSegmentController())) {
+                PacketUtil.sendPacket(player, packet);
+            }
         }
-
     }
 
     public boolean isDischargedOnHit() {
